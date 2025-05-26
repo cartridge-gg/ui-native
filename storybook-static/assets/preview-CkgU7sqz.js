@@ -1,1 +1,0 @@
-import{e as o}from"./entry-preview-DdRuhEyh.js";import{e}from"./entry-preview-docs-DXnN-E9y.js";import{L as t}from"./iframe-B7HPIzHu.js";import"./chunk-XP5HYGXS-BGCqD1aY.js";import"./index-ClhbAHlD.js";import"./index-DZ6xLB6S.js";function d(r){return t({...r,addons:[o,e,...r.addons??[]]})}export{d as __definePreview};
