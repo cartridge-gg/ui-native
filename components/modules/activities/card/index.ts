@@ -1,1 +1,2 @@
-export * from './ActivityCard'; 
+export * from './ActivityCard';
+export * from './ActivityAchievementCard'; 

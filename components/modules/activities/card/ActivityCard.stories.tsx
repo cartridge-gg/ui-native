@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { View, Image } from 'react-native';
-import { ActivityCard } from './ActivityCard';
+import { ActivityCard, ActivityAchievementCard } from './';
 import { Text } from '../../../typography/Text';
 
 const meta: Meta<typeof ActivityCard> = {
@@ -56,13 +56,37 @@ export const Token: Story = {
 };
 
 export const Achievement: Story = {
-  args: {
-    Logo: <MockLogo />,
-    title: 'Achievement',
-    subTitle: 'lootsurvivor.io',
-    topic: 'Squire',
-    subTopic: '⭐ 20',
-  },
+  render: () => (
+    <View style={{ gap: 12 }}>
+      <ActivityAchievementCard
+        title="Achievement"
+        website="https://lootsurvivor.io"
+        topic="Squire"
+        points={20}
+      />
+      <ActivityAchievementCard
+        title="Achievement"
+        website="https://lootsurvivor.io"
+        topic="Squire"
+        points={20}
+        certified
+      />
+      <ActivityAchievementCard
+        title="Achievement"
+        website="https://lootsurvivor.io"
+        topic="Squire"
+        points={20}
+        loading
+      />
+      <ActivityAchievementCard
+        title="Achievement"
+        website="https://lootsurvivor.io"
+        topic="Squire"
+        points={20}
+        error
+      />
+    </View>
+  ),
 };
 
 export const Loading: Story = {

@@ -17,9 +17,22 @@ module.exports = {
       // Wait a moment for styles to apply
       await page.waitForTimeout(100);
       
+      // Get the content dimensions to ensure we capture everything
+      const contentBox = await page.evaluate(() => {
+        const storyRoot = document.querySelector('#storybook-root');
+        if (storyRoot) {
+          const rect = storyRoot.getBoundingClientRect();
+          return {
+            width: Math.max(800, Math.ceil(rect.width + 32)), // Add padding
+            height: Math.max(600, Math.ceil(rect.height + 32)) // Add padding
+          };
+        }
+        return { width: 800, height: 600 };
+      });
+
       const image = await page.screenshot({
         fullPage: false,
-        clip: { x: 0, y: 0, width: 800, height: 600 }
+        clip: { x: 0, y: 0, width: contentBox.width, height: contentBox.height }
       });
       
       // Save screenshot directly to file
