@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { View, useState } from 'react-native';
+import { useState } from 'react';
+import { View } from 'react-native';
 import { RadioGroup, RadioGroupItem } from './RadioGroup';
 import { Text } from '../../typography/Text';
 

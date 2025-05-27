@@ -11,7 +11,11 @@
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "web": "expo start --web",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook",
+    "test:storybook:update": "start-server-and-test 'SNAPSHOT=1 pnpm storybook' 6006 'pnpm test-storybook --url http://127.0.0.1:6006 -u'",
+    "test:storybook": "start-server-and-test 'pnpm storybook' 6006 'pnpm test-storybook --url http://127.0.0.1:6006'",
+    "screenshots:generate": "node scripts/generate-rn-screenshots.js"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.4",
@@ -44,6 +48,8 @@
     "@storybook/react": "^8.6.12",
     "@storybook/react-native-web-vite": "^8.6.12",
     "@storybook/test": "^8.6.12",
+    "@storybook/test-runner": "^0.21.0",
+    "@types/jest-image-snapshot": "^6.4.0",
     "@types/react": "~19.0.10",
     "@types/react-native": "^0.73.0",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
@@ -53,8 +59,11 @@
     "eslint": "^8.57.0",
     "eslint-config-universe": "^12.0.1",
     "eslint-plugin-storybook": "^0.12.0",
+    "jest-image-snapshot": "^6.4.0",
+    "playwright": "^1.49.1",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "start-server-and-test": "^2.0.9",
     "storybook": "^8.6.12",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3"
