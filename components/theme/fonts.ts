@@ -8,16 +8,16 @@ export type FontFamily = 'sans' | 'mono';
 const FONT_CONFIG = {
   sans: {
     ios: {
-      regular: 'System',
-      medium: 'System',
-      semibold: 'System',
-      bold: 'System',
+      regular: 'Inter_400Regular',
+      medium: 'Inter_500Medium',
+      semibold: 'Inter_600SemiBold',
+      bold: 'Inter_700Bold',
     },
     android: {
-      regular: 'Roboto',
-      medium: 'Roboto-Medium',
-      semibold: 'Roboto-Medium', // Android doesn't have semibold, use medium
-      bold: 'Roboto-Bold',
+      regular: 'Inter_400Regular',
+      medium: 'Inter_500Medium',
+      semibold: 'Inter_600SemiBold',
+      bold: 'Inter_700Bold',
     },
     web: {
       regular: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

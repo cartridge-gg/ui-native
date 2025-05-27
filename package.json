@@ -18,6 +18,7 @@
     "screenshots:generate": "node scripts/generate-rn-screenshots.js"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.3.0",
     "@gorhom/bottom-sheet": "^5.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -50,7 +51,7 @@
     "@storybook/test": "^8.6.12",
     "@storybook/test-runner": "^0.21.0",
     "@types/jest-image-snapshot": "^6.4.0",
-    "@types/react": "~19.0.10",
+    "@types/react": "~18.3.23",
     "@types/react-native": "^0.73.0",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",

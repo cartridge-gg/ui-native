@@ -40,39 +40,39 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 
   const styles = StyleSheet.create({
     container: {
-      borderRadius: 8,
-      padding: 12,
-      paddingRight: 16,
+      borderRadius: 6, // rounded = 6px (web default)
+      padding: 12, // p-3 = 12px
+      paddingRight: 16, // pr-4 = 16px
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: 16,
+      gap: 16, // gap-4 = 16px
       backgroundColor: colors.background[200],
     },
     pressable: {
-      borderRadius: 8,
+      borderRadius: 6, // rounded = 6px
     },
     content: {
       flex: 1,
       flexDirection: 'column',
-      gap: 2,
+      gap: 2, // gap-0.5 = 2px
       overflow: 'hidden',
     },
     topRow: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: 24,
+      gap: 24, // gap-6 = 24px
     },
     title: {
-      fontSize: 14,
-      fontWeight: '500',
+      fontSize: 14, // text-sm = 14px
+      fontWeight: '500', // font-medium
       color: getTextColor(),
       textTransform: 'capitalize',
     },
     topic: {
-      fontSize: 14,
-      fontWeight: '500',
+      fontSize: 14, // text-sm = 14px
+      fontWeight: '500', // font-medium
       color: getTextColor(),
       flex: 1,
       textAlign: 'right',
@@ -81,14 +81,14 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: 4,
+      gap: 4, // gap-1 = 4px
     },
     subTitle: {
-      fontSize: 12,
+      fontSize: 12, // text-xs = 12px
       color: error ? colors.destructive[100] : colors.foreground[300],
     },
     subTopic: {
-      fontSize: 12,
+      fontSize: 12, // text-xs = 12px
       color: error ? colors.destructive[100] : colors.foreground[300],
     },
   });

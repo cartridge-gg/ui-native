@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
+import { View } from 'react-native';
 import { ActivityCard } from './ActivityCard';
+import { ActivitySocialWebsite } from './ActivitySocialWebsite';
 import { Text } from '../../../typography/Text';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { Thumbnail, ThumbnailsSubIcon } from '../../thumbnails';
+import { TrophyIcon, SparklesIcon } from '../../../icons/utility/SvgIcons';
 
 export interface ActivityAchievementCardProps {
   title: string;
@@ -22,7 +25,7 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
   topic,
   points,
   website,
-  image,
+  image = '',
   error = false,
   loading = false,
   certified = false,
@@ -31,93 +34,49 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
 }) => {
   const { colors } = useTheme();
 
-  const styles = StyleSheet.create({
-    logoContainer: {
-      position: 'relative',
-      width: 48,
-      height: 48,
-    },
-    logoBackground: {
-      width: 48,
-      height: 48,
-      borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    logoIcon: {
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-    subIcon: {
-      position: 'absolute',
-      bottom: -4,
-      right: -4,
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 2,
-      borderColor: colors.background[200],
-    },
-    subIconText: {
-      fontSize: 10,
-    },
-    socialContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 4,
-    },
-    socialIcon: {
-      fontSize: 12,
-    },
-    socialText: {
-      fontSize: 12,
-    },
-    pointsContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 4,
-    },
-    pointsIcon: {
-      fontSize: 12,
-    },
-    pointsText: {
-      fontSize: 12,
-    },
-  });
+  const Icon = useMemo(
+    () => (
+      <TrophyIcon
+        size="default"
+        color={colors.foreground[100]}
+      />
+    ),
+    [colors.foreground],
+  );
 
-  // Create the achievement logo with trophy icon
-  const Logo = (
-    <View style={styles.logoContainer}>
-      <View style={[styles.logoBackground, { backgroundColor: colors.primary[100] }]}>
-        <Text style={[styles.logoIcon, { color: colors.primary.foreground }]}>🏆</Text>
+  const Logo = useMemo(
+    () => (
+      <Thumbnail
+        icon={image || Icon}
+        subIcon={
+          <ThumbnailsSubIcon
+            variant="light"
+            size="lg"
+            Icon={<TrophyIcon size="xs" color={colors.primary[100]} />}
+          />
+        }
+        error={error}
+        loading={loading}
+        size="lg"
+        variant="light"
+        style={!error && !loading ? { backgroundColor: colors.primary[100] } : undefined}
+      />
+    ),
+    [image, error, loading, Icon, colors.primary],
+  );
+
+  const Social = useMemo(() => {
+    return <ActivitySocialWebsite website={website} certified={certified} />;
+  }, [website, certified]);
+
+  const Points = useMemo(() => {
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+        <SparklesIcon size="xs" color={colors.foreground[300]} />
+        <Text style={{ fontSize: 12, color: colors.foreground[300] }}>{points}</Text>
       </View>
-      <View style={[styles.subIcon, { backgroundColor: colors.background[300] }]}>
-        <Text style={[styles.subIconText, { color: colors.primary[100] }]}>⭐</Text>
-      </View>
-    </View>
-  );
-
-  // Create the social website component
-  const Social = (
-    <View style={styles.socialContainer}>
-      <Text style={[styles.socialIcon, { color: colors.foreground[300] }]}>
-        {certified ? '✓' : '🌐'}
-      </Text>
-      <Text style={[styles.socialText, { color: colors.foreground[300] }]}>
-        {website.replace(/^.*https?:\/\//, '').replace(/\/$/, '')}
-      </Text>
-    </View>
-  );
-
-  // Create the points component
-  const Points = (
-    <View style={styles.pointsContainer}>
-      <Text style={[styles.pointsIcon, { color: colors.foreground[300] }]}>✨</Text>
-      <Text style={[styles.pointsText, { color: colors.foreground[300] }]}>{points}</Text>
-    </View>
-  );
+    );
+  }, [points, colors.foreground]);
 
   return (
     <ActivityCard

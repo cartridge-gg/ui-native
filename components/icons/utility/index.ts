@@ -1,0 +1,1 @@
+export { TrophyIcon, SparklesIcon, GlobeIcon, VerifiedIcon } from './SvgIcons'; 
