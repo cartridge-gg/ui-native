@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const UI_SNAPSHOTS_DIR = path.join(__dirname, '..', '..', 'ui', '__image_snapshots__');
-const UI_NATIVE_SNAPSHOTS_DIR = path.join(__dirname, '..', '__image_snapshots__');
+const UI_SNAPSHOTS_DIR = path.join(__dirname, '..', 'ui', '__image_snapshots__');
+const UI_NATIVE_SNAPSHOTS_DIR = path.join(__dirname, '..', '__image_snapshots__', 'ui');
 const COMPARISON_OUTPUT_DIR = path.join(__dirname, '..', 'visual-comparisons');
 
 // Parse command line arguments
@@ -103,7 +103,7 @@ function findMatchingSnapshots(pattern) {
 
 function checkImageMagick() {
   try {
-    execSync('magick -version', { stdio: 'ignore' });
+    execSync('convert -version', { stdio: 'ignore' });
     return true;
   } catch (error) {
     console.log('⚠️  ImageMagick not found. Please install it for visual diff generation:');
@@ -119,8 +119,8 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
     console.log('================================');
     
     // Get detailed image properties
-    const uiInfo = execSync(`magick identify -verbose "${uiImage}"`, { encoding: 'utf8' });
-    const nativeInfo = execSync(`magick identify -verbose "${nativeImage}"`, { encoding: 'utf8' });
+    const uiInfo = execSync(`identify -verbose "${uiImage}"`, { encoding: 'utf8' });
+    const nativeInfo = execSync(`identify -verbose "${nativeImage}"`, { encoding: 'utf8' });
     
     // Extract key properties
     const uiMatch = uiInfo.match(/Geometry: (\d+)x(\d+)/);
@@ -148,7 +148,7 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
     
     // Analyze color differences
     try {
-      const colorDiff = execSync(`magick compare -metric AE "${uiImage}" "${nativeImage}" null: 2>&1`, { encoding: 'utf8' });
+      const colorDiff = execSync(`compare -metric AE "${uiImage}" "${nativeImage}" null: 2>&1`, { encoding: 'utf8' });
       const diffPixels = parseInt(colorDiff.trim()) || 0;
       
       if (diffPixels === 0) {
@@ -241,8 +241,8 @@ function generateFixSuggestions(analysisResult, uiImage, nativeImage) {
 function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
   try {
     // Get dimensions of both images
-    const uiDimensions = execSync(`magick identify -format "%w %h" "${uiImage}"`, { encoding: 'utf8' }).trim().split(' ');
-    const nativeDimensions = execSync(`magick identify -format "%w %h" "${nativeImage}"`, { encoding: 'utf8' }).trim().split(' ');
+    const uiDimensions = execSync(`identify -format "%w %h" "${uiImage}"`, { encoding: 'utf8' }).trim().split(' ');
+    const nativeDimensions = execSync(`identify -format "%w %h" "${nativeImage}"`, { encoding: 'utf8' }).trim().split(' ');
     
     console.log(`📐 UI dimensions: ${uiDimensions[0]}x${uiDimensions[1]}`);
     console.log(`📐 Native dimensions: ${nativeDimensions[0]}x${nativeDimensions[1]}`);
@@ -257,8 +257,8 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     const normalizedUI = path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-normalized.png');
     const normalizedNative = path.join(COMPARISON_OUTPUT_DIR, 'temp-native-normalized.png');
     
-    execSync(`magick "${uiImage}" -background white -gravity center -extent ${maxWidth}x${maxHeight} "${normalizedUI}"`, { stdio: 'ignore' });
-    execSync(`magick "${nativeImage}" -background white -gravity center -extent ${maxWidth}x${maxHeight} "${normalizedNative}"`, { stdio: 'ignore' });
+    execSync(`convert "${uiImage}" -background white -gravity center -extent ${maxWidth}x${maxHeight} "${normalizedUI}"`, { stdio: 'ignore' });
+    execSync(`convert "${nativeImage}" -background white -gravity center -extent ${maxWidth}x${maxHeight} "${normalizedNative}"`, { stdio: 'ignore' });
     
     // Analyze differences on normalized images
     const analysisResult = analyzeSpecificDifferences(normalizedUI, normalizedNative);
@@ -273,9 +273,9 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     const labelWidth = displayWidth;
     
     try {
-      execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI (Web)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-label.png')}"`, { stdio: 'ignore' });
-      execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI-Native (React Native)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-native-label.png')}"`, { stdio: 'ignore' });
-      execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "Differences (Red = Changed)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}"`, { stdio: 'ignore' });
+      execSync(`convert -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI (Web)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-label.png')}"`, { stdio: 'ignore' });
+      execSync(`convert -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI-Native (React Native)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-native-label.png')}"`, { stdio: 'ignore' });
+      execSync(`convert -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "Differences (Red = Changed)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}"`, { stdio: 'ignore' });
     } catch (labelError) {
       console.log('⚠️  Label creation failed, continuing without labels...');
     }
@@ -292,20 +292,20 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
         try {
           // First create a difference mask
           const diffMask = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-mask.png');
-          execSync(`magick compare -fuzz 5% "${normalizedUI}" "${normalizedNative}" "${diffMask}"`, { stdio: 'ignore' });
+          execSync(`compare -fuzz 5% "${normalizedUI}" "${normalizedNative}" "${diffMask}"`, { stdio: 'ignore' });
           
           // Create the highlighted image: start with UI image, then overlay red where differences exist
-          execSync(`magick "${normalizedUI}" "${diffMask}" -compose multiply -composite "${diffHighlight}"`, { stdio: 'ignore' });
+          execSync(`convert "${normalizedUI}" "${diffMask}" -compose multiply -composite "${diffHighlight}"`, { stdio: 'ignore' });
           console.log('✅ Difference highlighting created (method 1)');
         } catch (method1Error) {
           // Method 2: Use ImageMagick's built-in compare with proper highlighting
           try {
             console.log('⚠️  Method 1 failed, trying method 2...');
-            execSync(`magick compare -fuzz 5% -highlight-color red -lowlight-color transparent "${normalizedUI}" "${normalizedNative}" "${diffHighlight}"`, { stdio: 'ignore' });
+            execSync(`compare -fuzz 5% -highlight-color red -lowlight-color transparent "${normalizedUI}" "${normalizedNative}" "${diffHighlight}"`, { stdio: 'ignore' });
             
             // Composite this over the original UI image to show differences clearly
             const tempDiff = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png');
-            execSync(`magick "${normalizedUI}" "${diffHighlight}" -composite "${tempDiff}"`, { stdio: 'ignore' });
+            execSync(`convert "${normalizedUI}" "${diffHighlight}" -composite "${tempDiff}"`, { stdio: 'ignore' });
             execSync(`mv "${tempDiff}" "${diffHighlight}"`, { stdio: 'ignore' });
             console.log('✅ Difference highlighting created (method 2)');
           } catch (method2Error) {
@@ -315,19 +315,19 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
               
               // Create a mask of differences
               const diffMask = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-mask.png');
-              execSync(`magick "${normalizedUI}" "${normalizedNative}" -compose difference -composite -threshold 5% "${diffMask}"`, { stdio: 'ignore' });
+              execSync(`convert "${normalizedUI}" "${normalizedNative}" -compose difference -composite -threshold 5% "${diffMask}"`, { stdio: 'ignore' });
               
               // Create red overlay
               const redOverlay = path.join(COMPARISON_OUTPUT_DIR, 'temp-red-overlay.png');
-              execSync(`magick "${diffMask}" -fill red -colorize 100% "${redOverlay}"`, { stdio: 'ignore' });
+              execSync(`convert "${diffMask}" -fill red -colorize 100% "${redOverlay}"`, { stdio: 'ignore' });
               
               // Composite red overlay onto UI image only where differences exist
-              execSync(`magick "${normalizedUI}" "${redOverlay}" "${diffMask}" -composite "${diffHighlight}"`, { stdio: 'ignore' });
+              execSync(`convert "${normalizedUI}" "${redOverlay}" "${diffMask}" -composite "${diffHighlight}"`, { stdio: 'ignore' });
               console.log('✅ Difference highlighting created (method 3)');
             } catch (method3Error) {
               console.log('⚠️  All diff methods failed, using side-by-side...');
               // Ultimate fallback: side-by-side comparison
-              execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
+              execSync(`convert "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
             }
           }
         }
@@ -335,14 +335,14 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
       } catch (diffError) {
         console.log('⚠️  Difference highlighting failed, using basic comparison...');
         const diffHighlight = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png');
-        execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
+        execSync(`convert "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
       }
       
     } catch (error) {
       console.log('⚠️  All difference methods failed, using basic side-by-side...');
       // Ultimate fallback: create a basic side-by-side comparison
       const diffHighlight = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png');
-      execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
+      execSync(`convert "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
     }
     
     // Resize images to display size while maintaining quality
@@ -350,9 +350,9 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     const resizedNative = path.join(COMPARISON_OUTPUT_DIR, 'temp-native-resized.png');
     const resizedDiff = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-resized.png');
     
-    execSync(`magick "${normalizedUI}" -resize ${displayWidth}x${displayHeight}! "${resizedUI}"`, { stdio: 'ignore' });
-    execSync(`magick "${normalizedNative}" -resize ${displayWidth}x${displayHeight}! "${resizedNative}"`, { stdio: 'ignore' });
-    execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png')}" -resize ${displayWidth}x${displayHeight}! "${resizedDiff}"`, { stdio: 'ignore' });
+    execSync(`convert "${normalizedUI}" -resize ${displayWidth}x${displayHeight}! "${resizedUI}"`, { stdio: 'ignore' });
+    execSync(`convert "${normalizedNative}" -resize ${displayWidth}x${displayHeight}! "${resizedNative}"`, { stdio: 'ignore' });
+    execSync(`convert "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png')}" -resize ${displayWidth}x${displayHeight}! "${resizedDiff}"`, { stdio: 'ignore' });
     
     // Try to combine with labels, fall back to simple combination
     try {
@@ -360,18 +360,18 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
       const nativeWithLabel = path.join(COMPARISON_OUTPUT_DIR, 'temp-native-with-label.png');
       const diffWithLabel = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-with-label.png');
       
-      execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-label.png')}" "${resizedUI}" -append "${uiWithLabel}"`, { stdio: 'ignore' });
-      execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-native-label.png')}" "${resizedNative}" -append "${nativeWithLabel}"`, { stdio: 'ignore' });
-      execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}" "${resizedDiff}" -append "${diffWithLabel}"`, { stdio: 'ignore' });
+      execSync(`convert "${path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-label.png')}" "${resizedUI}" -append "${uiWithLabel}"`, { stdio: 'ignore' });
+      execSync(`convert "${path.join(COMPARISON_OUTPUT_DIR, 'temp-native-label.png')}" "${resizedNative}" -append "${nativeWithLabel}"`, { stdio: 'ignore' });
+      execSync(`convert "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}" "${resizedDiff}" -append "${diffWithLabel}"`, { stdio: 'ignore' });
       
       // Combine all three images horizontally with spacing and border
-      execSync(`magick "${uiWithLabel}" "${nativeWithLabel}" "${diffWithLabel}" +append -bordercolor "#f0f0f0" -border 15x15 "${outputPath}"`, { stdio: 'ignore' });
+      execSync(`convert "${uiWithLabel}" "${nativeWithLabel}" "${diffWithLabel}" +append -bordercolor "#f0f0f0" -border 15x15 "${outputPath}"`, { stdio: 'ignore' });
       
       console.log(`📏 Final output dimensions: ${displayWidth * 3 + 30}x${displayHeight + labelHeight + 30}`);
     } catch (combineError) {
       console.log('⚠️  Label combination failed, creating simple side-by-side...');
       // Simple side-by-side without labels
-      execSync(`magick "${resizedUI}" "${resizedNative}" "${resizedDiff}" +append -bordercolor "#f0f0f0" -border 15x15 "${outputPath}"`, { stdio: 'ignore' });
+      execSync(`convert "${resizedUI}" "${resizedNative}" "${resizedDiff}" +append -bordercolor "#f0f0f0" -border 15x15 "${outputPath}"`, { stdio: 'ignore' });
     }
     
     // Clean up temporary files
@@ -407,13 +407,13 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 function calculateSimilarity(uiImage, nativeImage) {
   try {
     // Use ImageMagick to calculate the actual pixel difference
-    const command = `magick compare -metric AE -fuzz 5% "${uiImage}" "${nativeImage}" null: 2>&1`;
+    const command = `compare -metric AE -fuzz 5% "${uiImage}" "${nativeImage}" null: 2>&1`;
     const result = execSync(command, { encoding: 'utf8' });
     
     const diffPixels = parseInt(result.trim()) || 0;
     
     // Get image dimensions to calculate percentage
-    const identifyCommand = `magick identify -format "%w %h" "${uiImage}"`;
+    const identifyCommand = `identify -format "%w %h" "${uiImage}"`;
     const dimensions = execSync(identifyCommand, { encoding: 'utf8' }).trim().split(' ');
     const totalPixels = parseInt(dimensions[0]) * parseInt(dimensions[1]);
     

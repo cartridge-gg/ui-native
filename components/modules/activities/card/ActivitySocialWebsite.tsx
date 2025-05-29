@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../typography/Text';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { GlobeIcon, VerifiedIcon } from '../../../icons/utility';
+import { GlobeIcon } from '../../../icons/state';
+import { VerifiedIcon } from '../../../icons/utility';
 
 export interface ActivitySocialWebsiteProps {
   website: string;
@@ -41,7 +42,7 @@ export const ActivitySocialWebsite: React.FC<ActivitySocialWebsiteProps> = ({
     if (certified) {
       return <VerifiedIcon size="xs" color={colors.foreground[300]} />;
     }
-    return <GlobeIcon size="xs" color={colors.foreground[300]} />;
+    return <GlobeIcon variant="line" size="xs" color={colors.foreground[300]} />;
   }, [certified, colors.foreground]);
 
   return (

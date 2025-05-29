@@ -41,7 +41,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   const styles = StyleSheet.create({
     container: {
       borderRadius: 6, // rounded = 6px (web default)
-      padding: 12, // p-3 = 12px
+      paddingVertical: 11, // Slightly reduced from 12px to match web rendering
+      paddingHorizontal: 12, // p-3 = 12px
       paddingRight: 16, // pr-4 = 16px
       flexDirection: 'row',
       alignItems: 'center',
