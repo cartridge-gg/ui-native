@@ -1,45 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { Pressable, Text, View, TextStyle, Animated } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import React from 'react';
+import { Pressable, Text, View, TextStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-
-// Custom Spinner component that matches UI web version with animation
-const Spinner = ({ color, size = 16 }: { color: string; size?: number }) => {
-  const spinValue = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const spin = () => {
-      spinValue.setValue(0);
-      Animated.timing(spinValue, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start(() => spin());
-    };
-    spin();
-  }, [spinValue]);
-
-  const rotate = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  return (
-    <Animated.View style={{ transform: [{ rotate }] }}>
-      <Svg width={size} height={size} viewBox="0 0 24 24">
-        <Path
-          fill={color}
-          d="M11.111 5.778c0-.491.398-.89.89-.89a7.11 7.11 0 0 1 6.158 10.668c-.245.425-.79.572-1.24.325-.4-.245-.544-.79-.3-1.24.453-.758.715-1.669.715-2.666A5.335 5.335 0 0 0 12 6.642a.873.873 0 0 1-.889-.89v.026Z"
-        />
-        <Path
-          fill={color}
-          opacity="0.25"
-          d="M11.975 6.667A5.319 5.319 0 0 0 6.64 12a5.335 5.335 0 0 0 5.334 5.333 5.34 5.34 0 0 0 4.605-2.6l.003.003a.906.906 0 0 0 .336 1.145c.45.247.995.1 1.24-.325A7.106 7.106 0 0 1 12 19.112 7.11 7.11 0 0 1 4.888 12a7.11 7.11 0 0 1 7.11-7.111.888.888 0 1 0 0 1.778h-.024Z"
-        />
-      </Svg>
-    </Animated.View>
-  );
-};
+import { Spinner } from '../spinner/Spinner';
+import { getSizeValue } from '../../icons/utils';
 
 export interface ButtonProps {
   children?: React.ReactNode;
@@ -283,7 +246,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <Spinner color={textColor} size={16} />
+          <Spinner color={textColor} size="sm" />
         ) : (
           <>
             {typeof children === 'string' ? (

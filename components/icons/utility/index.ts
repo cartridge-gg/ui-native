@@ -1,7 +1,11 @@
 export { AlertIcon } from './AlertIcon';
+export { CheckIcon } from './CheckIcon';
 export { GlobeIcon } from './GlobeIcon';
 export { JoystickIcon } from './JoystickIcon';
+export { MinusIcon } from './MinusIcon';
+export { SearchIcon } from './SearchIcon';
 export { SparklesIcon } from './SparklesIcon';
 export { SpinnerIcon } from './SpinnerIcon';
+export { TimesIcon } from './TimesIcon';
 export { TrophyIcon } from './TrophyIcon';
 export { VerifiedIcon } from './VerifiedIcon';
