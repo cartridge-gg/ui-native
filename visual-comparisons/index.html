@@ -1,1358 +1,161 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UI Component Migration Progress - React Native</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement Card Visual Comparison</title>
   <style>
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       margin: 0; 
       padding: 20px; 
-      background: #f8fafc; 
-      color: #1e293b;
+            background-color: #f5f5f5;
     }
-    .header { 
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
       background: white; 
-      padding: 32px; 
-      border-radius: 12px; 
-      margin-bottom: 24px; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .header h1 { 
-      margin: 0 0 8px 0; 
-      color: #0f172a; 
-      font-size: 2rem; 
-      font-weight: 700;
-    }
-    .header p { 
-      margin: 0; 
-      color: #64748b; 
-      font-size: 1.1rem;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .comparison-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #495057;
     }
     .stats { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-      gap: 20px; 
-      margin-bottom: 32px; 
+            gap: 15px;
+            margin-top: 15px;
     }
     .stat { 
       background: white; 
-      padding: 24px; 
-      border-radius: 12px; 
-      text-align: center; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .stat h3 { 
-      margin: 0 0 8px 0; 
-      font-size: 2.5rem; 
-      font-weight: 700; 
-      color: #059669;
-    }
-    .stat p { 
-      margin: 0; 
-      color: #64748b; 
-      font-weight: 500;
-    }
-    .category { 
-      background: white; 
-      margin-bottom: 24px; 
-      border-radius: 12px; 
-      overflow: hidden; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .category h3 { 
-      background: #1e293b; 
-      color: white; 
-      margin: 0; 
-      padding: 20px 24px; 
-      font-size: 1.2rem; 
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 18px;
       font-weight: 600;
-    }
-    .component-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-      gap: 1px; 
-      background: #e2e8f0;
-    }
-    .component-item { 
-      background: white; 
-      padding: 16px 20px; 
+            color: #212529;
+        }
+        .legend {
       display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-    }
-    .component-name { 
-      font-weight: 600; 
-      color: #1e293b;
-    }
-    .component-status { 
-      color: #059669; 
-      font-size: 0.9rem; 
-      font-weight: 500;
-    }
-    .summary { 
-      background: white; 
-      padding: 24px; 
-      border-radius: 12px; 
-      margin-bottom: 24px; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .summary h2 { 
-      margin: 0 0 16px 0; 
-      color: #1e293b;
-    }
-    .achievement { 
-      background: linear-gradient(135deg, #059669, #10b981); 
-      color: white; 
-      padding: 20px; 
-      border-radius: 8px; 
-      margin-bottom: 16px;
-    }
-    .achievement h4 { 
-      margin: 0 0 8px 0; 
-      font-size: 1.1rem;
-    }
-    .achievement p { 
-      margin: 0; 
-      opacity: 0.9;
-    }
-    .comparison-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .comparison-stat {
-      background: #f1f5f9;
-      padding: 16px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .comparison-stat.warning {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .comparison-stat.success {
-      background: #dcfce7;
-      color: #166534;
-    }
-    .comparison-stat h4 {
-      margin: 0 0 4px 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .comparison-stat p {
-      margin: 0;
-      font-size: 0.9rem;
-    }
-    .visual-comparison {
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
-    .comparison-header {
-      background: #f8fafc;
-      padding: 16px 20px;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .comparison-header h4 {
-      margin: 0;
-      color: #1e293b;
-    }
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .status-identical {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .status-different {
-      background: #dcfce7;
-      color: #166534;
-    }
-    .status-visual {
-      background: #e0e7ff;
-      color: #3730a3;
-    }
-    .comparison-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: #e2e8f0;
-    }
-    .comparison-side {
-      background: white;
-      padding: 20px;
-      text-align: center;
-    }
-    .comparison-side h5 {
-      margin: 0 0 12px 0;
-      color: #64748b;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .comparison-side img {
-      max-width: 100%;
-      border: 1px solid #e2e8f0;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
       border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .file-info {
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: #64748b;
-      font-family: 'SF Mono', Monaco, monospace;
-    }
-    .no-screenshots {
-      text-align: center;
-      padding: 40px 20px;
-      color: #64748b;
-    }
-    .no-screenshots h4 {
-      color: #dc2626;
-      margin-bottom: 16px;
-    }
-    .no-screenshots ol {
-      text-align: left;
-      display: inline-block;
-      margin: 16px 0;
-    }
-    .code-block {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 16px;
-      border-radius: 8px;
-      margin-top: 16px;
-    }
-    .code-block code {
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.9rem;
-    }
-    .comparison-note {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    .comparison-note h4 {
-      margin: 0 0 8px 0;
-      color: #1e293b;
-    }
-    .comparison-note p {
-      margin: 0;
-      color: #64748b;
-      line-height: 1.5;
-    }
+            border: 1px solid #ddd;
+        }
+        .ui-color { background: #e3f2fd; }
+        .native-color { background: #f3e5f5; }
+        .diff-color { background: #ffebee; }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>🎉 UI Library Migration Progress</h1>
-    <p>React Native component library migration with visual comparisons</p>
-  </div>
-  
+    <div class="container">
+        <h1>🎯 Achievement Card Visual Comparison</h1>
+        
+        <div class="info">
+            <h3>📊 Comparison Results</h3>
   <div class="stats">
     <div class="stat">
-      <h3>46</h3>
-      <p>Components Migrated</p>
+                    <div class="stat-label">Pixel Similarity</div>
+                    <div class="stat-value">88.7%</div>
     </div>
     <div class="stat">
-      <h3>96</h3>
-      <p>Remaining Components</p>
+                    <div class="stat-label">UI Dimensions</div>
+                    <div class="stat-value">1248×292</div>
     </div>
     <div class="stat">
-      <h3>32%</h3>
-      <p>Migration Progress</p>
+                    <div class="stat-label">Native Dimensions</div>
+                    <div class="stat-value">1248×300</div>
     </div>
     <div class="stat">
-      <h3>33</h3>
-      <p>Component Categories</p>
-    </div>
-  </div>
-
-  
-    <div class="summary">
-      <h2>📸 Visual Comparisons</h2>
-      <div class="comparison-stats">
-        <div class="comparison-stat success">
-          <h4>26</h4>
-          <p>Visual Comparisons</p>
-        </div>
-        <div class="comparison-stat">
-          <h4>React Native</h4>
-          <p>Platform Rendering</p>
-        </div>
-        <div class="comparison-stat">
-          <h4>Web</h4>
-          <p>Browser Rendering</p>
-        </div>
-      </div>
-      
-      <div class="comparison-note">
-        <h4>🎨 Platform-Specific Visual Differences</h4>
-        <p>The comparisons below show how the same components render differently on React Native vs Web platforms. 
-        Differences are expected and normal due to platform-specific styling, fonts, and rendering engines.</p>
-      </div>
-      
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-activities-card - achievement</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-activities-card--achievement-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-activities-card--achievement-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
+                    <div class="stat-label">Output Resolution</div>
+                    <div class="stat-value">1830×214</div>
             </div>
           </div>
         </div>
       
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-activities-card - game</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-activities-card--game-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color ui-color"></div>
+                <span>UI (Web) Version</span>
             </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-activities-card--game-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
+            <div class="legend-item">
+                <div class="legend-color native-color"></div>
+                <span>UI-Native (React Native) Version</span>
             </div>
+            <div class="legend-item">
+                <div class="legend-color diff-color"></div>
+                <span>50/50 Blend (Shows Differences)</span>
           </div>
         </div>
       
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-activities-card - token</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-activities-card--token-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-activities-card--token-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
+        <img src="achievement-card-comparison.png" alt="Achievement Card Visual Comparison" class="comparison-image">
+        
+        <div class="info">
+            <h3>🎯 Additional Comparisons</h3>
+            <p><strong>Animated GIF:</strong> <a href="achievement-card-animated.gif" target="_blank">achievement-card-animated.gif</a> - Flip between UI and UI-Native versions to easily spot differences</p>
         </div>
       
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-collectibles-asset-card - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-collectibles-asset-card--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-collectibles-asset-card--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
+        <div class="info">
+            <h3>🔍 Analysis</h3>
+            <p>The comparison shows the UI (Web) version on the left, the UI-Native (React Native) version in the center, and a 50/50 blend on the right that makes differences more visible.</p>
+            <p><strong>Key Findings:</strong></p>
+            <ul>
+                <li>Height difference: UI-Native is 8 pixels taller (300px vs 292px)</li>
+                <li>Pixel similarity: 88.7% (below 90% threshold)</li>
+                <li>High-resolution output: 1830×214 pixels for detailed analysis</li>
+                <li>50/50 blend clearly shows areas where the images differ</li>
+            </ul>
+            <p><strong>Status:</strong> ❌ Images need alignment to reach ≥90% similarity threshold</p>
+            <p><strong>Improvements Made:</strong></p>
+            <ul>
+                <li>✅ Higher resolution output (600px width per panel vs 400px previously)</li>
+                <li>✅ More useful difference visualization with 50/50 blend</li>
+                <li>✅ Animated GIF for easy difference spotting</li>
+                <li>✅ Side-by-side comparison for direct visual comparison</li>
+                <li>✅ Larger, clearer labels for better readability</li>
+            </ul>
         </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-tokens-card - decreasing</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-tokens-card--decreasing-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-tokens-card--decreasing-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-tokens-card - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-tokens-card--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-tokens-card--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-tokens-card - increasing</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-tokens-card--increasing-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-tokens-card--increasing-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>modules-tokens-card - with-value</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/modules-tokens-card--with-value-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/modules-tokens-card--with-value-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-accordion - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-accordion--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-accordion--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-alert - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-alert--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-alert--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-badge - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-badge--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-badge--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-badge - muted</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-badge--muted-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-badge--muted-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-badge - primary</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-badge--primary-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-badge--primary-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-breadcrumb - custom-separator</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-breadcrumb--custom-separator-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-breadcrumb--custom-separator-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-breadcrumb - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-breadcrumb--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-breadcrumb--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-button - disabled</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-button--disabled-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-button--disabled-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-button - secondary</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-button--secondary-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-button--secondary-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-command - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-command--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-command--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-input - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-input--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-input--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-input - loading</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-input--loading-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-input--loading-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-popover - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-popover--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-popover--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-select - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-select--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-select--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-tabs - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-tabs--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-tabs--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-toast - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-toast--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-toast--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-toggle - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-toggle--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-toggle--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="visual-comparison">
-          <div class="comparison-header">
-            <h4>primitives-tooltip - default</h4>
-            <span class="status-badge status-visual">
-              🎨 Platform Comparison
-            </span>
-          </div>
-          <div class="comparison-content">
-            <div class="comparison-side">
-              <h5>Web (React)</h5>
-              <img src="../../ui/__image_snapshots__/primitives-tooltip--default-chromium.png" alt="Web version" />
-              <div class="file-info">Browser rendering</div>
-            </div>
-            <div class="comparison-side">
-              <h5>React Native</h5>
-              <img src="../__image_snapshots__/primitives-tooltip--default-chromium.png" alt="React Native version" />
-              <div class="file-info">Native rendering</div>
-            </div>
-          </div>
-        </div>
-      
-    </div>
-  
-
-  <div class="summary">
-    <h2>🚀 Migration Achievements</h2>
-    <div class="achievement">
-      <h4>Production-Ready Components</h4>
-      <p>All 46 migrated components are production-ready with full feature parity, theme integration, and comprehensive Storybook documentation.</p>
-    </div>
-    <div class="achievement">
-      <h4>Advanced Component Patterns</h4>
-      <p>Successfully implemented complex patterns including context-based components, compound components, and advanced overlay systems.</p>
-    </div>
-    <div class="achievement">
-      <h4>Development Velocity</h4>
-      <p>Achieved extraordinary development speed with comprehensive quality assurance and visual fidelity matching.</p>
-    </div>
-  </div>
-
-  <div class="summary">
-    <h2>📊 Component Breakdown</h2>
-    
-        <div class="category">
-          <h3>Core (3 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Container</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">EditScreenInfo</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">ScreenContent</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Icons/utility (7 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">AlertIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">GlobeIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">JoystickIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">SparklesIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">SpinnerIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">TrophyIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">VerifiedIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Modules/activities/card (4 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">ActivityAchievementCard</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">ActivityCard</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">ActivityGameCard</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">ActivitySocialWebsite</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Modules/collectibles/asset-card (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">AssetCard</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Modules/thumbnails/sub-icon (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">ThumbnailsSubIcon</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Modules/thumbnails/thumbnail (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Thumbnail</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Modules/tokens/card (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">TokenCard</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/accordion (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Accordion</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/alert (2 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Alert</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">AlertDialog</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/badge (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Badge</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/breadcrumb (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Breadcrumb</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/button (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Button</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/card (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Card</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/checkbox (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Checkbox</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/command (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Command</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/dropdown-menu (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">DropdownMenu</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/input (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Input</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/modal (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Modal</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/popover (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Popover</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/progress (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Progress</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/progress-bar (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">ProgressBar</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/qr-code (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">QRCode</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/radio-group (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">RadioGroup</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/select (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Select</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/separator (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Separator</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/skeleton (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Skeleton</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/tabs (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Tabs</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/toast (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Toast</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/toggle (2 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Switch</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-              <div class="component-item">
-                <div class="component-name">Toggle</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/toggle-group (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">ToggleGroup</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Primitives/tooltip (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Tooltip</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Theme (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">ThemeProvider</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-        <div class="category">
-          <h3>Typography (1 components)</h3>
-          <div class="component-grid">
-            
-              <div class="component-item">
-                <div class="component-name">Text</div>
-                <div class="component-status">✅ Migrated</div>
-              </div>
-            
-          </div>
-        </div>
-      
-  </div>
-
-  <div class="summary">
-    <h2>🎯 Next Steps</h2>
-    <p><strong>Immediate Priorities:</strong></p>
-    <ul>
-      <li>Generate React Native specific screenshots for visual comparison</li>
-      <li>Continue with remaining primitive components</li>
-      <li>Expand module component library</li>
-      <li>Implement icon system migration</li>
-      <li>Add advanced animation and gesture support</li>
-    </ul>
-    
-    <p><strong>Quality Metrics:</strong></p>
-    <ul>
-      <li>✅ 100% TypeScript coverage</li>
-      <li>✅ Complete theme integration</li>
-      <li>✅ Comprehensive Storybook documentation</li>
-      <li>✅ Production-ready component quality</li>
-    </ul>
   </div>
 </body>
 </html>

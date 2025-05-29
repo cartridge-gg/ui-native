@@ -26,7 +26,8 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  // Force dark mode to match UI web version
+  const isDark = true; // colorScheme === 'dark';
   
   return (
     <ThemeContext.Provider value={{ 

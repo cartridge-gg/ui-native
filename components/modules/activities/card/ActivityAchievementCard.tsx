@@ -36,9 +36,11 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
 
   const Icon = useMemo(
     () => (
-      <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <TrophyIcon size="xs" color={colors.foreground[100]} />
-      </View>
+      <TrophyIcon
+        color={colors.foreground[100]}
+        variant="solid"
+        style={{ width: '100%', height: '100%' }}
+      />
     ),
     [colors.foreground]
   );
@@ -50,7 +52,6 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
         subIcon={
           <ThumbnailsSubIcon
             variant="light"
-            size="lg"
             Icon={Icon}
           />
         }
@@ -58,8 +59,9 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
         loading={loading}
         size="lg"
         variant="light"
-        centered
-        style={!error && !loading ? { backgroundColor: colors.primary[100] } : undefined}
+        style={!error && !loading ? { 
+          color: colors.primary[100] 
+        } : undefined}
       />
     ),
     [image, error, loading, Icon, colors.primary]
@@ -72,8 +74,18 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
   const Points = useMemo(() => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-        <SparklesIcon size="xs" color={colors.foreground[300]} />
-        <Text style={{ fontSize: 12, color: colors.foreground[300] }}>{points}</Text>
+        <SparklesIcon 
+          size="xs" 
+          color={colors.foreground[300]}
+          variant="solid"
+        />
+        <Text style={{ 
+          fontSize: 12, 
+          color: colors.foreground[300],
+          fontWeight: '400'
+        }}>
+          {points}
+        </Text>
       </View>
     );
   }, [points, colors.foreground]);

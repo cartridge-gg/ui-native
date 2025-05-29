@@ -79,18 +79,20 @@ export const Token: Story = {
 
 export const Achievement: Story = {
   render: () => (
-    <View style={{ gap: 12 }}>
+    <View style={{ gap: 9 }}>
       <ActivityAchievementCard
         title="Achievement"
         website="https://lootsurvivor.io"
         topic="Squire"
         points={20}
+        image="fa-seedling"
       />
       <ActivityAchievementCard
         title="Achievement"
         website="https://lootsurvivor.io"
         topic="Squire"
         points={20}
+        image="fa-seedling"
         certified
       />
       <ActivityAchievementCard
@@ -98,6 +100,7 @@ export const Achievement: Story = {
         website="https://lootsurvivor.io"
         topic="Squire"
         points={20}
+        image="fa-seedling"
         loading
       />
       <ActivityAchievementCard
@@ -105,6 +108,7 @@ export const Achievement: Story = {
         website="https://lootsurvivor.io"
         topic="Squire"
         points={20}
+        image="fa-seedling"
         error
       />
     </View>

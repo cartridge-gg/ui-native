@@ -11,9 +11,27 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    backgrounds: {
+      default: 'dark',
+      values: [
+        {
+          name: 'dark',
+          value: '#161a17',
+        },
+      ],
+    },
   },
   decorators: [
-    (Story) => React.createElement(ThemeProvider, { children: React.createElement(Story) }),
+    (Story) => {
+      // Force dark mode to match UI web version
+      React.useEffect(() => {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+        document.body.style.backgroundColor = '#161a17';
+      }, []);
+      
+      return React.createElement(ThemeProvider, { children: React.createElement(Story) });
+    },
   ],
   tags: ['autodocs'],
 };
