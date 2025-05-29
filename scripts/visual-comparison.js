@@ -232,9 +232,9 @@ function generateFixSuggestions(analysisResult, uiImage, nativeImage) {
   }
   
   console.log('\n🔧 Recommended next steps:');
-  console.log('   1. Open the animated GIF to see what\'s changing');
-  console.log('   2. Check the 50/50 blend to identify problem areas');
-  console.log('   3. Focus on the most obvious differences first');
+  console.log('   1. Check the red highlighted differences in the comparison image');
+  console.log('   2. Focus on the most obvious differences first');
+  console.log('   3. Make targeted fixes based on the highlighted areas');
   console.log('   4. Re-run this tool after each fix to track progress');
 }
 
@@ -275,7 +275,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     try {
       execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI (Web)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-ui-label.png')}"`, { stdio: 'ignore' });
       execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "UI-Native (React Native)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-native-label.png')}"`, { stdio: 'ignore' });
-      execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "50/50 Blend (Shows Differences)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}"`, { stdio: 'ignore' });
+      execSync(`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "Differences (Red = Changed)" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-label.png')}"`, { stdio: 'ignore' });
     } catch (labelError) {
       console.log('⚠️  Label creation failed, continuing without labels...');
     }
@@ -283,29 +283,66 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     try {
       console.log('🎨 Creating useful difference visualization...');
       
-      // Method 1: Create side-by-side comparison (most useful for direct comparison)
-      execSync(`magick "${normalizedUI}" "${normalizedNative}" +append -bordercolor red -border 1x0 "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff.png')}"`, { stdio: 'ignore' });
-      console.log('✅ Side-by-side comparison created');
-      
-      // Method 2: Create animated GIF for easy difference spotting
+      // Method 1: Create proper difference highlighting (like test-diff.png)
       try {
-        const animatedGif = path.join(COMPARISON_OUTPUT_DIR, `${snapshotName}-animated.gif`);
-        execSync(`magick "${normalizedUI}" "${normalizedNative}" -delay 100 -loop 0 "${animatedGif}"`, { stdio: 'ignore' });
-        console.log(`✅ Animated GIF created: ${snapshotName}-animated.gif`);
+        // Create a difference image that shows the UI image with differences highlighted in red
+        const diffHighlight = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png');
         
-        // For the overlay, use a 50/50 blend which shows differences well
-        execSync(`magick "${normalizedUI}" "${normalizedNative}" -compose blend -define compose:args=50,50 -composite "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png')}"`, { stdio: 'ignore' });
-        console.log('✅ 50/50 blend overlay created');
-      } catch (overlayErr) {
-        console.log('⚠️  Overlay failed, using side-by-side...');
-        execSync(`cp "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff.png')}" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png')}"`, { stdio: 'ignore' });
+        // Method 1: Create a proper diff that shows base image with red highlights on differences
+        try {
+          // First create a difference mask
+          const diffMask = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-mask.png');
+          execSync(`magick compare -fuzz 5% "${normalizedUI}" "${normalizedNative}" "${diffMask}"`, { stdio: 'ignore' });
+          
+          // Create the highlighted image: start with UI image, then overlay red where differences exist
+          execSync(`magick "${normalizedUI}" "${diffMask}" -compose multiply -composite "${diffHighlight}"`, { stdio: 'ignore' });
+          console.log('✅ Difference highlighting created (method 1)');
+        } catch (method1Error) {
+          // Method 2: Use ImageMagick's built-in compare with proper highlighting
+          try {
+            console.log('⚠️  Method 1 failed, trying method 2...');
+            execSync(`magick compare -fuzz 5% -highlight-color red -lowlight-color transparent "${normalizedUI}" "${normalizedNative}" "${diffHighlight}"`, { stdio: 'ignore' });
+            
+            // Composite this over the original UI image to show differences clearly
+            const tempDiff = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png');
+            execSync(`magick "${normalizedUI}" "${diffHighlight}" -composite "${tempDiff}"`, { stdio: 'ignore' });
+            execSync(`mv "${tempDiff}" "${diffHighlight}"`, { stdio: 'ignore' });
+            console.log('✅ Difference highlighting created (method 2)');
+          } catch (method2Error) {
+            // Method 3: Manual approach - create red overlay only where pixels differ
+            try {
+              console.log('⚠️  Method 2 failed, trying method 3...');
+              
+              // Create a mask of differences
+              const diffMask = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-mask.png');
+              execSync(`magick "${normalizedUI}" "${normalizedNative}" -compose difference -composite -threshold 5% "${diffMask}"`, { stdio: 'ignore' });
+              
+              // Create red overlay
+              const redOverlay = path.join(COMPARISON_OUTPUT_DIR, 'temp-red-overlay.png');
+              execSync(`magick "${diffMask}" -fill red -colorize 100% "${redOverlay}"`, { stdio: 'ignore' });
+              
+              // Composite red overlay onto UI image only where differences exist
+              execSync(`magick "${normalizedUI}" "${redOverlay}" "${diffMask}" -composite "${diffHighlight}"`, { stdio: 'ignore' });
+              console.log('✅ Difference highlighting created (method 3)');
+            } catch (method3Error) {
+              console.log('⚠️  All diff methods failed, using side-by-side...');
+              // Ultimate fallback: side-by-side comparison
+              execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
+            }
+          }
+        }
+        
+      } catch (diffError) {
+        console.log('⚠️  Difference highlighting failed, using basic comparison...');
+        const diffHighlight = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png');
+        execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
       }
       
     } catch (error) {
       console.log('⚠️  All difference methods failed, using basic side-by-side...');
       // Ultimate fallback: create a basic side-by-side comparison
-      execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff.png')}"`, { stdio: 'ignore' });
-      execSync(`cp "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff.png')}" "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png')}"`, { stdio: 'ignore' });
+      const diffHighlight = path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png');
+      execSync(`magick "${normalizedUI}" "${normalizedNative}" +append "${diffHighlight}"`, { stdio: 'ignore' });
     }
     
     // Resize images to display size while maintaining quality
@@ -315,7 +352,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     
     execSync(`magick "${normalizedUI}" -resize ${displayWidth}x${displayHeight}! "${resizedUI}"`, { stdio: 'ignore' });
     execSync(`magick "${normalizedNative}" -resize ${displayWidth}x${displayHeight}! "${resizedNative}"`, { stdio: 'ignore' });
-    execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-overlay.png')}" -resize ${displayWidth}x${displayHeight}! "${resizedDiff}"`, { stdio: 'ignore' });
+    execSync(`magick "${path.join(COMPARISON_OUTPUT_DIR, 'temp-diff-highlight.png')}" -resize ${displayWidth}x${displayHeight}! "${resizedDiff}"`, { stdio: 'ignore' });
     
     // Try to combine with labels, fall back to simple combination
     try {
@@ -339,7 +376,8 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
     
     // Clean up temporary files
     const tempFiles = [
-      'temp-ui-normalized.png', 'temp-native-normalized.png', 'temp-diff.png', 'temp-diff-overlay.png',
+      'temp-ui-normalized.png', 'temp-native-normalized.png', 'temp-diff-mask.png', 'temp-diff-highlight.png',
+      'temp-diff-overlay.png', 'temp-red-overlay.png',
       'temp-ui-label.png', 'temp-native-label.png', 'temp-diff-label.png',
       'temp-ui-resized.png', 'temp-native-resized.png', 'temp-diff-resized.png',
       'temp-ui-with-label.png', 'temp-native-with-label.png', 'temp-diff-with-label.png'
@@ -471,9 +509,8 @@ function compareSnapshots(snapshots) {
         console.log('📖 The comparison image shows:');
         console.log('   • Left: UI (Web) version');
         console.log('   • Center: UI-Native (React Native) version');
-        console.log('   • Right: 50/50 blend showing differences');
+        console.log('   • Right: Differences (Red = Changed)');
         console.log('');
-        console.log(`🎬 Also check: ${snapshotName}-animated.gif`);
         
         if (analysisResult.perfect) {
           console.log('\n🎉 PERFECT MATCH! No further changes needed.');
@@ -533,4 +570,4 @@ if (matchingSnapshots.length === 0) {
   process.exit(1);
 }
 
-compareSnapshots(matchingSnapshots); 
+compareSnapshots(matchingSnapshots);

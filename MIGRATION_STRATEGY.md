@@ -134,8 +134,7 @@ node scripts/visual-comparison.js [component-name]
 ```
 
 **Expected outputs**:
-- Static comparison image (side-by-side with 50/50 blend)
-- Animated GIF showing differences
+- Static comparison image (side-by-side with red difference highlighting)
 - Detailed analysis report
 - Fix suggestions
 
@@ -195,7 +194,7 @@ node scripts/visual-comparison.js [component-name]
 **Iteration Guidelines**:
 - Make one logical change at a time
 - Test after each change to track progress
-- Use the animated GIF to spot remaining differences
+- Focus on the red highlighted differences in the comparison image
 - Focus on the most obvious differences first
 
 #### Step 11: Fine-tuning
