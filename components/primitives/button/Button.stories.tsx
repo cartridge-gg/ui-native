@@ -7,49 +7,95 @@ const meta: Meta<typeof Button> = {
   parameters: {
     layout: 'centered',
   },
+  tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary'],
-    },
-    isLoading: {
-      control: { type: 'boolean' },
+    children: {
+      control: 'text',
+      description: 'label',
     },
     disabled: {
-      control: { type: 'boolean' },
+      control: 'boolean',
+      description: 'Gray out a button when disabled',
+    },
+    isLoading: {
+      control: 'boolean',
+      description: 'Show loading indicator.',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Button>;
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    title: 'Primary Button',
-    variant: 'primary',
+    children: 'sign up',
+  },
+};
+
+export const DefaultLoading: Story = {
+  args: {
+    children: 'sign up',
+    isLoading: true,
+  },
+};
+
+export const DefaultDisabled: Story = {
+  args: {
+    children: 'sign up',
+    disabled: true,
   },
 };
 
 export const Secondary: Story = {
   args: {
-    title: 'Secondary Button',
+    children: 'skip',
     variant: 'secondary',
   },
 };
 
-export const Loading: Story = {
+export const SecondaryLoading: Story = {
   args: {
-    title: 'Loading Button',
-    variant: 'primary',
+    children: 'skip',
+    variant: 'secondary',
     isLoading: true,
   },
 };
 
-export const Disabled: Story = {
+export const SecondaryDisabled: Story = {
   args: {
-    title: 'Disabled Button',
-    variant: 'primary',
+    children: 'skip',
     disabled: true,
+    variant: 'secondary',
+  },
+};
+
+export const Tertiary: Story = {
+  args: {
+    children: '$1',
+    variant: 'tertiary',
+  },
+};
+
+export const TertiaryLoading: Story = {
+  args: {
+    children: '$1',
+    variant: 'tertiary',
+    isLoading: true,
+  },
+};
+
+export const TertiaryActive: Story = {
+  args: {
+    children: '$1',
+    variant: 'tertiary',
+    isActive: true,
+  },
+};
+
+export const ExternalLink: Story = {
+  args: {
+    children: 'View on Starkscan',
+    variant: 'link',
   },
 }; 
