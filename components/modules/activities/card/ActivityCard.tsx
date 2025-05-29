@@ -53,16 +53,17 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       borderRadius: 6, // rounded = 6px
     },
     content: {
-      flex: 1,
       flexDirection: 'column',
       gap: 2, // gap-0.5 = 2px
+      alignItems: 'stretch',
+      flexGrow: 1,
       overflow: 'hidden',
     },
     topRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
       gap: 24, // gap-6 = 24px
+      justifyContent: 'space-between',
     },
     title: {
       fontSize: 14, // text-sm = 14px
@@ -74,14 +75,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       fontSize: 14, // text-sm = 14px
       fontWeight: '500', // font-medium
       color: getTextColor(),
-      flex: 1,
-      textAlign: 'right',
     },
     bottomRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
       gap: 4, // gap-1 = 4px
+      justifyContent: 'space-between',
     },
     subTitle: {
       fontSize: 12, // text-xs = 12px
@@ -99,24 +98,20 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       <View style={styles.content}>
         <View style={styles.topRow}>
           <Text style={styles.title}>{title}</Text>
-          {topic && <Text style={styles.topic} numberOfLines={1}>{topic}</Text>}
+          {topic && <Text style={styles.topic} numberOfLines={1} ellipsizeMode="tail">{topic}</Text>}
         </View>
         <View style={styles.bottomRow}>
-          <View style={{ flex: 1 }}>
-            {typeof subTitle === 'string' ? (
-              <Text style={styles.subTitle}>{subTitle}</Text>
-            ) : (
-              subTitle
-            )}
-          </View>
+          {typeof subTitle === 'string' ? (
+            <Text style={styles.subTitle}>{subTitle}</Text>
+          ) : (
+            subTitle
+          )}
           {subTopic && (
-            <View>
-              {typeof subTopic === 'string' ? (
-                <Text style={styles.subTopic}>{subTopic}</Text>
-              ) : (
-                subTopic
-              )}
-            </View>
+            typeof subTopic === 'string' ? (
+              <Text style={styles.subTopic}>{subTopic}</Text>
+            ) : (
+              subTopic
+            )
           )}
         </View>
       </View>

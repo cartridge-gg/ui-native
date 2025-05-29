@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/react';
+import React from 'react';
+import { ThemeProvider } from '../components/theme/ThemeProvider';
 import '../global.css';
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -9,7 +12,9 @@ const preview: Preview = {
       },
     },
   },
-
+  decorators: [
+    (Story) => React.createElement(ThemeProvider, { children: React.createElement(Story) }),
+  ],
   tags: ['autodocs'],
 };
 

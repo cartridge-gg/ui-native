@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { View, Image } from 'react-native';
-import { ActivityCard, ActivityAchievementCard } from './';
+import { ActivityCard, ActivityAchievementCard, ActivityGameCard } from './';
 import { Text } from '../../../typography/Text';
 
 const meta: Meta<typeof ActivityCard> = {
@@ -38,11 +38,33 @@ const MockTokenLogo = () => (
 );
 
 export const Game: Story = {
-  args: {
-    Logo: <MockLogo />,
-    title: 'Attack',
-    subTitle: 'lootsurvivor.io',
-  },
+  render: () => (
+    <View style={{ gap: 12 }}>
+      <ActivityGameCard
+        title="Attack"
+        website="https://lootsurvivor.io"
+        image="https://raw.githubusercontent.com/cartridge-gg/presets/refs/heads/main/configs/loot-survivor/icon.png"
+      />
+      <ActivityGameCard
+        title="Attack"
+        website="https://lootsurvivor.io"
+        image="https://raw.githubusercontent.com/cartridge-gg/presets/refs/heads/main/configs/loot-survivor/icon.png"
+        certified
+      />
+      <ActivityGameCard
+        title="Attack"
+        website="https://lootsurvivor.io"
+        image="https://raw.githubusercontent.com/cartridge-gg/presets/refs/heads/main/configs/loot-survivor/icon.png"
+        loading
+      />
+      <ActivityGameCard
+        title="Attack"
+        website="https://lootsurvivor.io"
+        image="https://raw.githubusercontent.com/cartridge-gg/presets/refs/heads/main/configs/loot-survivor/icon.png"
+        error
+      />
+    </View>
+  ),
 };
 
 export const Token: Story = {

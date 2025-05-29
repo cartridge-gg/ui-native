@@ -12,24 +12,32 @@ export interface IconProps {
   style?: any;
 }
 
-export const VerifiedIcon: React.FC<IconProps> = ({ 
-  size = 'default', 
-  color, 
+export const VerifiedIcon: React.FC<IconProps> = ({
+  size = 'default',
+  color,
   variant = 'solid',
   style,
 }) => {
   const { colors } = useTheme();
-  
+
   const getSizeValue = () => {
     switch (size) {
-      case 'xs': return 16;
-      case 'sm': return 20;
-      case 'default': return 24;
-      case 'lg': return 32;
-      case 'xl': return 48;
-      case '2xl': return 56;
-      case '3xl': return 72;
-      default: return 24;
+      case 'xs':
+        return 16;
+      case 'sm':
+        return 20;
+      case 'default':
+        return 24;
+      case 'lg':
+        return 32;
+      case 'xl':
+        return 48;
+      case '2xl':
+        return 56;
+      case '3xl':
+        return 72;
+      default:
+        return 24;
     }
   };
 
@@ -37,27 +45,11 @@ export const VerifiedIcon: React.FC<IconProps> = ({
   const iconColor = color || colors.foreground[100];
 
   return (
-    <Svg 
-      width={sizeValue} 
-      height={sizeValue} 
-      viewBox="0 0 24 24" 
-      style={style}
-    >
-      {variant === 'solid' ? (
-        <Path 
-          fill={iconColor}
-          d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V4.5C15 3.4 14.6 2.4 13.9 1.7L12 0L10.1 1.7C9.4 2.4 9 3.4 9 4.5V6.5L3 7V9L9 9.5V11.5C9 12.6 9.4 13.6 10.1 14.3L12 16L13.9 14.3C14.6 13.6 15 12.6 15 11.5V9.5L21 9ZM7 10.5L5 10.2V8.8L7 8.5V10.5ZM17 10.5V8.5L19 8.8V10.2L17 10.5Z"
-        />
-      ) : (
-        <Path 
-          fill="none"
-          stroke={iconColor}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      )}
+    <Svg width={sizeValue} height={sizeValue} viewBox="0 0 24 24" style={style}>
+      <Path
+        fill={iconColor}
+        d="M12 4C13.15 4 14.15 4.64687 14.6531 5.59687C15.6812 5.28125 16.8438 5.53125 17.6562 6.34375C18.4688 7.15625 18.7188 8.32188 18.4031 9.34688C19.3531 9.85 20 10.85 20 12C20 13.15 19.3531 14.15 18.4031 14.6531C18.7188 15.6812 18.4688 16.8438 17.6562 17.6562C16.8438 18.4688 15.6781 18.7188 14.6531 18.4031C14.15 19.3531 13.15 20 12 20C10.85 20 9.85 19.3531 9.34688 18.4031C8.31875 18.7188 7.15625 18.4688 6.34375 17.6562C5.53125 16.8438 5.28125 15.6781 5.59687 14.6531C4.64687 14.15 4 13.15 4 12C4 10.85 4.64687 9.85 5.59687 9.34688C5.28125 8.31875 5.53125 7.15625 6.34375 6.34375C7.15625 5.53125 8.32188 5.28125 9.34688 5.59687C9.85 4.64687 10.85 4 12 4ZM15.5312 10.5312C15.825 10.2375 15.825 9.7625 15.5312 9.47188C15.2375 9.18125 14.7625 9.17813 14.4719 9.47188L11.0031 12.9406L9.53438 11.4719C9.24063 11.1781 8.76562 11.1781 8.475 11.4719C8.18437 11.7656 8.18125 12.2406 8.475 12.5312L10.475 14.5312C10.7687 14.825 11.2438 14.825 11.5344 14.5312L15.5312 10.5312Z"
+      />
     </Svg>
   );
-}; 
+};

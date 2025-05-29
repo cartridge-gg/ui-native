@@ -5,7 +5,7 @@ import { ActivitySocialWebsite } from './ActivitySocialWebsite';
 import { Text } from '../../../typography/Text';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Thumbnail, ThumbnailsSubIcon } from '../../thumbnails';
-import { TrophyIcon, SparklesIcon } from '../../../icons/utility/SvgIcons';
+import { TrophyIcon, SparklesIcon } from '../../../icons/utility';
 
 export interface ActivityAchievementCardProps {
   title: string;
@@ -36,33 +36,33 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
 
   const Icon = useMemo(
     () => (
-      <TrophyIcon
-        size="default"
-        color={colors.foreground[100]}
-      />
+      <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <TrophyIcon size="xs" color={colors.foreground[100]} />
+      </View>
     ),
-    [colors.foreground],
+    [colors.foreground]
   );
 
   const Logo = useMemo(
     () => (
       <Thumbnail
-        icon={image || Icon}
+        icon={image || "🌱"}
         subIcon={
           <ThumbnailsSubIcon
             variant="light"
             size="lg"
-            Icon={<TrophyIcon size="xs" color={colors.primary[100]} />}
+            Icon={Icon}
           />
         }
         error={error}
         loading={loading}
         size="lg"
         variant="light"
+        centered
         style={!error && !loading ? { backgroundColor: colors.primary[100] } : undefined}
       />
     ),
-    [image, error, loading, Icon, colors.primary],
+    [image, error, loading, Icon, colors.primary]
   );
 
   const Social = useMemo(() => {
@@ -91,4 +91,4 @@ export const ActivityAchievementCard: React.FC<ActivityAchievementCardProps> = (
       style={style}
     />
   );
-}; 
+};

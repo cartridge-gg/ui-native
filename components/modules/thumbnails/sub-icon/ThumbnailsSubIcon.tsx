@@ -22,8 +22,8 @@ export const ThumbnailsSubIcon: React.FC<ThumbnailsSubIconProps> = ({
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'lg': return { width: 20, height: 20, padding: 4 }; // w-5 h-5 (web default)
-      case 'xl': return { width: 24, height: 24, padding: 4 }; // w-6 h-6
+      case 'lg': return { width: 20, height: 20, padding: 4 }; // w-5 h-5 p-1 (web: p-1 = 4px)
+      case 'xl': return { width: 24, height: 24, padding: 4 }; // w-6 h-6 p-1 (web: p-1 = 4px)
       default: return { width: 20, height: 20, padding: 4 };
     }
   };

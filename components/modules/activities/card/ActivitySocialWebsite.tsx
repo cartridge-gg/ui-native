@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '../../../typography/Text';
 import { useTheme } from '../../../theme/ThemeProvider';
-import { GlobeIcon, VerifiedIcon } from '../../../icons/utility/SvgIcons';
+import { GlobeIcon, VerifiedIcon } from '../../../icons/utility';
 
 export interface ActivitySocialWebsiteProps {
   website: string;
@@ -50,4 +50,4 @@ export const ActivitySocialWebsite: React.FC<ActivitySocialWebsiteProps> = ({
       {label && <Text style={styles.label}>{label}</Text>}
     </View>
   );
-}; 
+};
