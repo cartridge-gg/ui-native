@@ -238,6 +238,31 @@ Once 99%+ similarity is achieved:
 2. **Add migration notes if needed**
 3. **Update any relevant README files**
 
+#### Step 14: Create Migration Commit
+Once the component migration is complete and validated:
+
+```bash
+# Check current status
+git status
+
+# Add all changes
+git add .
+
+# Create commit with standardized message
+git commit -m "Migrated [ComponentName]"
+
+# Example commits:
+git commit -m "Migrated Button"
+git commit -m "Migrated ActivityCard"
+git commit -m "Migrated TokenCard"
+```
+
+**Commit Guidelines**:
+- Use the exact component name as it appears in the file/directory structure
+- Keep the format consistent: "Migrated [ComponentName]"
+- Include all related files (component, stories, tests) in a single commit
+- Ensure the component passes all quality thresholds before committing
+
 ## Quality Thresholds
 
 ### Similarity Targets
@@ -331,17 +356,23 @@ node scripts/visual-comparison.js [component-name]
 
 # 6. Validate final result
 node scripts/visual-comparison.js [component-name]
+
+# 7. Create migration commit
+git add .
+git commit -m "Migrated [ComponentName]"
 ```
 
 ## Best Practices
 
 1. **Start Simple**: Begin with basic components before complex ones
 2. **One Change at a Time**: Make incremental changes to track progress
-3. **Use Tools**: Leverage the animated GIF for quick difference spotting
+3. **Use Tools**: Leverage the visual comparison for quick difference spotting
 4. **Document Issues**: Keep notes on common problems and solutions
 5. **Test Thoroughly**: Verify all component states and variants
 6. **Maintain Quality**: Don't compromise on similarity thresholds
+7. **Commit Regularly**: Create a commit after each successful component migration
+8. **Track Progress**: Use consistent commit messages for easy progress tracking
 
 ## Conclusion
 
-This systematic approach ensures high-quality, consistent migration of UI components to the React Native platform. By following this process and using the provided tools, we can achieve near-perfect visual parity while maintaining code quality and performance standards. 
+This systematic approach ensures high-quality, consistent migration of UI components to the React Native platform. By following this process and using the provided tools, we can achieve near-perfect visual parity while maintaining code quality and performance standards. The standardized commit format helps track migration progress and provides a clear history of completed work. 
