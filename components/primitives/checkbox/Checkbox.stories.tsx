@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { View } from 'react-native';
 import { Checkbox } from './Checkbox';
+import { Text } from '../../typography/Text';
 import { useState } from 'react';
 
 const meta: Meta<typeof Checkbox> = {
@@ -15,29 +16,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => {
-    const [checked, setChecked] = useState(false);
-    return (
-      <Checkbox
-        checked={checked}
-        onCheckedChange={setChecked}
-      />
-    );
-  },
+  render: () => (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <Checkbox />
+      <Text variant="body">Accept terms and conditions</Text>
+    </View>
+  ),
 };
 
 export const Variants: Story = {
   render: () => {
     const [checked1, setChecked1] = useState(true);
     const [checked2, setChecked2] = useState(true);
-    const [checked3, setChecked3] = useState('indeterminate');
+    const [checked3, setChecked3] = useState<boolean | 'indeterminate'>('indeterminate');
     
     return (
       <View style={{ flexDirection: 'column', gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}>
           <Checkbox variant="line" checked={checked1} onCheckedChange={setChecked1} />
           <Checkbox variant="solid" checked={checked2} onCheckedChange={setChecked2} />
-          <Checkbox checked={checked3} onCheckedChange={() => setChecked3(!checked3)} />
+          <Checkbox checked={checked3} onCheckedChange={(value) => setChecked3(value)} />
         </View>
       </View>
     );

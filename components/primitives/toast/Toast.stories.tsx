@@ -17,18 +17,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => {
-    const [visible, setVisible] = useState(false);
+    const ToastExample = () => {
+      const { showToast } = useToast();
+      
+      return (
+        <Button onPress={() => showToast({
+          title: "Scheduled: Catch up",
+          description: "Friday, February 10, 2023 at 5:57 PM",
+        })}>
+          Show Toast
+        </Button>
+      );
+    };
     
     return (
-      <View style={{ padding: 20 }}>
-        <Button title="Show Toast" onPress={() => setVisible(true)} />
-        <Toast
-          title="Default Toast"
-          description="This is a default toast message."
-          visible={visible}
-          onClose={() => setVisible(false)}
-        />
-      </View>
+      <ToastProvider>
+        <ToastExample />
+      </ToastProvider>
     );
   },
 };
@@ -42,10 +47,10 @@ export const Variants: Story = {
     
     return (
       <View style={{ padding: 20, gap: 12 }}>
-        <Button title="Default Toast" onPress={() => setVisibleDefault(true)} />
-        <Button title="Success Toast" onPress={() => setVisibleSuccess(true)} />
-        <Button title="Error Toast" onPress={() => setVisibleError(true)} />
-        <Button title="Warning Toast" onPress={() => setVisibleWarning(true)} />
+        <Button onPress={() => setVisibleDefault(true)}>Default Toast</Button>
+        <Button onPress={() => setVisibleSuccess(true)}>Success Toast</Button>
+        <Button onPress={() => setVisibleError(true)}>Error Toast</Button>
+        <Button onPress={() => setVisibleWarning(true)}>Warning Toast</Button>
         
         <Toast
           title="Default"
@@ -88,7 +93,7 @@ export const WithoutTitle: Story = {
     
     return (
       <View style={{ padding: 20 }}>
-        <Button title="Show Toast" onPress={() => setVisible(true)} />
+        <Button onPress={() => setVisible(true)}>Show Toast</Button>
         <Toast
           description="This toast only has a description."
           visible={visible}
@@ -105,7 +110,7 @@ export const AutoDismiss: Story = {
     
     return (
       <View style={{ padding: 20 }}>
-        <Button title="Auto Dismiss (2s)" onPress={() => setVisible(true)} />
+        <Button onPress={() => setVisible(true)}>Auto Dismiss (2s)</Button>
         <Toast
           title="Auto Dismiss"
           description="This toast will disappear in 2 seconds."
@@ -125,29 +130,32 @@ const ToastExample = () => {
   return (
     <View style={{ padding: 20, gap: 12 }}>
       <Button 
-        title="Show Success Toast" 
         onPress={() => showToast({
           title: 'Success!',
           description: 'Your action was completed successfully.',
           variant: 'success',
         })}
-      />
+      >
+        Show Success Toast
+      </Button>
       <Button 
-        title="Show Error Toast" 
         onPress={() => showToast({
           title: 'Error!',
           description: 'Something went wrong.',
           variant: 'error',
         })}
-      />
+      >
+        Show Error Toast
+      </Button>
       <Button 
-        title="Show Warning Toast" 
         onPress={() => showToast({
           title: 'Warning!',
           description: 'Please be careful.',
           variant: 'warning',
         })}
-      />
+      >
+        Show Warning Toast
+      </Button>
     </View>
   );
 };
