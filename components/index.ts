@@ -14,6 +14,9 @@ export {
 } from './primitives/card';
 export { Input } from './primitives/input';
 
+// Layout
+export * from './layout';
+
 // Typography
 export { Text } from './typography';
 
