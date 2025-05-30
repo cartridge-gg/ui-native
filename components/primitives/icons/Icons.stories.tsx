@@ -78,6 +78,12 @@ import { LeaderboardIcon } from '../../icons/state/LeaderboardIcon';
 import { MetricsIcon } from '../../icons/state/MetricsIcon';
 import { ConnectIcon } from '../../icons/state/ConnectIcon';
 import { DoveIcon } from '../../icons/state/DoveIcon';
+import { CreditCardIcon } from '../../icons/state/CreditCardIcon';
+import { DetailsIcon } from '../../icons/state/DetailsIcon';
+import { EarthIcon } from '../../icons/state/EarthIcon';
+import { LaurelIcon } from '../../icons/state/LaurelIcon';
+import { UserAddIcon } from '../../icons/state/UserAddIcon';
+import { UserCheckIcon } from '../../icons/state/UserCheckIcon';
 
 import { SearchIcon } from '../../icons/utility/SearchIcon';
 import { TimesIcon } from '../../icons/utility/TimesIcon';
@@ -214,6 +220,12 @@ const iconsByCategory = {
     { name: 'MetricsIcon', component: MetricsIcon },
     { name: 'ConnectIcon', component: ConnectIcon },
     { name: 'DoveIcon', component: DoveIcon },
+    { name: 'CreditCardIcon', component: CreditCardIcon },
+    { name: 'DetailsIcon', component: DetailsIcon },
+    { name: 'EarthIcon', component: EarthIcon },
+    { name: 'LaurelIcon', component: LaurelIcon },
+    { name: 'UserAddIcon', component: UserAddIcon },
+    { name: 'UserCheckIcon', component: UserCheckIcon },
   ],
   utility: [
     { name: 'SearchIcon', component: SearchIcon },

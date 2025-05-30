@@ -130,6 +130,14 @@ export * from './MetricsIcon';
 export * from './ConnectIcon';
 export * from './DoveIcon';
 
+// Completion batch state icons
+export * from './CreditCardIcon';
+export * from './DetailsIcon';
+export * from './EarthIcon';
+export * from './LaurelIcon';
+export * from './UserAddIcon';
+export * from './UserCheckIcon';
+
 // Collections for stories
 export const stateIcons = {
   InfoIcon: () => import('./InfoIcon').then(m => m.InfoIcon),
@@ -176,4 +184,10 @@ export const stateIcons = {
   MetricsIcon: () => import('./MetricsIcon').then(m => m.MetricsIcon),
   ConnectIcon: () => import('./ConnectIcon').then(m => m.ConnectIcon),
   DoveIcon: () => import('./DoveIcon').then(m => m.DoveIcon),
+  CreditCardIcon: () => import('./CreditCardIcon').then(m => m.CreditCardIcon),
+  DetailsIcon: () => import('./DetailsIcon').then(m => m.DetailsIcon),
+  EarthIcon: () => import('./EarthIcon').then(m => m.EarthIcon),
+  LaurelIcon: () => import('./LaurelIcon').then(m => m.LaurelIcon),
+  UserAddIcon: () => import('./UserAddIcon').then(m => m.UserAddIcon),
+  UserCheckIcon: () => import('./UserCheckIcon').then(m => m.UserCheckIcon),
 }; 
