@@ -31,4 +31,5 @@ export * from './sheet';
 export * from './table';
 export * from './aspect-ratio';
 export * from './hover-card';
-export * from './menubar'; 
+export * from './menubar';
+export * from './drawer'; 
