@@ -17,16 +17,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => {
-    const [checked, setChecked] = useState(false);
-    
-    return (
-      <View style={{ gap: 16, alignItems: 'center' }}>
-        <Switch checked={checked} onCheckedChange={setChecked} />
-        <Text>Switch is {checked ? 'on' : 'off'}</Text>
-      </View>
-    );
-  },
+  render: () => <Switch />,
 };
 
 export const Checked: Story = {

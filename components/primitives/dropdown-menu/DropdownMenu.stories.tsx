@@ -32,7 +32,7 @@ export const Default: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="Open Menu" />
+        <Button>Open Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -47,7 +47,7 @@ export const WithLabelsAndSeparators: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="My Account" />
+        <Button>My Account</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -66,7 +66,7 @@ export const WithShortcuts: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="File Menu" />
+        <Button>File Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
@@ -106,7 +106,7 @@ export const WithCheckboxItems: Story = {
         </Text>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button title="View Options" />
+            <Button>View Options</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Appearance</DropdownMenuLabel>
@@ -145,7 +145,7 @@ export const WithRadioGroup: Story = {
         <Text variant="label">Current Theme: {theme}</Text>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button title="Theme Settings" />
+            <Button>Theme Settings</Button> />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Theme</DropdownMenuLabel>
@@ -171,7 +171,7 @@ export const ControlledMenu: Story = {
         <Text variant="label">Menu is {open ? 'open' : 'closed'}</Text>
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger>
-            <Button title="Controlled Menu" />
+            <Button>Controlled Menu</Button> />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
@@ -188,7 +188,7 @@ export const WithDisabledItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="Actions" />
+        <Button>Actions</Button> />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -210,7 +210,7 @@ export const UserAccountMenu: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button title="👤 John Doe" variant="secondary" />
+          <Button>👤 John Doe</Button> variant="secondary" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -263,7 +263,7 @@ export const EditorContextMenu: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="Right Click Menu" />
+        <Button>Right Click Menu</Button> />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
@@ -301,7 +301,7 @@ export const GroupedItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="Grouped Menu" />
+        <Button>Grouped Menu</Button> />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
@@ -331,7 +331,7 @@ export const InsetItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button title="Inset Menu" />
+        <Button>Inset Menu</Button> />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>File Operations</DropdownMenuLabel>

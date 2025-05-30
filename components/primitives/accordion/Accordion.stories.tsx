@@ -91,7 +91,7 @@ export const Controlled: Story = {
     return (
       <View style={{ gap: 16 }}>
         <Text variant="label">Currently open: {value || 'None'}</Text>
-        <Accordion type="single" value={value} onValueChange={setValue} collapsible>
+        <Accordion type="single" value={value} onValueChange={(val) => setValue(val as string)} collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger>
               <Text variant="body">Controlled Section 1</Text>
