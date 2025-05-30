@@ -23,4 +23,7 @@ export * from './breadcrumb';
 export * from './qr-code';
 export * from './progress-bar';
 export * from './input';
-export * from './spinner'; 
+export * from './spinner';
+export * from './label';
+export * from './textarea';
+export * from './dialog'; 
