@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { View } from 'react-native';
 import { Textarea } from './Textarea';
-import { Label } from '../label/Label';
 
 const meta: Meta<typeof Textarea> = {
   title: 'Primitives/Textarea',
@@ -11,75 +9,88 @@ const meta: Meta<typeof Textarea> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    value: '',
+    variant: 'default',
+    size: 'default',
+    placeholder: 'Label',
+    onClear: () => {},
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: Story = {};
+
+export const Value: Story = {
   args: {
-    placeholder: "Enter your message...",
-    value: "",
+    value: 'Value',
   },
 };
 
-export const WithLabel: Story = {
-  render: () => (
-    <View style={{ gap: 8, minWidth: 300 }}>
-      <Label>Message</Label>
-      <Textarea
-        placeholder="Enter your message..."
-        value=""
-      />
-    </View>
-  ),
-};
-
-export const WithValue: Story = {
+export const Error: Story = {
   args: {
-    value: 'This is a sample message that demonstrates how the textarea looks with content.',
-    placeholder: "Enter your message...",
+    value: 'Value*',
+    error: { message: 'Error' },
   },
 };
 
-export const WithError: Story = {
-  render: () => (
-    <View style={{ gap: 8, minWidth: 300 }}>
-      <Label required>Message</Label>
-      <Textarea
-        value="Invalid content"
-        placeholder="Enter your message..."
-        error={{ message: 'Message must be at least 10 characters long' }}
-      />
-    </View>
-  ),
-};
-
-export const Disabled: Story = {
+export const AutoFocus: Story = {
   args: {
-    value: "This textarea is disabled",
-    placeholder: "Enter your message...",
-    disabled: true,
+    value: 'Value',
+    autoFocus: true,
   },
 };
 
-export const Large: Story = {
+export const LongValue: Story = {
   args: {
-    placeholder: "Enter your message...",
-    size: "lg" as const,
-    value: "",
+    value:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   },
 };
 
-export const UsernameVariant: Story = {
-  render: () => (
-    <View style={{ gap: 8, minWidth: 300 }}>
-      <Label>Bio</Label>
-      <Textarea
-        placeholder="Tell us about yourself..."
-        variant="username"
-        value=""
-      />
-    </View>
-  ),
+export const BigDefault: Story = {
+  args: {
+    size: 'lg',
+  },
+};
+
+export const BigValue: Story = {
+  args: {
+    size: 'lg',
+    value: 'Value',
+  },
+};
+
+export const BigError: Story = {
+  args: {
+    size: 'lg',
+    value: 'Value*',
+    error: { message: 'Error' },
+  },
+};
+
+export const UsernameDefault: Story = {
+  args: {
+    variant: 'username',
+    size: 'lg',
+  },
+};
+
+export const UsernameValue: Story = {
+  args: {
+    variant: 'username',
+    size: 'lg',
+    value: 'Value',
+  },
+};
+
+export const UsernameError: Story = {
+  args: {
+    variant: 'username',
+    size: 'lg',
+    value: 'Value*',
+    error: { message: '' },
+  },
 }; 

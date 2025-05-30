@@ -5,7 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from './ToggleGroup';
 import { Text } from '../../typography/Text';
 
 const meta: Meta<typeof ToggleGroup> = {
-  title: 'Primitives/ToggleGroup',
+  title: 'Primitives/Toggle Group',
   component: ToggleGroup,
   parameters: {
     layout: 'padded',

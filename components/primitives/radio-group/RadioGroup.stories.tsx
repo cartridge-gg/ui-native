@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from './RadioGroup';
 import { Text } from '../../typography/Text';
 
 const meta: Meta<typeof RadioGroup> = {
-  title: 'Primitives/RadioGroup',
+  title: 'Primitives/Radio Group',
   component: RadioGroup,
   parameters: {
     layout: 'padded',
