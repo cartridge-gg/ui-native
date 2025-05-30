@@ -11,7 +11,7 @@ import { Text } from '../../typography/Text';
 import { useTheme } from '../../theme/ThemeProvider';
 
 const meta: Meta<typeof HoverCard> = {
-  title: 'Primitives/HoverCard',
+  title: 'Primitives/Hover Card',
   component: HoverCard,
   parameters: {
     layout: 'centered',
@@ -25,13 +25,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <HoverCard>
-      <HoverCardTrigger>
-        <Button variant="outline">Hover (Tap on mobile)</Button>
-      </HoverCardTrigger>
+      <HoverCardTrigger>Hover</HoverCardTrigger>
       <HoverCardContent>
-        <Text variant="sans-semibold-14" style={{ marginBottom: 8 }}>
-          Hover Card
-        </Text>
         <Text variant="body">
           Some insightful information about the hover trigger
         </Text>

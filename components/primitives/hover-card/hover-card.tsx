@@ -82,12 +82,21 @@ interface HoverCardTriggerProps {
 export const HoverCardTrigger: React.FC<HoverCardTriggerProps> = ({ children }) => {
   const { setOpen } = useHoverCard();
 
+  // Auto-wrap string children in Text component for React Native compatibility
+  const renderChildren = () => {
+    if (typeof children === 'string') {
+      const Text = require('../../typography/Text').Text;
+      return <Text variant="sans-regular-16">{children}</Text>;
+    }
+    return children;
+  };
+
   return (
     <TouchableOpacity 
       onPress={() => setOpen(true)}
       activeOpacity={0.7}
     >
-      {children}
+      {renderChildren()}
     </TouchableOpacity>
   );
 };
