@@ -28,4 +28,5 @@ export * from './label';
 export * from './textarea';
 export * from './dialog';
 export * from './sheet';
-export * from './table'; 
+export * from './table';
+export * from './aspect-ratio'; 
