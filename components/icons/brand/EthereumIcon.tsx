@@ -6,8 +6,10 @@ import { IconProps } from '../types';
 export const EthereumIcon: React.FC<IconProps> = (props) => {
   return (
     <BaseIcon {...props}>
-      <Path d="M12 2L5 12.5L12 16L19 12.5L12 2Z" fill="currentColor" />
-      <Path d="M12 17L5 13.5L12 22L19 13.5L12 17Z" fill="currentColor" />
+      <Path
+        d="M16.7469 12.15L12 15.05L7.25 12.15L12 4L16.7469 12.15ZM12 15.9812L7.25 13.0813L12 20L16.75 13.0813L12 15.9812Z"
+        fill="currentColor"
+      />
     </BaseIcon>
   );
 };
