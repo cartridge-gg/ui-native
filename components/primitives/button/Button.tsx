@@ -75,14 +75,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
           };
         case 'outline':
           return {
-            backgroundColor: 'transparent',
-            borderColor: colors.background[200],
+            backgroundColor: colors.background[100],
+            borderColor: colors.border,
             borderWidth: 1,
           };
         case 'ghost':
           return {
             backgroundColor: 'transparent',
             borderColor: 'transparent',
+            borderWidth: 0,
           };
         default:
           return {
@@ -123,7 +124,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           return colors.destructive.foreground;
         case 'outline':
         case 'ghost':
-          return colors.foreground[200];
+          return colors.foreground[100];
         default:
           return colors.primary.foreground;
       }
