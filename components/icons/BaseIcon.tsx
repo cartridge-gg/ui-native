@@ -30,8 +30,8 @@ export const BaseIcon: React.FC<BaseIconProps> = ({
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
-            fill: child.props.fill || iconColor,
             ...child.props,
+            fill: child.props.fill === 'currentColor' ? iconColor : (child.props.fill || iconColor),
           });
         }
         return child;
