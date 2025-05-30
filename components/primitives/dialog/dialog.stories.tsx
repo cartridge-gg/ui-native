@@ -162,4 +162,37 @@ export const ControlledDialog: Story = {
       </View>
     );
   },
+};
+
+export const AlertDialog: Story = {
+  render: () => {
+    const AlertDialog = require('../alert/AlertDialog').AlertDialog;
+    const AlertDialogTrigger = require('../alert/AlertDialog').AlertDialogTrigger;
+    const AlertDialogContent = require('../alert/AlertDialog').AlertDialogContent;
+    const AlertDialogHeader = require('../alert/AlertDialog').AlertDialogHeader;
+    const AlertDialogTitle = require('../alert/AlertDialog').AlertDialogTitle;
+    const AlertDialogDescription = require('../alert/AlertDialog').AlertDialogDescription;
+    const AlertDialogFooter = require('../alert/AlertDialog').AlertDialogFooter;
+    const AlertDialogCancel = require('../alert/AlertDialog').AlertDialogCancel;
+    const AlertDialogAction = require('../alert/AlertDialog').AlertDialogAction;
+    
+    return (
+      <AlertDialog>
+        <AlertDialogTrigger>Open</AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  },
 }; 
