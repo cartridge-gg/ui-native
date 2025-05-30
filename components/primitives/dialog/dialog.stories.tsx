@@ -30,7 +30,7 @@ export const Default: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger>
-        <Button variant="primary">Open Dialog</Button>
+        Open
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

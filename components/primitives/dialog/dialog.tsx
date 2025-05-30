@@ -67,9 +67,17 @@ interface DialogTriggerProps {
 export const DialogTrigger: React.FC<DialogTriggerProps> = ({ children }) => {
   const { setOpen } = useDialog();
 
+  // Auto-wrap string children in Text component for React Native compatibility
+  const renderChildren = () => {
+    if (typeof children === 'string') {
+      return <Text variant="sans-regular-16">{children}</Text>;
+    }
+    return children;
+  };
+
   return (
     <TouchableOpacity onPress={() => setOpen(true)} activeOpacity={0.7}>
-      {children}
+      {renderChildren()}
     </TouchableOpacity>
   );
 };
