@@ -10,12 +10,19 @@ import {
 } from '../../icons/types';
 import { useTheme } from '../../theme/ThemeProvider';
 
-// Direct imports for better performance
+// Direct imports for better performance - organized by category
+
+// Badge icons
 import { DefaultBadgeIcon } from '../../icons/badge/DefaultBadgeIcon';
 import { BronzeIcon } from '../../icons/badge/BronzeIcon';
 import { SilverIcon } from '../../icons/badge/SilverIcon';
 import { GoldIcon } from '../../icons/badge/GoldIcon';
+import { BronzeTagIcon } from '../../icons/badge/BronzeTagIcon';
+import { SilverTagIcon } from '../../icons/badge/SilverTagIcon';
+import { GoldTagIcon } from '../../icons/badge/GoldTagIcon';
+import { DefaultIcon } from '../../icons/badge/DefaultIcon';
 
+// Brand icons
 import { EthereumIcon } from '../../icons/brand/EthereumIcon';
 import { StarknetIcon } from '../../icons/brand/StarknetIcon';
 import { GitHubIcon } from '../../icons/brand/GitHubIcon';
@@ -23,17 +30,25 @@ import { DiscordIcon } from '../../icons/brand/DiscordIcon';
 import { XIcon } from '../../icons/brand/XIcon';
 import { TelegramIcon } from '../../icons/brand/TelegramIcon';
 import { MetamaskIcon } from '../../icons/brand/MetamaskIcon';
+import { PhantomIcon } from '../../icons/brand/PhantomIcon';
+import { WalletConnectIcon } from '../../icons/brand/WalletConnectIcon';
+import { SolanaIcon } from '../../icons/brand/SolanaIcon';
+import { TwitterIcon } from '../../icons/brand/TwitterIcon';
+import { AppleIcon } from '../../icons/brand/AppleIcon';
+import { CartridgeIcon } from '../../icons/brand/CartridgeIcon';
 import { StripeIcon } from '../../icons/brand/StripeIcon';
 import { ChromeIcon } from '../../icons/brand/ChromeIcon';
 import { ArgentIcon } from '../../icons/brand/ArgentIcon';
 
-import { ChevronIcon } from '../../icons/directional/ChevronIcon';
+// Directional icons
 import { ArrowIcon } from '../../icons/directional/ArrowIcon';
+import { ChevronIcon } from '../../icons/directional/ChevronIcon';
 import { CaratIcon } from '../../icons/directional/CaratIcon';
 import { WedgeIcon } from '../../icons/directional/WedgeIcon';
 import { ArrowFromLineIcon } from '../../icons/directional/ArrowFromLineIcon';
 import { ArrowToLineIcon } from '../../icons/directional/ArrowToLineIcon';
 
+// State icons
 import { InfoIcon } from '../../icons/state/InfoIcon';
 import { WarningIcon } from '../../icons/state/WarningIcon';
 import { CheckIcon } from '../../icons/state/CheckIcon';
@@ -85,65 +100,65 @@ import { LaurelIcon } from '../../icons/state/LaurelIcon';
 import { UserAddIcon } from '../../icons/state/UserAddIcon';
 import { UserCheckIcon } from '../../icons/state/UserCheckIcon';
 
-import { SearchIcon } from '../../icons/utility/SearchIcon';
-import { TimesIcon } from '../../icons/utility/TimesIcon';
-import { MinusIcon } from '../../icons/utility/MinusIcon';
-import { TimesCircleIcon } from '../../icons/utility/TimesCircleIcon';
-import { CircleCheckIcon } from '../../icons/utility/CircleCheckIcon';
-import { SignOutIcon } from '../../icons/utility/SignOutIcon';
-import { TransferIcon } from '../../icons/utility/TransferIcon';
-import { SlashIcon } from '../../icons/utility/SlashIcon';
-import { ScanQRIcon } from '../../icons/utility/ScanQRIcon';
-import { DoubleWedgeIcon } from '../../icons/utility/DoubleWedgeIcon';
+// Utility icons in the exact order from UI package
+import { AlertIcon } from '../../icons/utility/AlertIcon';
 import { ArrowTurnDownIcon } from '../../icons/utility/ArrowTurnDownIcon';
-import { FnIcon } from '../../icons/utility/FnIcon';
-import { SpiderWebIcon } from '../../icons/utility/SpiderWebIcon';
-import { ScanSelfIcon } from '../../icons/utility/ScanSelfIcon';
+import { AwardIcon } from '../../icons/utility/AwardIcon';
+import { AwardSimpleIcon } from '../../icons/utility/AwardSimpleIcon';
+import { BranchIcon } from '../../icons/utility/BranchIcon';
+import { CheckIcon as UtilityCheckIcon } from '../../icons/utility/CheckIcon';
 import { CheckboxCheckedIcon } from '../../icons/utility/CheckboxCheckedIcon';
 import { CheckboxUncheckedIcon } from '../../icons/utility/CheckboxUncheckedIcon';
+import { ChessIcon } from '../../icons/utility/ChessIcon';
+import { CircleCheckIcon } from '../../icons/utility/CircleCheckIcon';
 import { CircleNoCheckIcon } from '../../icons/utility/CircleNoCheckIcon';
-import { L3Icon } from '../../icons/utility/L3Icon';
-import { AwardSimpleIcon } from '../../icons/utility/AwardSimpleIcon';
-import { SpinnerPixelIcon } from '../../icons/utility/SpinnerPixelIcon';
-import { EmptyStateIcon } from '../../icons/utility/EmptyStateIcon';
+import { CircleIcon } from '../../icons/utility/CircleIcon';
+import { FnIcon } from '../../icons/utility/FnIcon';
+import { CopyIcon } from '../../icons/utility/CopyIcon';
+import { DeployerIcon } from '../../icons/utility/DeployerIcon';
+import { DollarIcon } from '../../icons/utility/DollarIcon';
+import { DotsIcon } from '../../icons/utility/DotsIcon';
+import { DoubleWedgeIcon } from '../../icons/utility/DoubleWedgeIcon';
 import { EmptyStateAchievementIcon } from '../../icons/utility/EmptyStateAchievementIcon';
 import { EmptyStateActivityIcon } from '../../icons/utility/EmptyStateActivityIcon';
-import { EmptyStateInventoryIcon } from '../../icons/utility/EmptyStateInventoryIcon';
-import { EmptyStateDiscoverIcon } from '../../icons/utility/EmptyStateDiscoverIcon';
 import { EmptyStateGuildIcon } from '../../icons/utility/EmptyStateGuildIcon';
+import { EmptyStateInventoryIcon } from '../../icons/utility/EmptyStateInventoryIcon';
 import { EmptyStateLeaderboardIcon } from '../../icons/utility/EmptyStateLeaderboardIcon';
-import { CircleIcon } from '../../icons/utility/CircleIcon';
-import { DotsIcon } from '../../icons/utility/DotsIcon';
-import { LockIcon } from '../../icons/utility/LockIcon';
-import { PlayIcon } from '../../icons/utility/PlayIcon';
-import { TrashIcon } from '../../icons/utility/TrashIcon';
-import { CopyIcon } from '../../icons/utility/CopyIcon';
+import { EmptyStateIcon } from '../../icons/utility/EmptyStateIcon';
 import { ExternalIcon } from '../../icons/utility/ExternalIcon';
+import { TouchIcon } from '../../icons/utility/TouchIcon';
+import { FullscreenIcon } from '../../icons/utility/FullscreenIcon';
 import { GearIcon } from '../../icons/utility/GearIcon';
-import { MagnifyingGlassIcon } from '../../icons/utility/MagnifyingGlassIcon';
+import { GiftIcon } from '../../icons/utility/GiftIcon';
 import { HamburgerIcon } from '../../icons/utility/HamburgerIcon';
+import { InfoIcon as UtilityInfoIcon } from '../../icons/utility/InfoIcon';
+import { L3Icon } from '../../icons/utility/L3Icon';
+import { LockIcon } from '../../icons/utility/LockIcon';
+import { MagnifyingGlassIcon } from '../../icons/utility/MagnifyingGlassIcon';
+import { MinusIcon } from '../../icons/utility/MinusIcon';
+import { MirrorWedgeIcon } from '../../icons/utility/MirrorWedgeIcon';
+import { MysteryIcon } from '../../icons/utility/MysteryIcon';
+import { PacmanIcon } from '../../icons/utility/PacmanIcon';
+import { PlayIcon } from '../../icons/utility/PlayIcon';
 import { QuestionIcon } from '../../icons/utility/QuestionIcon';
 import { RibbonIcon } from '../../icons/utility/RibbonIcon';
 import { RobotIcon } from '../../icons/utility/RobotIcon';
-import { MysteryIcon } from '../../icons/utility/MysteryIcon';
-import { PacmanIcon } from '../../icons/utility/PacmanIcon';
-import { QrCodeIcon } from '../../icons/utility/QrCodeIcon';
+import { ScanQRIcon } from '../../icons/utility/ScanQRIcon';
+import { ScanSelfIcon } from '../../icons/utility/ScanSelfIcon';
+import { SearchIcon } from '../../icons/utility/SearchIcon';
+import { SignOutIcon } from '../../icons/utility/SignOutIcon';
+import { SlashIcon } from '../../icons/utility/SlashIcon';
 import { SliderIcon } from '../../icons/utility/SliderIcon';
-import { TouchIcon } from '../../icons/utility/TouchIcon';
-import { WebsiteIcon } from '../../icons/utility/WebsiteIcon';
-import { MirrorWedgeIcon } from '../../icons/utility/MirrorWedgeIcon';
-import { FullscreenIcon } from '../../icons/utility/FullscreenIcon';
-import { GiftIcon } from '../../icons/utility/GiftIcon';
-import { DollarIcon } from '../../icons/utility/DollarIcon';
-import { CreditsIcon } from '../../icons/utility/CreditsIcon';
-import { DeployerIcon } from '../../icons/utility/DeployerIcon';
-import { BranchIcon } from '../../icons/utility/BranchIcon';
-import { ChessIcon } from '../../icons/utility/ChessIcon';
-import { AwardIcon } from '../../icons/utility/AwardIcon';
-import { CheckIcon as UtilityCheckIcon } from '../../icons/utility/CheckIcon';
-import { AlertIcon } from '../../icons/utility/AlertIcon';
+import { SpiderWebIcon } from '../../icons/utility/SpiderWebIcon';
+import { SpinnerPixelIcon } from '../../icons/utility/SpinnerPixelIcon';
+import { SpinnerIcon } from '../../icons/utility/SpinnerIcon';
+import { TimesCircleIcon } from '../../icons/utility/TimesCircleIcon';
+import { TimesIcon } from '../../icons/utility/TimesIcon';
+import { TransferIcon } from '../../icons/utility/TransferIcon';
+import { TrashIcon } from '../../icons/utility/TrashIcon';
+import { VerifiedIcon } from '../../icons/utility/VerifiedIcon';
 import { WarningIcon as UtilityWarningIcon } from '../../icons/utility/WarningIcon';
-import { InfoIcon as UtilityInfoIcon } from '../../icons/utility/InfoIcon';
+import { WebsiteIcon } from '../../icons/utility/WebsiteIcon';
 
 const iconsByCategory = {
   badge: [
@@ -151,6 +166,10 @@ const iconsByCategory = {
     { name: 'BronzeIcon', component: BronzeIcon },
     { name: 'SilverIcon', component: SilverIcon },
     { name: 'GoldIcon', component: GoldIcon },
+    { name: 'BronzeTagIcon', component: BronzeTagIcon },
+    { name: 'SilverTagIcon', component: SilverTagIcon },
+    { name: 'GoldTagIcon', component: GoldTagIcon },
+    { name: 'DefaultIcon', component: DefaultIcon },
   ],
   brand: [
     { name: 'EthereumIcon', component: EthereumIcon },
@@ -160,16 +179,19 @@ const iconsByCategory = {
     { name: 'XIcon', component: XIcon },
     { name: 'TelegramIcon', component: TelegramIcon },
     { name: 'MetamaskIcon', component: MetamaskIcon },
+    { name: 'PhantomIcon', component: PhantomIcon },
+    { name: 'WalletConnectIcon', component: WalletConnectIcon },
+    { name: 'SolanaIcon', component: SolanaIcon },
+    { name: 'TwitterIcon', component: TwitterIcon },
+    { name: 'AppleIcon', component: AppleIcon },
+    { name: 'CartridgeIcon', component: CartridgeIcon },
     { name: 'StripeIcon', component: StripeIcon },
     { name: 'ChromeIcon', component: ChromeIcon },
     { name: 'ArgentIcon', component: ArgentIcon },
   ],
-  'brand-color': [
-    // Brand color icons would go here
-  ],
   directional: [
-    { name: 'ChevronIcon', component: ChevronIcon },
     { name: 'ArrowIcon', component: ArrowIcon },
+    { name: 'ChevronIcon', component: ChevronIcon },
     { name: 'CaratIcon', component: CaratIcon },
     { name: 'WedgeIcon', component: WedgeIcon },
     { name: 'ArrowFromLineIcon', component: ArrowFromLineIcon },
@@ -228,65 +250,65 @@ const iconsByCategory = {
     { name: 'UserCheckIcon', component: UserCheckIcon },
   ],
   utility: [
-    { name: 'SearchIcon', component: SearchIcon },
-    { name: 'TimesIcon', component: TimesIcon },
-    { name: 'MinusIcon', component: MinusIcon },
-    { name: 'TimesCircleIcon', component: TimesCircleIcon },
-    { name: 'CircleCheckIcon', component: CircleCheckIcon },
-    { name: 'SignOutIcon', component: SignOutIcon },
-    { name: 'TransferIcon', component: TransferIcon },
-    { name: 'SlashIcon', component: SlashIcon },
-    { name: 'ScanQRIcon', component: ScanQRIcon },
-    { name: 'DoubleWedgeIcon', component: DoubleWedgeIcon },
+    // Utility icons in the exact order from UI package
+    { name: 'AlertIcon', component: AlertIcon },
     { name: 'ArrowTurnDownIcon', component: ArrowTurnDownIcon },
-    { name: 'FnIcon', component: FnIcon },
-    { name: 'SpiderWebIcon', component: SpiderWebIcon },
-    { name: 'ScanSelfIcon', component: ScanSelfIcon },
+    { name: 'AwardIcon', component: AwardIcon },
+    { name: 'AwardSimpleIcon', component: AwardSimpleIcon },
+    { name: 'BranchIcon', component: BranchIcon },
+    { name: 'CheckIcon', component: UtilityCheckIcon },
     { name: 'CheckboxCheckedIcon', component: CheckboxCheckedIcon },
     { name: 'CheckboxUncheckedIcon', component: CheckboxUncheckedIcon },
+    { name: 'ChessIcon', component: ChessIcon },
+    { name: 'CircleCheckIcon', component: CircleCheckIcon },
     { name: 'CircleNoCheckIcon', component: CircleNoCheckIcon },
-    { name: 'L3Icon', component: L3Icon },
-    { name: 'AwardSimpleIcon', component: AwardSimpleIcon },
-    { name: 'SpinnerPixelIcon', component: SpinnerPixelIcon },
-    { name: 'EmptyStateIcon', component: EmptyStateIcon },
+    { name: 'CircleIcon', component: CircleIcon },
+    { name: 'FnIcon', component: FnIcon },
+    { name: 'CopyIcon', component: CopyIcon },
+    { name: 'DeployerIcon', component: DeployerIcon },
+    { name: 'DollarIcon', component: DollarIcon },
+    { name: 'DotsIcon', component: DotsIcon },
+    { name: 'DoubleWedgeIcon', component: DoubleWedgeIcon },
     { name: 'EmptyStateAchievementIcon', component: EmptyStateAchievementIcon },
     { name: 'EmptyStateActivityIcon', component: EmptyStateActivityIcon },
-    { name: 'EmptyStateInventoryIcon', component: EmptyStateInventoryIcon },
-    { name: 'EmptyStateDiscoverIcon', component: EmptyStateDiscoverIcon },
     { name: 'EmptyStateGuildIcon', component: EmptyStateGuildIcon },
+    { name: 'EmptyStateInventoryIcon', component: EmptyStateInventoryIcon },
     { name: 'EmptyStateLeaderboardIcon', component: EmptyStateLeaderboardIcon },
-    { name: 'CircleIcon', component: CircleIcon },
-    { name: 'DotsIcon', component: DotsIcon },
-    { name: 'LockIcon', component: LockIcon },
-    { name: 'PlayIcon', component: PlayIcon },
-    { name: 'TrashIcon', component: TrashIcon },
-    { name: 'CopyIcon', component: CopyIcon },
+    { name: 'EmptyStateIcon', component: EmptyStateIcon },
     { name: 'ExternalIcon', component: ExternalIcon },
+    { name: 'TouchIcon', component: TouchIcon },
+    { name: 'FullscreenIcon', component: FullscreenIcon },
     { name: 'GearIcon', component: GearIcon },
-    { name: 'MagnifyingGlassIcon', component: MagnifyingGlassIcon },
+    { name: 'GiftIcon', component: GiftIcon },
     { name: 'HamburgerIcon', component: HamburgerIcon },
+    { name: 'InfoIcon', component: UtilityInfoIcon },
+    { name: 'L3Icon', component: L3Icon },
+    { name: 'LockIcon', component: LockIcon },
+    { name: 'MagnifyingGlassIcon', component: MagnifyingGlassIcon },
+    { name: 'MinusIcon', component: MinusIcon },
+    { name: 'MirrorWedgeIcon', component: MirrorWedgeIcon },
+    { name: 'MysteryIcon', component: MysteryIcon },
+    { name: 'PacmanIcon', component: PacmanIcon },
+    { name: 'PlayIcon', component: PlayIcon },
     { name: 'QuestionIcon', component: QuestionIcon },
     { name: 'RibbonIcon', component: RibbonIcon },
     { name: 'RobotIcon', component: RobotIcon },
-    { name: 'MysteryIcon', component: MysteryIcon },
-    { name: 'PacmanIcon', component: PacmanIcon },
-    { name: 'QrCodeIcon', component: QrCodeIcon },
+    { name: 'ScanQRIcon', component: ScanQRIcon },
+    { name: 'ScanSelfIcon', component: ScanSelfIcon },
+    { name: 'SearchIcon', component: SearchIcon },
+    { name: 'SignOutIcon', component: SignOutIcon },
+    { name: 'SlashIcon', component: SlashIcon },
     { name: 'SliderIcon', component: SliderIcon },
-    { name: 'TouchIcon', component: TouchIcon },
+    { name: 'SpiderWebIcon', component: SpiderWebIcon },
+    { name: 'SpinnerPixelIcon', component: SpinnerPixelIcon },
+    { name: 'SpinnerIcon', component: SpinnerIcon },
+    { name: 'TimesCircleIcon', component: TimesCircleIcon },
+    { name: 'TimesIcon', component: TimesIcon },
+    { name: 'TransferIcon', component: TransferIcon },
+    { name: 'TrashIcon', component: TrashIcon },
+    { name: 'VerifiedIcon', component: VerifiedIcon },
+    { name: 'WarningIcon', component: UtilityWarningIcon },
     { name: 'WebsiteIcon', component: WebsiteIcon },
-    { name: 'MirrorWedgeIcon', component: MirrorWedgeIcon },
-    { name: 'FullscreenIcon', component: FullscreenIcon },
-    { name: 'GiftIcon', component: GiftIcon },
-    { name: 'DollarIcon', component: DollarIcon },
-    { name: 'CreditsIcon', component: CreditsIcon },
-    { name: 'DeployerIcon', component: DeployerIcon },
-    { name: 'BranchIcon', component: BranchIcon },
-    { name: 'ChessIcon', component: ChessIcon },
-    { name: 'AwardIcon', component: AwardIcon },
-    { name: 'UtilityCheckIcon', component: UtilityCheckIcon },
-    { name: 'AlertIcon', component: AlertIcon },
-    { name: 'UtilityWarningIcon', component: UtilityWarningIcon },
-    { name: 'UtilityInfoIcon', component: UtilityInfoIcon },
   ],
 };
 
@@ -304,6 +326,9 @@ const meta: Meta<typeof Icons> = {
     size: {
       control: 'radio',
       options: sizeOptions,
+      table: {
+        defaultValue: { summary: 'default' },
+      },
     },
     directionalVariant: {
       control: 'radio',
@@ -313,7 +338,11 @@ const meta: Meta<typeof Icons> = {
     stateVariant: {
       control: 'radio',
       options: ['solid', 'line'],
+      defaultValue: 'solid',
       description: 'State icons only.',
+      table: {
+        defaultValue: { summary: 'solid' },
+      },
     },
   },
   args: {
@@ -337,12 +366,6 @@ export const Badge: Story = {
 export const Brand: Story = {
   args: {
     category: 'brand',
-  },
-};
-
-export const BrandColor: Story = {
-  args: {
-    category: 'brand-color',
   },
 };
 
@@ -377,9 +400,10 @@ function Icons({
 }) {
   const { colors } = useTheme();
 
-  // Calculate number of columns based on screen width (similar to Tailwind grid)
   const getColumns = () => {
-    // Default to 6 columns for md screens, 4 for sm, 3 for base
+    const iconCount = iconsByCategory[category].length;
+    if (iconCount <= 6) return 3;
+    if (iconCount <= 12) return 4;
     return 6;
   };
 
@@ -399,14 +423,14 @@ function Icons({
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 8,
-      padding: 0,
+      padding: 16,
     }}>
       {iconEntries.map(({ name, component: IconComponent }) => (
         <View
           key={name}
           style={{
             borderWidth: 1,
-            borderColor: colors.background[200],
+            borderColor: colors.border,
             borderRadius: 8,
             flexDirection: 'column',
             alignItems: 'center',
