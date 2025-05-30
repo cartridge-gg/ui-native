@@ -390,4 +390,30 @@ export const CustomStyling: Story = {
       </BreadcrumbList>
     </Breadcrumb>
   ),
+};
+
+export const Ellipsis: Story = {
+  render: () => (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink onPress={() => console.log('Home')}>
+            Home
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbEllipsis />
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink onPress={() => console.log('Breadcrumb N')}>
+            Breadcrumb N
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  ),
 }; 

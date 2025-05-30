@@ -267,4 +267,34 @@ export const FAQ: Story = {
       </AccordionItem>
     </Accordion>
   ),
+};
+
+export const TriggerColor: Story = {
+  render: () => (
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>
+          <Text variant="body" style={{ color: '#ef4444' }}>
+            Approve <Text variant="body" color="primary">2 methods</Text>
+          </Text>
+        </AccordionTrigger>
+        <AccordionContent>
+          <View style={{ gap: 8 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Text variant="caption" color="muted">●</Text>
+              <Text variant="body">Method 1</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Text variant="caption" color="muted">●</Text>
+              <Text variant="body">Method 2</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Text variant="caption" color="muted">●</Text>
+              <Text variant="body">Method 3</Text>
+            </View>
+          </View>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  ),
 }; 

@@ -18,7 +18,7 @@ import { Text } from '../../typography/Text';
 import { Button } from '../button/Button';
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: 'Primitives/DropdownMenu',
+  title: 'Primitives/Dropdown Menu',
   component: DropdownMenu,
   parameters: {
     layout: 'padded',
