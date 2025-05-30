@@ -27,4 +27,5 @@ export * from './spinner';
 export * from './label';
 export * from './textarea';
 export * from './dialog';
-export * from './sheet'; 
+export * from './sheet';
+export * from './table'; 
