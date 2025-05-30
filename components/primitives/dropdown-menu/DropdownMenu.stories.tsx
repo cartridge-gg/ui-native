@@ -145,7 +145,7 @@ export const WithRadioGroup: Story = {
         <Text variant="label">Current Theme: {theme}</Text>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button>Theme Settings</Button> />
+            <Button>Theme Settings</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Theme</DropdownMenuLabel>
@@ -171,7 +171,7 @@ export const ControlledMenu: Story = {
         <Text variant="label">Menu is {open ? 'open' : 'closed'}</Text>
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger>
-            <Button>Controlled Menu</Button> />
+            <Button>Controlled Menu</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
@@ -188,7 +188,7 @@ export const WithDisabledItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button>Actions</Button> />
+        <Button>Actions</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -210,7 +210,7 @@ export const UserAccountMenu: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button>👤 John Doe</Button> variant="secondary" />
+          <Button variant="secondary">👤 John Doe</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -263,7 +263,7 @@ export const EditorContextMenu: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button>Right Click Menu</Button> />
+        <Button>Right Click Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
@@ -301,7 +301,7 @@ export const GroupedItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button>Grouped Menu</Button> />
+        <Button>Grouped Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
@@ -331,7 +331,7 @@ export const InsetItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button>Inset Menu</Button> />
+        <Button>Inset Menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>File Operations</DropdownMenuLabel>

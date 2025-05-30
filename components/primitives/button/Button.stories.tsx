@@ -187,7 +187,7 @@ export const IconToggle: Story = {
   },
 };
 
-export const ThumbnailDeposit: Story = {
+export const ThumnailDeposit: Story = {
   args: {
     children: <ArrowToLineIcon variant="down" />,
     size: 'thumbnail',
@@ -195,7 +195,7 @@ export const ThumbnailDeposit: Story = {
   },
 };
 
-export const ThumbnailToggle: Story = {
+export const ThumnailToggle: Story = {
   args: {
     children: <GiftIcon size="default" />,
     size: 'thumbnail',
