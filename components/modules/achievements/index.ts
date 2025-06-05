@@ -11,4 +11,7 @@ export * from './content';
 export * from './pagination';
 export * from './pin';
 export * from './share';
-export * from './card'; 
+export * from './card';
+export * from './featured';
+export * from './player-avatar';
+export * from './player-badge'; 
