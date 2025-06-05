@@ -189,7 +189,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const buttonStyles = {
       ...sizeStyles,
       ...variantStyles,
-      opacity: (disabled || isLoading) ? 0.5 : 1,
+      opacity: disabled ? 0.5 : (isLoading ? 0.5 : 1),
     };
 
     // Build text styles based on variant
@@ -200,8 +200,8 @@ export const Button = React.forwardRef<View, ButtonProps>(
         lineHeight: 20,
         fontWeight: '600',
         textTransform: 'uppercase',
-        letterSpacing: 0.5,
-        fontFamily: 'monospace',
+        letterSpacing: 0.4,
+        fontFamily: 'System',
       };
 
       // For link variant, use normal case and sans font
@@ -210,7 +210,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           ...baseStyles,
           textTransform: 'none',
           letterSpacing: 0,
-          fontFamily: 'system',
+          fontFamily: 'System',
           fontWeight: '400',
         };
       }
