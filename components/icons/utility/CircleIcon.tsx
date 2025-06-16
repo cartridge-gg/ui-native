@@ -1,14 +1,21 @@
-import React from 'react';
-import { Circle } from 'react-native-svg';
-import { BaseIcon } from '../BaseIcon';
-import { IconProps } from '../types';
+import type React from "react";
+import { Circle } from "react-native-svg";
+import { BaseIcon } from "../BaseIcon";
+import type { IconProps } from "../types";
 
 export const CircleIcon: React.FC<IconProps> = (props) => {
-  return (
-    <BaseIcon {...props}>
-      <Circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
-    </BaseIcon>
-  );
+	return (
+		<BaseIcon {...props}>
+			<Circle
+				cx="12"
+				cy="12"
+				r="10"
+				stroke="currentColor"
+				strokeWidth="2"
+				fill="none"
+			/>
+		</BaseIcon>
+	);
 };
 
-CircleIcon.displayName = "CircleIcon"; 
+CircleIcon.displayName = "CircleIcon";

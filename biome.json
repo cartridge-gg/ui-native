@@ -1,0 +1,26 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignore": ["node_modules", ".expo", "dist", "build", "__image_snapshots__"]
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				"noChildrenProp": "warn",
+				"useExhaustiveDependencies": "warn"
+			},
+			"complexity": {
+				"noForEach": "warn"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "warn",
+				"noExplicitAny": "warn"
+			}
+		}
+	}
+}

@@ -1,14 +1,14 @@
-import React from 'react';
-import { Rect } from 'react-native-svg';
-import { BaseIcon } from '../BaseIcon';
-import { IconProps } from '../types';
+import type React from "react";
+import { Rect } from "react-native-svg";
+import { BaseIcon } from "../BaseIcon";
+import type { IconProps } from "../types";
 
 export const CartridgeIcon: React.FC<IconProps> = (props) => {
-  return (
-    <BaseIcon {...props}>
-      <Rect x="4" y="6" width="16" height="12" rx="2" fill="currentColor" />
-    </BaseIcon>
-  );
+	return (
+		<BaseIcon {...props}>
+			<Rect x="4" y="6" width="16" height="12" rx="2" fill="currentColor" />
+		</BaseIcon>
+	);
 };
 
-CartridgeIcon.displayName = "CartridgeIcon"; 
+CartridgeIcon.displayName = "CartridgeIcon";
