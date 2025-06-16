@@ -1,4 +1,4 @@
-import { ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 
 // Common style type that can accept style objects or arrays
 export type StyleProp<T> = T | T[] | undefined;
@@ -10,12 +10,12 @@ export type ImageStyleProp = StyleProp<ImageStyle>;
 
 // Common component props interface
 export interface BaseComponentProps {
-  style?: ViewStyleProp;
-  className?: string;
-  testID?: string;
+	style?: ViewStyleProp;
+	className?: string;
+	testID?: string;
 }
 
 // Common text component props
 export interface BaseTextProps extends BaseComponentProps {
-  style?: TextStyleProp;
-} 
+	style?: TextStyleProp;
+}
