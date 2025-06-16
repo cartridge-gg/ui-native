@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 
 import { EditScreenInfo } from './EditScreenInfo';
-import { Button } from './Button';
+import { Button } from './primitives/button/Button';
 
 type ScreenContentProps = {
   title: string;
