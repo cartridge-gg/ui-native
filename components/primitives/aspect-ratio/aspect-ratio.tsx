@@ -1,14 +1,15 @@
 import type React from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 
 interface AspectRatioProps {
-	/**
-	 * The desired aspect ratio (width / height)
-	 * Examples: 16/9, 4/3, 1 (square), 9/16 (portrait)
-	 */
-	ratio?: number;
-	children: React.ReactNode;
-	style?: ViewStyle;
+  /**
+   * The desired aspect ratio (width / height)
+   * Examples: 16/9, 4/3, 1 (square), 9/16 (portrait)
+   */
+  ratio?: number;
+  children: React.ReactNode;
+  className?: string;
 }
 
 /**
@@ -16,16 +17,16 @@ interface AspectRatioProps {
  * The ratio is calculated as width / height.
  */
 export const AspectRatio: React.FC<AspectRatioProps> = ({
-	ratio = 1,
-	children,
-	style,
+  ratio = 1,
+  children,
+  className,
 }) => {
-	const styles = StyleSheet.create({
-		container: {
-			width: "100%",
-			aspectRatio: ratio,
-		},
-	});
-
-	return <View style={[styles.container, style]}>{children}</View>;
+  return (
+    <View
+      className={cn("w-full", className)}
+      style={{ aspectRatio: ratio }}
+    >
+      {children}
+    </View>
+  );
 };

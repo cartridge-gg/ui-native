@@ -1,258 +1,202 @@
 import type React from "react";
 import {
-	type DimensionValue,
-	ScrollView,
-	StyleSheet,
-	type TextStyle,
-	View,
-	type ViewStyle,
+  type DimensionValue,
+  ScrollView,
+  View,
 } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { cn } from "../../utils/cn";
 import { Text } from "../../typography/Text";
 
 // Table Root Component
 interface TableProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export const Table: React.FC<TableProps> = ({ children, style }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			width: "100%",
-			overflow: "hidden",
-		},
-		table: {
-			width: "100%",
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 8,
-			backgroundColor: colors.background[100],
-		},
-	});
-
-	return (
-		<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-			<View style={[styles.container, style]}>
-				<View style={styles.table}>{children}</View>
-			</View>
-		</ScrollView>
-	);
+export const Table: React.FC<TableProps> = ({ children, className }) => {
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <View className={cn("w-full overflow-hidden", className)}>
+        <View className="w-full border border-border-200 rounded-lg bg-background-100">
+          {children}
+        </View>
+      </View>
+    </ScrollView>
+  );
 };
 
 // Table Header Component
 interface TableHeaderProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
-	children,
-	style,
+  children,
+  className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		header: {
-			borderBottomWidth: 1,
-			borderBottomColor: colors.border[200],
-			backgroundColor: colors.background[200],
-		},
-	});
-
-	return <View style={[styles.header, style]}>{children}</View>;
+  return (
+    <View className={cn("border-b border-border-200 bg-background-200", className)}>
+      {children}
+    </View>
+  );
 };
 
 // Table Body Component
 interface TableBodyProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export const TableBody: React.FC<TableBodyProps> = ({ children, style }) => {
-	return <View style={style}>{children}</View>;
+export const TableBody: React.FC<TableBodyProps> = ({ children, className }) => {
+  return <View className={className}>{children}</View>;
 };
 
 // Table Footer Component
 interface TableFooterProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const TableFooter: React.FC<TableFooterProps> = ({
-	children,
-	style,
+  children,
+  className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		footer: {
-			borderTopWidth: 1,
-			borderTopColor: colors.border[200],
-			backgroundColor: colors.background[100],
-		},
-	});
-
-	return <View style={[styles.footer, style]}>{children}</View>;
+  return (
+    <View className={cn("border-t border-border-200 bg-background-100", className)}>
+      {children}
+    </View>
+  );
 };
 
 // Table Row Component
 interface TableRowProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
-	onPress?: () => void;
-	selected?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  onPress?: () => void;
+  selected?: boolean;
 }
 
 export const TableRow: React.FC<TableRowProps> = ({
-	children,
-	style,
-	onPress,
-	selected = false,
+  children,
+  className,
+  onPress,
+  selected = false,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		row: {
-			flexDirection: "row",
-			borderBottomWidth: 1,
-			borderBottomColor: colors.border[200],
-			minHeight: 48,
-			alignItems: "center",
-		},
-		selected: {
-			backgroundColor: colors.background[200],
-		},
-		lastRow: {
-			borderBottomWidth: 0,
-		},
-	});
-
-	return (
-		<View style={[styles.row, selected && styles.selected, style]}>
-			{children}
-		</View>
-	);
+  return (
+    <View className={cn(
+      "flex-row border-b border-border-200 min-h-12 items-center",
+      selected && "bg-background-200",
+      className
+    )}>
+      {children}
+    </View>
+  );
 };
 
 // Table Head Component
 interface TableHeadProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
-	textStyle?: TextStyle;
-	width?: DimensionValue;
-	align?: "left" | "center" | "right";
+  children: React.ReactNode;
+  className?: string;
+  textClassName?: string;
+  width?: DimensionValue;
+  align?: "left" | "center" | "right";
 }
 
 export const TableHead: React.FC<TableHeadProps> = ({
-	children,
-	style,
-	textStyle,
-	width,
-	align = "left",
+  children,
+  className,
+  textClassName,
+  width,
+  align = "left",
 }) => {
-	const { colors } = useTheme();
+  const alignClasses = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+  };
 
-	const styles = StyleSheet.create({
-		head: {
-			flex: width ? 0 : 1,
-			width: width,
-			paddingHorizontal: 8,
-			paddingVertical: 10,
-			justifyContent: "center",
-		},
-		text: {
-			color: colors.foreground[400],
-			textAlign: align,
-		},
-	});
-
-	return (
-		<View style={[styles.head, style]}>
-			<Text variant="sans-medium-12" style={[styles.text, textStyle]}>
-				{children}
-			</Text>
-		</View>
-	);
+  return (
+    <View
+      className={cn(
+        "px-2 py-2.5 justify-center",
+        width ? "" : "flex-1",
+        className
+      )}
+      style={{ width }}
+    >
+      <Text
+        variant="sans-medium-12"
+        className={cn("text-foreground-400", alignClasses[align], textClassName)}
+      >
+        {children}
+      </Text>
+    </View>
+  );
 };
 
 // Table Cell Component
 interface TableCellProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
-	textStyle?: TextStyle;
-	width?: DimensionValue;
-	align?: "left" | "center" | "right";
-	colSpan?: number;
+  children: React.ReactNode;
+  className?: string;
+  textClassName?: string;
+  width?: DimensionValue;
+  align?: "left" | "center" | "right";
+  colSpan?: number;
 }
 
 export const TableCell: React.FC<TableCellProps> = ({
-	children,
-	style,
-	textStyle,
-	width,
-	align = "left",
-	colSpan = 1,
+  children,
+  className,
+  textClassName,
+  width,
+  align = "left",
+  colSpan = 1,
 }) => {
-	const { colors } = useTheme();
+  const alignClasses = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+  };
 
-	const styles = StyleSheet.create({
-		cell: {
-			flex: width ? 0 : colSpan,
-			width: width,
-			paddingHorizontal: 8,
-			paddingVertical: 8,
-			justifyContent: "center",
-		},
-		text: {
-			color: colors.foreground[100],
-			textAlign: align,
-		},
-	});
-
-	return (
-		<View style={[styles.cell, style]}>
-			{typeof children === "string" ? (
-				<Text variant="body" style={[styles.text, textStyle]}>
-					{children}
-				</Text>
-			) : (
-				children
-			)}
-		</View>
-	);
+  return (
+    <View
+      className={cn(
+        "px-2 py-2 justify-center",
+        width ? "" : `flex-${colSpan}`,
+        className
+      )}
+      style={{ width }}
+    >
+      {typeof children === "string" ? (
+        <Text
+          variant="body"
+          className={cn("text-foreground-100", alignClasses[align], textClassName)}
+        >
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+    </View>
+  );
 };
 
 // Table Caption Component
 interface TableCaptionProps {
-	children: React.ReactNode;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const TableCaption: React.FC<TableCaptionProps> = ({
-	children,
-	style,
+  children,
+  className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		caption: {
-			paddingVertical: 8,
-			paddingHorizontal: 16,
-		},
-		text: {
-			color: colors.foreground[400],
-			textAlign: "center",
-		},
-	});
-
-	return (
-		<View style={[styles.caption, style]}>
-			<Text variant="caption" style={styles.text}>
-				{children}
-			</Text>
-		</View>
-	);
+  return (
+    <View className={cn("py-2 px-4", className)}>
+      <Text variant="caption" className="text-foreground-400 text-center">
+        {children}
+      </Text>
+    </View>
+  );
 };
