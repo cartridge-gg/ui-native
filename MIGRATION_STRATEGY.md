@@ -24,7 +24,8 @@ NativeWind enables using Tailwind CSS classes directly in React Native component
 
 **Configuration Requirements**:
 - Ensure `tailwind.config.js` is properly configured for React Native
-- Verify custom theme colors are defined
+- Verify custom theme colors from `dark.css` are mapped to Tailwind classes
+- Map CSS custom properties (--background-100, --foreground, etc.) to Tailwind color tokens
 - Check that all Tailwind plugins are compatible with NativeWind
 
 **React Native vs Web Differences**:
@@ -37,6 +38,18 @@ React Native has different default behaviors that require Tailwind class adjustm
 | `position: relative` is default | No default positioning | May need explicit `relative` |
 | `box-sizing: border-box` default | Different box model | Check padding/border interactions |
 | `overflow: visible` default | `overflow: hidden` default | May need `overflow-visible` |
+
+**Color System**:
+The UI library uses CSS custom properties defined in `dark.css` for theming:
+- Background colors: `--background-100` through `--background-500`
+- Foreground colors: `--foreground`, `--foreground-100` through `--foreground-400`
+- Translucent variants: `--translucent-dark-*` and `--translucent-light-*`
+- Spacer color: `--spacer-100`
+
+These map to Tailwind classes like:
+- `bg-background-100`, `bg-background-200`, etc.
+- `text-foreground`, `text-foreground-200`, etc.
+- `bg-translucent-dark-100`, `bg-translucent-light-150`, etc.
 
 ### 2. Snapshot Update Tool
 ```bash
@@ -97,9 +110,9 @@ Look for:
 2. **Identify key elements**:
    - Props interface
    - Component structure
-   - Styling approach (Tailwind classes)
+   - Styling approach (Tailwind classes with CSS custom properties)
    - Dependencies (icons, sub-components)
-   - Theme integration
+   - Theme integration (check dark.css for color definitions)
 
 3. **Check the story file**:
    ```bash
@@ -136,7 +149,8 @@ Look for:
    
    // Most other classes remain the same
    <span className="text-sm"> -> <Text className="text-sm">
-   <div className="bg-primary-100"> -> <View className="bg-primary-100">
+   <div className="bg-background-100"> -> <View className="bg-background-100">
+   <div className="text-foreground"> -> <Text className="text-foreground">
    <div className="p-3"> -> <View className="p-3">
    <div className="gap-2"> -> <View className="gap-2">
    ```
@@ -210,7 +224,8 @@ Based on the analysis, fix issues in order of impact:
 2. **Color Differences**:
    - Verify theme integration with NativeWind
    - Check dark/light mode consistency
-   - Ensure custom theme colors are configured in tailwind.config.js
+   - Ensure custom theme colors from dark.css are configured in tailwind.config.js
+   - Verify CSS custom properties (--background-100, --foreground, etc.) are properly mapped
 
 3. **Typography Issues**:
    - Check Tailwind typography classes (text-sm, font-bold, etc.)
@@ -369,7 +384,8 @@ git commit -m "Migrated TokenCard"
 **Solution**:
 - Verify NativeWind is properly installed and configured
 - Check that `tailwind.config.js` includes React Native file extensions
-- Ensure custom theme values are correctly defined
+- Ensure CSS custom properties from `dark.css` are mapped to Tailwind tokens
+- Verify color classes like `bg-background-100` and `text-foreground` work correctly
 - Verify import statements include NativeWind setup
 
 ## Automation Opportunities
