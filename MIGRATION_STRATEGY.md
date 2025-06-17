@@ -13,7 +13,32 @@ This document outlines the systematic process for migrating UI components from t
 
 ## Tools
 
-### 1. Snapshot Update Tool
+### 1. NativeWind Setup
+NativeWind enables using Tailwind CSS classes directly in React Native components, eliminating the need for style prop conversions.
+
+**Key Benefits**:
+- Keep existing Tailwind classes unchanged
+- Maintain design system consistency
+- Simplify migration process
+- Support for responsive design and theme switching
+
+**Configuration Requirements**:
+- Ensure `tailwind.config.js` is properly configured for React Native
+- Verify custom theme colors are defined
+- Check that all Tailwind plugins are compatible with NativeWind
+
+**React Native vs Web Differences**:
+React Native has different default behaviors that require Tailwind class adjustments:
+
+| Web Behavior | React Native Behavior | Class Adjustment |
+|--------------|----------------------|------------------|
+| `flex` defaults to `flex-direction: row` | `flex` defaults to `flex-direction: column` | `flex` → `flex-row` |
+| `flex-col` explicit column direction | `flex` already defaults to column | `flex-col` → `flex` (optional) |
+| `position: relative` is default | No default positioning | May need explicit `relative` |
+| `box-sizing: border-box` default | Different box model | Check padding/border interactions |
+| `overflow: visible` default | `overflow: hidden` default | May need `overflow-visible` |
+
+### 2. Snapshot Update Tool
 ```bash
 # Update all snapshots
 node scripts/update-snapshots.js
@@ -24,7 +49,7 @@ node scripts/update-snapshots.js button
 node scripts/update-snapshots.js "activities.*card"
 ```
 
-### 2. Visual Comparison Tool
+### 3. Visual Comparison Tool
 ```bash
 # Compare specific snapshots
 node scripts/visual-comparison.js achievement
@@ -89,19 +114,31 @@ Look for:
    ```
 
 2. **Implement the component**:
-   - Convert Tailwind classes to React Native styles
-   - Use theme colors from `ui-native/components/theme/colors.ts`
+   - Keep most Tailwind classes using NativeWind (minimal conversion needed)
+   - **Critical**: Convert `flex` to `flex-row` for horizontal layouts
    - Replace HTML elements with React Native equivalents
    - Ensure prop interfaces match exactly
+   - Verify theme integration works with NativeWind
 
-3. **Key conversion patterns**:
+3. **Key conversion patterns with NativeWind**:
    ```typescript
-   // UI (Web) -> UI-Native (React Native)
-   <div className="flex"> -> <View style={{ flexDirection: 'row' }}>
-   <span className="text-sm"> -> <Text style={{ fontSize: 14 }}>
-   className="bg-primary-100" -> style={{ backgroundColor: colors.primary[100] }}
-   className="p-3" -> style={{ padding: 12 }}
-   className="gap-2" -> style={{ gap: 8 }}
+   // HTML elements to React Native components
+   <div> -> <View>
+   <span> -> <Text>
+   <p> -> <Text>
+   <img> -> <Image>
+   <button> -> <Pressable> or custom Button component
+   
+   // Tailwind class adjustments for React Native defaults
+   // Web flex defaults to row, React Native defaults to column
+   <div className="flex"> -> <View className="flex-row">
+   <div className="flex-col"> -> <View className="flex"> (or <View className="flex-col">)
+   
+   // Most other classes remain the same
+   <span className="text-sm"> -> <Text className="text-sm">
+   <div className="bg-primary-100"> -> <View className="bg-primary-100">
+   <div className="p-3"> -> <View className="p-3">
+   <div className="gap-2"> -> <View className="gap-2">
    ```
 
 #### Step 5: Create Story File
@@ -114,9 +151,11 @@ Look for:
 
 2. **Key story patterns**:
    ```typescript
-   // Replace <div> with <View>
-   // Ensure gap values match (Tailwind gap-3 = 12px)
+   // Replace HTML elements with React Native equivalents
+   // Keep most Tailwind classes unchanged (NativeWind handles conversion)
+   // IMPORTANT: Convert flex to flex-row for horizontal layouts
    // Use same test data and prop combinations
+   // Ensure className props work identically
    ```
 
 ### Phase 3: Visual Verification
@@ -163,24 +202,25 @@ Review the comparison results:
 Based on the analysis, fix issues in order of impact:
 
 1. **Dimension Mismatches**:
-   - Check padding/margin values
-   - Verify container sizing
-   - Ensure gap values match
+   - Check Tailwind class consistency, especially flex direction
+   - Convert `flex` to `flex-row` for horizontal layouts
+   - Verify NativeWind configuration
+   - Ensure responsive breakpoints work correctly
 
 2. **Color Differences**:
-   - Verify theme integration
+   - Verify theme integration with NativeWind
    - Check dark/light mode consistency
-   - Ensure exact color value matches
+   - Ensure custom theme colors are configured in tailwind.config.js
 
 3. **Typography Issues**:
-   - Check font sizes and weights
-   - Verify line heights
-   - Ensure text alignment
+   - Check Tailwind typography classes (text-sm, font-bold, etc.)
+   - Verify font configuration in NativeWind
+   - Ensure text alignment classes work correctly
 
 4. **Icon/Image Problems**:
    - Verify icon variants and sizes
    - Check image handling (URLs vs local)
-   - Ensure sub-icon positioning
+   - Ensure sub-icon positioning with Tailwind classes
 
 #### Step 10: Re-test After Each Fix
 ```bash
@@ -206,13 +246,14 @@ For the final 1-5% similarity gap:
    - Font rendering variations
 
 2. **Story-level adjustments**:
-   - Gap between components in stories
-   - Container sizing
-   - Background colors
+   - Gap between components in stories (using Tailwind classes)
+   - Container sizing (using Tailwind width/height classes)
+   - Background colors (using Tailwind bg-* classes)
 
 3. **Platform-specific considerations**:
    - React Native vs Web rendering differences
    - Font availability and fallbacks
+   - NativeWind configuration differences
 
 ### Phase 5: Validation and Documentation
 
@@ -311,9 +352,25 @@ git commit -m "Migrated TokenCard"
 ### 5. Spacing Inconsistencies
 **Problem**: Gaps and padding don't match
 **Solution**:
-- Convert Tailwind classes accurately (gap-3 = 12px)
-- Check flex properties
-- Verify margin/padding values
+- Ensure Tailwind classes are identical between UI and UI-native
+- Check NativeWind configuration for custom spacing values
+- Verify flex properties work correctly with NativeWind
+
+### 6. Flex Direction Mismatches
+**Problem**: Components appear stacked vertically instead of horizontally
+**Solution**:
+- Change `className="flex"` to `className="flex-row"` for horizontal layouts
+- Remember React Native defaults to column direction, web defaults to row
+- Check all flex containers in the component
+- Verify items-center and justify-center work with correct flex direction
+
+### 7. NativeWind Configuration Issues
+**Problem**: Tailwind classes not working as expected in React Native
+**Solution**:
+- Verify NativeWind is properly installed and configured
+- Check that `tailwind.config.js` includes React Native file extensions
+- Ensure custom theme values are correctly defined
+- Verify import statements include NativeWind setup
 
 ## Automation Opportunities
 
@@ -372,6 +429,9 @@ git commit -m "Migrated [ComponentName]"
 6. **Maintain Quality**: Don't compromise on similarity thresholds
 7. **Commit Regularly**: Create a commit after each successful component migration
 8. **Track Progress**: Use consistent commit messages for easy progress tracking
+9. **Leverage NativeWind**: Keep most Tailwind classes unchanged to maintain consistency
+10. **Mind the Flex Direction**: Always convert `flex` to `flex-row` for horizontal layouts
+11. **Verify Configuration**: Ensure NativeWind setup matches UI library configuration
 
 ## Conclusion
 
