@@ -1,176 +1,149 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Pressable, TextInput, View } from "react-native";
+import { cn } from "../../utils/cn";
 import { TimesIcon } from "../../icons/utility/TimesIcon";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
-import type { TextStyleProp, ViewStyleProp } from "../../utils/types";
 
 export interface TextareaProps {
-	value?: string;
-	onChangeText?: (text: string) => void;
-	placeholder?: string;
-	variant?: "default" | "username";
-	size?: "default" | "lg";
-	disabled?: boolean;
-	error?: { message: string };
-	isLoading?: boolean;
-	onClear?: () => void;
-	style?: ViewStyleProp;
-	textStyle?: TextStyleProp;
-	minHeight?: number;
-	maxHeight?: number;
-	testID?: string;
+  value?: string;
+  onChangeText?: (text: string) => void;
+  placeholder?: string;
+  variant?: "default" | "username";
+  size?: "default" | "lg";
+  disabled?: boolean;
+  error?: { message: string };
+  isLoading?: boolean;
+  onClear?: () => void;
+  className?: string;
+  minHeight?: number;
+  maxHeight?: number;
+  testID?: string;
 }
 
 export const Textarea = React.forwardRef<TextInput, TextareaProps>(
-	(
-		{
-			value = "",
-			onChangeText,
-			placeholder,
-			variant = "default",
-			size = "default",
-			disabled = false,
-			error,
-			isLoading = false,
-			onClear,
-			style,
-			textStyle,
-			minHeight,
-			maxHeight,
-			testID,
-			...props
-		},
-		ref,
-	) => {
-		const { colors } = useTheme();
-		const [isFocused, setIsFocused] = useState(false);
-		const [contentHeight, setContentHeight] = useState(0);
+  (
+    {
+      value = "",
+      onChangeText,
+      placeholder,
+      variant = "default",
+      size = "default",
+      disabled = false,
+      error,
+      isLoading = false,
+      onClear,
+      className,
+      minHeight,
+      maxHeight,
+      testID,
+      ...props
+    },
+    ref,
+  ) => {
+    const [isFocused, setIsFocused] = useState(false);
+    const [contentHeight, setContentHeight] = useState(0);
 
-		// Get variant styles
-		const getVariantStyles = () => {
-			const baseStyles = {
-				borderWidth: 1,
-				borderRadius: 6,
-				paddingHorizontal: 16,
-				fontFamily: "monospace",
-				backgroundColor: colors.background[200],
-				borderColor: error ? colors.destructive[100] : colors.background[300],
-				color: colors.foreground[100],
-			};
+    // Calculate height only when dependencies change
+    const calculatedStyle = useMemo(() => {
+      const baseMinHeight = minHeight || (size === "lg" ? 48 : 40);
+      const paddingVertical = size === "lg" ? 26.6 : 20.6;
+      const calculatedHeight = Math.max(
+        baseMinHeight,
+        contentHeight + paddingVertical,
+        baseMinHeight,
+      );
 
-			if (isFocused) {
-				baseStyles.borderColor = error
-					? colors.destructive[100]
-					: colors.primary[100];
-				baseStyles.backgroundColor = colors.background[300];
-			}
+      const finalHeight = maxHeight
+        ? Math.min(calculatedHeight, maxHeight)
+        : calculatedHeight;
 
-			return baseStyles;
-		};
+      return {
+        minHeight: baseMinHeight,
+        height: finalHeight,
+      };
+    }, [contentHeight, minHeight, maxHeight, size]);
 
-		// Get size styles
-		const getSizeStyles = () => {
-			const calculatedHeight = Math.max(
-				minHeight || (size === "lg" ? 48 : 40),
-				contentHeight + (size === "lg" ? 26.6 : 20.6), // padding top + bottom
-				size === "lg" ? 48 : 40,
-			);
+    const baseClasses = cn(
+      "border font-mono bg-background-200 text-foreground-100 rounded-md px-4",
+      // Size classes
+      size === "lg" ? "text-[15px] leading-5" : "text-sm leading-[18px]",
+      // Focus and error states
+      isFocused && !error && "border-primary-100 bg-background-300",
+      error && "border-destructive-100",
+      !isFocused && !error && "border-background-300",
+      // Disabled state
+      disabled && "opacity-50",
+      // Padding right for clear button
+      value && onClear && "pr-12",
+      className
+    );
 
-			const finalHeight = maxHeight
-				? Math.min(calculatedHeight, maxHeight)
-				: calculatedHeight;
+    const handleContentSizeChange = useCallback((event: any) => {
+      const newHeight = event.nativeEvent.contentSize.height;
+      // Only update if height changed by more than 1px to prevent micro-adjustments
+      setContentHeight(prevHeight => {
+        if (Math.abs(newHeight - prevHeight) > 1) {
+          return newHeight;
+        }
+        return prevHeight;
+      });
+    }, []);
 
-			return {
-				minHeight: minHeight || (size === "lg" ? 48 : 40),
-				height: finalHeight,
-				paddingTop: size === "lg" ? 13.3 : 10.3,
-				paddingBottom: size === "lg" ? 13.3 : 10.3,
-				fontSize: size === "lg" ? 15 : 14,
-				lineHeight: size === "lg" ? 20 : 18,
-			};
-		};
+    const handleClear = useCallback(() => {
+      if (onClear) {
+        onClear();
+      }
+    }, [onClear]);
 
-		const variantStyles = getVariantStyles();
-		const sizeStyles = getSizeStyles();
+    return (
+      <View className="gap-3">
+        <View className="relative">
+          <TextInput
+            ref={ref}
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={placeholder}
+            placeholderTextColor="#505050" // foreground-400
+            multiline
+            editable={!disabled && !isLoading}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onContentSizeChange={handleContentSizeChange}
+            className={baseClasses}
+            style={{
+              ...calculatedStyle,
+              textAlignVertical: "top",
+              paddingTop: size === "lg" ? 13.3 : 10.3,
+              paddingBottom: size === "lg" ? 13.3 : 10.3,
+            }}
+            testID={testID}
+            {...props}
+          />
 
-		const textInputStyles = {
-			...variantStyles,
-			...sizeStyles,
-			textAlignVertical: "top" as const,
-			opacity: disabled ? 0.5 : 1,
-			paddingRight: value && onClear ? 48 : 16, // Space for clear button
-		};
+          {/* Clear button */}
+          {(isFocused || value) &&
+            value &&
+            onClear &&
+            !disabled &&
+            !isLoading && (
+              <Pressable
+                onPress={handleClear}
+                className="absolute right-1.5 top-1.5 w-8 h-8 rounded bg-background-200 justify-center items-center"
+              >
+                <TimesIcon size="xs" color="#808080" />
+              </Pressable>
+            )}
+        </View>
 
-		const handleContentSizeChange = (event: any) => {
-			setContentHeight(event.nativeEvent.contentSize.height);
-		};
-
-		const handleClear = () => {
-			if (onClear) {
-				onClear();
-			}
-		};
-
-		return (
-			<View style={[{ gap: 12 }, style]}>
-				<View style={{ position: "relative" }}>
-					<TextInput
-						ref={ref}
-						value={value}
-						onChangeText={onChangeText}
-						placeholder={placeholder}
-						placeholderTextColor={colors.foreground[400]}
-						multiline
-						editable={!disabled && !isLoading}
-						onFocus={() => setIsFocused(true)}
-						onBlur={() => setIsFocused(false)}
-						onContentSizeChange={handleContentSizeChange}
-						style={[textInputStyles, textStyle]}
-						testID={testID}
-						{...props}
-					/>
-
-					{/* Clear button */}
-					{(isFocused || value) &&
-						value &&
-						onClear &&
-						!disabled &&
-						!isLoading && (
-							<Pressable
-								onPress={handleClear}
-								style={{
-									position: "absolute",
-									right: 6,
-									top: 6,
-									width: 32,
-									height: 32,
-									borderRadius: 4,
-									backgroundColor: colors.background[200],
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<TimesIcon size="xs" color={colors.foreground[300]} />
-							</Pressable>
-						)}
-				</View>
-
-				{/* Error message */}
-				{error && (
-					<Text
-						style={{
-							fontSize: 12,
-							color: colors.destructive[100],
-							marginTop: -8, // Reduce gap when error is shown
-						}}
-					>
-						{error.message}
-					</Text>
-				)}
-			</View>
-		);
-	},
+        {/* Error message */}
+        {error && (
+          <Text className="text-xs text-destructive-100 -mt-2">
+            {error.message}
+          </Text>
+        )}
+      </View>
+    );
+  },
 );
 
 Textarea.displayName = "Textarea";
