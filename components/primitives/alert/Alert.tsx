@@ -1,110 +1,71 @@
-import { StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 import { Text } from "../../typography/Text";
 
 export type AlertVariant = "default" | "destructive" | "constructive";
 
 export interface AlertProps {
-	variant?: AlertVariant;
-	children: React.ReactNode;
-	style?: ViewStyle;
+  variant?: AlertVariant;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const Alert: React.FC<AlertProps> = ({
-	variant = "default",
-	children,
-	style,
+  variant = "default",
+  children,
+  className,
 }) => {
-	const { colors } = useTheme();
+  const variantStyles = {
+    default: "bg-background-200 border border-background-300",
+    destructive: "bg-background-200 border border-destructive-100",
+    constructive: "bg-background-200 border border-constructive-100",
+  };
 
-	const getVariantStyles = (variant: AlertVariant) => {
-		switch (variant) {
-			case "destructive":
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.destructive[100],
-					borderWidth: 1,
-				};
-			case "constructive":
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.constructive[100],
-					borderWidth: 1,
-				};
-			default:
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.background[300],
-					borderWidth: 1,
-				};
-		}
-	};
-
-	const variantStyles = getVariantStyles(variant);
-
-	const styles = StyleSheet.create({
-		alert: {
-			borderRadius: 8,
-			padding: 16,
-			...variantStyles,
-		},
-	});
-
-	return (
-		<View style={[styles.alert, style]} accessibilityRole="alert">
-			{children}
-		</View>
-	);
+  return (
+    <View
+      className={cn(
+        "rounded-lg p-4",
+        variantStyles[variant],
+        className
+      )}
+      accessibilityRole="alert"
+    >
+      {children}
+    </View>
+  );
 };
 
 export interface AlertTitleProps {
-	children: React.ReactNode;
-	style?: any;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export const AlertTitle: React.FC<AlertTitleProps> = ({ children, style }) => {
-	const { colors } = useTheme();
-
-	return (
-		<Text
-			variant="body"
-			style={[
-				{
-					fontWeight: "600",
-					marginBottom: 4,
-					color: colors.foreground[100],
-				},
-				style,
-			]}
-		>
-			{children}
-		</Text>
-	);
+export const AlertTitle: React.FC<AlertTitleProps> = ({ children, className }) => {
+  return (
+    <Text
+      variant="body"
+      className={cn("font-semibold mb-1 text-foreground-100", className)}
+    >
+      {children}
+    </Text>
+  );
 };
 
 export interface AlertDescriptionProps {
-	children: React.ReactNode;
-	style?: any;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const AlertDescription: React.FC<AlertDescriptionProps> = ({
-	children,
-	style,
+  children,
+  className,
 }) => {
-	const { colors } = useTheme();
-
-	return (
-		<Text
-			variant="body"
-			style={[
-				{
-					color: colors.foreground[400],
-					lineHeight: 20,
-				},
-				style,
-			]}
-		>
-			{children}
-		</Text>
-	);
+  return (
+    <Text
+      variant="body"
+      className={cn("text-foreground-400 leading-5", className)}
+    >
+      {children}
+    </Text>
+  );
 };

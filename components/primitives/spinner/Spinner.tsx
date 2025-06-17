@@ -1,44 +1,24 @@
 import type React from "react";
-import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 import type { IconProps } from "../../icons/types";
 import { SpinnerIcon } from "../../icons/utility/SpinnerIcon";
 
 export interface SpinnerProps extends IconProps {
-	duration?: number;
+  className?: string;
 }
 
 export const Spinner: React.FC<SpinnerProps> = ({
-	size = "default",
-	color,
-	style,
-	duration = 1000,
-	...props
+  size = "default",
+  color,
+  className,
+  ...props
 }) => {
-	const spinValue = useRef(new Animated.Value(0)).current;
-
-	useEffect(() => {
-		const spin = () => {
-			spinValue.setValue(0);
-			Animated.timing(spinValue, {
-				toValue: 1,
-				duration,
-				useNativeDriver: true,
-			}).start(() => spin());
-		};
-		spin();
-	}, [spinValue, duration]);
-
-	const rotate = spinValue.interpolate({
-		inputRange: [0, 1],
-		outputRange: ["0deg", "360deg"],
-	});
-
-	return (
-		<Animated.View style={[{ transform: [{ rotate }] }, style]}>
-			<SpinnerIcon size={size} color={color} {...props} />
-		</Animated.View>
-	);
+  return (
+    <View className={cn("animate-spin", className)}>
+      <SpinnerIcon size={size} color={color} {...props} />
+    </View>
+  );
 };
 
 Spinner.displayName = "Spinner";

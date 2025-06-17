@@ -1,111 +1,66 @@
 import type React from "react";
-import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, View, type ViewStyle } from "react-native";
+import { cn } from "../../utils/cn";
 import { Text } from "../../typography/Text";
 
 export type BadgeVariant =
-	| "default"
-	| "primary"
-	| "muted"
-	| "destructive"
-	| "outline";
+  | "default"
+  | "primary"
+  | "muted"
+  | "destructive"
+  | "outline";
 
 export interface BadgeProps {
-	children: React.ReactNode;
-	variant?: BadgeVariant;
-	onPress?: () => void;
-	style?: ViewStyle;
+  children: React.ReactNode;
+  variant?: BadgeVariant;
+  onPress?: () => void;
+  className?: string;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
-	children,
-	variant = "default",
-	onPress,
-	style,
+  children,
+  variant = "default",
+  onPress,
+  className,
 }) => {
-	const { colors } = useTheme();
+  const badgeVariants = {
+    default: "bg-background-200",
+    primary: "bg-primary-100",
+    muted: "bg-background-200",
+    destructive: "bg-destructive-100",
+    outline: "bg-transparent border border-foreground-400",
+  };
 
-	const getVariantStyles = (variant: BadgeVariant) => {
-		switch (variant) {
-			case "primary":
-				return {
-					backgroundColor: colors.primary[100],
-					borderColor: "transparent",
-				};
-			case "muted":
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: "transparent",
-				};
-			case "destructive":
-				return {
-					backgroundColor: colors.destructive[100],
-					borderColor: "transparent",
-				};
-			case "outline":
-				return {
-					backgroundColor: "transparent",
-					borderColor: colors.foreground[400],
-					borderWidth: 1,
-				};
-			default:
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: "transparent",
-				};
-		}
-	};
+  const textVariants = {
+    default: "text-foreground-100",
+    primary: "text-primary-foreground",
+    muted: "text-foreground-400",
+    destructive: "text-destructive-foreground",
+    outline: "text-foreground-100",
+  };
 
-	const getTextColor = (variant: BadgeVariant) => {
-		switch (variant) {
-			case "primary":
-				return colors.primary.foreground;
-			case "muted":
-				return colors.foreground[400];
-			case "destructive":
-				return colors.destructive.foreground;
-			case "outline":
-				return colors.foreground[100];
-			default:
-				return colors.foreground[100];
-		}
-	};
+  const content = (
+    <View className={cn(
+      "flex-row items-center rounded-md px-1 py-0.5",
+      badgeVariants[variant],
+      className
+    )}>
+      <Text className={cn("text-xs font-semibold", textVariants[variant])}>
+        {children}
+      </Text>
+    </View>
+  );
 
-	const variantStyles = getVariantStyles(variant);
-	const textColor = getTextColor(variant);
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        className="active:opacity-80"
+      >
+        {content}
+      </Pressable>
+    );
+  }
 
-	const styles = StyleSheet.create({
-		badge: {
-			flexDirection: "row",
-			alignItems: "center",
-			borderRadius: 6,
-			paddingHorizontal: 4,
-			paddingVertical: 2,
-			...variantStyles,
-		},
-		text: {
-			fontSize: 12,
-			fontWeight: "600",
-			color: textColor,
-		},
-	});
-
-	const content = (
-		<View style={[styles.badge, style]}>
-			<Text style={styles.text}>{children}</Text>
-		</View>
-	);
-
-	if (onPress) {
-		return (
-			<Pressable
-				onPress={onPress}
-				style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-			>
-				{content}
-			</Pressable>
-		);
-	}
-
-	return content;
+  return content;
 };
