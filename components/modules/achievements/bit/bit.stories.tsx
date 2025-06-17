@@ -42,7 +42,7 @@ export const ActiveCompleted: Story = {
 
 export const Collection: Story = {
 	render: () => (
-		<View style={{ flexDirection: "row", gap: 8, padding: 16 }}>
+		<View className="flex-row gap-2 p-4">
 			<AchievementBit />
 			<AchievementBit active />
 			<AchievementBit completed />

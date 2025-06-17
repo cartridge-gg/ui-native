@@ -418,10 +418,10 @@ function Icons({
 	const columns = getColumns();
 	const iconEntries = iconsByCategory[category];
 
-	if (!iconEntries || iconEntries.length === 0) {
+	if (iconEntries.length === 0) {
 		return (
-			<View style={{ padding: 16, alignItems: "center" }}>
-				<Text style={{ color: colors.foreground[400] }}>
+			<View className="p-4 items-center">
+				<Text className="text-theme-foreground-muted">
 					No icons found in this category.
 				</Text>
 			</View>
@@ -429,30 +429,11 @@ function Icons({
 	}
 
 	return (
-		<View
-			style={{
-				flexDirection: "row",
-				flexWrap: "wrap",
-				gap: 8,
-				padding: 16,
-			}}
-		>
+		<View className="flex-row flex-wrap gap-4 p-4">
 			{iconEntries.map(({ name, component: IconComponent }) => (
 				<View
 					key={name}
-					style={{
-						borderWidth: 1,
-						borderColor: colors.border,
-						borderRadius: 8,
-						flexDirection: "column",
-						alignItems: "center",
-						paddingVertical: 16,
-						paddingHorizontal: 8,
-						gap: 8,
-						width: `${100 / columns - 2}%`,
-						minHeight: 80,
-						overflow: "hidden",
-					}}
+					className="border border-gray-200 rounded-lg p-4 items-center justify-center w-24 h-24"
 				>
 					{(() => {
 						try {
@@ -476,21 +457,10 @@ function Icons({
 							}
 						} catch (err) {
 							console.warn(`Error rendering icon ${name}:`, err);
-							return (
-								<Text style={{ color: colors.destructive[500], fontSize: 10 }}>
-									Error
-								</Text>
-							);
+							return <Text className="text-red-500 text-xs">Error</Text>;
 						}
 					})()}
-					<Text
-						style={{
-							fontSize: 10,
-							color: colors.foreground[400],
-							textAlign: "center",
-							lineHeight: 12,
-						}}
-					>
+					<Text className="text-xs text-center text-theme-foreground-muted leading-tight">
 						{name}
 					</Text>
 				</View>

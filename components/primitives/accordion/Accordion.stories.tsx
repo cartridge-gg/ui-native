@@ -33,26 +33,20 @@ export const Default: Story = {
 					</Text>
 				</AccordionTrigger>
 				<AccordionContent>
-					<View style={{ gap: 8 }}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+					<View className="gap-2">
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>
 							<Text variant="body">Method 1</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>
 							<Text variant="body">Method 2</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>
@@ -111,7 +105,7 @@ export const Controlled: Story = {
 		const [value, setValue] = useState("item-1");
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Currently open: {value || "None"}</Text>
 				<Accordion
 					type="single"
@@ -268,7 +262,7 @@ export const FAQ: Story = {
 					<Text variant="body">How do I use it?</Text>
 				</AccordionTrigger>
 				<AccordionContent>
-					<View style={{ gap: 8 }}>
+					<View className="gap-2">
 						<Text variant="body" color="secondary">
 							You can use it in several ways:
 						</Text>
@@ -309,7 +303,7 @@ export const TriggerColor: Story = {
 		<Accordion type="single" collapsible>
 			<AccordionItem value="item-1">
 				<AccordionTrigger>
-					<Text variant="body" style={{ color: "#ef4444" }}>
+					<Text variant="body" className="text-red-500">
 						Approve{" "}
 						<Text variant="body" color="primary">
 							2 methods
@@ -317,26 +311,20 @@ export const TriggerColor: Story = {
 					</Text>
 				</AccordionTrigger>
 				<AccordionContent>
-					<View style={{ gap: 8 }}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+					<View className="gap-2">
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>
 							<Text variant="body">Method 1</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>
 							<Text variant="body">Method 2</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<Text variant="caption" color="muted">
 								●
 							</Text>

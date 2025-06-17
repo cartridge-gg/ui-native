@@ -2,7 +2,6 @@ import type React from "react";
 import { createContext, useContext, useState } from "react";
 import {
 	Modal,
-	StyleSheet,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
@@ -10,8 +9,8 @@ import {
 import { WedgeIcon } from "../../icons/directional/WedgeIcon";
 import { CheckIcon } from "../../icons/state/CheckIcon";
 import { CircleIcon } from "../../icons/utility/CircleIcon";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // MenuBar Context
 interface MenuBarContextType {
@@ -35,32 +34,19 @@ interface MenubarProps {
 	className?: string;
 }
 
-export const Menubar: React.FC<MenubarProps> = ({ children }) => {
+export const Menubar: React.FC<MenubarProps> = ({ children, className }) => {
 	const [activeMenu, setActiveMenu] = useState<string | null>(null);
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			height: 36, // h-9 equivalent
-			backgroundColor: colors.background[100],
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 6,
-			padding: 4,
-			gap: 4,
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 1 },
-			shadowOpacity: 0.1,
-			shadowRadius: 2,
-			elevation: 2,
-		},
-	});
 
 	return (
 		<MenuBarContext.Provider value={{ activeMenu, setActiveMenu }}>
-			<View style={styles.container}>{children}</View>
+			<View
+				className={cn(
+					"flex-row items-center h-9 bg-theme-background border border-theme-border rounded-md p-1 gap-1 shadow-sm",
+					className,
+				)}
+			>
+				{children}
+			</View>
 		</MenuBarContext.Provider>
 	);
 };
@@ -84,31 +70,30 @@ interface MenubarTriggerProps {
 	className?: string;
 }
 
-export const MenubarTrigger: React.FC<MenubarTriggerProps> = ({ children }) => {
+export const MenubarTrigger: React.FC<MenubarTriggerProps> = ({
+	children,
+	className,
+}) => {
 	const { activeMenu, setActiveMenu } = useMenuBar();
-	const { colors } = useTheme();
 	const menuId = typeof children === "string" ? children : "menu";
 	const isActive = activeMenu === menuId;
 
-	const styles = StyleSheet.create({
-		trigger: {
-			paddingHorizontal: 12,
-			paddingVertical: 4,
-			borderRadius: 4,
-			backgroundColor: isActive ? colors.background[500] : "transparent",
-		},
-		text: {
-			color: isActive ? colors.foreground[200] : colors.foreground[100],
-		},
-	});
-
 	return (
 		<TouchableOpacity
-			style={styles.trigger}
+			className={cn(
+				"px-3 py-1 rounded",
+				isActive ? "bg-theme-background-muted" : "bg-transparent",
+				className,
+			)}
 			onPress={() => setActiveMenu(isActive ? null : menuId)}
 			activeOpacity={0.7}
 		>
-			<Text variant="sans-medium-14" style={styles.text}>
+			<Text
+				variant="sans-medium-14"
+				className={cn(
+					isActive ? "text-theme-foreground-subtle" : "text-theme-foreground",
+				)}
+			>
 				{children}
 			</Text>
 		</TouchableOpacity>
@@ -129,34 +114,10 @@ export const MenubarContent: React.FC<MenubarContentProps> = ({
 	align = "start",
 	alignOffset = -4,
 	sideOffset = 8,
+	className,
 }) => {
 	const { activeMenu, setActiveMenu } = useMenuBar();
-	const { colors } = useTheme();
 	const isVisible = activeMenu !== null;
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.3)",
-		},
-		content: {
-			position: "absolute",
-			top: 50, // Approximate position below menubar
-			left: 20,
-			minWidth: 192, // min-w-[12rem]
-			backgroundColor: colors.background[200],
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 6,
-			padding: 4,
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 2 },
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-			zIndex: 50,
-		},
-	});
 
 	return (
 		<Modal
@@ -166,9 +127,16 @@ export const MenubarContent: React.FC<MenubarContentProps> = ({
 			onRequestClose={() => setActiveMenu(null)}
 		>
 			<TouchableWithoutFeedback onPress={() => setActiveMenu(null)}>
-				<View style={styles.overlay}>
+				<View className="flex-1 bg-black/30">
 					<TouchableWithoutFeedback>
-						<View style={styles.content}>{children}</View>
+						<View
+							className={cn(
+								"absolute top-12 left-5 min-w-48 bg-theme-background-subtle border border-theme-border rounded-md p-1 shadow-lg z-50",
+								className,
+							)}
+						>
+							{children}
+						</View>
 					</TouchableWithoutFeedback>
 				</View>
 			</TouchableWithoutFeedback>
@@ -190,23 +158,9 @@ export const MenubarItem: React.FC<MenubarItemProps> = ({
 	onPress,
 	disabled = false,
 	inset = false,
+	className,
 }) => {
 	const { setActiveMenu } = useMenuBar();
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingHorizontal: inset ? 32 : 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		text: {
-			color: colors.foreground[100],
-		},
-	});
 
 	const handlePress = () => {
 		if (!disabled) {
@@ -217,12 +171,17 @@ export const MenubarItem: React.FC<MenubarItemProps> = ({
 
 	return (
 		<TouchableOpacity
-			style={styles.item}
+			className={cn(
+				"flex-row items-center px-2 py-1.5 rounded",
+				inset && "pl-8",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			activeOpacity={0.7}
 		>
-			<Text variant="body" style={styles.text}>
+			<Text variant="body" className="text-theme-foreground">
 				{children}
 			</Text>
 		</TouchableOpacity>
@@ -234,19 +193,14 @@ interface MenubarSeparatorProps {
 	className?: string;
 }
 
-export const MenubarSeparator: React.FC<MenubarSeparatorProps> = () => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		separator: {
-			height: 1,
-			backgroundColor: colors.background[200],
-			marginVertical: 4,
-			marginHorizontal: -4,
-		},
-	});
-
-	return <View style={styles.separator} />;
+export const MenubarSeparator: React.FC<MenubarSeparatorProps> = ({
+	className,
+}) => {
+	return (
+		<View
+			className={cn("h-px bg-theme-background-subtle my-1 -mx-1", className)}
+		/>
+	);
 };
 
 // MenuBar Shortcut Component
@@ -257,18 +211,13 @@ interface MenubarShortcutProps {
 
 export const MenubarShortcut: React.FC<MenubarShortcutProps> = ({
 	children,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		shortcut: {
-			marginLeft: "auto",
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
-		<Text variant="caption" style={styles.shortcut}>
+		<Text
+			variant="caption"
+			className={cn("ml-auto text-theme-foreground-muted", className)}
+		>
 			{children}
 		</Text>
 	);
@@ -302,19 +251,17 @@ export const MenubarRadioGroup: React.FC<{ children: React.ReactNode }> = ({
 export const MenubarLabel: React.FC<{
 	children: React.ReactNode;
 	inset?: boolean;
-}> = ({ children, inset = false }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		label: {
-			paddingHorizontal: inset ? 32 : 8,
-			paddingVertical: 6,
-			color: colors.foreground[100],
-		},
-	});
-
+	className?: string;
+}> = ({ children, inset = false, className }) => {
 	return (
-		<Text variant="sans-semibold-14" style={styles.label}>
+		<Text
+			variant="sans-semibold-14"
+			className={cn(
+				"px-2 py-1.5 text-theme-foreground",
+				inset && "pl-8",
+				className,
+			)}
+		>
 			{children}
 		</Text>
 	);
@@ -325,32 +272,15 @@ export const MenubarCheckboxItem: React.FC<{
 	checked?: boolean;
 	onCheckedChange?: (checked: boolean) => void;
 	disabled?: boolean;
-}> = ({ children, checked = false, onCheckedChange, disabled = false }) => {
+	className?: string;
+}> = ({
+	children,
+	checked = false,
+	onCheckedChange,
+	disabled = false,
+	className,
+}) => {
 	const { setActiveMenu } = useMenuBar();
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingLeft: 32,
-			paddingRight: 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		indicator: {
-			position: "absolute",
-			left: 8,
-			width: 14,
-			height: 14,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		text: {
-			color: colors.foreground[100],
-		},
-	});
 
 	const handlePress = () => {
 		if (!disabled) {
@@ -361,17 +291,19 @@ export const MenubarCheckboxItem: React.FC<{
 
 	return (
 		<TouchableOpacity
-			style={styles.item}
+			className={cn(
+				"flex-row items-center pl-8 pr-2 py-1.5 rounded",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			activeOpacity={0.7}
 		>
-			<View style={styles.indicator}>
-				{checked && (
-					<CheckIcon size="xs" variant="solid" color={colors.foreground[100]} />
-				)}
+			<View className="absolute left-2 w-3.5 h-3.5 justify-center items-center">
+				{checked && <CheckIcon size="xs" variant="solid" />}
 			</View>
-			<Text variant="body" style={styles.text}>
+			<Text variant="body" className="text-theme-foreground">
 				{children}
 			</Text>
 		</TouchableOpacity>
@@ -384,32 +316,16 @@ export const MenubarRadioItem: React.FC<{
 	checked?: boolean;
 	onSelect?: (value: string) => void;
 	disabled?: boolean;
-}> = ({ children, value, checked = false, onSelect, disabled = false }) => {
+	className?: string;
+}> = ({
+	children,
+	value,
+	checked = false,
+	onSelect,
+	disabled = false,
+	className,
+}) => {
 	const { setActiveMenu } = useMenuBar();
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingLeft: 32,
-			paddingRight: 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		indicator: {
-			position: "absolute",
-			left: 8,
-			width: 14,
-			height: 14,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		text: {
-			color: colors.foreground[100],
-		},
-	});
 
 	const handlePress = () => {
 		if (!disabled) {
@@ -420,15 +336,19 @@ export const MenubarRadioItem: React.FC<{
 
 	return (
 		<TouchableOpacity
-			style={styles.item}
+			className={cn(
+				"flex-row items-center pl-8 pr-2 py-1.5 rounded",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			activeOpacity={0.7}
 		>
-			<View style={styles.indicator}>
-				{checked && <CircleIcon size="xs" color={colors.foreground[100]} />}
+			<View className="absolute left-2 w-3.5 h-3.5 justify-center items-center">
+				{checked && <CircleIcon size="xs" />}
 			</View>
-			<Text variant="body" style={styles.text}>
+			<Text variant="body" className="text-theme-foreground">
 				{children}
 			</Text>
 		</TouchableOpacity>

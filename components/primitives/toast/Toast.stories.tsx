@@ -50,7 +50,7 @@ export const Variants: Story = {
 		const [visibleWarning, setVisibleWarning] = useState(false);
 
 		return (
-			<View style={{ padding: 20, gap: 12 }}>
+			<View className="p-5 gap-3">
 				<Button onPress={() => setVisibleDefault(true)}>Default Toast</Button>
 				<Button onPress={() => setVisibleSuccess(true)}>Success Toast</Button>
 				<Button onPress={() => setVisibleError(true)}>Error Toast</Button>
@@ -96,7 +96,7 @@ export const WithoutTitle: Story = {
 		const [visible, setVisible] = useState(false);
 
 		return (
-			<View style={{ padding: 20 }}>
+			<View className="p-5">
 				<Button onPress={() => setVisible(true)}>Show Toast</Button>
 				<Toast
 					description="This toast only has a description."
@@ -113,7 +113,7 @@ export const AutoDismiss: Story = {
 		const [visible, setVisible] = useState(false);
 
 		return (
-			<View style={{ padding: 20 }}>
+			<View className="p-5">
 				<Button onPress={() => setVisible(true)}>Auto Dismiss (2s)</Button>
 				<Toast
 					title="Auto Dismiss"
@@ -132,7 +132,7 @@ const ToastExample = () => {
 	const { showToast } = useToast();
 
 	return (
-		<View style={{ padding: 20, gap: 12 }}>
+		<View className="p-5 gap-3">
 			<Button
 				onPress={() =>
 					showToast({

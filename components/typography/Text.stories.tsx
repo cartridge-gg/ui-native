@@ -61,7 +61,7 @@ export const Default: Story = {
 
 export const AllSansVariants: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 20 }}>
+		<View className="gap-4 p-5">
 			<Text variant="sans-regular-10">
 				Sans Regular 10px - The quick brown fox jumps over the lazy dog.
 			</Text>
@@ -101,7 +101,7 @@ export const AllSansVariants: Story = {
 
 export const AllMonoVariants: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 20 }}>
+		<View className="gap-4 p-5">
 			<Text variant="mono-regular-14">
 				Mono Regular 14px - The quick brown fox jumps over the lazy dog.
 			</Text>
@@ -120,7 +120,7 @@ export const AllMonoVariants: Story = {
 
 export const CommonPatterns: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 20 }}>
+		<View className="gap-4 p-5">
 			<Text variant="heading-xl">Heading XL - Main Page Title</Text>
 			<Text variant="heading-lg">Heading LG - Section Title</Text>
 			<Text variant="body">
@@ -138,7 +138,7 @@ export const CommonPatterns: Story = {
 
 export const ColorVariants: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 20 }}>
+		<View className="gap-4 p-5">
 			<Text color="primary">Primary color - Main text content</Text>
 			<Text color="secondary">Secondary color - Less important text</Text>
 			<Text color="tertiary">Tertiary color - Supporting text</Text>

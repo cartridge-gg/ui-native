@@ -15,7 +15,6 @@ export interface ActivityGameCardProps {
 	loading?: boolean;
 	certified?: boolean;
 	onPress?: () => void;
-	style?: any;
 }
 
 export const ActivityGameCard: React.FC<ActivityGameCardProps> = ({
@@ -26,21 +25,17 @@ export const ActivityGameCard: React.FC<ActivityGameCardProps> = ({
 	loading = false,
 	certified = false,
 	onPress,
-	style,
 }) => {
 	const { colors } = useTheme();
 
 	const Icon = useMemo(
 		() => (
-			<View
-				style={{
-					width: "100%",
-					height: "100%",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<JoystickIcon size="default" color={colors.foreground[100]} />
+			<View className="w-full h-full justify-center items-center">
+				<JoystickIcon
+					size="default"
+					color={colors.foreground[100]}
+					variant="solid"
+				/>
 			</View>
 		),
 		[colors.foreground],
@@ -48,15 +43,12 @@ export const ActivityGameCard: React.FC<ActivityGameCardProps> = ({
 
 	const SubIcon = useMemo(
 		() => (
-			<View
-				style={{
-					width: "100%",
-					height: "100%",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<JoystickIcon size="xs" color={colors.foreground[100]} />
+			<View className="w-full h-full justify-center items-center">
+				<JoystickIcon
+					size="xs"
+					color={colors.foreground[100]}
+					variant="solid"
+				/>
 			</View>
 		),
 		[colors.foreground],
@@ -96,7 +88,6 @@ export const ActivityGameCard: React.FC<ActivityGameCardProps> = ({
 			error={error}
 			loading={loading}
 			onPress={onPress}
-			style={style}
 		/>
 	);
 };

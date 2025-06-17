@@ -13,19 +13,41 @@ import {
 } from "./Card";
 
 // Placeholder for EthereumIcon since it doesn't exist in UI-native yet
-const EthereumIcon = () => (
-	<View
-		style={{
-			width: 16,
-			height: 16,
-			backgroundColor: "#627EEA",
-			borderRadius: 8,
-		}}
-	/>
-);
+const EthereumIcon = () => <View className="w-4 h-4 bg-blue-600 rounded-lg" />;
 
 // Placeholder asset (base64 SVG converted to a simple placeholder)
 const PLACEHOLDER = "https://via.placeholder.com/24x24/cccccc/666666?text=P";
+
+// Mock icon component
+const MockIcon = ({ size = 16 }: { size?: number }) => (
+	<View
+		className="bg-blue-500 rounded justify-center items-center"
+		style={{
+			width: size,
+			height: size,
+		}}
+	>
+		<Text className="text-white text-xs font-bold">I</Text>
+	</View>
+);
+
+const ColoredBox = ({ size = 40 }: { size?: number }) => (
+	<View className="w-4 h-4 bg-blue-500 rounded" />
+);
+
+const SizeBox = ({ size }: { size: number }) => (
+	<View
+		className="bg-blue-500 rounded justify-center items-center"
+		style={{
+			width: size,
+			height: size,
+		}}
+	>
+		<Text variant="caption" className="text-white">
+			{size}
+		</Text>
+	</View>
+);
 
 const meta: Meta<typeof Card> = {
 	title: "Primitives/Card",
@@ -107,9 +129,7 @@ function Card({
 						</CardListItem>
 
 						<CardListItem icon={<EthereumIcon />}>
-							<View
-								style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-							>
+							<View className="flex-row items-center gap-2">
 								<Text>0.01</Text>
 								<Text color="tertiary">ETH</Text>
 							</View>
@@ -117,14 +137,22 @@ function Card({
 						</CardListItem>
 
 						<CardListItem icon="https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/1b126320-367c-48ed-cf5a-ba7580e49600/logo">
-							<View
-								style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-							>
+							<View className="flex-row items-center gap-2">
 								<Text>100</Text>
 								<Text color="tertiary">STRK</Text>
 							</View>
 							<Text color="tertiary">$50.00</Text>
 						</CardListItem>
+
+						<View className="flex-row items-center gap-2">
+							<ColoredBox />
+							<Text variant="body">Item with colored indicator</Text>
+						</View>
+
+						<View className="flex-row items-center gap-2">
+							<ColoredBox />
+							<Text variant="body">Another item</Text>
+						</View>
 					</CardListContent>
 				</UICard>
 			);

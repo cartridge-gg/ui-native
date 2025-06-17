@@ -38,7 +38,7 @@ export const Unchecked: Story = {
 
 export const Disabled: Story = {
 	render: () => (
-		<View style={{ gap: 16, flexDirection: "row" }}>
+		<View className="gap-4 flex-row">
 			<Switch checked={false} disabled />
 			<Switch checked={true} disabled />
 		</View>
@@ -52,39 +52,18 @@ export const WithLabels: Story = {
 		const [analytics, setAnalytics] = useState(true);
 
 		return (
-			<View style={{ gap: 16 }}>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-						minWidth: 200,
-					}}
-				>
-					<Text>Notifications</Text>
+			<View className="gap-4">
+				<View className="flex-row items-center gap-2">
 					<Switch checked={notifications} onCheckedChange={setNotifications} />
+					<Text variant="label">Notifications</Text>
 				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-						minWidth: 200,
-					}}
-				>
-					<Text>Marketing emails</Text>
+				<View className="flex-row items-center gap-2">
 					<Switch checked={marketing} onCheckedChange={setMarketing} />
+					<Text variant="label">Marketing emails</Text>
 				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-						minWidth: 200,
-					}}
-				>
-					<Text>Analytics</Text>
+				<View className="flex-row items-center gap-2">
 					<Switch checked={analytics} onCheckedChange={setAnalytics} />
+					<Text variant="label">Analytics</Text>
 				</View>
 			</View>
 		);

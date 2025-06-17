@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => (
-		<View style={{ height: 400, width: 300 }}>
+		<View className="h-100 w-75">
 			<LayoutContainer>
 				<LayoutHeader
 					title="Welcome to Keychain"
@@ -30,13 +30,13 @@ export const Default: Story = {
 				/>
 
 				<LayoutContent>
-					<Text variant="body" style={{ textAlign: "center", padding: 20 }}>
+					<Text variant="body" className="text-center p-5">
 						Layout Content
 					</Text>
 				</LayoutContent>
 
 				<LayoutFooter>
-					<Text variant="body" style={{ textAlign: "center" }}>
+					<Text variant="body" className="text-center">
 						Layout Footer
 					</Text>
 				</LayoutFooter>
@@ -47,7 +47,7 @@ export const Default: Story = {
 
 export const WithScrollContent: Story = {
 	render: () => (
-		<View style={{ height: 400, width: 300 }}>
+		<View className="h-100 w-75">
 			<LayoutContainer>
 				<LayoutHeader
 					title="Scrollable Content"
@@ -55,21 +55,13 @@ export const WithScrollContent: Story = {
 				/>
 
 				<LayoutContent>
-					<Text
-						variant="body"
-						style={{ textAlign: "center", marginBottom: 20 }}
-					>
+					<Text variant="body" className="text-center mb-5">
 						Scrollable Content
 					</Text>
 					{Array.from({ length: 5 }, (_, i) => (
 						<View
 							key={i}
-							style={{
-								padding: 16,
-								margin: 8,
-								backgroundColor: "#f0f0f0",
-								borderRadius: 8,
-							}}
+							className="p-4 mb-2 bg-theme-background-subtle rounded"
 						>
 							<Text variant="body">Item {i + 1}</Text>
 						</View>
@@ -86,7 +78,7 @@ export const WithScrollContent: Story = {
 
 export const ExpandedHeader: Story = {
 	render: () => (
-		<View style={{ height: 400, width: 300 }}>
+		<View className="h-100 w-75">
 			<LayoutContainer>
 				<LayoutHeader
 					variant="expanded"
@@ -95,7 +87,7 @@ export const ExpandedHeader: Story = {
 				/>
 
 				<LayoutContent>
-					<Text variant="body" style={{ textAlign: "center", padding: 20 }}>
+					<Text variant="body" className="text-center p-5">
 						Content with expanded header
 					</Text>
 				</LayoutContent>
@@ -110,7 +102,7 @@ export const ExpandedHeader: Story = {
 
 export const CompressedHeader: Story = {
 	render: () => (
-		<View style={{ height: 400, width: 300 }}>
+		<View className="h-100 w-75">
 			<LayoutContainer>
 				<LayoutHeader
 					variant="compressed"
@@ -119,7 +111,7 @@ export const CompressedHeader: Story = {
 				/>
 
 				<LayoutContent>
-					<Text variant="body" style={{ textAlign: "center", padding: 20 }}>
+					<Text variant="body" className="text-center p-5">
 						Content with compressed header
 					</Text>
 				</LayoutContent>
@@ -134,27 +126,24 @@ export const CompressedHeader: Story = {
 
 export const ContentStates: Story = {
 	render: () => (
-		<View style={{ gap: 20 }}>
-			<View style={{ height: 200, borderWidth: 1, borderColor: "#ccc" }}>
-				<Text variant="sans-semibold-14" style={{ padding: 10 }}>
+		<View className="gap-5">
+			<View className="h-50 border border-gray-300">
+				<Text variant="sans-semibold-14" className="p-2.5">
 					Loading State:
 				</Text>
 				<LayoutContent>
-					<Text variant="body" style={{ textAlign: "center" }}>
+					<Text variant="body" className="text-center">
 						Loading content...
 					</Text>
 				</LayoutContent>
 			</View>
 
-			<View style={{ height: 200, borderWidth: 1, borderColor: "#ccc" }}>
-				<Text variant="sans-semibold-14" style={{ padding: 10 }}>
+			<View className="h-50 border border-gray-300">
+				<Text variant="sans-semibold-14" className="p-2.5">
 					Error State:
 				</Text>
 				<LayoutContent>
-					<Text
-						variant="body"
-						style={{ textAlign: "center", color: "#ff6b6b" }}
-					>
+					<Text variant="body" className="text-center text-red-500">
 						Error loading content
 					</Text>
 				</LayoutContent>

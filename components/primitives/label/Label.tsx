@@ -1,12 +1,11 @@
 import type React from "react";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
-import type { TextStyleProp } from "../../utils/types";
+import { cn } from "../../utils/cn";
 
 export interface LabelProps {
 	children: React.ReactNode;
 	htmlFor?: string; // For web compatibility, but not used in React Native
-	style?: TextStyleProp;
+	className?: string;
 	disabled?: boolean;
 	required?: boolean;
 	testID?: string;
@@ -14,27 +13,24 @@ export interface LabelProps {
 
 export const Label: React.FC<LabelProps> = ({
 	children,
-	style,
+	className,
 	disabled = false,
 	required = false,
 	testID,
 	...props
 }) => {
-	const { colors } = useTheme();
-
-	const labelStyles = {
-		fontSize: 12, // text-xs
-		color: disabled ? colors.foreground[400] : colors.foreground[400],
-		fontWeight: "500" as const, // font-medium
-		lineHeight: 16, // leading-none equivalent
-		textTransform: "uppercase" as const,
-		opacity: disabled ? 0.7 : 1,
-	};
-
 	return (
-		<Text style={[labelStyles, style]} testID={testID} {...props}>
+		<Text
+			className={cn(
+				"text-xs text-theme-foreground-muted font-medium leading-4 uppercase",
+				disabled && "opacity-70",
+				className,
+			)}
+			testID={testID}
+			{...props}
+		>
 			{children}
-			{required && <Text style={{ color: colors.destructive[100] }}> *</Text>}
+			{required && <Text className="text-theme-destructive"> *</Text>}
 		</Text>
 	);
 };

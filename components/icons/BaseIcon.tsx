@@ -1,6 +1,7 @@
 import React from "react";
 import Svg, { SvgProps } from "react-native-svg";
 import { useTheme } from "../theme/ThemeProvider";
+import { cn } from "../utils/cn";
 import type { IconProps } from "./types";
 import { getSizeValue } from "./utils";
 
@@ -13,6 +14,7 @@ export const BaseIcon: React.FC<BaseIconProps> = ({
 	size = "default",
 	color,
 	style,
+	className,
 	viewBox = "0 0 24 24",
 	children,
 }) => {
@@ -21,15 +23,21 @@ export const BaseIcon: React.FC<BaseIconProps> = ({
 	const iconColor = color || colors.foreground[300];
 
 	return (
-		<Svg width={sizeValue} height={sizeValue} viewBox={viewBox} style={style}>
+		<Svg
+			width={sizeValue}
+			height={sizeValue}
+			viewBox={viewBox}
+			style={style}
+			className={className}
+		>
 			{React.Children.map(children, (child) => {
 				if (React.isValidElement(child)) {
 					return React.cloneElement(child, {
-						...child.props,
+						...(child.props as any),
 						fill:
-							child.props.fill === "currentColor"
+							(child.props as any).fill === "currentColor"
 								? iconColor
-								: child.props.fill || iconColor,
+								: (child.props as any).fill || iconColor,
 					});
 				}
 				return child;

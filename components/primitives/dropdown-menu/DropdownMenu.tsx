@@ -1,15 +1,8 @@
 import type React from "react";
 import { createContext, useContext, useState } from "react";
-import {
-	Modal,
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Modal, Pressable, ScrollView, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // DropdownMenu Context
 interface DropdownMenuContextType {
@@ -63,12 +56,12 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
 export interface DropdownMenuTriggerProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(DropdownMenuContext);
 
@@ -79,7 +72,7 @@ export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
 	const { onOpenChange } = context;
 
 	return (
-		<Pressable style={style} onPress={() => onOpenChange(true)}>
+		<Pressable className={className} onPress={() => onOpenChange(true)}>
 			{children}
 		</Pressable>
 	);
@@ -87,49 +80,20 @@ export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
 
 export interface DropdownMenuContentProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(DropdownMenuContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("DropdownMenuContent must be used within a DropdownMenu");
 	}
 
 	const { open, onOpenChange } = context;
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.5)",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 16,
-		},
-		content: {
-			backgroundColor: colors.background[200],
-			borderRadius: 8,
-			borderWidth: 1,
-			borderColor: colors.background[300],
-			padding: 4,
-			minWidth: 128,
-			maxWidth: 300,
-			maxHeight: 400,
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-	});
 
 	return (
 		<Modal
@@ -138,9 +102,15 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
 			animationType="fade"
 			onRequestClose={() => onOpenChange(false)}
 		>
-			<Pressable style={styles.overlay} onPress={() => onOpenChange(false)}>
+			<Pressable
+				className="flex-1 bg-black/50 justify-center items-center p-4"
+				onPress={() => onOpenChange(false)}
+			>
 				<Pressable
-					style={[styles.content, style]}
+					className={cn(
+						"bg-theme-background-subtle rounded-lg border border-theme-border p-1 min-w-32 max-w-72 shadow-lg max-h-96",
+						className,
+					)}
 					onPress={(e) => e.stopPropagation()}
 				>
 					<ScrollView showsVerticalScrollIndicator={false}>
@@ -157,7 +127,7 @@ export interface DropdownMenuItemProps {
 	onPress?: () => void;
 	disabled?: boolean;
 	inset?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
@@ -165,10 +135,9 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
 	onPress,
 	disabled = false,
 	inset = false,
-	style,
+	className,
 }) => {
 	const context = useContext(DropdownMenuContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("DropdownMenuItem must be used within a DropdownMenu");
@@ -182,30 +151,20 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
 		onOpenChange(false);
 	};
 
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingHorizontal: inset ? 32 : 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[200],
-		},
-	});
-
 	return (
 		<Pressable
-			style={[styles.item, style]}
+			className={cn(
+				"flex-row items-center px-2 py-1.5 rounded",
+				inset && "pl-8",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			accessibilityRole="menuitem"
 			accessibilityState={{ disabled }}
 		>
-			<Text style={styles.text}>{children}</Text>
+			<Text className="text-sm text-theme-foreground-subtle">{children}</Text>
 		</Pressable>
 	);
 };
@@ -215,7 +174,7 @@ export interface DropdownMenuCheckboxItemProps {
 	checked?: boolean;
 	onCheckedChange?: (checked: boolean) => void;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuCheckboxItem: React.FC<
@@ -225,46 +184,20 @@ export const DropdownMenuCheckboxItem: React.FC<
 	checked = false,
 	onCheckedChange,
 	disabled = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	const handlePress = () => {
 		if (disabled) return;
 		onCheckedChange?.(!checked);
 	};
 
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingLeft: 32,
-			paddingRight: 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		indicator: {
-			position: "absolute",
-			left: 8,
-			width: 14,
-			height: 14,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		checkmark: {
-			fontSize: 12,
-			color: colors.foreground[200],
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[200],
-		},
-	});
-
 	return (
 		<Pressable
-			style={[styles.item, style]}
+			className={cn(
+				"flex-row items-center pl-8 pr-2 py-1.5 rounded",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			accessibilityRole="checkbox"
@@ -273,10 +206,12 @@ export const DropdownMenuCheckboxItem: React.FC<
 				disabled,
 			}}
 		>
-			<View style={styles.indicator}>
-				{checked && <Text style={styles.checkmark}>✓</Text>}
+			<View className="absolute left-2 w-3.5 h-3.5 justify-center items-center">
+				{checked && (
+					<Text className="text-xs text-theme-foreground-subtle">✓</Text>
+				)}
 			</View>
-			<Text style={styles.text}>{children}</Text>
+			<Text className="text-sm text-theme-foreground-subtle">{children}</Text>
 		</Pressable>
 	);
 };
@@ -303,17 +238,16 @@ export interface DropdownMenuRadioItemProps {
 	value: string;
 	children: React.ReactNode;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuRadioItem: React.FC<DropdownMenuRadioItemProps> = ({
 	value,
 	children,
 	disabled = false,
-	style,
+	className,
 }) => {
 	const radioContext = useContext(DropdownMenuRadioGroupContext);
-	const { colors } = useTheme();
 
 	if (!radioContext) {
 		throw new Error(
@@ -329,42 +263,13 @@ export const DropdownMenuRadioItem: React.FC<DropdownMenuRadioItemProps> = ({
 		onValueChange?.(value);
 	};
 
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingLeft: 32,
-			paddingRight: 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		indicator: {
-			position: "absolute",
-			left: 8,
-			width: 14,
-			height: 14,
-			borderRadius: 7,
-			borderWidth: 2,
-			borderColor: colors.foreground[300],
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		dot: {
-			width: 6,
-			height: 6,
-			borderRadius: 3,
-			backgroundColor: colors.foreground[200],
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[200],
-		},
-	});
-
 	return (
 		<Pressable
-			style={[styles.item, style]}
+			className={cn(
+				"flex-row items-center pl-8 pr-2 py-1.5 rounded",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			accessibilityRole="radio"
@@ -373,10 +278,12 @@ export const DropdownMenuRadioItem: React.FC<DropdownMenuRadioItemProps> = ({
 				disabled,
 			}}
 		>
-			<View style={styles.indicator}>
-				{isSelected && <View style={styles.dot} />}
+			<View className="absolute left-2 w-3.5 h-3.5 rounded-full border-2 border-theme-foreground-muted justify-center items-center">
+				{isSelected && (
+					<View className="w-1.5 h-1.5 rounded-full bg-theme-foreground-subtle" />
+				)}
 			</View>
-			<Text style={styles.text}>{children}</Text>
+			<Text className="text-sm text-theme-foreground-subtle">{children}</Text>
 		</Pressable>
 	);
 };
@@ -384,78 +291,48 @@ export const DropdownMenuRadioItem: React.FC<DropdownMenuRadioItemProps> = ({
 export interface DropdownMenuLabelProps {
 	children: React.ReactNode;
 	inset?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuLabel: React.FC<DropdownMenuLabelProps> = ({
 	children,
 	inset = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		label: {
-			paddingHorizontal: inset ? 32 : 8,
-			paddingVertical: 6,
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "600",
-			color: colors.foreground[100],
-		},
-	});
-
 	return (
-		<View style={[styles.label, style]}>
-			<Text style={styles.text}>{children}</Text>
+		<View className={cn("px-2 py-1.5", inset && "pl-8", className)}>
+			<Text className="text-sm font-semibold text-theme-foreground">
+				{children}
+			</Text>
 		</View>
 	);
 };
 
 export interface DropdownMenuSeparatorProps {
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const DropdownMenuSeparator: React.FC<DropdownMenuSeparatorProps> = ({
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		separator: {
-			height: 1,
-			backgroundColor: colors.background[300],
-			marginHorizontal: -4,
-			marginVertical: 4,
-		},
-	});
-
-	return <View style={[styles.separator, style]} />;
+	return <View className={cn("h-px bg-theme-border -mx-1 my-1", className)} />;
 };
 
 export interface DropdownMenuShortcutProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export const DropdownMenuShortcut: React.FC<DropdownMenuShortcutProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
-			style={[
-				{
-					marginLeft: "auto",
-					fontSize: 12,
-					color: colors.foreground[400],
-					opacity: 0.6,
-				},
-				style,
-			]}
+			className={cn(
+				"ml-auto text-xs text-theme-foreground-muted opacity-60",
+				className,
+			)}
 		>
 			{children}
 		</Text>

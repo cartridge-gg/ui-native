@@ -46,15 +46,15 @@ export const Sizes: ToggleStory = {
 		const [pressed3, setPressed3] = useState(false);
 
 		return (
-			<View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+			<View className="flex-row gap-2 items-center">
 				<Toggle size="sm" pressed={pressed1} onPressedChange={setPressed1}>
-					Small
+					B
 				</Toggle>
-				<Toggle size="default" pressed={pressed2} onPressedChange={setPressed2}>
-					Default
+				<Toggle size="sm" pressed={pressed2} onPressedChange={setPressed2}>
+					I
 				</Toggle>
-				<Toggle size="lg" pressed={pressed3} onPressedChange={setPressed3}>
-					Large
+				<Toggle size="sm" pressed={pressed3} onPressedChange={setPressed3}>
+					U
 				</Toggle>
 			</View>
 		);
@@ -79,7 +79,7 @@ export const SwitchDefault: StoryObj<typeof SwitchMeta> = {
 
 export const SwitchDisabled: StoryObj<typeof SwitchMeta> = {
 	render: () => (
-		<View style={{ flexDirection: "row", gap: 16 }}>
+		<View className="flex-row gap-4">
 			<Switch value={false} disabled />
 			<Switch value={true} disabled />
 		</View>

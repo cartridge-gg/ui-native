@@ -47,14 +47,14 @@ export const WithForm: Story = {
 					<Button title="Edit Profile" />
 				</PopoverTrigger>
 				<PopoverContent>
-					<View style={{ gap: 16 }}>
+					<View className="gap-4">
 						<Text variant="heading-md">Edit Profile</Text>
-						<Text variant="caption" color="muted">
+						<Text variant="body" className="text-theme-foreground-muted">
 							Make changes to your profile here. Click save when you're done.
 						</Text>
 						<Separator />
-						<View style={{ gap: 12 }}>
-							<View style={{ gap: 4 }}>
+						<View className="gap-3">
+							<View className="gap-1">
 								<Text variant="label">Name</Text>
 								<Input
 									value={name}
@@ -62,7 +62,7 @@ export const WithForm: Story = {
 									placeholder="Enter your name"
 								/>
 							</View>
-							<View style={{ gap: 4 }}>
+							<View className="gap-1">
 								<Text variant="label">Email</Text>
 								<Input
 									value={email}
@@ -85,23 +85,18 @@ export const ControlledPopover: Story = {
 		const [open, setOpen] = useState(false);
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Popover is {open ? "open" : "closed"}</Text>
 				<Popover open={open} onOpenChange={setOpen}>
 					<PopoverTrigger>
-						<Button title="Controlled Popover" />
+						<Button variant="primary">Controlled Popover</Button>
 					</PopoverTrigger>
 					<PopoverContent>
-						<View style={{ gap: 12 }}>
+						<View className="gap-3">
 							<Text variant="heading-sm">Controlled Popover</Text>
-							<Text variant="body">
-								This popover's open state is controlled by external state.
+							<Text variant="body" className="text-theme-foreground-muted">
+								This popover's state is controlled by the parent component.
 							</Text>
-							<Button
-								title="Close Popover"
-								onPress={() => setOpen(false)}
-								variant="secondary"
-							/>
 						</View>
 					</PopoverContent>
 				</Popover>
@@ -117,24 +112,23 @@ export const UserInfo: Story = {
 				<Button title="👤 @johndoe" variant="secondary" />
 			</PopoverTrigger>
 			<PopoverContent>
-				<View style={{ gap: 12 }}>
-					<View style={{ gap: 4 }}>
+				<View className="gap-3">
+					<View className="gap-1">
 						<Text variant="heading-sm">John Doe</Text>
-						<Text variant="caption" color="muted">
+						<Text variant="caption" className="text-theme-foreground-muted">
 							@johndoe
 						</Text>
+						<Text variant="body" className="text-theme-foreground-muted">
+							Software Engineer at Acme Corp
+						</Text>
 					</View>
-					<Text variant="body">
-						Software engineer passionate about building great user experiences.
-						Currently working on React Native applications.
-					</Text>
 					<Separator />
-					<View style={{ flexDirection: "row", gap: 16 }}>
-						<View style={{ gap: 2 }}>
+					<View className="flex-row gap-4">
+						<View className="gap-0.5">
 							<Text variant="label">Following</Text>
 							<Text variant="body">1,234</Text>
 						</View>
-						<View style={{ gap: 2 }}>
+						<View className="gap-0.5">
 							<Text variant="label">Followers</Text>
 							<Text variant="body">5,678</Text>
 						</View>
@@ -147,25 +141,19 @@ export const UserInfo: Story = {
 
 export const HelpTooltip: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Text variant="heading-md">Settings</Text>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<Text variant="label">Enable Notifications</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button
-							title="?"
-							variant="secondary"
-							style={{ width: 24, height: 24 }}
-						/>
+						<Button variant="secondary" className="w-6 h-6" />
 					</PopoverTrigger>
 					<PopoverContent>
-						<View style={{ gap: 8 }}>
+						<View className="gap-2">
 							<Text variant="heading-sm">Notifications</Text>
-							<Text variant="body">
-								When enabled, you'll receive push notifications for important
-								updates, messages, and reminders. You can customize notification
-								preferences in your account settings.
+							<Text variant="body" className="text-theme-foreground-muted">
+								Get notified about important updates and messages.
 							</Text>
 						</View>
 					</PopoverContent>
@@ -182,15 +170,11 @@ export const QuickActions: Story = {
 				<Button title="⚡ Quick Actions" />
 			</PopoverTrigger>
 			<PopoverContent>
-				<View style={{ gap: 8 }}>
+				<View className="gap-2">
 					<Text variant="heading-sm">Quick Actions</Text>
-					<Separator />
-					<Button title="📝 Create New Post" variant="ghost" />
-					<Button title="📷 Upload Photo" variant="ghost" />
-					<Button title="📊 View Analytics" variant="ghost" />
-					<Button title="⚙️ Settings" variant="ghost" />
-					<Separator />
-					<Button title="🚪 Logout" variant="ghost" />
+					<Text variant="body" className="text-theme-foreground-muted">
+						Perform common actions quickly.
+					</Text>
 				</View>
 			</PopoverContent>
 		</Popover>
@@ -199,19 +183,12 @@ export const QuickActions: Story = {
 
 export const WithAnchor: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Text variant="heading-md">Popover with Anchor</Text>
 			<Popover>
 				<PopoverAnchor>
-					<View
-						style={{
-							padding: 16,
-							backgroundColor: "#f0f0f0",
-							borderRadius: 8,
-							alignItems: "center",
-						}}
-					>
-						<Text variant="body">This is the anchor element</Text>
+					<View className="p-4 bg-theme-background-subtle rounded border border-dashed border-theme-border items-center justify-center">
+						<Text variant="body">Click me for popover</Text>
 					</View>
 				</PopoverAnchor>
 				<PopoverTrigger>
@@ -230,12 +207,12 @@ export const WithAnchor: Story = {
 
 export const AlignmentOptions: Story = {
 	render: () => (
-		<View style={{ gap: 24 }}>
-			<View style={{ gap: 8 }}>
+		<View className="gap-6">
+			<View className="gap-2">
 				<Text variant="label">Start Aligned</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Start Aligned Popover" />
+						<Button variant="primary">Start Aligned</Button>
 					</PopoverTrigger>
 					<PopoverContent align="start">
 						<Text variant="body">This popover is aligned to the start.</Text>
@@ -243,11 +220,11 @@ export const AlignmentOptions: Story = {
 				</Popover>
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View className="gap-2">
 				<Text variant="label">Center Aligned (Default)</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Center Aligned Popover" />
+						<Button variant="primary">Center Aligned</Button>
 					</PopoverTrigger>
 					<PopoverContent align="center">
 						<Text variant="body">This popover is center aligned.</Text>
@@ -255,11 +232,11 @@ export const AlignmentOptions: Story = {
 				</Popover>
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View className="gap-2">
 				<Text variant="label">End Aligned</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="End Aligned Popover" />
+						<Button variant="primary">End Aligned</Button>
 					</PopoverTrigger>
 					<PopoverContent align="end">
 						<Text variant="body">This popover is aligned to the end.</Text>
@@ -272,12 +249,12 @@ export const AlignmentOptions: Story = {
 
 export const SideOptions: Story = {
 	render: () => (
-		<View style={{ gap: 24 }}>
-			<View style={{ gap: 8 }}>
+		<View className="gap-6">
+			<View className="gap-2">
 				<Text variant="label">Top Side</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Top Popover" />
+						<Button variant="primary">Top Popover</Button>
 					</PopoverTrigger>
 					<PopoverContent side="top">
 						<Text variant="body">This popover appears on the top.</Text>
@@ -285,11 +262,11 @@ export const SideOptions: Story = {
 				</Popover>
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View className="gap-2">
 				<Text variant="label">Bottom Side (Default)</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Bottom Popover" />
+						<Button variant="primary">Bottom Popover</Button>
 					</PopoverTrigger>
 					<PopoverContent side="bottom">
 						<Text variant="body">This popover appears on the bottom.</Text>
@@ -297,11 +274,11 @@ export const SideOptions: Story = {
 				</Popover>
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View className="gap-2">
 				<Text variant="label">Left Side</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Left Popover" />
+						<Button variant="primary">Left Popover</Button>
 					</PopoverTrigger>
 					<PopoverContent side="left">
 						<Text variant="body">This popover appears on the left.</Text>
@@ -309,11 +286,11 @@ export const SideOptions: Story = {
 				</Popover>
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View className="gap-2">
 				<Text variant="label">Right Side</Text>
 				<Popover>
 					<PopoverTrigger>
-						<Button title="Right Popover" />
+						<Button variant="primary">Right Popover</Button>
 					</PopoverTrigger>
 					<PopoverContent side="right">
 						<Text variant="body">This popover appears on the right.</Text>
@@ -348,43 +325,26 @@ export const ColorPicker: Story = {
 		];
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Selected Color: {selectedColor}</Text>
 				<Popover>
 					<PopoverTrigger>
 						<View
-							style={{
-								width: 40,
-								height: 40,
-								backgroundColor: selectedColor,
-								borderRadius: 8,
-								borderWidth: 2,
-								borderColor: "#e5e7eb",
-							}}
-						/>
+							className="w-10 h-10 rounded border border-theme-border items-center justify-center"
+							style={{ backgroundColor: selectedColor }}
+						>
+							<Text variant="caption">{selectedColor}</Text>
+						</View>
 					</PopoverTrigger>
 					<PopoverContent>
-						<View style={{ gap: 12 }}>
+						<View className="gap-3">
 							<Text variant="heading-sm">Choose Color</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									flexWrap: "wrap",
-									gap: 8,
-									width: 200,
-								}}
-							>
+							<View className="flex-row flex-wrap gap-2">
 								{colors.map((color) => (
 									<Pressable
 										key={color}
-										style={{
-											width: 32,
-											height: 32,
-											backgroundColor: color,
-											borderRadius: 6,
-											borderWidth: selectedColor === color ? 3 : 1,
-											borderColor: selectedColor === color ? "#000" : "#e5e7eb",
-										}}
+										className="w-8 h-8 rounded border border-gray-300"
+										style={{ backgroundColor: color }}
 										onPress={() => setSelectedColor(color)}
 									/>
 								))}

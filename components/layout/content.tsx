@@ -1,42 +1,27 @@
 import type React from "react";
 import { useMemo } from "react";
-import { ScrollView, StyleSheet, View, type ViewStyle } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Spinner } from "../primitives/spinner/Spinner";
-import { useTheme } from "../theme/ThemeProvider";
 import { Text } from "../typography/Text";
+import { cn } from "../utils/cn";
 import { useLayoutContext } from "./context";
 
 // Main LayoutContent Component
 interface LayoutContentProps {
 	children: React.ReactNode;
 	className?: string;
-	style?: ViewStyle;
 }
 
 export const LayoutContent: React.FC<LayoutContentProps> = ({
 	children,
 	className,
-	style,
 }) => {
-	const { colors } = useTheme();
 	const { withBottomTabs, withFooter } = useLayoutContext();
 
 	// Error handling for conflicting layout states
 	if (withBottomTabs && withFooter) {
 		throw new Error("BottomTabs and Footer cannot be used at the same time");
 	}
-
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			width: "100%",
-			padding: 24, // p-6 equivalent
-		},
-		scrollContent: {
-			flexGrow: 1,
-			gap: 12, // gap-3 equivalent
-		},
-	});
 
 	// Calculate bottom margin compensation for tabs/footer
 	const bottomMargin = useMemo(() => {
@@ -47,11 +32,12 @@ export const LayoutContent: React.FC<LayoutContentProps> = ({
 
 	return (
 		<ScrollView
-			style={[styles.container, style]}
-			contentContainerStyle={[
-				styles.scrollContent,
-				{ paddingBottom: bottomMargin },
-			]}
+			className={cn("flex-1 w-full p-6", className)}
+			contentContainerStyle={{
+				flexGrow: 1,
+				gap: 12,
+				paddingBottom: bottomMargin,
+			}}
 			showsVerticalScrollIndicator={false}
 			showsHorizontalScrollIndicator={false}
 		>
@@ -62,32 +48,10 @@ export const LayoutContent: React.FC<LayoutContentProps> = ({
 
 // LayoutContent Loader Component
 export const LayoutContentLoader: React.FC = () => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 16,
-		},
-		loaderBox: {
-			width: "100%",
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			borderWidth: 1,
-			borderColor: colors.background[400],
-			borderStyle: "dashed",
-			borderRadius: 6,
-			marginBottom: 16,
-		},
-	});
-
 	return (
-		<LayoutContent style={styles.container}>
-			<View style={styles.loaderBox}>
-				<Spinner size="lg" color={colors.foreground[400]} />
+		<LayoutContent className="justify-center items-center p-4">
+			<View className="w-full flex-1 justify-center items-center border border-dashed border-theme-background-muted rounded-md mb-4">
+				<Spinner size="lg" className="text-theme-foreground-muted" />
 			</View>
 		</LayoutContent>
 	);
@@ -101,40 +65,16 @@ interface LayoutContentErrorProps {
 export const LayoutContentError: React.FC<LayoutContentErrorProps> = ({
 	children = "Oops! Something went wrong.",
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			gap: 32,
-			padding: 32,
-		},
-		errorText: {
-			color: colors.foreground[100],
-			textAlign: "center",
-		},
-		errorImage: {
-			width: 120,
-			height: 120,
-			backgroundColor: colors.background[300],
-			borderRadius: 8,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		errorImageText: {
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
-		<LayoutContent style={styles.container}>
-			<Text variant="sans-semibold-14" style={styles.errorText}>
+		<LayoutContent className="justify-center items-center gap-8 p-8">
+			<Text
+				variant="sans-semibold-14"
+				className="text-theme-foreground text-center"
+			>
 				{children}
 			</Text>
-			<View style={styles.errorImage}>
-				<Text variant="caption" style={styles.errorImageText}>
+			<View className="w-30 h-30 bg-theme-border rounded-lg justify-center items-center">
+				<Text variant="caption" className="text-theme-foreground-muted">
 					Error
 				</Text>
 			</View>

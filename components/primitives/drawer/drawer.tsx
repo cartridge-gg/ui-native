@@ -4,13 +4,12 @@ import {
 	Animated,
 	Dimensions,
 	Modal,
-	StyleSheet,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -84,22 +83,10 @@ interface DrawerOverlayProps {
 	className?: string;
 }
 
-export const DrawerOverlay: React.FC<DrawerOverlayProps> = () => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		overlay: {
-			position: "absolute",
-			top: 0,
-			left: 0,
-			right: 0,
-			bottom: 0,
-			backgroundColor: "rgba(0, 0, 0, 0.8)",
-			zIndex: 50,
-		},
-	});
-
-	return <View style={styles.overlay} />;
+export const DrawerOverlay: React.FC<DrawerOverlayProps> = ({ className }) => {
+	return (
+		<View className={cn("absolute inset-0 bg-black/80 z-50", className)} />
+	);
 };
 
 // Drawer Content Component
@@ -108,35 +95,11 @@ interface DrawerContentProps {
 	className?: string;
 }
 
-export const DrawerContent: React.FC<DrawerContentProps> = ({ children }) => {
+export const DrawerContent: React.FC<DrawerContentProps> = ({
+	children,
+	className,
+}) => {
 	const { open, setOpen } = useDrawer();
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.8)",
-			justifyContent: "flex-end",
-		},
-		content: {
-			backgroundColor: colors.background[100],
-			borderTopLeftRadius: 10,
-			borderTopRightRadius: 10,
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			minHeight: 200,
-			maxHeight: screenHeight * 0.8,
-			paddingTop: 16,
-		},
-		handle: {
-			width: 100,
-			height: 8,
-			backgroundColor: colors.background[200],
-			borderRadius: 4,
-			alignSelf: "center",
-			marginBottom: 16,
-		},
-	});
 
 	return (
 		<Modal
@@ -146,10 +109,20 @@ export const DrawerContent: React.FC<DrawerContentProps> = ({ children }) => {
 			onRequestClose={() => setOpen(false)}
 		>
 			<TouchableWithoutFeedback onPress={() => setOpen(false)}>
-				<View style={styles.overlay}>
+				<View className="flex-1 bg-black/80 justify-end">
 					<TouchableWithoutFeedback>
-						<View style={styles.content}>
-							<View style={styles.handle} />
+						<View
+							className={cn(
+								"bg-theme-background rounded-t-lg border border-theme-border pt-4",
+								className,
+							)}
+							style={{
+								minHeight: 200,
+								maxHeight: screenHeight * 0.8,
+							}}
+						>
+							{/* Drag Handle */}
+							<View className="w-24 h-2 bg-theme-background-muted rounded-full self-center mb-4" />
 							{children}
 						</View>
 					</TouchableWithoutFeedback>
@@ -165,16 +138,13 @@ interface DrawerHeaderProps {
 	className?: string;
 }
 
-export const DrawerHeader: React.FC<DrawerHeaderProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		header: {
-			paddingHorizontal: 16,
-			paddingBottom: 16,
-			alignItems: "center",
-		},
-	});
-
-	return <View style={styles.header}>{children}</View>;
+export const DrawerHeader: React.FC<DrawerHeaderProps> = ({
+	children,
+	className,
+}) => {
+	return (
+		<View className={cn("px-4 pb-4 items-center", className)}>{children}</View>
+	);
 };
 
 // Drawer Footer Component
@@ -183,16 +153,11 @@ interface DrawerFooterProps {
 	className?: string;
 }
 
-export const DrawerFooter: React.FC<DrawerFooterProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		footer: {
-			marginTop: "auto",
-			padding: 16,
-			gap: 8,
-		},
-	});
-
-	return <View style={styles.footer}>{children}</View>;
+export const DrawerFooter: React.FC<DrawerFooterProps> = ({
+	children,
+	className,
+}) => {
+	return <View className={cn("mt-auto p-4 gap-2", className)}>{children}</View>;
 };
 
 // Drawer Title Component
@@ -201,17 +166,14 @@ interface DrawerTitleProps {
 	className?: string;
 }
 
-export const DrawerTitle: React.FC<DrawerTitleProps> = ({ children }) => {
-	const { colors } = useTheme();
-
+export const DrawerTitle: React.FC<DrawerTitleProps> = ({
+	children,
+	className,
+}) => {
 	return (
 		<Text
 			variant="sans-semibold-18"
-			style={{
-				color: colors.foreground[100],
-				textAlign: "center",
-				marginBottom: 8,
-			}}
+			className={cn("text-theme-foreground text-center mb-2", className)}
 		>
 			{children}
 		</Text>
@@ -226,16 +188,12 @@ interface DrawerDescriptionProps {
 
 export const DrawerDescription: React.FC<DrawerDescriptionProps> = ({
 	children,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="body"
-			style={{
-				color: colors.foreground[400],
-				textAlign: "center",
-			}}
+			className={cn("text-theme-foreground-muted text-center", className)}
 		>
 			{children}
 		</Text>

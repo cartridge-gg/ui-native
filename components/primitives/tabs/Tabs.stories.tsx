@@ -32,7 +32,7 @@ export const Default: Story = {
 		const [value, setValue] = useState("tab1");
 
 		return (
-			<View style={{ width: 300 }}>
+			<View className="w-75">
 				<Tabs items={sampleTabs} value={value} onValueChange={setValue} />
 			</View>
 		);
@@ -44,9 +44,40 @@ export const WithDisabled: Story = {
 		const [value, setValue] = useState("tab1");
 
 		return (
-			<View style={{ width: 300 }}>
+			<View className="w-75">
 				<Tabs
 					items={sampleTabsWithDisabled}
+					value={value}
+					onValueChange={setValue}
+				/>
+			</View>
+		);
+	},
+};
+
+export const Controlled: Story = {
+	render: () => {
+		const [value, setValue] = useState("tab1");
+
+		return (
+			<View className="w-75">
+				<Tabs items={sampleTabs} value={value} onValueChange={setValue} />
+			</View>
+		);
+	},
+};
+
+export const Disabled: Story = {
+	render: () => {
+		const [value, setValue] = useState("tab1");
+
+		return (
+			<View className="w-75">
+				<Tabs
+					items={sampleTabs.map((tab, index) => ({
+						...tab,
+						disabled: index === 1,
+					}))}
 					value={value}
 					onValueChange={setValue}
 				/>
@@ -60,67 +91,69 @@ export const WithContent: Story = {
 		const [value, setValue] = useState("tab1");
 
 		return (
-			<View style={{ width: 300, gap: 16 }}>
+			<View className="w-75 gap-4">
 				<Tabs items={sampleTabs} value={value} onValueChange={setValue} />
-
 				{value === "tab1" && (
-					<TabsContent value="tab1">
-						<View
-							style={{
-								padding: 16,
-								backgroundColor: "#1e221f",
-								borderRadius: 8,
-							}}
-						>
-							<Text>Content for Tab 1</Text>
-							<Text style={{ marginTop: 8, fontSize: 12, color: "#808080" }}>
-								This is the content area for the first tab.
-							</Text>
-						</View>
-					</TabsContent>
+					<View className="p-4 bg-theme-background-subtle rounded-lg">
+						<Text>Content for Tab 1</Text>
+						<Text className="mt-2 text-xs text-gray-500">
+							This is the content area for the first tab.
+						</Text>
+					</View>
 				)}
-
 				{value === "tab2" && (
-					<TabsContent value="tab2">
-						<View
-							style={{
-								padding: 16,
-								backgroundColor: "#1e221f",
-								borderRadius: 8,
-							}}
-						>
-							<Text>Content for Tab 2</Text>
-							<Text style={{ marginTop: 8, fontSize: 12, color: "#808080" }}>
-								This is the content area for the second tab.
-							</Text>
-						</View>
-					</TabsContent>
+					<View className="p-4 bg-theme-background-subtle rounded-lg">
+						<Text>Content for Tab 2</Text>
+						<Text className="mt-2 text-xs text-gray-500">
+							This is the content area for the second tab.
+						</Text>
+					</View>
 				)}
-
 				{value === "tab3" && (
-					<TabsContent value="tab3">
-						<View
-							style={{
-								padding: 16,
-								backgroundColor: "#1e221f",
-								borderRadius: 8,
-							}}
-						>
-							<Text>Content for Tab 3</Text>
-							<Text style={{ marginTop: 8, fontSize: 12, color: "#808080" }}>
-								This is the content area for the third tab.
-							</Text>
-						</View>
-					</TabsContent>
+					<View className="p-4 bg-theme-background-subtle rounded-lg">
+						<Text>Content for Tab 3</Text>
+						<Text className="mt-2 text-xs text-gray-500">
+							This is the content area for the third tab.
+						</Text>
+					</View>
 				)}
 			</View>
 		);
 	},
 };
 
+export const CustomStyling: Story = {
+	render: () => (
+		<TabsRoot defaultValue="overview" className="w-75 gap-4">
+			<Tabs
+				items={[
+					{ value: "overview", label: "Overview" },
+					{ value: "analytics", label: "Analytics" },
+					{ value: "reports", label: "Reports" },
+				]}
+			/>
+			<TabsContent value="overview">
+				<View className="p-4 bg-gray-800 rounded-lg">
+					<Text>Overview content goes here...</Text>
+				</View>
+			</TabsContent>
+			<TabsContent value="analytics">
+				<View className="p-4 bg-gray-800 rounded-lg">
+					<Text>Analytics data and charts...</Text>
+				</View>
+			</TabsContent>
+			<TabsContent value="reports">
+				<View className="p-4 bg-gray-800 rounded-lg">
+					<Text>Reports and summaries...</Text>
+				</View>
+			</TabsContent>
+		</TabsRoot>
+	),
+};
+
 export const CompoundComponent: Story = {
 	render: () => (
-		<TabsRoot defaultValue="overview" style={{ width: 300, gap: 16 }}>
+		<TabsRoot defaultValue="overview" className="w-75 gap-4">
 			<Tabs
 				items={[
 					{ value: "overview", label: "Overview" },
@@ -130,25 +163,19 @@ export const CompoundComponent: Story = {
 			/>
 
 			<TabsContent value="overview">
-				<View
-					style={{ padding: 16, backgroundColor: "#1e221f", borderRadius: 8 }}
-				>
+				<View className="p-4 bg-gray-800 rounded-lg">
 					<Text>Overview Dashboard</Text>
 				</View>
 			</TabsContent>
 
 			<TabsContent value="analytics">
-				<View
-					style={{ padding: 16, backgroundColor: "#1e221f", borderRadius: 8 }}
-				>
+				<View className="p-4 bg-gray-800 rounded-lg">
 					<Text>Analytics Data</Text>
 				</View>
 			</TabsContent>
 
 			<TabsContent value="reports">
-				<View
-					style={{ padding: 16, backgroundColor: "#1e221f", borderRadius: 8 }}
-				>
+				<View className="p-4 bg-gray-800 rounded-lg">
 					<Text>Reports Section</Text>
 				</View>
 			</TabsContent>
@@ -159,14 +186,13 @@ export const CompoundComponent: Story = {
 export const ManyTabs: Story = {
 	render: () => {
 		const [value, setValue] = useState("tab1");
-
-		const manyTabs = Array.from({ length: 6 }, (_, i) => ({
+		const manyTabs = Array.from({ length: 8 }, (_, i) => ({
 			value: `tab${i + 1}`,
 			label: `Tab ${i + 1}`,
 		}));
 
 		return (
-			<View style={{ width: 400 }}>
+			<View className="w-100">
 				<Tabs items={manyTabs} value={value} onValueChange={setValue} />
 			</View>
 		);

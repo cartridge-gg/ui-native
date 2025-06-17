@@ -98,7 +98,7 @@ export const WithCheckboxItems: Story = {
 		const [showPanel, setShowPanel] = useState(true);
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">
 					Status Bar: {showStatusBar ? "On" : "Off"}, Activity Bar:{" "}
 					{showActivityBar ? "On" : "Off"}, Panel: {showPanel ? "On" : "Off"}
@@ -140,7 +140,7 @@ export const WithRadioGroup: Story = {
 		const [theme, setTheme] = useState("light");
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Current Theme: {theme}</Text>
 				<DropdownMenu>
 					<DropdownMenuTrigger>
@@ -168,7 +168,7 @@ export const ControlledMenu: Story = {
 		const [open, setOpen] = useState(false);
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Menu is {open ? "open" : "closed"}</Text>
 				<DropdownMenu open={open} onOpenChange={setOpen}>
 					<DropdownMenuTrigger>

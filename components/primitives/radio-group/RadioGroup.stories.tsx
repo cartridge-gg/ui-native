@@ -18,11 +18,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	render: () => (
 		<RadioGroup defaultValue="option-one">
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-one" />
 				<Text variant="body">Option One</Text>
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-two" />
 				<Text variant="body">Option Two</Text>
 			</View>
@@ -35,18 +35,18 @@ export const Controlled: Story = {
 		const [value, setValue] = useState("option-one");
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Selected: {value}</Text>
 				<RadioGroup value={value} onValueChange={setValue}>
-					<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+					<View className="flex-row items-center gap-2">
 						<RadioGroupItem value="option-one" />
 						<Text variant="body">Option One</Text>
 					</View>
-					<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+					<View className="flex-row items-center gap-2">
 						<RadioGroupItem value="option-two" />
 						<Text variant="body">Option Two</Text>
 					</View>
-					<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+					<View className="flex-row items-center gap-2">
 						<RadioGroupItem value="option-three" />
 						<Text variant="body">Option Three</Text>
 					</View>
@@ -59,13 +59,13 @@ export const Controlled: Story = {
 export const Disabled: Story = {
 	render: () => (
 		<RadioGroup defaultValue="option-one" disabled>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-one" />
 				<Text variant="body" color="muted">
 					Option One (Disabled)
 				</Text>
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-two" />
 				<Text variant="body" color="muted">
 					Option Two (Disabled)
@@ -78,17 +78,17 @@ export const Disabled: Story = {
 export const IndividualDisabled: Story = {
 	render: () => (
 		<RadioGroup defaultValue="option-one">
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-one" />
 				<Text variant="body">Option One</Text>
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-two" disabled />
 				<Text variant="body" color="muted">
 					Option Two (Disabled)
 				</Text>
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<RadioGroupItem value="option-three" />
 				<Text variant="body">Option Three</Text>
 			</View>
@@ -102,56 +102,44 @@ export const MultipleGroups: Story = {
 		const [group2Value, setGroup2Value] = useState("red");
 
 		return (
-			<View style={{ gap: 24 }}>
-				<View style={{ gap: 12 }}>
+			<View className="gap-6">
+				<View className="gap-3">
 					<Text variant="label">Size</Text>
 					<RadioGroup value={group1Value} onValueChange={setGroup1Value}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="small" />
 							<Text variant="body">Small</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="medium" />
 							<Text variant="body">Medium</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="large" />
 							<Text variant="body">Large</Text>
 						</View>
 					</RadioGroup>
 				</View>
 
-				<View style={{ gap: 12 }}>
+				<View className="gap-3">
 					<Text variant="label">Color</Text>
 					<RadioGroup value={group2Value} onValueChange={setGroup2Value}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="red" />
 							<Text variant="body">Red</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="blue" />
 							<Text variant="body">Blue</Text>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="green" />
 							<Text variant="body">Green</Text>
 						</View>
 					</RadioGroup>
 				</View>
 
-				<View style={{ gap: 4 }}>
+				<View className="gap-1">
 					<Text variant="caption" color="muted">
 						Selected: {group1Value}, {group2Value}
 					</Text>
@@ -167,13 +155,11 @@ export const FormExample: Story = {
 		const [deliveryMethod, setDeliveryMethod] = useState("standard");
 
 		return (
-			<View style={{ gap: 24 }}>
-				<View style={{ gap: 12 }}>
+			<View className="gap-6">
+				<View className="gap-3">
 					<Text variant="heading-lg">Payment Method</Text>
 					<RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="card" />
 							<View>
 								<Text variant="body">Credit Card</Text>
@@ -182,9 +168,7 @@ export const FormExample: Story = {
 								</Text>
 							</View>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="paypal" />
 							<View>
 								<Text variant="body">PayPal</Text>
@@ -193,9 +177,7 @@ export const FormExample: Story = {
 								</Text>
 							</View>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="crypto" />
 							<View>
 								<Text variant="body">Cryptocurrency</Text>
@@ -207,12 +189,10 @@ export const FormExample: Story = {
 					</RadioGroup>
 				</View>
 
-				<View style={{ gap: 12 }}>
+				<View className="gap-3">
 					<Text variant="heading-lg">Delivery</Text>
 					<RadioGroup value={deliveryMethod} onValueChange={setDeliveryMethod}>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="standard" />
 							<View>
 								<Text variant="body">Standard Delivery</Text>
@@ -221,9 +201,7 @@ export const FormExample: Story = {
 								</Text>
 							</View>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="express" />
 							<View>
 								<Text variant="body">Express Delivery</Text>
@@ -232,9 +210,7 @@ export const FormExample: Story = {
 								</Text>
 							</View>
 						</View>
-						<View
-							style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-						>
+						<View className="flex-row items-center gap-2">
 							<RadioGroupItem value="overnight" />
 							<View>
 								<Text variant="body">Overnight Delivery</Text>

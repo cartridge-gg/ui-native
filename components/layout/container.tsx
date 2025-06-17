@@ -4,11 +4,10 @@ import {
 	Dimensions,
 	Modal,
 	SafeAreaView,
-	StyleSheet,
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
+import { cn } from "../utils/cn";
 import { LayoutProvider, useLayoutContext } from "./context";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -34,44 +33,35 @@ interface ResponsiveWrapperProps {
 }
 
 const ResponsiveWrapper: React.FC<ResponsiveWrapperProps> = ({ children }) => {
-	const { colors } = useTheme();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
-
-	const styles = StyleSheet.create({
-		desktopContainer: {
-			flex: 1,
-			width: screenWidth,
-			height: screenHeight,
-			justifyContent: "center",
-			alignItems: "center",
-			backgroundColor: colors.background[100],
-		},
-		desktopContent: {
-			width: Math.min(432, screenWidth - 32),
-			maxHeight: Math.min(600, screenHeight - 32),
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 12,
-			overflow: "hidden",
-			backgroundColor: colors.background[100],
-		},
-		mobileContainer: {
-			flex: 1,
-			width: screenWidth,
-			height: screenHeight,
-			backgroundColor: colors.background[100],
-		},
-	});
 
 	if (isDesktop) {
 		return (
-			<View style={styles.desktopContainer}>
-				<View style={styles.desktopContent}>{children}</View>
+			<View
+				className="flex-1 justify-center items-center bg-theme-background"
+				style={{ width: screenWidth, height: screenHeight }}
+			>
+				<View
+					className="border border-theme-border rounded-xl overflow-hidden bg-theme-background"
+					style={{
+						width: Math.min(432, screenWidth - 32),
+						maxHeight: Math.min(600, screenHeight - 32),
+					}}
+				>
+					{children}
+				</View>
 			</View>
 		);
 	}
 
-	return <SafeAreaView style={styles.mobileContainer}>{children}</SafeAreaView>;
+	return (
+		<SafeAreaView
+			className="flex-1 bg-theme-background"
+			style={{ width: screenWidth, height: screenHeight }}
+		>
+			{children}
+		</SafeAreaView>
+	);
 };
 
 // Main LayoutContainer Component
@@ -88,25 +78,7 @@ const LayoutContainerInner: React.FC<LayoutContainerProps> = ({
 	modal,
 	onModalClick,
 }) => {
-	const { colors } = useTheme();
 	const { withBackground, setWithBackground } = useLayoutContext();
-
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			flexDirection: "column",
-			minHeight: 0,
-		},
-		backgroundOverlay: {
-			position: "absolute",
-			top: 0,
-			left: 0,
-			right: 0,
-			bottom: 0,
-			backgroundColor: "rgba(0, 0, 0, 0.5)",
-			zIndex: 50,
-		},
-	});
 
 	return (
 		<ResponsiveWrapper>
@@ -119,12 +91,14 @@ const LayoutContainerInner: React.FC<LayoutContainerProps> = ({
 					onRequestClose={() => setWithBackground(false)}
 				>
 					<TouchableWithoutFeedback onPress={() => setWithBackground(false)}>
-						<View style={styles.backgroundOverlay} />
+						<View className="absolute inset-0 bg-black/50 z-50" />
 					</TouchableWithoutFeedback>
 				</Modal>
 			)}
 
-			<View style={styles.container}>{children}</View>
+			<View className={cn("flex-1 flex-col min-h-0", className)}>
+				{children}
+			</View>
 		</ResponsiveWrapper>
 	);
 };

@@ -60,7 +60,7 @@ export const BottomTab: React.FC<BottomTabProps> = ({
 	if (onPress) {
 		return (
 			<TouchableOpacity
-				style={{ flex: 1 }}
+				className="flex-1"
 				onPress={onPress}
 				activeOpacity={0.7}
 			>

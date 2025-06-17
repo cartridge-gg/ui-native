@@ -1,13 +1,13 @@
 import React from "react";
 import { Switch as RNSwitch, View } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
-import type { ViewStyleProp } from "../../utils/types";
+import { cn } from "../../utils/cn";
 
 export interface SwitchProps {
 	checked?: boolean;
 	onCheckedChange?: (checked: boolean) => void;
 	disabled?: boolean;
-	style?: ViewStyleProp;
+	className?: string;
 	testID?: string;
 }
 
@@ -17,7 +17,7 @@ export const Switch = React.forwardRef<View, SwitchProps>(
 			checked = false,
 			onCheckedChange,
 			disabled = false,
-			style,
+			className,
 			testID,
 			...props
 		},
@@ -32,7 +32,7 @@ export const Switch = React.forwardRef<View, SwitchProps>(
 		};
 
 		return (
-			<View ref={ref} style={[{ alignSelf: "flex-start" }, style]}>
+			<View ref={ref} className={cn("self-start", className)}>
 				<RNSwitch
 					value={checked}
 					onValueChange={handleValueChange}

@@ -181,7 +181,7 @@ export const WithSelectedRow: Story = {
 
 export const CompactTable: Story = {
 	render: () => (
-		<View style={{ width: 300 }}>
+		<View className="w-80">
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -205,6 +205,65 @@ export const CompactTable: Story = {
 						<TableCell>Banana</TableCell>
 						<TableCell align="right">7</TableCell>
 						<TableCell align="right">$3.50</TableCell>
+					</TableRow>
+				</TableBody>
+			</Table>
+		</View>
+	),
+};
+
+export const Responsive: Story = {
+	render: () => (
+		<View className="w-75">
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead width={100}>ID</TableHead>
+						<TableHead>Name</TableHead>
+						<TableHead>Email</TableHead>
+						<TableHead width={80}>Status</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					<TableRow>
+						<TableCell width={100}>001</TableCell>
+						<TableCell>John Doe</TableCell>
+						<TableCell>john@example.com</TableCell>
+						<TableCell width={80}>Active</TableCell>
+					</TableRow>
+					<TableRow>
+						<TableCell width={100}>002</TableCell>
+						<TableCell>Jane Smith</TableCell>
+						<TableCell>jane@example.com</TableCell>
+						<TableCell width={80}>Inactive</TableCell>
+					</TableRow>
+				</TableBody>
+			</Table>
+		</View>
+	),
+};
+
+export const WithFixedWidth: Story = {
+	render: () => (
+		<View className="w-80">
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>Name</TableHead>
+						<TableHead>Status</TableHead>
+						<TableHead>Actions</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					<TableRow>
+						<TableCell>John Doe</TableCell>
+						<TableCell>Active</TableCell>
+						<TableCell>Edit</TableCell>
+					</TableRow>
+					<TableRow>
+						<TableCell>Jane Smith</TableCell>
+						<TableCell>Inactive</TableCell>
+						<TableCell>Edit</TableCell>
 					</TableRow>
 				</TableBody>
 			</Table>

@@ -1,7 +1,7 @@
 import type React from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { Image, Pressable, View } from "react-native";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 export interface CollectibleAssetCardProps {
 	image: string;
@@ -9,7 +9,7 @@ export interface CollectibleAssetCardProps {
 	description: string;
 	variant?: "default";
 	onPress?: () => void;
-	style?: any;
+	className?: string;
 }
 
 export const CollectibleAssetCard: React.FC<CollectibleAssetCardProps> = ({
@@ -18,62 +18,34 @@ export const CollectibleAssetCard: React.FC<CollectibleAssetCardProps> = ({
 	description,
 	variant = "default",
 	onPress,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			width: "100%",
-			paddingHorizontal: 16,
-			paddingVertical: 12,
-			flexDirection: "row",
-			gap: 12,
-			backgroundColor: colors.background[200],
-		},
-		thumbnail: {
-			width: 48,
-			height: 48,
-			borderRadius: 8,
-			backgroundColor: colors.background[300],
-		},
-		content: {
-			flex: 1,
-			flexDirection: "column",
-			gap: 2,
-			justifyContent: "space-between",
-		},
-		title: {
-			fontSize: 14,
-			fontWeight: "500",
-			color: colors.foreground[100],
-		},
-		description: {
-			fontSize: 12,
-			color: colors.foreground[300],
-		},
-	});
-
 	const content = (
-		<View style={[styles.container, style]}>
+		<View
+			className={cn(
+				"w-full px-4 py-3 flex-row gap-3 bg-theme-background-subtle",
+				className,
+			)}
+		>
 			<Image
 				source={{ uri: image }}
-				style={styles.thumbnail}
+				className="w-12 h-12 rounded-lg bg-theme-border"
 				resizeMode="cover"
 			/>
-			<View style={styles.content}>
-				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.description}>{description}</Text>
+			<View className="flex-1 flex-col gap-0.5 justify-between">
+				<Text className="text-sm font-medium text-theme-foreground">
+					{title}
+				</Text>
+				<Text className="text-xs text-theme-foreground-muted">
+					{description}
+				</Text>
 			</View>
 		</View>
 	);
 
 	if (onPress) {
 		return (
-			<Pressable
-				onPress={onPress}
-				style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-			>
+			<Pressable onPress={onPress} className="active:opacity-80">
 				{content}
 			</Pressable>
 		);

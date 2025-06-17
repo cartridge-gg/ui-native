@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Text variant="body">Content above separator</Text>
 			<Separator />
 			<Text variant="body">Content below separator</Text>
@@ -26,7 +26,7 @@ export const Default: Story = {
 
 export const Horizontal: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Text variant="heading-lg">Section 1</Text>
 			<Text variant="body" color="secondary">
 				This is the first section with some content.
@@ -47,22 +47,15 @@ export const Horizontal: Story = {
 
 export const Vertical: Story = {
 	render: () => (
-		<View
-			style={{
-				flexDirection: "row",
-				alignItems: "center",
-				gap: 16,
-				height: 100,
-			}}
-		>
-			<View style={{ flex: 1 }}>
+		<View className="flex-row items-center h-20 px-4">
+			<View className="flex-1">
 				<Text variant="body">Left Content</Text>
 				<Text variant="caption" color="secondary">
 					Some description
 				</Text>
 			</View>
 			<Separator orientation="vertical" />
-			<View style={{ flex: 1 }}>
+			<View className="flex-1">
 				<Text variant="body">Right Content</Text>
 				<Text variant="caption" color="secondary">
 					Another description
@@ -74,29 +67,29 @@ export const Vertical: Story = {
 
 export const InList: Story = {
 	render: () => (
-		<View style={{ gap: 0 }}>
-			<View style={{ padding: 16 }}>
+		<View className="gap-0">
+			<View className="p-4">
 				<Text variant="body">List Item 1</Text>
 				<Text variant="caption" color="secondary">
 					Description for item 1
 				</Text>
 			</View>
 			<Separator />
-			<View style={{ padding: 16 }}>
+			<View className="p-4">
 				<Text variant="body">List Item 2</Text>
 				<Text variant="caption" color="secondary">
 					Description for item 2
 				</Text>
 			</View>
 			<Separator />
-			<View style={{ padding: 16 }}>
+			<View className="p-4">
 				<Text variant="body">List Item 3</Text>
 				<Text variant="caption" color="secondary">
 					Description for item 3
 				</Text>
 			</View>
 			<Separator />
-			<View style={{ padding: 16 }}>
+			<View className="p-4">
 				<Text variant="body">List Item 4</Text>
 				<Text variant="caption" color="secondary">
 					Description for item 4
@@ -108,31 +101,26 @@ export const InList: Story = {
 
 export const CustomStyling: Story = {
 	render: () => (
-		<View style={{ gap: 24 }}>
-			<View style={{ gap: 8 }}>
-				<Text variant="label">Default Separator</Text>
-				<Separator />
-			</View>
-
-			<View style={{ gap: 8 }}>
+		<View className="gap-6">
+			<View>
 				<Text variant="label">Thick Separator</Text>
-				<Separator style={{ height: 3 }} />
+				<Separator className="h-1" />
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View>
 				<Text variant="label">Colored Separator</Text>
-				<Separator style={{ backgroundColor: "#fbcb4a" }} />
+				<Separator className="bg-yellow-400" />
 			</View>
 
-			<View style={{ gap: 8 }}>
+			<View>
 				<Text variant="label">Dashed Effect (using opacity)</Text>
-				<Separator style={{ opacity: 0.5, height: 2 }} />
+				<Separator className="opacity-50 h-0.5" />
 			</View>
 
-			<View style={{ gap: 8 }}>
-				<Text variant="label">Short Separator</Text>
-				<View style={{ alignItems: "center" }}>
-					<Separator style={{ width: "50%" }} />
+			<View>
+				<Text variant="label">Centered Separator</Text>
+				<View className="flex items-center">
+					<Separator className="w-1/2" />
 				</View>
 			</View>
 		</View>
@@ -141,29 +129,22 @@ export const CustomStyling: Story = {
 
 export const InCard: Story = {
 	render: () => (
-		<View
-			style={{
-				backgroundColor: "#1e221f",
-				borderRadius: 8,
-				padding: 16,
-				gap: 0,
-			}}
-		>
-			<View style={{ paddingVertical: 12 }}>
+		<View className="bg-gray-800 rounded-lg p-16 gap-0">
+			<View className="p-4">
 				<Text variant="body">Card Header</Text>
 				<Text variant="caption" color="secondary">
 					Header description
 				</Text>
 			</View>
 			<Separator />
-			<View style={{ paddingVertical: 12 }}>
+			<View className="p-4">
 				<Text variant="body">Card Content</Text>
 				<Text variant="caption" color="secondary">
 					Main content area
 				</Text>
 			</View>
 			<Separator />
-			<View style={{ paddingVertical: 12 }}>
+			<View className="p-4">
 				<Text variant="body">Card Footer</Text>
 				<Text variant="caption" color="secondary">
 					Footer information
@@ -175,38 +156,52 @@ export const InCard: Story = {
 
 export const Navigation: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-16">
 			{/* Horizontal navigation */}
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+			<View className="flex-row items-center gap-16">
 				<Text variant="body">Home</Text>
-				<Separator orientation="vertical" style={{ height: 20 }} />
+				<Separator orientation="vertical" className="h-5" />
 				<Text variant="body">Products</Text>
-				<Separator orientation="vertical" style={{ height: 20 }} />
+				<Separator orientation="vertical" className="h-5" />
 				<Text variant="body">About</Text>
-				<Separator orientation="vertical" style={{ height: 20 }} />
+				<Separator orientation="vertical" className="h-5" />
 				<Text variant="body">Contact</Text>
 			</View>
 
 			<Separator />
 
 			{/* Vertical navigation */}
-			<View style={{ gap: 0 }}>
-				<View style={{ padding: 12 }}>
+			<View className="gap-0">
+				<View className="p-12">
 					<Text variant="body">Dashboard</Text>
 				</View>
 				<Separator />
-				<View style={{ padding: 12 }}>
+				<View className="p-12">
 					<Text variant="body">Settings</Text>
 				</View>
 				<Separator />
-				<View style={{ padding: 12 }}>
+				<View className="p-12">
 					<Text variant="body">Profile</Text>
 				</View>
 				<Separator />
-				<View style={{ padding: 12 }}>
+				<View className="p-12">
 					<Text variant="body">Logout</Text>
 				</View>
 			</View>
+		</View>
+	),
+};
+
+export const InlineNavigation: Story = {
+	render: () => (
+		<View className="flex-row items-center gap-4">
+			<Text variant="body">Home</Text>
+			<Separator orientation="vertical" className="h-5" />
+			<Text variant="body">Products</Text>
+			<Separator orientation="vertical" className="h-5" />
+			<Text variant="body">About</Text>
+			<Separator orientation="vertical" className="h-5" />
+			<Text variant="body">Contact</Text>
 		</View>
 	),
 };

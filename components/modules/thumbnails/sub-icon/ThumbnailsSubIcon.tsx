@@ -1,6 +1,6 @@
 import type React from "react";
-import { StyleSheet, View } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { View } from "react-native";
+import { cn } from "../../../utils/cn";
 
 export type SubIconVariant =
 	| "darkest"
@@ -17,63 +17,55 @@ export interface ThumbnailsSubIconProps {
 	Icon: React.ReactNode;
 	variant?: SubIconVariant;
 	size?: SubIconSize;
-	style?: any;
+	className?: string;
 }
 
 export const ThumbnailsSubIcon: React.FC<ThumbnailsSubIconProps> = ({
 	Icon,
 	variant = "default",
 	size = "lg",
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const getSizeStyles = () => {
+	const getSizeClasses = () => {
 		switch (size) {
 			case "lg":
-				return { width: 20, height: 20, padding: 4 }; // w-5 h-5 p-1 (web: p-1 = 4px)
+				return "w-5 h-5 p-1";
 			case "xl":
-				return { width: 24, height: 24, padding: 4 }; // w-6 h-6 p-1 (web: p-1 = 4px)
+				return "w-6 h-6 p-1";
 			default:
-				return { width: 20, height: 20, padding: 4 };
+				return "w-5 h-5 p-1";
 		}
 	};
 
-	const getBackgroundColor = () => {
+	const getVariantClasses = () => {
 		switch (variant) {
 			case "darkest":
-				return colors.background[200];
 			case "darker":
-				return colors.background[200];
 			case "dark":
-				return colors.background[200];
+				return "bg-theme-background-subtle";
 			case "default":
-				return colors.background[300];
 			case "light":
-				return colors.background[300];
+				return "bg-theme-border";
 			case "lighter":
-				return colors.background[400];
 			case "lightest":
-				return colors.background[400];
+				return "bg-theme-background-muted";
 			case "ghost":
-				return "transparent";
+				return "bg-transparent";
 			default:
-				return colors.background[300];
+				return "bg-theme-border";
 		}
 	};
 
-	const sizeStyles = getSizeStyles();
-	const backgroundColor = getBackgroundColor();
-
-	const styles = StyleSheet.create({
-		container: {
-			...sizeStyles,
-			backgroundColor,
-			borderRadius: sizeStyles.width / 2,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-	});
-
-	return <View style={[styles.container, style]}>{Icon}</View>;
+	return (
+		<View
+			className={cn(
+				"rounded-full justify-center items-center",
+				getSizeClasses(),
+				getVariantClasses(),
+				className,
+			)}
+		>
+			{Icon}
+		</View>
+	);
 };

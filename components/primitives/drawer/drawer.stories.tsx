@@ -61,37 +61,25 @@ export const WithForm: Story = {
 						Make changes to your profile here. Click save when you're done.
 					</DrawerDescription>
 				</DrawerHeader>
-				<View style={{ padding: 16, gap: 16 }}>
+				<View className="p-4 gap-4">
 					<View>
-						<Text variant="sans-medium-14" style={{ marginBottom: 8 }}>
+						<Text variant="sans-medium-14" className="mb-2">
 							Name
 						</Text>
-						<View
-							style={{
-								borderWidth: 1,
-								borderColor: "#ccc",
-								borderRadius: 4,
-								padding: 12,
-								backgroundColor: "#f9f9f9",
-							}}
-						>
-							<Text variant="body">John Doe</Text>
+						<View className="border border-gray-300 rounded bg-gray-100 h-10 px-3 justify-center">
+							<Text variant="body" className="text-gray-500">
+								Enter your name
+							</Text>
 						</View>
 					</View>
 					<View>
-						<Text variant="sans-medium-14" style={{ marginBottom: 8 }}>
+						<Text variant="sans-medium-14" className="mb-2">
 							Email
 						</Text>
-						<View
-							style={{
-								borderWidth: 1,
-								borderColor: "#ccc",
-								borderRadius: 4,
-								padding: 12,
-								backgroundColor: "#f9f9f9",
-							}}
-						>
-							<Text variant="body">john@example.com</Text>
+						<View className="border border-gray-300 rounded bg-gray-100 h-10 px-3 justify-center">
+							<Text variant="body" className="text-gray-500">
+								Enter your email
+							</Text>
 						</View>
 					</View>
 				</View>
@@ -116,8 +104,8 @@ export const SimpleDrawer: Story = {
 				<DrawerHeader>
 					<DrawerTitle>Simple Drawer</DrawerTitle>
 				</DrawerHeader>
-				<View style={{ padding: 16 }}>
-					<Text variant="body" style={{ textAlign: "center" }}>
+				<View className="p-4">
+					<Text variant="body" className="text-center">
 						This is a simple drawer with just a title and some content.
 					</Text>
 				</View>
@@ -136,7 +124,7 @@ export const ControlledDrawer: Story = {
 		const [open, setOpen] = React.useState(false);
 
 		return (
-			<View style={{ gap: 12 }}>
+			<View className="gap-3">
 				<Drawer open={open} onOpenChange={setOpen}>
 					<DrawerTrigger>
 						<Button variant="primary">Controlled Drawer</Button>

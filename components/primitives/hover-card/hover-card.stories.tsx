@@ -38,47 +38,31 @@ export const WithUserProfile: Story = {
 		return (
 			<HoverCard>
 				<HoverCardTrigger>
-					<Text variant="sans-medium-14" style={{ color: colors.primary[100] }}>
+					<Text variant="sans-medium-14" className="text-theme-primary">
 						@username
 					</Text>
 				</HoverCardTrigger>
 				<HoverCardContent>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginBottom: 12,
-						}}
-					>
-						<View
-							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 20,
-								backgroundColor: colors.background[300],
-								marginRight: 12,
-							}}
-						/>
+					<View className="flex-row gap-3 mb-2">
+						<View className="w-10 h-10 rounded-full bg-blue-500" />
 						<View>
-							<Text variant="sans-semibold-14" style={{ marginBottom: 2 }}>
+							<Text variant="sans-semibold-14" className="mb-0.5">
 								John Doe
 							</Text>
-							<Text variant="caption" style={{ color: colors.foreground[400] }}>
+							<Text variant="caption" className="text-theme-foreground-muted">
 								@username
 							</Text>
 						</View>
 					</View>
-					<Text variant="body" style={{ marginBottom: 8 }}>
+					<Text variant="body" className="mb-2">
 						Software engineer passionate about building great user experiences.
 					</Text>
-					<View style={{ flexDirection: "row", gap: 16 }}>
-						<Text variant="caption" style={{ color: colors.foreground[400] }}>
-							<Text style={{ color: colors.foreground[100] }}>1,234</Text>{" "}
-							Following
+					<View className="flex-row gap-4">
+						<Text variant="caption" className="text-theme-foreground-muted">
+							<Text className="text-theme-foreground">1,234</Text> Following
 						</Text>
-						<Text variant="caption" style={{ color: colors.foreground[400] }}>
-							<Text style={{ color: colors.foreground[100] }}>5,678</Text>{" "}
-							Followers
+						<Text variant="caption" className="text-theme-foreground-muted">
+							<Text className="text-theme-foreground">5,678</Text> Followers
 						</Text>
 					</View>
 				</HoverCardContent>
@@ -97,35 +81,21 @@ export const WithRichContent: Story = {
 					<Button variant="tertiary">Product Info</Button>
 				</HoverCardTrigger>
 				<HoverCardContent>
-					<View style={{ marginBottom: 12 }}>
-						<View
-							style={{
-								width: "100%",
-								height: 80,
-								borderRadius: 6,
-								backgroundColor: colors.background[300],
-								marginBottom: 8,
-							}}
-						/>
-						<Text variant="sans-semibold-14" style={{ marginBottom: 4 }}>
+					<View className="mb-3">
+						<View className="w-full h-20 bg-blue-500 rounded mb-2" />
+						<Text variant="sans-semibold-14" className="mb-1">
 							Premium Subscription
 						</Text>
-						<Text
-							variant="body"
-							style={{ color: colors.foreground[400], marginBottom: 8 }}
-						>
-							Unlock all features with our premium plan
+						<Text variant="body" className="text-theme-foreground-muted mb-2">
+							Unlock all features and get priority support.
 						</Text>
-						<Text
-							variant="sans-semibold-14"
-							style={{ color: colors.primary[100] }}
-						>
+						<Text variant="sans-semibold-14" className="text-theme-primary">
 							$9.99/month
 						</Text>
 					</View>
-					<View style={{ flexDirection: "row", gap: 8 }}>
+					<View className="flex-row gap-2">
 						<Button variant="primary">Subscribe</Button>
-						<Button variant="outline">Learn More</Button>
+						<Button variant="secondary">Learn More</Button>
 					</View>
 				</HoverCardContent>
 			</HoverCard>
@@ -138,16 +108,16 @@ export const ControlledHoverCard: Story = {
 		const [open, setOpen] = React.useState(false);
 
 		return (
-			<View style={{ gap: 12 }}>
+			<View className="gap-3">
 				<HoverCard open={open} onOpenChange={setOpen}>
 					<HoverCardTrigger>
 						<Button variant="primary">Controlled Hover Card</Button>
 					</HoverCardTrigger>
 					<HoverCardContent>
-						<Text variant="sans-semibold-14" style={{ marginBottom: 8 }}>
+						<Text variant="sans-semibold-14" className="mb-2">
 							Controlled State
 						</Text>
-						<Text variant="body" style={{ marginBottom: 12 }}>
+						<Text variant="body" className="mb-3">
 							This hover card's open state is controlled by the parent
 							component.
 						</Text>

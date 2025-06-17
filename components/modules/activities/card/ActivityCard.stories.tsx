@@ -17,16 +17,14 @@ type Story = StoryObj<typeof meta>;
 // Mock logo component
 const MockLogo = ({ size = 48 }: { size?: number }) => (
 	<View
+		className="bg-yellow-400 justify-center items-center"
 		style={{
 			width: size,
 			height: size,
 			borderRadius: size / 2,
-			backgroundColor: "#fbcb4a",
-			justifyContent: "center",
-			alignItems: "center",
 		}}
 	>
-		<Text style={{ fontSize: 16, fontWeight: "bold" }}>🎮</Text>
+		<Text className="text-base font-bold">🎮</Text>
 	</View>
 );
 
@@ -35,13 +33,13 @@ const MockTokenLogo = () => (
 		source={{
 			uri: "https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/a3bfe959-50c4-4f89-0aef-b19207d82a00/logo",
 		}}
-		style={{ width: 48, height: 48, borderRadius: 24 }}
+		className="w-12 h-12 rounded-full"
 	/>
 );
 
 export const Game: Story = {
 	render: () => (
-		<View style={{ gap: 12 }}>
+		<View className="gap-3">
 			<ActivityGameCard
 				title="Attack"
 				website="https://lootsurvivor.io"
@@ -81,7 +79,7 @@ export const Token: Story = {
 
 export const Achievement: Story = {
 	render: () => (
-		<View style={{ gap: 9 }}>
+		<View className="gap-2">
 			<ActivityAchievementCard
 				title="Achievement"
 				website="https://lootsurvivor.io"
@@ -150,7 +148,7 @@ export const Interactive: Story = {
 
 export const AllStates: Story = {
 	render: () => (
-		<View style={{ gap: 12 }}>
+		<View className="gap-3">
 			<ActivityCard
 				Logo={<MockLogo />}
 				title="Game Action"

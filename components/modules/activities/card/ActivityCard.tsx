@@ -1,7 +1,7 @@
 import type React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { Pressable, View } from "react-native";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 export type ActivityCardVariant = "default";
 
@@ -15,7 +15,7 @@ export interface ActivityCardProps {
 	loading?: boolean;
 	variant?: ActivityCardVariant;
 	onPress?: () => void;
-	style?: any;
+	className?: string;
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({
@@ -28,91 +28,60 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 	loading = false,
 	variant = "default",
 	onPress,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const getTextColor = () => {
-		if (error) return colors.destructive[100];
-		if (loading) return colors.foreground[300];
-		return colors.foreground[100];
+	const getTextColorClass = () => {
+		if (error) return "text-theme-destructive";
+		if (loading) return "text-theme-foreground-muted";
+		return "text-theme-foreground";
 	};
 
-	const styles = StyleSheet.create({
-		container: {
-			borderRadius: 6, // rounded = 6px (web default)
-			padding: 12, // p-3 = 12px
-			paddingRight: 16, // pr-4 = 16px
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-			gap: 16, // gap-4 = 16px
-			backgroundColor: colors.background[200],
-		},
-		pressable: {
-			borderRadius: 6, // rounded = 6px
-		},
-		content: {
-			flexDirection: "column",
-			gap: 2, // gap-0.5 = 2px
-			alignItems: "stretch",
-			flexGrow: 1,
-			overflow: "hidden",
-		},
-		topRow: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 24, // gap-6 = 24px
-			justifyContent: "space-between",
-		},
-		title: {
-			fontSize: 14, // text-sm = 14px
-			fontWeight: "500", // font-medium
-			color: getTextColor(),
-			textTransform: "capitalize",
-		},
-		topic: {
-			fontSize: 14, // text-sm = 14px
-			fontWeight: "500", // font-medium
-			color: getTextColor(),
-		},
-		bottomRow: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 4, // gap-1 = 4px
-			justifyContent: "space-between",
-		},
-		subTitle: {
-			fontSize: 12, // text-xs = 12px
-			color: error ? colors.destructive[100] : colors.foreground[300],
-		},
-		subTopic: {
-			fontSize: 12, // text-xs = 12px
-			color: error ? colors.destructive[100] : colors.foreground[300],
-		},
-	});
+	const getSubTextColorClass = () => {
+		if (error) return "text-theme-destructive";
+		return "text-theme-foreground-muted";
+	};
 
 	const content = (
-		<View style={[styles.container, style]}>
+		<View
+			className={cn(
+				"rounded-md p-3 pr-4 flex-row items-center justify-between gap-4 bg-theme-background-subtle",
+				className,
+			)}
+		>
 			{Logo}
-			<View style={styles.content}>
-				<View style={styles.topRow}>
-					<Text style={styles.title}>{title}</Text>
+			<View className="flex-col gap-0.5 items-stretch flex-grow overflow-hidden">
+				<View className="flex-row items-center gap-6 justify-between">
+					<Text
+						className={cn(
+							"text-sm font-medium capitalize",
+							getTextColorClass(),
+						)}
+					>
+						{title}
+					</Text>
 					{topic && (
-						<Text style={styles.topic} numberOfLines={1} ellipsizeMode="tail">
+						<Text
+							className={cn("text-sm font-medium", getTextColorClass())}
+							numberOfLines={1}
+							ellipsizeMode="tail"
+						>
 							{topic}
 						</Text>
 					)}
 				</View>
-				<View style={styles.bottomRow}>
+				<View className="flex-row items-center gap-1 justify-between">
 					{typeof subTitle === "string" ? (
-						<Text style={styles.subTitle}>{subTitle}</Text>
+						<Text className={cn("text-xs", getSubTextColorClass())}>
+							{subTitle}
+						</Text>
 					) : (
 						subTitle
 					)}
 					{subTopic &&
 						(typeof subTopic === "string" ? (
-							<Text style={styles.subTopic}>{subTopic}</Text>
+							<Text className={cn("text-xs", getSubTextColorClass())}>
+								{subTopic}
+							</Text>
 						) : (
 							subTopic
 						))}
@@ -124,12 +93,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
 	if (onPress) {
 		return (
 			<Pressable
-				style={styles.pressable}
+				className="rounded-md"
 				onPress={onPress}
-				android_ripple={{ color: colors.background[300] }}
+				android_ripple={{ color: "#e5e7eb" }} // gray-200
 			>
 				{({ pressed }) => (
-					<View style={{ opacity: pressed ? 0.8 : 1 }}>{content}</View>
+					<View className={cn(pressed && "opacity-80")}>{content}</View>
 				)}
 			</Pressable>
 		);

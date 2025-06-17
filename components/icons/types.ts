@@ -6,6 +6,7 @@ export interface IconProps {
 	size?: IconSize;
 	color?: string;
 	style?: ViewStyle;
+	className?: string;
 }
 
 export interface DirectionalIconProps extends IconProps {

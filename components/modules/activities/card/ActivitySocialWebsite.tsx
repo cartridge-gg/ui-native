@@ -1,54 +1,38 @@
 import type React from "react";
 import { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { GlobeIcon, VerifiedIcon } from "../../../icons/utility";
-import { useTheme } from "../../../theme/ThemeProvider";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 export interface ActivitySocialWebsiteProps {
 	website: string;
 	certified?: boolean;
-	style?: any;
+	className?: string;
 }
 
 export const ActivitySocialWebsite: React.FC<ActivitySocialWebsiteProps> = ({
 	website,
 	certified = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	const label = useMemo(() => {
 		return website.replace(/^.*https?:\/\//, "").replace(/\/$/, "");
 	}, [website]);
 
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 4,
-		},
-		icon: {
-			fontSize: 16, // xs size = 16px
-			color: colors.foreground[300],
-		},
-		label: {
-			fontSize: 12,
-			color: colors.foreground[300],
-		},
-	});
-
 	const Icon = useMemo(() => {
 		if (certified) {
-			return <VerifiedIcon size="xs" color={colors.foreground[300]} />;
+			return <VerifiedIcon size="xs" />;
 		}
-		return <GlobeIcon size="xs" color={colors.foreground[300]} />;
-	}, [certified, colors.foreground]);
+		return <GlobeIcon size="xs" />;
+	}, [certified]);
 
 	return (
-		<View style={[styles.container, style]}>
+		<View className={cn("flex-row items-center gap-1", className)}>
 			{Icon}
-			{label && <Text style={styles.label}>{label}</Text>}
+			{label && (
+				<Text className="text-xs text-theme-foreground-muted">{label}</Text>
+			)}
 		</View>
 	);
 };
