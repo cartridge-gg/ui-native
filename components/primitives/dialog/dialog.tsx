@@ -3,14 +3,13 @@ import { createContext, useContext, useState } from "react";
 import {
 	Modal,
 	Pressable,
-	StyleSheet,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import { TimesIcon } from "../../icons/utility/TimesIcon";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // Dialog Context
 interface DialogContextType {
@@ -89,44 +88,11 @@ interface DialogContentProps {
 	className?: string;
 }
 
-export const DialogContent: React.FC<DialogContentProps> = ({ children }) => {
+export const DialogContent: React.FC<DialogContentProps> = ({
+	children,
+	className,
+}) => {
 	const { open, setOpen } = useDialog();
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.8)",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 16,
-		},
-		content: {
-			backgroundColor: colors.background[100],
-			borderRadius: 8,
-			padding: 24,
-			width: "100%",
-			maxWidth: 400,
-			borderWidth: 4,
-			borderColor: colors.border[200],
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-		closeButton: {
-			position: "absolute",
-			left: 12,
-			top: 12,
-			padding: 8,
-			backgroundColor: colors.background[200],
-			borderRadius: 6,
-		},
-	});
 
 	return (
 		<Modal
@@ -136,14 +102,19 @@ export const DialogContent: React.FC<DialogContentProps> = ({ children }) => {
 			onRequestClose={() => setOpen(false)}
 		>
 			<TouchableWithoutFeedback onPress={() => setOpen(false)}>
-				<View style={styles.overlay}>
+				<View className="flex-1 bg-black/80 justify-center items-center p-4">
 					<TouchableWithoutFeedback>
-						<View style={styles.content}>
+						<View
+							className={cn(
+								"bg-background-100 rounded-lg p-6 w-full max-w-sm border-4 border-border-200 shadow-lg",
+								className,
+							)}
+						>
 							<Pressable
-								style={styles.closeButton}
+								className="absolute left-3 top-3 p-2 bg-background-200 rounded-md"
 								onPress={() => setOpen(false)}
 							>
-								<TimesIcon size="default" color={colors.foreground[400]} />
+								<TimesIcon size="default" color="rgb(156, 163, 175)" />
 							</Pressable>
 							{children}
 						</View>
@@ -160,15 +131,11 @@ interface DialogHeaderProps {
 	className?: string;
 }
 
-export const DialogHeader: React.FC<DialogHeaderProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		header: {
-			marginBottom: 16,
-			alignItems: "center",
-		},
-	});
-
-	return <View style={styles.header}>{children}</View>;
+export const DialogHeader: React.FC<DialogHeaderProps> = ({
+	children,
+	className,
+}) => {
+	return <View className={cn("mb-4 items-center", className)}>{children}</View>;
 };
 
 // Dialog Footer Component
@@ -177,17 +144,15 @@ interface DialogFooterProps {
 	className?: string;
 }
 
-export const DialogFooter: React.FC<DialogFooterProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		footer: {
-			flexDirection: "row",
-			justifyContent: "flex-end",
-			gap: 8,
-			marginTop: 16,
-		},
-	});
-
-	return <View style={styles.footer}>{children}</View>;
+export const DialogFooter: React.FC<DialogFooterProps> = ({
+	children,
+	className,
+}) => {
+	return (
+		<View className={cn("flex-row justify-end gap-2 mt-4", className)}>
+			{children}
+		</View>
+	);
 };
 
 // Dialog Title Component
@@ -196,9 +161,12 @@ interface DialogTitleProps {
 	className?: string;
 }
 
-export const DialogTitle: React.FC<DialogTitleProps> = ({ children }) => {
+export const DialogTitle: React.FC<DialogTitleProps> = ({
+	children,
+	className,
+}) => {
 	return (
-		<Text variant="heading-lg" style={{ textAlign: "center", marginBottom: 8 }}>
+		<Text variant="heading-lg" className={cn("text-center mb-2", className)}>
 			{children}
 		</Text>
 	);
@@ -212,16 +180,12 @@ interface DialogDescriptionProps {
 
 export const DialogDescription: React.FC<DialogDescriptionProps> = ({
 	children,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="body"
-			style={{
-				textAlign: "center",
-				color: colors.foreground[400],
-			}}
+			className={cn("text-center text-foreground-400", className)}
 		>
 			{children}
 		</Text>

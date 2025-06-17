@@ -27,7 +27,7 @@ export const Timestamp: Story = {
 
 export const Collection: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 16 }}>
+		<View className="gap-4 p-4">
 			<AchievementPoints points={10} />
 			<AchievementPoints points={50} />
 			<AchievementPoints points={100} />

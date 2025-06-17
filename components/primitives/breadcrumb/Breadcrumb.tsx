@@ -1,17 +1,21 @@
 import type React from "react";
-import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export interface BreadcrumbProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
-export const Breadcrumb: React.FC<BreadcrumbProps> = ({ children, style }) => {
+export const Breadcrumb: React.FC<BreadcrumbProps> = ({
+	children,
+	className,
+}) => {
 	return (
 		<View
-			style={style}
+			className={className}
+			// @ts-ignore - navigation is a valid role for React Native
 			accessibilityRole="navigation"
 			accessibilityLabel="breadcrumb"
 		>
@@ -22,92 +26,71 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ children, style }) => {
 
 export interface BreadcrumbListProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbList: React.FC<BreadcrumbListProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		list: {
-			flexDirection: "row",
-			flexWrap: "wrap",
-			alignItems: "center",
-			gap: 0,
-		},
-	});
-
-	return <View style={[styles.list, style]}>{children}</View>;
+	return (
+		<View className={cn("flex-row flex-wrap items-center gap-0", className)}>
+			{children}
+		</View>
+	);
 };
 
 export interface BreadcrumbItemProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 6,
-		},
-	});
-
-	return <View style={[styles.item, style]}>{children}</View>;
+	return (
+		<View className={cn("flex-row items-center gap-1.5", className)}>
+			{children}
+		</View>
+	);
 };
 
 export interface BreadcrumbLinkProps {
 	children: React.ReactNode;
 	onPress?: () => void;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbLink: React.FC<BreadcrumbLinkProps> = ({
 	children,
 	onPress,
 	disabled = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		link: {
-			opacity: disabled ? 0.5 : 1,
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[400],
-		},
-		pressedText: {
-			color: colors.foreground[200],
-		},
-	});
-
 	if (!onPress || disabled) {
 		return (
-			<View style={[styles.link, style]}>
-				<Text style={styles.text}>{children}</Text>
+			<View className={cn(disabled && "opacity-50", className)}>
+				<Text className="text-sm text-foreground-400">{children}</Text>
 			</View>
 		);
 	}
 
 	return (
 		<Pressable
-			style={[styles.link, style]}
+			className={className}
 			onPress={onPress}
 			disabled={disabled}
 			accessibilityRole="link"
 		>
 			{({ pressed }) => (
-				<Text style={[styles.text, pressed && styles.pressedText]}>
+				<Text
+					className={cn(
+						"text-sm text-foreground-400",
+						pressed && "text-foreground-200",
+					)}
+				>
 					{children}
 				</Text>
 			)}
@@ -117,114 +100,78 @@ export const BreadcrumbLink: React.FC<BreadcrumbLinkProps> = ({
 
 export interface BreadcrumbPageProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbPage: React.FC<BreadcrumbPageProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		page: {
-			// Current page styling
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "400",
-			color: colors.foreground[100],
-		},
-	});
-
 	return (
 		<View
-			style={[styles.page, style]}
+			className={className}
 			accessibilityRole="text"
 			accessibilityState={{ disabled: true }}
 			accessibilityLabel="current page"
 		>
-			<Text style={styles.text}>{children}</Text>
+			<Text className="text-sm font-normal text-foreground-100">
+				{children}
+			</Text>
 		</View>
 	);
 };
 
 export interface BreadcrumbSeparatorProps {
 	children?: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbSeparator: React.FC<BreadcrumbSeparatorProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		separator: {
-			marginHorizontal: 4,
-		},
-		defaultIcon: {
-			fontSize: 16,
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
 		<View
-			style={[styles.separator, style]}
+			className={cn("mx-1", className)}
+			// @ts-ignore - presentation is a valid role for React Native
 			accessibilityRole="presentation"
 			accessibilityElementsHidden={true}
 		>
-			{children || <Text style={styles.defaultIcon}>›</Text>}
+			{children || <Text className="text-base text-foreground-400">›</Text>}
 		</View>
 	);
 };
 
 export interface BreadcrumbEllipsisProps {
 	onPress?: () => void;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const BreadcrumbEllipsis: React.FC<BreadcrumbEllipsisProps> = ({
 	onPress,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		ellipsis: {
-			width: 36,
-			height: 36,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		text: {
-			fontSize: 16,
-			color: colors.foreground[400],
-		},
-	});
-
 	if (!onPress) {
 		return (
 			<View
-				style={[styles.ellipsis, style]}
+				className={cn("w-9 h-9 justify-center items-center", className)}
+				// @ts-ignore - presentation is a valid role for React Native
 				accessibilityRole="presentation"
 				accessibilityElementsHidden={true}
 			>
-				<Text style={styles.text}>⋯</Text>
+				<Text className="text-base text-foreground-400">⋯</Text>
 			</View>
 		);
 	}
 
 	return (
 		<Pressable
-			style={[styles.ellipsis, style]}
+			className={cn("w-9 h-9 justify-center items-center", className)}
 			onPress={onPress}
 			accessibilityRole="button"
 			accessibilityLabel="Show more breadcrumb items"
 		>
-			<Text style={styles.text}>⋯</Text>
+			<Text className="text-base text-foreground-400">⋯</Text>
 		</Pressable>
 	);
 };

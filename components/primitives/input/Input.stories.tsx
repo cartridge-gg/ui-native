@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { View } from "react-native";
+import { Text } from "../../typography/Text";
 import { Input } from "./Input";
 
 const meta: Meta<typeof Input> = {
@@ -102,7 +103,7 @@ export const Clear: Story = {
 		const [value, setValue] = useState("Some text to clear");
 
 		return (
-			<View style={{ width: 300 }}>
+			<View className="w-80">
 				<Input
 					placeholder="Type to search..."
 					value={value}
@@ -128,7 +129,7 @@ export const Loading: Story = {
 		const [value, setValue] = useState("Loading state");
 
 		return (
-			<View style={{ width: 300 }}>
+			<View className="w-80">
 				<Input
 					label="Processing"
 					placeholder="Please wait..."
@@ -136,6 +137,64 @@ export const Loading: Story = {
 					onChangeText={setValue}
 					onClear={() => setValue("")}
 					isLoading={true}
+				/>
+			</View>
+		);
+	},
+};
+
+export const WithPrefix: Story = {
+	render: () => (
+		<View className="w-75">
+			<Input placeholder="$ 0.00" keyboardType="numeric" />
+		</View>
+	),
+};
+
+export const WithSuffix: Story = {
+	render: () => (
+		<View className="w-75">
+			<Input placeholder="Enter amount (USD)" keyboardType="numeric" />
+		</View>
+	),
+};
+
+export const WithValidation: Story = {
+	render: () => (
+		<View className="w-75">
+			<Input placeholder="Enter email" keyboardType="email-address" />
+		</View>
+	),
+};
+
+export const LargeInput: Story = {
+	render: () => (
+		<View className="w-75">
+			<Input placeholder="Large input field" multiline numberOfLines={3} />
+		</View>
+	),
+};
+
+export const WithFixedWidth: Story = {
+	render: () => {
+		return (
+			<View className="w-80">
+				<Input
+					placeholder="Fixed width input"
+					defaultValue="This input has a fixed width"
+				/>
+			</View>
+		);
+	},
+};
+
+export const Responsive: Story = {
+	render: () => {
+		return (
+			<View className="w-80">
+				<Input
+					placeholder="Responsive input"
+					defaultValue="This input adapts to container"
 				/>
 			</View>
 		);

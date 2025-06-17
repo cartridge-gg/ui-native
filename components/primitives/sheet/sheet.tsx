@@ -4,14 +4,13 @@ import {
 	Dimensions,
 	Modal,
 	Pressable,
-	StyleSheet,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import { TimesIcon } from "../../icons/utility/TimesIcon";
-import { useTheme } from "../../theme/ThemeProvider";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -95,91 +94,49 @@ export const SheetContent: React.FC<SheetContentProps> = ({
 	children,
 	side = "right",
 	showClose = true,
+	className,
 }) => {
 	const { open, setOpen } = useSheet();
-	const { colors } = useTheme();
 
-	const getSheetStyles = () => {
-		const baseStyle = {
-			backgroundColor: colors.background[100],
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 2 },
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		};
+	const getSheetClasses = () => {
+		const baseClasses = "absolute bg-theme-background shadow-lg";
 
 		switch (side) {
 			case "top":
-				return {
-					...baseStyle,
-					position: "absolute" as const,
-					top: 0,
-					left: 0,
-					right: 0,
-					height: screenHeight * 0.5,
-					borderBottomWidth: 1,
-					borderBottomColor: colors.border[200],
-				};
+				return cn(
+					baseClasses,
+					"top-0 left-0 right-0 border-b border-theme-border",
+				);
 			case "bottom":
-				return {
-					...baseStyle,
-					position: "absolute" as const,
-					bottom: 0,
-					left: 0,
-					right: 0,
-					height: screenHeight * 0.5,
-					borderTopWidth: 1,
-					borderTopColor: colors.border[200],
-					borderTopLeftRadius: 12,
-					borderTopRightRadius: 12,
-				};
+				return cn(
+					baseClasses,
+					"bottom-0 left-0 right-0 border-t border-theme-border rounded-t-lg",
+				);
 			case "left":
-				return {
-					...baseStyle,
-					position: "absolute" as const,
-					top: 0,
-					bottom: 0,
-					left: 0,
-					width: screenWidth * 0.75,
-					maxWidth: 320,
-					borderRightWidth: 1,
-					borderRightColor: colors.border[200],
-				};
+				return cn(
+					baseClasses,
+					"top-0 bottom-0 left-0 border-r border-theme-border",
+				);
 			default:
-				return {
-					...baseStyle,
-					position: "absolute" as const,
-					top: 0,
-					bottom: 0,
-					right: 0,
-					width: screenWidth * 0.75,
-					maxWidth: 320,
-					borderLeftWidth: 1,
-					borderLeftColor: colors.border[200],
-				};
+				return cn(
+					baseClasses,
+					"top-0 bottom-0 right-0 border-l border-theme-border",
+				);
 		}
 	};
 
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.5)",
-		},
-		content: {
-			...getSheetStyles(),
-			padding: 24,
-			gap: 16,
-		},
-		closeButton: {
-			position: "absolute",
-			right: 16,
-			top: 16,
-			padding: 8,
-			borderRadius: 4,
-			opacity: 0.7,
-		},
-	});
+	const getSheetSize = () => {
+		switch (side) {
+			case "top":
+			case "bottom":
+				return { height: screenHeight * 0.5 };
+			case "left":
+			case "right":
+				return { width: screenWidth * 0.75, maxWidth: 320 };
+			default:
+				return {};
+		}
+	};
 
 	const getAnimationType = () => {
 		switch (side) {
@@ -202,15 +159,18 @@ export const SheetContent: React.FC<SheetContentProps> = ({
 			onRequestClose={() => setOpen(false)}
 		>
 			<TouchableWithoutFeedback onPress={() => setOpen(false)}>
-				<View style={styles.overlay}>
+				<View className="flex-1 bg-black/50">
 					<TouchableWithoutFeedback>
-						<View style={styles.content}>
+						<View
+							className={cn(getSheetClasses(), "p-6 gap-4", className)}
+							style={getSheetSize()}
+						>
 							{showClose && (
 								<Pressable
-									style={styles.closeButton}
+									className="absolute right-4 top-4 p-2 rounded opacity-70"
 									onPress={() => setOpen(false)}
 								>
-									<TimesIcon size="xs" color={colors.foreground[400]} />
+									<TimesIcon size="xs" />
 								</Pressable>
 							)}
 							{children}
@@ -228,14 +188,11 @@ interface SheetHeaderProps {
 	className?: string;
 }
 
-export const SheetHeader: React.FC<SheetHeaderProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		header: {
-			marginBottom: 16,
-		},
-	});
-
-	return <View style={styles.header}>{children}</View>;
+export const SheetHeader: React.FC<SheetHeaderProps> = ({
+	children,
+	className,
+}) => {
+	return <View className={cn("mb-4", className)}>{children}</View>;
 };
 
 // Sheet Footer Component
@@ -244,17 +201,15 @@ interface SheetFooterProps {
 	className?: string;
 }
 
-export const SheetFooter: React.FC<SheetFooterProps> = ({ children }) => {
-	const styles = StyleSheet.create({
-		footer: {
-			flexDirection: "row",
-			justifyContent: "flex-end",
-			gap: 8,
-			marginTop: 16,
-		},
-	});
-
-	return <View style={styles.footer}>{children}</View>;
+export const SheetFooter: React.FC<SheetFooterProps> = ({
+	children,
+	className,
+}) => {
+	return (
+		<View className={cn("flex-row justify-end gap-2 mt-4", className)}>
+			{children}
+		</View>
+	);
 };
 
 // Sheet Title Component
@@ -263,16 +218,14 @@ interface SheetTitleProps {
 	className?: string;
 }
 
-export const SheetTitle: React.FC<SheetTitleProps> = ({ children }) => {
-	const { colors } = useTheme();
-
+export const SheetTitle: React.FC<SheetTitleProps> = ({
+	children,
+	className,
+}) => {
 	return (
 		<Text
 			variant="heading-lg"
-			style={{
-				color: colors.foreground[100],
-				marginBottom: 8,
-			}}
+			className={cn("text-theme-foreground mb-2", className)}
 		>
 			{children}
 		</Text>
@@ -287,15 +240,12 @@ interface SheetDescriptionProps {
 
 export const SheetDescription: React.FC<SheetDescriptionProps> = ({
 	children,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="body"
-			style={{
-				color: colors.foreground[400],
-			}}
+			className={cn("text-theme-foreground-muted", className)}
 		>
 			{children}
 		</Text>

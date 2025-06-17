@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, View } from "react-native";
+import { cn } from "../../utils/cn";
 
 // RadioGroup Context
 interface RadioGroupContextType {
@@ -17,7 +17,7 @@ export interface RadioGroupProps {
 	onValueChange?: (value: string) => void;
 	disabled?: boolean;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const RadioGroup: React.FC<RadioGroupProps> = ({
@@ -26,7 +26,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 	onValueChange,
 	disabled = false,
 	children,
-	style,
+	className,
 }) => {
 	const [internalValue, setInternalValue] = useState(defaultValue);
 
@@ -49,7 +49,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 				disabled,
 			}}
 		>
-			<View style={[styles.container, style]}>{children}</View>
+			<View className={cn("gap-2", className)}>{children}</View>
 		</RadioGroupContext.Provider>
 	);
 };
@@ -58,16 +58,15 @@ export interface RadioGroupItemProps {
 	value: string;
 	id?: string;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const RadioGroupItem: React.FC<RadioGroupItemProps> = ({
 	value,
 	disabled: itemDisabled = false,
-	style,
+	className,
 }) => {
 	const context = useContext(RadioGroupContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("RadioGroupItem must be used within a RadioGroup");
@@ -87,33 +86,15 @@ export const RadioGroupItem: React.FC<RadioGroupItemProps> = ({
 		}
 	};
 
-	const itemStyles = StyleSheet.create({
-		container: {
-			width: 16,
-			height: 16,
-			borderRadius: 8,
-			borderWidth: 1,
-			borderColor: isDisabled ? colors.foreground[400] : colors.foreground[100],
-			backgroundColor: colors.background[100],
-			justifyContent: "center",
-			alignItems: "center",
-			opacity: isDisabled ? 0.5 : 1,
-		},
-		indicator: {
-			width: 6,
-			height: 6,
-			borderRadius: 3,
-			backgroundColor: isSelected
-				? isDisabled
-					? colors.foreground[400]
-					: colors.foreground[100]
-				: "transparent",
-		},
-	});
-
 	return (
 		<Pressable
-			style={[itemStyles.container, style]}
+			className={cn(
+				"w-4 h-4 rounded-full border bg-background-100 justify-center items-center",
+				isDisabled
+					? "border-foreground-400 opacity-50"
+					: "border-foreground-100",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={isDisabled}
 			accessibilityRole="radio"
@@ -122,13 +103,16 @@ export const RadioGroupItem: React.FC<RadioGroupItemProps> = ({
 				disabled: isDisabled,
 			}}
 		>
-			<View style={itemStyles.indicator} />
+			<View
+				className={cn(
+					"w-1.5 h-1.5 rounded-full",
+					isSelected
+						? isDisabled
+							? "bg-foreground-400"
+							: "bg-foreground-100"
+						: "bg-transparent",
+				)}
+			/>
 		</Pressable>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		gap: 8,
-	},
-});

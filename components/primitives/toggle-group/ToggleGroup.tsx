@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 import type { ToggleSize, ToggleVariant } from "../toggle/Toggle";
 
 // ToggleGroup Context
@@ -25,7 +25,7 @@ export interface ToggleGroupProps {
 	size?: ToggleSize;
 	disabled?: boolean;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const ToggleGroup: React.FC<ToggleGroupProps> = ({
@@ -37,7 +37,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 	size = "default",
 	disabled = false,
 	children,
-	style,
+	className,
 }) => {
 	const [internalValue, setInternalValue] = useState(
 		defaultValue || (type === "single" ? "" : []),
@@ -65,7 +65,11 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 				disabled,
 			}}
 		>
-			<View style={[styles.container, style]}>{children}</View>
+			<View
+				className={cn("flex-row items-center justify-center gap-1", className)}
+			>
+				{children}
+			</View>
 		</ToggleGroupContext.Provider>
 	);
 };
@@ -76,7 +80,7 @@ export interface ToggleGroupItemProps {
 	variant?: ToggleVariant;
 	size?: ToggleSize;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
@@ -85,10 +89,9 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
 	variant: itemVariant,
 	size: itemSize,
 	disabled: itemDisabled = false,
-	style,
+	className,
 }) => {
 	const context = useContext(ToggleGroupContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("ToggleGroupItem must be used within a ToggleGroup");
@@ -130,74 +133,34 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
 		}
 	};
 
-	const getVariantStyles = (variant: ToggleVariant, pressed: boolean) => {
-		const baseStyles = {
-			backgroundColor: "transparent",
-			borderWidth: 0,
-		};
+	const baseClasses = "flex-row items-center justify-center rounded-md";
 
-		if (pressed) {
-			return {
-				...baseStyles,
-				backgroundColor: colors.background[500],
-			};
-		}
-
-		switch (variant) {
-			case "outline":
-				return {
-					...baseStyles,
-					borderWidth: 1,
-					borderColor: colors.input,
-				};
-			default:
-				return baseStyles;
-		}
+	const variantClasses = {
+		default: isPressed ? "bg-background-500" : "bg-transparent",
+		outline: isPressed
+			? "bg-background-500 border border-input"
+			: "bg-transparent border border-input",
 	};
 
-	const getSizeStyles = (size: ToggleSize) => {
-		switch (size) {
-			case "sm":
-				return {
-					height: 32,
-					paddingHorizontal: 8,
-				};
-			case "lg":
-				return {
-					height: 40,
-					paddingHorizontal: 12,
-				};
-			default:
-				return {
-					height: 36,
-					paddingHorizontal: 12,
-				};
-		}
+	const sizeClasses = {
+		sm: "h-8 px-2",
+		default: "h-9 px-3",
+		lg: "h-10 px-3",
 	};
 
-	const variantStyles = getVariantStyles(variant, isPressed);
-	const sizeStyles = getSizeStyles(size);
-
-	const itemStyles = StyleSheet.create({
-		toggle: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "center",
-			borderRadius: 6,
-			opacity: isDisabled ? 0.5 : 1,
-			...variantStyles,
-			...sizeStyles,
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "500",
-			color: isPressed ? colors.foreground[200] : colors.foreground[400],
-		},
-	});
+	const textColorClass = isPressed
+		? "text-foreground-200"
+		: "text-foreground-400";
 
 	return (
 		<Pressable
-			style={[itemStyles.toggle, style]}
+			className={cn(
+				baseClasses,
+				variantClasses[variant],
+				sizeClasses[size],
+				isDisabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={isDisabled}
 			accessibilityRole="button"
@@ -206,16 +169,13 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
 				disabled: isDisabled,
 			}}
 		>
-			<Text style={itemStyles.text}>{children}</Text>
+			{typeof children === "string" ? (
+				<Text className={cn("text-sm font-medium", textColorClass)}>
+					{children}
+				</Text>
+			) : (
+				children
+			)}
 		</Pressable>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-		gap: 4,
-	},
-});

@@ -1,35 +1,31 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, type ViewStyle } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { TouchableOpacity } from "react-native";
+import { cn } from "../../../utils/cn";
 
 interface AchievementBitProps {
 	completed?: boolean;
 	active?: boolean;
 	onClick?: () => void;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export function AchievementBit({
 	completed = false,
 	active = false,
 	onClick,
-	style,
+	className,
 }: AchievementBitProps) {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		bit: {
-			height: 10, // h-2.5 = 10px
-			width: 10, // w-2.5 = 10px
-			backgroundColor: completed ? colors.primary[100] : colors.foreground[400],
-			opacity: active ? 1 : 0.5,
-		},
-	});
+	const baseClasses = cn(
+		"h-2.5 w-2.5",
+		completed ? "bg-theme-primary" : "bg-theme-foreground-muted",
+		active ? "opacity-100" : "opacity-50",
+		className,
+	);
 
 	if (onClick) {
 		return (
 			<TouchableOpacity
-				style={[styles.bit, style]}
+				className={baseClasses}
 				onPress={onClick}
 				activeOpacity={0.8}
 			/>
@@ -37,7 +33,7 @@ export function AchievementBit({
 	}
 
 	return (
-		<TouchableOpacity style={[styles.bit, style]} disabled activeOpacity={1} />
+		<TouchableOpacity className={baseClasses} disabled activeOpacity={1} />
 	);
 }
 

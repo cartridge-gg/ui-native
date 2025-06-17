@@ -1,57 +1,31 @@
-import { StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export type AlertVariant = "default" | "destructive" | "constructive";
 
 export interface AlertProps {
 	variant?: AlertVariant;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const Alert: React.FC<AlertProps> = ({
 	variant = "default",
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const getVariantStyles = (variant: AlertVariant) => {
-		switch (variant) {
-			case "destructive":
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.destructive[100],
-					borderWidth: 1,
-				};
-			case "constructive":
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.constructive[100],
-					borderWidth: 1,
-				};
-			default:
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.background[300],
-					borderWidth: 1,
-				};
-		}
+	const variantStyles = {
+		default: "bg-background-200 border border-background-300",
+		destructive: "bg-background-200 border border-destructive-100",
+		constructive: "bg-background-200 border border-constructive-100",
 	};
 
-	const variantStyles = getVariantStyles(variant);
-
-	const styles = StyleSheet.create({
-		alert: {
-			borderRadius: 8,
-			padding: 16,
-			...variantStyles,
-		},
-	});
-
 	return (
-		<View style={[styles.alert, style]} accessibilityRole="alert">
+		<View
+			className={cn("rounded-lg p-4", variantStyles[variant], className)}
+			accessibilityRole="alert"
+		>
 			{children}
 		</View>
 	);
@@ -59,23 +33,17 @@ export const Alert: React.FC<AlertProps> = ({
 
 export interface AlertTitleProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
-export const AlertTitle: React.FC<AlertTitleProps> = ({ children, style }) => {
-	const { colors } = useTheme();
-
+export const AlertTitle: React.FC<AlertTitleProps> = ({
+	children,
+	className,
+}) => {
 	return (
 		<Text
 			variant="body"
-			style={[
-				{
-					fontWeight: "600",
-					marginBottom: 4,
-					color: colors.foreground[100],
-				},
-				style,
-			]}
+			className={cn("font-semibold mb-1 text-foreground-100", className)}
 		>
 			{children}
 		</Text>
@@ -84,25 +52,17 @@ export const AlertTitle: React.FC<AlertTitleProps> = ({ children, style }) => {
 
 export interface AlertDescriptionProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export const AlertDescription: React.FC<AlertDescriptionProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="body"
-			style={[
-				{
-					color: colors.foreground[400],
-					lineHeight: 20,
-				},
-				style,
-			]}
+			className={cn("text-foreground-400 leading-5", className)}
 		>
 			{children}
 		</Text>

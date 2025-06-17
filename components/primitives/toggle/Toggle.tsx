@@ -1,7 +1,7 @@
 import type React from "react";
-import { Pressable, StyleSheet } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export type ToggleVariant = "default" | "outline";
 export type ToggleSize = "default" | "sm" | "lg";
@@ -13,7 +13,7 @@ export interface ToggleProps {
 	variant?: ToggleVariant;
 	size?: ToggleSize;
 	disabled?: boolean;
-	style?: any;
+	className?: string;
 }
 
 export const Toggle: React.FC<ToggleProps> = ({
@@ -23,81 +23,46 @@ export const Toggle: React.FC<ToggleProps> = ({
 	variant = "default",
 	size = "default",
 	disabled = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
+	const baseStyles = "flex-row items-center justify-center rounded-md";
 
-	const getVariantStyles = (variant: ToggleVariant, pressed: boolean) => {
-		const baseStyles = {
-			backgroundColor: "transparent",
-			borderWidth: 0,
-		};
-
-		if (pressed) {
-			return {
-				...baseStyles,
-				backgroundColor: colors.background[500],
-			};
-		}
-
-		switch (variant) {
-			case "outline":
-				return {
-					...baseStyles,
-					borderWidth: 1,
-					borderColor: colors.input,
-				};
-			default:
-				return baseStyles;
-		}
+	const variantStyles = {
+		default: pressed ? "bg-background-500" : "bg-transparent",
+		outline: pressed
+			? "bg-background-500 border border-input"
+			: "bg-transparent border border-input",
 	};
 
-	const getSizeStyles = (size: ToggleSize) => {
-		switch (size) {
-			case "sm":
-				return {
-					height: 32,
-					paddingHorizontal: 8,
-				};
-			case "lg":
-				return {
-					height: 40,
-					paddingHorizontal: 12,
-				};
-			default:
-				return {
-					height: 36,
-					paddingHorizontal: 12,
-				};
-		}
+	const sizeStyles = {
+		sm: "h-8 px-2",
+		default: "h-9 px-3",
+		lg: "h-10 px-3",
 	};
 
-	const variantStyles = getVariantStyles(variant, pressed);
-	const sizeStyles = getSizeStyles(size);
-
-	const styles = StyleSheet.create({
-		toggle: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "center",
-			borderRadius: 6,
-			...variantStyles,
-			...sizeStyles,
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "500",
-			color: pressed ? colors.foreground[200] : colors.foreground[400],
-		},
-	});
+	const textColorClass = pressed
+		? "text-foreground-200"
+		: "text-foreground-400";
 
 	return (
 		<Pressable
-			style={[styles.toggle, style]}
+			className={cn(
+				baseStyles,
+				variantStyles[variant],
+				sizeStyles[size],
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={() => onPressedChange?.(!pressed)}
 			disabled={disabled}
 		>
-			<Text style={styles.text}>{children}</Text>
+			{typeof children === "string" ? (
+				<Text className={cn("text-sm font-medium", textColorClass)}>
+					{children}
+				</Text>
+			) : (
+				children
+			)}
 		</Pressable>
 	);
 };

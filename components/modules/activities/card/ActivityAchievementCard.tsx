@@ -18,7 +18,6 @@ export interface ActivityAchievementCardProps {
 	loading?: boolean;
 	certified?: boolean;
 	onPress?: () => void;
-	style?: any;
 }
 
 export const ActivityAchievementCard: React.FC<
@@ -33,7 +32,6 @@ export const ActivityAchievementCard: React.FC<
 	loading = false,
 	certified = false,
 	onPress,
-	style,
 }) => {
 	const { colors } = useTheme();
 
@@ -42,7 +40,7 @@ export const ActivityAchievementCard: React.FC<
 			<TrophyIcon
 				color={colors.foreground[100]}
 				variant="solid"
-				style={{ width: "100%", height: "100%" }}
+				className="w-full h-full"
 			/>
 		),
 		[colors.foreground],
@@ -57,13 +55,6 @@ export const ActivityAchievementCard: React.FC<
 				loading={loading}
 				size="lg"
 				variant="light"
-				style={
-					!error && !loading
-						? {
-								color: colors.primary[100],
-							}
-						: undefined
-				}
 			/>
 		),
 		[image, error, loading, Icon, colors.primary],
@@ -75,19 +66,13 @@ export const ActivityAchievementCard: React.FC<
 
 	const Points = useMemo(() => {
 		return (
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+			<View className="flex-row items-center gap-1">
 				<SparklesIcon
 					size="xs"
 					color={colors.foreground[300]}
 					variant="solid"
 				/>
-				<Text
-					style={{
-						fontSize: 12,
-						color: colors.foreground[300],
-						fontWeight: "400",
-					}}
-				>
+				<Text className="text-xs font-normal text-theme-foreground-muted">
 					{points}
 				</Text>
 			</View>
@@ -104,7 +89,6 @@ export const ActivityAchievementCard: React.FC<
 			error={error}
 			loading={loading}
 			onPress={onPress}
-			style={style}
 		/>
 	);
 };

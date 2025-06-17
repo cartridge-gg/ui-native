@@ -1,13 +1,7 @@
 import type React from "react";
 import { createContext, useContext, useState } from "react";
-import {
-	Modal,
-	Pressable,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Modal, Pressable, View } from "react-native";
+import { cn } from "../../utils/cn";
 
 // Popover Context
 interface PopoverContextType {
@@ -50,12 +44,12 @@ export const Popover: React.FC<PopoverProps> = ({
 
 export interface PopoverTriggerProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const PopoverTrigger: React.FC<PopoverTriggerProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(PopoverContext);
 
@@ -66,7 +60,7 @@ export const PopoverTrigger: React.FC<PopoverTriggerProps> = ({
 	const { onOpenChange } = context;
 
 	return (
-		<Pressable style={style} onPress={() => onOpenChange(true)}>
+		<Pressable className={className} onPress={() => onOpenChange(true)}>
 			{children}
 		</Pressable>
 	);
@@ -74,19 +68,18 @@ export const PopoverTrigger: React.FC<PopoverTriggerProps> = ({
 
 export interface PopoverContentProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 	align?: "start" | "center" | "end";
 	side?: "top" | "right" | "bottom" | "left";
 }
 
 export const PopoverContent: React.FC<PopoverContentProps> = ({
 	children,
-	style,
+	className,
 	align = "center",
 	side = "bottom",
 }) => {
 	const context = useContext(PopoverContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("PopoverContent must be used within a Popover");
@@ -94,58 +87,18 @@ export const PopoverContent: React.FC<PopoverContentProps> = ({
 
 	const { open, onOpenChange } = context;
 
-	const getAlignmentStyles = () => {
-		switch (align) {
-			case "start":
-				return { alignItems: "flex-start" as const };
-			case "end":
-				return { alignItems: "flex-end" as const };
-			default:
-				return { alignItems: "center" as const };
-		}
+	const alignClasses = {
+		start: "items-start",
+		center: "items-center",
+		end: "items-end",
 	};
 
-	const getSideStyles = () => {
-		switch (side) {
-			case "top":
-				return { justifyContent: "flex-start" as const };
-			case "bottom":
-				return { justifyContent: "flex-end" as const };
-			case "left":
-				return { justifyContent: "flex-start" as const };
-			case "right":
-				return { justifyContent: "flex-end" as const };
-			default:
-				return { justifyContent: "center" as const };
-		}
+	const sideClasses = {
+		top: "justify-start",
+		bottom: "justify-end",
+		left: "justify-start",
+		right: "justify-end",
 	};
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.3)",
-			padding: 16,
-			...getSideStyles(),
-			...getAlignmentStyles(),
-		},
-		content: {
-			backgroundColor: colors.background[200],
-			borderRadius: 8,
-			borderWidth: 1,
-			borderColor: colors.background[300],
-			padding: 16,
-			width: 288, // w-72 equivalent
-			maxWidth: "90%",
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-	});
 
 	return (
 		<Modal
@@ -154,9 +107,19 @@ export const PopoverContent: React.FC<PopoverContentProps> = ({
 			animationType="fade"
 			onRequestClose={() => onOpenChange(false)}
 		>
-			<Pressable style={styles.overlay} onPress={() => onOpenChange(false)}>
+			<Pressable
+				className={cn(
+					"flex-1 bg-black/30 p-4",
+					sideClasses[side],
+					alignClasses[align],
+				)}
+				onPress={() => onOpenChange(false)}
+			>
 				<Pressable
-					style={[styles.content, style]}
+					className={cn(
+						"bg-background-200 rounded-lg border border-background-300 p-4 w-72 max-w-[90%] shadow-lg",
+						className,
+					)}
 					onPress={(e) => e.stopPropagation()}
 				>
 					{children}
@@ -168,12 +131,12 @@ export const PopoverContent: React.FC<PopoverContentProps> = ({
 
 export interface PopoverAnchorProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const PopoverAnchor: React.FC<PopoverAnchorProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	return <View style={style}>{children}</View>;
+	return <View className={className}>{children}</View>;
 };

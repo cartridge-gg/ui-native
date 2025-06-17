@@ -1,14 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import {
-	Modal,
-	Pressable,
-	StyleSheet,
-	type TextStyle,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Modal, Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // AlertDialog Context
 interface AlertDialogContextType {
@@ -53,12 +46,12 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 
 export interface AlertDialogTriggerProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(AlertDialogContext);
 
@@ -69,7 +62,7 @@ export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
 	const { onOpenChange } = context;
 
 	return (
-		<Pressable style={style} onPress={() => onOpenChange(true)}>
+		<Pressable className={className} onPress={() => onOpenChange(true)}>
 			{children}
 		</Pressable>
 	);
@@ -77,48 +70,20 @@ export const AlertDialogTrigger: React.FC<AlertDialogTriggerProps> = ({
 
 export interface AlertDialogContentProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogContent: React.FC<AlertDialogContentProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(AlertDialogContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("AlertDialogContent must be used within an AlertDialog");
 	}
 
 	const { open, onOpenChange } = context;
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.8)",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 16,
-		},
-		content: {
-			backgroundColor: colors.background[100],
-			borderRadius: 8,
-			borderWidth: 4,
-			borderColor: colors.background[300],
-			padding: 24,
-			width: "100%",
-			maxWidth: 400,
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-	});
 
 	return (
 		<Modal
@@ -127,9 +92,15 @@ export const AlertDialogContent: React.FC<AlertDialogContentProps> = ({
 			animationType="fade"
 			onRequestClose={() => onOpenChange(false)}
 		>
-			<Pressable style={styles.overlay} onPress={() => onOpenChange(false)}>
+			<Pressable
+				className="flex-1 bg-black/80 justify-center items-center p-4"
+				onPress={() => onOpenChange(false)}
+			>
 				<Pressable
-					style={[styles.content, style]}
+					className={cn(
+						"bg-theme-background rounded-lg border-4 border-theme-border p-6 w-full max-w-sm shadow-lg",
+						className,
+					)}
 					onPress={(e) => e.stopPropagation()}
 				>
 					{children}
@@ -141,37 +112,27 @@ export const AlertDialogContent: React.FC<AlertDialogContentProps> = ({
 
 export interface AlertDialogHeaderProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogHeader: React.FC<AlertDialogHeaderProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	return <View style={[{ marginBottom: 16 }, style]}>{children}</View>;
+	return <View className={cn("mb-4", className)}>{children}</View>;
 };
 
 export interface AlertDialogFooterProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	return (
-		<View
-			style={[
-				{
-					flexDirection: "row",
-					justifyContent: "flex-end",
-					gap: 8,
-					marginTop: 16,
-				},
-				style,
-			]}
-		>
+		<View className={cn("flex-row justify-end gap-2 mt-4", className)}>
 			{children}
 		</View>
 	);
@@ -179,25 +140,17 @@ export const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({
 
 export interface AlertDialogTitleProps {
 	children: React.ReactNode;
-	style?: TextStyle;
+	className?: string;
 }
 
 export const AlertDialogTitle: React.FC<AlertDialogTitleProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="heading-lg"
-			style={[
-				{
-					color: colors.foreground[100],
-					marginBottom: 8,
-				},
-				style,
-			]}
+			className={cn("text-theme-foreground mb-2", className)}
 		>
 			{children}
 		</Text>
@@ -206,25 +159,17 @@ export const AlertDialogTitle: React.FC<AlertDialogTitleProps> = ({
 
 export interface AlertDialogDescriptionProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export const AlertDialogDescription: React.FC<AlertDialogDescriptionProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
 			variant="body"
-			style={[
-				{
-					color: colors.foreground[400],
-					lineHeight: 20,
-				},
-				style,
-			]}
+			className={cn("text-theme-foreground-muted leading-5", className)}
 		>
 			{children}
 		</Text>
@@ -235,17 +180,16 @@ export interface AlertDialogActionProps {
 	children: React.ReactNode;
 	onPress?: () => void;
 	variant?: "default" | "destructive";
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
 	children,
 	onPress,
 	variant = "default",
-	style,
+	className,
 }) => {
 	const context = useContext(AlertDialogContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("AlertDialogAction must be used within an AlertDialog");
@@ -258,43 +202,25 @@ export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
 		onOpenChange(false);
 	};
 
-	const getVariantStyles = () => {
+	const getVariantClasses = () => {
 		switch (variant) {
 			case "destructive":
-				return {
-					backgroundColor: colors.destructive[100],
-					color: colors.background[100],
-				};
+				return "bg-theme-destructive text-white";
 			default:
-				return {
-					backgroundColor: colors.primary[100],
-					color: colors.background[100],
-				};
+				return "bg-theme-primary text-white";
 		}
 	};
 
-	const variantStyles = getVariantStyles();
-
-	const styles = StyleSheet.create({
-		button: {
-			paddingHorizontal: 16,
-			paddingVertical: 8,
-			borderRadius: 6,
-			backgroundColor: variantStyles.backgroundColor,
-			justifyContent: "center",
-			alignItems: "center",
-			minWidth: 80,
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "600",
-			color: variantStyles.color,
-		},
-	});
-
 	return (
-		<Pressable style={styles.button} onPress={handlePress}>
-			<Text style={styles.text}>{children}</Text>
+		<Pressable
+			className={cn(
+				"px-4 py-2 rounded-md justify-center items-center min-w-20",
+				getVariantClasses(),
+				className,
+			)}
+			onPress={handlePress}
+		>
+			<Text className="text-sm font-semibold text-white">{children}</Text>
 		</Pressable>
 	);
 };
@@ -302,16 +228,15 @@ export const AlertDialogAction: React.FC<AlertDialogActionProps> = ({
 export interface AlertDialogCancelProps {
 	children: React.ReactNode;
 	onPress?: () => void;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AlertDialogCancel: React.FC<AlertDialogCancelProps> = ({
 	children,
 	onPress,
-	style,
+	className,
 }) => {
 	const context = useContext(AlertDialogContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("AlertDialogCancel must be used within an AlertDialog");
@@ -324,28 +249,17 @@ export const AlertDialogCancel: React.FC<AlertDialogCancelProps> = ({
 		onOpenChange(false);
 	};
 
-	const styles = StyleSheet.create({
-		button: {
-			paddingHorizontal: 16,
-			paddingVertical: 8,
-			borderRadius: 6,
-			backgroundColor: "transparent",
-			borderWidth: 1,
-			borderColor: colors.background[300],
-			justifyContent: "center",
-			alignItems: "center",
-			minWidth: 80,
-		},
-		text: {
-			fontSize: 14,
-			fontWeight: "600",
-			color: colors.foreground[200],
-		},
-	});
-
 	return (
-		<Pressable style={styles.button} onPress={handlePress}>
-			<Text style={styles.text}>{children}</Text>
+		<Pressable
+			className={cn(
+				"px-4 py-2 rounded-md bg-transparent border border-theme-border justify-center items-center min-w-20",
+				className,
+			)}
+			onPress={handlePress}
+		>
+			<Text className="text-sm font-semibold text-theme-foreground-subtle">
+				{children}
+			</Text>
 		</Pressable>
 	);
 };

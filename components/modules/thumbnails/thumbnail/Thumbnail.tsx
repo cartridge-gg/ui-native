@@ -1,9 +1,9 @@
 import type React from "react";
 import { useEffect, useRef } from "react";
-import { Animated, Image, StyleSheet, View } from "react-native";
+import { Animated, Image, View } from "react-native";
 import { AlertIcon, SpinnerIcon } from "../../../icons/utility";
-import { useTheme } from "../../../theme/ThemeProvider";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 export type ThumbnailVariant =
 	| "darkest"
@@ -26,7 +26,6 @@ export interface ThumbnailProps {
 	variant?: ThumbnailVariant;
 	size?: ThumbnailSize;
 	className?: string;
-	style?: ViewStyle;
 }
 
 export const Thumbnail: React.FC<ThumbnailProps> = ({
@@ -38,9 +37,8 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
 	error = false,
 	variant = "default",
 	size = "md",
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
 	const spinValue = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
@@ -57,130 +55,114 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
 		}
 	}, [loading, spinValue]);
 
-	const getSizeStyles = () => {
-		const basePadding = centered ? 1 : 0;
+	const getSizeClasses = () => {
 		switch (size) {
 			case "xs":
-				return {
-					width: 20,
-					height: 20,
-					minWidth: 20,
-					minHeight: 20,
-					padding: centered ? 2 : 2,
-				}; // w-5 h-5
+				return "w-5 h-5 min-w-5 min-h-5";
 			case "sm":
-				return {
-					width: 24,
-					height: 24,
-					minWidth: 24,
-					minHeight: 24,
-					padding: centered ? 3 : 2,
-				}; // w-6 h-6
+				return "w-6 h-6 min-w-6 min-h-6";
 			case "md":
-				return {
-					width: 32,
-					height: 32,
-					minWidth: 32,
-					minHeight: 32,
-					padding: centered ? 4 : 2,
-				}; // w-8 h-8
+				return "w-8 h-8 min-w-8 min-h-8";
 			case "lg":
-				return {
-					width: 40,
-					height: 40,
-					minWidth: 40,
-					minHeight: 40,
-					padding: 3,
-				}; // w-10 h-10 (web default)
+				return "w-10 h-10 min-w-10 min-h-10";
 			case "xl":
-				return {
-					width: 48,
-					height: 48,
-					minWidth: 48,
-					minHeight: 48,
-					padding: centered ? 6 : 3,
-				}; // w-12 h-12
+				return "w-12 h-12 min-w-12 min-h-12";
 			case "xxl":
-				return {
-					width: 80,
-					height: 80,
-					minWidth: 80,
-					minHeight: 80,
-					padding: centered ? 6 : 4,
-				}; // w-20 h-20
+				return "w-20 h-20 min-w-20 min-h-20";
 			default:
-				return {
-					width: 32,
-					height: 32,
-					minWidth: 32,
-					minHeight: 32,
-					padding: centered ? 4 : 2,
-				};
+				return "w-8 h-8 min-w-8 min-h-8";
 		}
 	};
 
-	const getBackgroundColor = () => {
+	const getPaddingClasses = () => {
+		const base = centered ? "p-1" : "p-0.5";
+		switch (size) {
+			case "xs":
+				return centered ? "p-0.5" : "p-0.5";
+			case "sm":
+				return centered ? "p-1" : "p-0.5";
+			case "md":
+				return centered ? "p-1" : "p-0.5";
+			case "lg":
+				return "p-1";
+			case "xl":
+				return centered ? "p-1.5" : "p-1";
+			case "xxl":
+				return centered ? "p-1.5" : "p-1";
+			default:
+				return base;
+		}
+	};
+
+	const getVariantClasses = () => {
 		switch (variant) {
 			case "darkest":
-				return colors.background[100];
 			case "darker":
-				return colors.background[100];
 			case "dark":
-				return colors.background[100];
+				return "bg-theme-background";
 			case "default":
-				return colors.background[200];
+				return "bg-theme-background-subtle";
 			case "light":
-				return colors.background[300];
+				return "bg-theme-border";
 			case "lighter":
-				return colors.background[400];
+				return "bg-theme-background-muted";
 			case "lightest":
-				return colors.background[500];
+				return "bg-theme-background-accent";
 			case "ghost":
-				return "transparent";
+				return "bg-transparent";
 			default:
-				return colors.background[200];
+				return "bg-theme-background-subtle";
 		}
 	};
 
-	const sizeStyles = getSizeStyles();
-	const backgroundColor = getBackgroundColor();
+	const getSizeValue = () => {
+		switch (size) {
+			case "xs":
+				return 20;
+			case "sm":
+				return 24;
+			case "md":
+				return 32;
+			case "lg":
+				return 40;
+			case "xl":
+				return 48;
+			case "xxl":
+				return 80;
+			default:
+				return 32;
+		}
+	};
 
-	const styles = StyleSheet.create({
-		container: {
-			position: "relative",
-			...sizeStyles,
-			backgroundColor,
-			borderRadius: rounded ? sizeStyles.width / 2 : 6,
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		iconContainer: {
-			width: "100%",
-			height: "100%",
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		image: {
-			width: "100%",
-			height: "100%",
-			borderRadius: rounded ? sizeStyles.width / 2 : 4,
-		},
-		subIconContainer: {
-			position: "absolute",
-			top: "75%",
-			left: "75%",
-			transform: [{ translateX: -10 }, { translateY: -10 }],
-			zIndex: 20,
-		},
-	});
+	const sizeValue = getSizeValue();
 
 	if (error) {
 		return (
-			<View style={[styles.container, style]}>
-				<View style={styles.iconContainer}>
-					<AlertIcon size="default" color={colors.destructive[100]} />
+			<View
+				className={cn(
+					"relative justify-center items-center",
+					getSizeClasses(),
+					getPaddingClasses(),
+					getVariantClasses(),
+					rounded ? "rounded-full" : "rounded-md",
+					className,
+				)}
+			>
+				<View className="w-full h-full justify-center items-center">
+					<AlertIcon size="default" />
 				</View>
-				{subIcon && <View style={styles.subIconContainer}>{subIcon}</View>}
+				{subIcon && (
+					<View
+						className="absolute z-20"
+						style={{
+							top: "75%",
+							left: "75%",
+							transform: [{ translateX: -10 }, { translateY: -10 }],
+						}}
+					>
+						{subIcon}
+					</View>
+				)}
 			</View>
 		);
 	}
@@ -192,38 +174,69 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
 		});
 
 		return (
-			<View style={[styles.container, style]}>
-				<View style={styles.iconContainer}>
+			<View
+				className={cn(
+					"relative justify-center items-center",
+					getSizeClasses(),
+					getPaddingClasses(),
+					getVariantClasses(),
+					rounded ? "rounded-full" : "rounded-md",
+					className,
+				)}
+			>
+				<View className="w-full h-full justify-center items-center">
 					<Animated.View style={{ transform: [{ rotate: spin }] }}>
-						<SpinnerIcon size="default" color={colors.foreground[300]} />
+						<SpinnerIcon size="default" />
 					</Animated.View>
 				</View>
-				{subIcon && <View style={styles.subIconContainer}>{subIcon}</View>}
+				{subIcon && (
+					<View
+						className="absolute z-20"
+						style={{
+							top: "75%",
+							left: "75%",
+							transform: [{ translateX: -10 }, { translateY: -10 }],
+						}}
+					>
+						{subIcon}
+					</View>
+				)}
 			</View>
 		);
 	}
 
 	return (
-		<View style={[styles.container, style]}>
-			<View style={styles.iconContainer}>
+		<View
+			className={cn(
+				"relative justify-center items-center",
+				getSizeClasses(),
+				getPaddingClasses(),
+				getVariantClasses(),
+				rounded ? "rounded-full" : "rounded-md",
+				className,
+			)}
+		>
+			<View className="w-full h-full justify-center items-center">
 				{typeof icon === "string" ? (
 					icon.startsWith("http") ? (
-						<Image source={{ uri: icon }} style={styles.image} />
+						<Image
+							source={{ uri: icon }}
+							className={cn(
+								"w-full h-full",
+								rounded ? "rounded-full" : "rounded",
+							)}
+						/>
 					) : icon.includes("fa-") ? (
 						<Text
-							style={{
-								fontSize: sizeStyles.width * 0.4,
-								color: colors.foreground[100],
-							}}
+							className="text-theme-foreground"
+							style={{ fontSize: sizeValue * 0.4 }}
 						>
 							{icon === "fa-seedling" ? "🌱" : "🌱"}
 						</Text>
 					) : (
 						<Text
-							style={{
-								fontSize: sizeStyles.width * 0.5,
-								color: colors.foreground[100],
-							}}
+							className="text-theme-foreground"
+							style={{ fontSize: sizeValue * 0.5 }}
 						>
 							{icon}
 						</Text>
@@ -232,7 +245,18 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
 					icon
 				)}
 			</View>
-			{subIcon && <View style={styles.subIconContainer}>{subIcon}</View>}
+			{subIcon && (
+				<View
+					className="absolute z-20"
+					style={{
+						top: "75%",
+						left: "75%",
+						transform: [{ translateX: -10 }, { translateY: -10 }],
+					}}
+				>
+					{subIcon}
+				</View>
+			)}
 		</View>
 	);
 };

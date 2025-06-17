@@ -1,15 +1,7 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
-import {
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	TextInput,
-	type TextStyle,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, ScrollView, TextInput, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // Command Context
 interface CommandContextType {
@@ -23,47 +15,42 @@ const CommandContext = createContext<CommandContextType | null>(null);
 export interface CommandProps {
 	children: React.ReactNode;
 	onSelect?: (value: string) => void;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const Command: React.FC<CommandProps> = ({
 	children,
 	onSelect,
-	style,
+	className,
 }) => {
 	const [search, setSearch] = useState("");
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			backgroundColor: colors.background[200],
-			borderRadius: 8,
-			borderWidth: 1,
-			borderColor: colors.background[300],
-			overflow: "hidden",
-		},
-	});
 
 	return (
 		<CommandContext.Provider value={{ search, setSearch, onSelect }}>
-			<View style={[styles.container, style]}>{children}</View>
+			<View
+				className={cn(
+					"bg-background-200 rounded-lg border border-background-300 overflow-hidden",
+					className,
+				)}
+			>
+				{children}
+			</View>
 		</CommandContext.Provider>
 	);
 };
 
 export interface CommandInputProps {
 	placeholder?: string;
-	style?: ViewStyle;
-	inputStyle?: TextStyle;
+	className?: string;
+	inputClassName?: string;
 }
 
 export const CommandInput: React.FC<CommandInputProps> = ({
 	placeholder = "Type a command or search...",
-	style,
-	inputStyle,
+	className,
+	inputClassName,
 }) => {
 	const context = useContext(CommandContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("CommandInput must be used within a Command");
@@ -71,38 +58,23 @@ export const CommandInput: React.FC<CommandInputProps> = ({
 
 	const { search, setSearch } = context;
 
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			borderBottomWidth: 1,
-			borderBottomColor: colors.background[300],
-			paddingHorizontal: 12,
-			gap: 8,
-		},
-		icon: {
-			fontSize: 16,
-			color: colors.foreground[400],
-			opacity: 0.5,
-		},
-		input: {
-			flex: 1,
-			height: 40,
-			fontSize: 14,
-			color: colors.foreground[200],
-			backgroundColor: "transparent",
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
-			<Text style={styles.icon}>🔍</Text>
+		<View
+			className={cn(
+				"flex-row items-center border-b border-background-300 px-3 gap-2",
+				className,
+			)}
+		>
+			<Text className="text-base text-foreground-400 opacity-50">🔍</Text>
 			<TextInput
-				style={[styles.input, inputStyle]}
+				className={cn(
+					"flex-1 h-10 text-sm text-foreground-200 bg-transparent",
+					inputClassName,
+				)}
 				value={search}
 				onChangeText={setSearch}
 				placeholder={placeholder}
-				placeholderTextColor={colors.foreground[400]}
+				placeholderTextColor="rgba(255, 255, 255, 0.4)"
 				autoCapitalize="none"
 				autoCorrect={false}
 			/>
@@ -112,22 +84,16 @@ export const CommandInput: React.FC<CommandInputProps> = ({
 
 export interface CommandListProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const CommandList: React.FC<CommandListProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const styles = StyleSheet.create({
-		list: {
-			maxHeight: 300,
-		},
-	});
-
 	return (
 		<ScrollView
-			style={[styles.list, style]}
+			className={cn("max-h-75", className)}
 			showsVerticalScrollIndicator={false}
 			keyboardShouldPersistTaps="handled"
 		>
@@ -138,35 +104,24 @@ export const CommandList: React.FC<CommandListProps> = ({
 
 export interface CommandEmptyProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const CommandEmpty: React.FC<CommandEmptyProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(CommandContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("CommandEmpty must be used within a Command");
 	}
 
-	const styles = StyleSheet.create({
-		container: {
-			paddingVertical: 24,
-			alignItems: "center",
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[400],
-			textAlign: "center",
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
-			<Text style={styles.text}>{children}</Text>
+		<View className={cn("py-6 items-center", className)}>
+			<Text className="text-sm text-foreground-400 text-center">
+				{children}
+			</Text>
 		</View>
 	);
 };
@@ -174,16 +129,15 @@ export const CommandEmpty: React.FC<CommandEmptyProps> = ({
 export interface CommandGroupProps {
 	heading?: string;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const CommandGroup: React.FC<CommandGroupProps> = ({
 	heading,
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(CommandContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("CommandGroup must be used within a Command");
@@ -196,9 +150,11 @@ export const CommandGroup: React.FC<CommandGroupProps> = ({
 		if (!search) return children;
 
 		return React.Children.toArray(children).filter((child) => {
-			if (React.isValidElement(child) && child.props.children) {
+			if (React.isValidElement(child) && (child.props as any).children) {
 				const text =
-					typeof child.props.children === "string" ? child.props.children : "";
+					typeof (child.props as any).children === "string"
+						? (child.props as any).children
+						: "";
 				return text.toLowerCase().includes(search.toLowerCase());
 			}
 			return true;
@@ -206,50 +162,33 @@ export const CommandGroup: React.FC<CommandGroupProps> = ({
 	}, [children, search]);
 
 	// Don't render if no children match search
-	if (search && filteredChildren.length === 0) {
+	const filteredArray = React.Children.toArray(filteredChildren);
+	if (search && filteredArray.length === 0) {
 		return null;
 	}
 
-	const styles = StyleSheet.create({
-		container: {
-			padding: 4,
-		},
-		heading: {
-			paddingHorizontal: 8,
-			paddingVertical: 6,
-			fontSize: 12,
-			fontWeight: "500",
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
-			{heading && <Text style={styles.heading}>{heading}</Text>}
+		<View className={cn("p-1", className)}>
+			{heading && (
+				<Text className="px-2 py-1.5 text-xs font-medium text-foreground-400">
+					{heading}
+				</Text>
+			)}
 			{filteredChildren}
 		</View>
 	);
 };
 
 export interface CommandSeparatorProps {
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const CommandSeparator: React.FC<CommandSeparatorProps> = ({
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		separator: {
-			height: 1,
-			backgroundColor: colors.background[300],
-			marginHorizontal: -4,
-			marginVertical: 4,
-		},
-	});
-
-	return <View style={[styles.separator, style]} />;
+	return (
+		<View className={cn("h-px bg-background-300 -mx-1 my-1", className)} />
+	);
 };
 
 export interface CommandItemProps {
@@ -257,7 +196,7 @@ export interface CommandItemProps {
 	children: React.ReactNode;
 	onSelect?: () => void;
 	disabled?: boolean;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const CommandItem: React.FC<CommandItemProps> = ({
@@ -265,10 +204,9 @@ export const CommandItem: React.FC<CommandItemProps> = ({
 	children,
 	onSelect,
 	disabled = false,
-	style,
+	className,
 }) => {
 	const context = useContext(CommandContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("CommandItem must be used within a Command");
@@ -291,56 +229,38 @@ export const CommandItem: React.FC<CommandItemProps> = ({
 		contextOnSelect?.(value || text);
 	};
 
-	const styles = StyleSheet.create({
-		item: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingHorizontal: 8,
-			paddingVertical: 6,
-			borderRadius: 4,
-			opacity: disabled ? 0.5 : 1,
-		},
-		text: {
-			fontSize: 14,
-			color: colors.foreground[200],
-		},
-	});
-
 	return (
 		<Pressable
-			style={[styles.item, style]}
+			className={cn(
+				"flex-row items-center px-2 py-1.5 rounded",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			accessibilityRole="menuitem"
 			accessibilityState={{ disabled }}
 		>
-			<Text style={styles.text}>{children}</Text>
+			<Text className="text-sm text-foreground-200">{children}</Text>
 		</Pressable>
 	);
 };
 
 export interface CommandShortcutProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export const CommandShortcut: React.FC<CommandShortcutProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	return (
 		<Text
-			style={[
-				{
-					marginLeft: "auto",
-					fontSize: 12,
-					color: colors.foreground[400],
-					opacity: 0.6,
-				},
-				style,
-			]}
+			className={cn(
+				"ml-auto text-xs text-foreground-400 opacity-60",
+				className,
+			)}
 		>
 			{children}
 		</Text>
@@ -359,41 +279,18 @@ export const CommandDialog: React.FC<CommandDialogProps> = ({
 	onOpenChange,
 	children,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.5)",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 16,
-		},
-		content: {
-			backgroundColor: colors.background[200],
-			borderRadius: 8,
-			borderWidth: 1,
-			borderColor: colors.background[300],
-			width: "100%",
-			maxWidth: 400,
-			maxHeight: "80%",
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-	});
-
 	if (!open) return null;
 
 	return (
-		<View style={styles.overlay}>
-			<Pressable style={styles.overlay} onPress={() => onOpenChange?.(false)}>
-				<Pressable style={styles.content} onPress={(e) => e.stopPropagation()}>
+		<View className="flex-1 bg-black/50 justify-center items-center p-4">
+			<Pressable
+				className="flex-1 bg-black/50 justify-center items-center p-4"
+				onPress={() => onOpenChange?.(false)}
+			>
+				<Pressable
+					className="bg-background-200 rounded-lg border border-background-300 w-full max-w-sm max-h-[80%] shadow-lg"
+					onPress={(e) => e.stopPropagation()}
+				>
 					{children}
 				</Pressable>
 			</Pressable>

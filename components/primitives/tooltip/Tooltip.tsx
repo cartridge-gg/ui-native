@@ -1,14 +1,8 @@
 import type React from "react";
 import { createContext, useContext, useState } from "react";
-import {
-	Modal,
-	Pressable,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Modal, Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // Tooltip Context
 interface TooltipContextType {
@@ -83,12 +77,12 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
 export interface TooltipTriggerProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const TooltipTrigger: React.FC<TooltipTriggerProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(TooltipContext);
 
@@ -114,7 +108,7 @@ export const TooltipTrigger: React.FC<TooltipTriggerProps> = ({
 
 	return (
 		<Pressable
-			style={style}
+			className={className}
 			onPressIn={handlePressIn}
 			onPressOut={handlePressOut}
 			onPress={() => {}} // Prevent default press behavior
@@ -126,19 +120,18 @@ export const TooltipTrigger: React.FC<TooltipTriggerProps> = ({
 
 export interface TooltipContentProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 	side?: "top" | "right" | "bottom" | "left";
 	sideOffset?: number;
 }
 
 export const TooltipContent: React.FC<TooltipContentProps> = ({
 	children,
-	style,
+	className,
 	side = "bottom",
 	sideOffset = 4,
 }) => {
 	const context = useContext(TooltipContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("TooltipContent must be used within a Tooltip");
@@ -146,66 +139,19 @@ export const TooltipContent: React.FC<TooltipContentProps> = ({
 
 	const { open, onOpenChange } = context;
 
-	const getSideStyles = () => {
-		switch (side) {
-			case "top":
-				return {
-					justifyContent: "flex-start" as const,
-					paddingTop: sideOffset,
-				};
-			case "bottom":
-				return {
-					justifyContent: "flex-end" as const,
-					paddingBottom: sideOffset,
-				};
-			case "left":
-				return {
-					justifyContent: "center" as const,
-					alignItems: "flex-start" as const,
-					paddingLeft: sideOffset,
-				};
-			case "right":
-				return {
-					justifyContent: "center" as const,
-					alignItems: "flex-end" as const,
-					paddingRight: sideOffset,
-				};
-			default:
-				return {
-					justifyContent: "flex-end" as const,
-					paddingBottom: sideOffset,
-				};
-		}
+	const sideClasses = {
+		top: "justify-start",
+		bottom: "justify-end",
+		left: "justify-center items-start",
+		right: "justify-center items-end",
 	};
 
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "transparent",
-			alignItems: "center",
-			...getSideStyles(),
-		},
-		content: {
-			backgroundColor: colors.background[100],
-			borderRadius: 6,
-			paddingHorizontal: 12,
-			paddingVertical: 6,
-			maxWidth: 250,
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-		text: {
-			fontSize: 12,
-			color: colors.foreground[100],
-			textAlign: "center",
-		},
-	});
+	const paddingClasses = {
+		top: "pt-1",
+		bottom: "pb-1",
+		left: "pl-1",
+		right: "pr-1",
+	};
 
 	return (
 		<Modal
@@ -214,10 +160,24 @@ export const TooltipContent: React.FC<TooltipContentProps> = ({
 			animationType="fade"
 			onRequestClose={() => onOpenChange(false)}
 		>
-			<Pressable style={styles.overlay} onPress={() => onOpenChange(false)}>
-				<View style={[styles.content, style]}>
+			<Pressable
+				className={cn(
+					"flex-1 bg-transparent items-center",
+					sideClasses[side],
+					paddingClasses[side],
+				)}
+				onPress={() => onOpenChange(false)}
+			>
+				<View
+					className={cn(
+						"bg-background-100 rounded-md px-3 py-1.5 max-w-[250px] shadow-lg",
+						className,
+					)}
+				>
 					{typeof children === "string" ? (
-						<Text style={styles.text}>{children}</Text>
+						<Text className="text-xs text-foreground-100 text-center">
+							{children}
+						</Text>
 					) : (
 						children
 					)}

@@ -3,12 +3,11 @@ import { createContext, useContext, useState } from "react";
 import {
 	Dimensions,
 	Modal,
-	StyleSheet,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { cn } from "../../utils/cn";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -117,59 +116,9 @@ export const HoverCardContent: React.FC<HoverCardContentProps> = ({
 	align = "center",
 	side = "bottom",
 	sideOffset = 4,
+	className,
 }) => {
 	const { open, setOpen } = useHoverCard();
-	const { colors } = useTheme();
-
-	const getContentPosition = () => {
-		const baseStyle = {
-			position: "absolute" as const,
-			backgroundColor: colors.background[200],
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 8,
-			padding: 16,
-			width: 256, // w-64 equivalent
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 2 },
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-			zIndex: 50,
-		};
-
-		// For simplicity in React Native, we'll center the content
-		// In a real implementation, you'd calculate position based on trigger location
-		return {
-			...baseStyle,
-			top: "50%",
-			left: "50%",
-			marginTop: -100, // Approximate half height
-			marginLeft: -128, // Half of width (256/2)
-		};
-	};
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.3)",
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		content: {
-			backgroundColor: colors.background[200],
-			borderWidth: 1,
-			borderColor: colors.border[200],
-			borderRadius: 8,
-			padding: 16,
-			width: 256, // w-64 equivalent
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 2 },
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-	});
 
 	return (
 		<Modal
@@ -179,9 +128,16 @@ export const HoverCardContent: React.FC<HoverCardContentProps> = ({
 			onRequestClose={() => setOpen(false)}
 		>
 			<TouchableWithoutFeedback onPress={() => setOpen(false)}>
-				<View style={styles.overlay}>
+				<View className="flex-1 bg-black/30 justify-center items-center">
 					<TouchableWithoutFeedback>
-						<View style={styles.content}>{children}</View>
+						<View
+							className={cn(
+								"bg-background-200 border border-border-200 rounded-lg p-4 w-64 shadow-lg",
+								className,
+							)}
+						>
+							{children}
+						</View>
 					</TouchableWithoutFeedback>
 				</View>
 			</TouchableWithoutFeedback>

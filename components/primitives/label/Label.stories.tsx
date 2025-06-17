@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { TextInput } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
+import { Input } from "../input/Input";
 import { Label } from "./Label";
 
 const meta: Meta<typeof Label> = {
@@ -19,35 +20,17 @@ type Story = StoryObj<typeof meta>;
 
 // Match the web version exactly - Label with Input
 export const Default: Story = {
-	render: () => {
-		const { colors } = useTheme();
-
-		return (
-			<View
-				style={{
-					width: 384, // max-w-sm equivalent
-					gap: 6, // gap-1.5 equivalent
-					alignItems: "stretch",
-				}}
-			>
-				<Label>Email</Label>
-				<TextInput
+	render: () => (
+		<View>
+			<Label>Email</Label>
+			<View className="w-96 mt-2">
+				<Input
 					placeholder="Email"
-					style={{
-						height: 40,
-						borderWidth: 1,
-						borderColor: colors.background[300],
-						borderRadius: 6,
-						backgroundColor: colors.background[200],
-						paddingHorizontal: 16,
-						color: colors.foreground[100],
-						fontSize: 14,
-					}}
-					placeholderTextColor={colors.foreground[400]}
+					className="h-10 px-3 py-2 text-sm bg-theme-background border border-theme-border rounded-md"
 				/>
 			</View>
-		);
-	},
+		</View>
+	),
 };
 
 export const Required: Story = {
@@ -64,61 +47,42 @@ export const Disabled: Story = {
 	},
 };
 
-export const WithForm: Story = {
+export const FormExample: Story = {
 	render: () => {
-		const { colors } = useTheme();
+		const [emailValue, setEmailValue] = useState("");
+		const [passwordValue, setPasswordValue] = useState("");
 
 		return (
-			<View style={{ gap: 16, padding: 16 }}>
-				<View style={{ gap: 4 }}>
+			<View className="gap-4 p-4">
+				<View className="gap-1">
 					<Label required>Email address</Label>
-					<View
-						style={{
-							height: 40,
-							borderWidth: 1,
-							borderColor: "#2a2f2a",
-							borderRadius: 6,
-							backgroundColor: "#1e221f",
-							paddingHorizontal: 12,
-							justifyContent: "center",
-						}}
-					>
-						{/* Placeholder for input */}
+					<View className="h-10 px-3 py-2 bg-theme-background border border-theme-border rounded-md justify-center">
+						<Input
+							placeholder="Enter your email"
+							value={emailValue}
+							onChangeText={setEmailValue}
+							keyboardType="email-address"
+							autoCapitalize="none"
+						/>
 					</View>
 				</View>
 
-				<View style={{ gap: 4 }}>
+				<View className="gap-1">
 					<Label>Password</Label>
-					<View
-						style={{
-							height: 40,
-							borderWidth: 1,
-							borderColor: "#2a2f2a",
-							borderRadius: 6,
-							backgroundColor: "#1e221f",
-							paddingHorizontal: 12,
-							justifyContent: "center",
-						}}
-					>
-						{/* Placeholder for input */}
+					<View className="h-10 px-3 py-2 bg-theme-background border border-theme-border rounded-md justify-center">
+						<Input
+							placeholder="Enter your password"
+							value={passwordValue}
+							onChangeText={setPasswordValue}
+							secureTextEntry
+						/>
 					</View>
 				</View>
 
-				<View style={{ gap: 4 }}>
+				<View className="gap-1">
 					<Label disabled>Disabled field</Label>
-					<View
-						style={{
-							height: 40,
-							borderWidth: 1,
-							borderColor: "#2a2f2a",
-							borderRadius: 6,
-							backgroundColor: "#1e221f",
-							paddingHorizontal: 12,
-							justifyContent: "center",
-							opacity: 0.5,
-						}}
-					>
-						{/* Placeholder for disabled input */}
+					<View className="h-10 px-3 py-2 bg-gray-100 border border-gray-300 rounded-md justify-center opacity-50">
+						<Input placeholder="This field is disabled" editable={false} />
 					</View>
 				</View>
 			</View>

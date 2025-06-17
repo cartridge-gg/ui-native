@@ -32,7 +32,7 @@ export const Default: Story = {
 	render: () => (
 		<Tooltip>
 			<TooltipTrigger>
-				<Button title="Hover me" />
+				<Button>Hover me</Button>
 			</TooltipTrigger>
 			<TooltipContent>Add to library</TooltipContent>
 		</Tooltip>
@@ -41,17 +41,17 @@ export const Default: Story = {
 
 export const WithCustomDelay: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Tooltip delayDuration={0}>
 				<TooltipTrigger>
-					<Button title="No Delay" />
+					<Button>No Delay</Button>
 				</TooltipTrigger>
 				<TooltipContent>This tooltip appears immediately</TooltipContent>
 			</Tooltip>
 
 			<Tooltip delayDuration={1000}>
 				<TooltipTrigger>
-					<Button title="1 Second Delay" />
+					<Button>1 Second Delay</Button>
 				</TooltipTrigger>
 				<TooltipContent>This tooltip appears after 1 second</TooltipContent>
 			</Tooltip>
@@ -61,25 +61,25 @@ export const WithCustomDelay: Story = {
 
 export const DifferentSides: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
+		<View className="gap-6 items-center">
 			<Tooltip>
 				<TooltipTrigger>
-					<Button title="Top Tooltip" />
+					<Button>Top Tooltip</Button>
 				</TooltipTrigger>
 				<TooltipContent side="top">This tooltip appears on top</TooltipContent>
 			</Tooltip>
 
-			<View style={{ flexDirection: "row", gap: 24 }}>
+			<View className="flex-row gap-6">
 				<Tooltip>
 					<TooltipTrigger>
-						<Button title="Left" />
+						<Button>Left</Button>
 					</TooltipTrigger>
 					<TooltipContent side="left">Left side</TooltipContent>
 				</Tooltip>
 
 				<Tooltip>
 					<TooltipTrigger>
-						<Button title="Right" />
+						<Button>Right</Button>
 					</TooltipTrigger>
 					<TooltipContent side="right">Right side</TooltipContent>
 				</Tooltip>
@@ -87,7 +87,7 @@ export const DifferentSides: Story = {
 
 			<Tooltip>
 				<TooltipTrigger>
-					<Button title="Bottom Tooltip" />
+					<Button>Bottom Tooltip</Button>
 				</TooltipTrigger>
 				<TooltipContent side="bottom">
 					This tooltip appears on bottom
@@ -102,21 +102,19 @@ export const ControlledTooltip: Story = {
 		const [open, setOpen] = useState(false);
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Tooltip is {open ? "open" : "closed"}</Text>
 				<Tooltip open={open} onOpenChange={setOpen}>
 					<TooltipTrigger>
-						<Button title="Controlled Tooltip" />
+						<Button>Controlled Tooltip</Button>
 					</TooltipTrigger>
 					<TooltipContent>
 						This tooltip is controlled by external state
 					</TooltipContent>
 				</Tooltip>
-				<Button
-					title={open ? "Close Tooltip" : "Open Tooltip"}
-					onPress={() => setOpen(!open)}
-					variant="secondary"
-				/>
+				<Button onPress={() => setOpen(!open)} variant="secondary">
+					{open ? "Close Tooltip" : "Open Tooltip"}
+				</Button>
 			</View>
 		);
 	},
@@ -124,22 +122,13 @@ export const ControlledTooltip: Story = {
 
 export const HelpTooltips: Story = {
 	render: () => (
-		<View style={{ gap: 24 }}>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+		<View className="gap-6">
+			<View className="flex-row items-center gap-2">
 				<Text variant="label">Username</Text>
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 16,
-								height: 16,
-								borderRadius: 8,
-								backgroundColor: "#6b7280",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<Text style={{ color: "white", fontSize: 10 }}>?</Text>
+						<View className="w-4 h-4 rounded-full bg-gray-500 items-center justify-center">
+							<Text className="text-white text-xs">?</Text>
 						</View>
 					</TooltipTrigger>
 					<TooltipContent>
@@ -149,21 +138,12 @@ export const HelpTooltips: Story = {
 				</Tooltip>
 			</View>
 
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+			<View className="flex-row items-center gap-2">
 				<Text variant="label">Password Strength</Text>
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 16,
-								height: 16,
-								borderRadius: 8,
-								backgroundColor: "#6b7280",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<Text style={{ color: "white", fontSize: 10 }}>i</Text>
+						<View className="w-4 h-4 rounded-full bg-gray-500 items-center justify-center">
+							<Text className="text-white text-xs">i</Text>
 						</View>
 					</TooltipTrigger>
 					<TooltipContent>
@@ -178,21 +158,12 @@ export const HelpTooltips: Story = {
 
 export const IconTooltips: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Text variant="label">Toolbar Actions</Text>
-			<View style={{ flexDirection: "row", gap: 12 }}>
+			<View className="flex-row gap-3">
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 8,
-								backgroundColor: "#f3f4f6",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
+						<View className="w-10 h-10 rounded-lg bg-gray-100 items-center justify-center">
 							<Text>📝</Text>
 						</View>
 					</TooltipTrigger>
@@ -201,16 +172,7 @@ export const IconTooltips: Story = {
 
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 8,
-								backgroundColor: "#f3f4f6",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
+						<View className="w-10 h-10 rounded-lg bg-gray-100 items-center justify-center">
 							<Text>💾</Text>
 						</View>
 					</TooltipTrigger>
@@ -219,16 +181,7 @@ export const IconTooltips: Story = {
 
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 8,
-								backgroundColor: "#f3f4f6",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
+						<View className="w-10 h-10 rounded-lg bg-gray-100 items-center justify-center">
 							<Text>🗑️</Text>
 						</View>
 					</TooltipTrigger>
@@ -237,16 +190,7 @@ export const IconTooltips: Story = {
 
 				<Tooltip>
 					<TooltipTrigger>
-						<View
-							style={{
-								width: 40,
-								height: 40,
-								borderRadius: 8,
-								backgroundColor: "#f3f4f6",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
+						<View className="w-10 h-10 rounded-lg bg-gray-100 items-center justify-center">
 							<Text>📤</Text>
 						</View>
 					</TooltipTrigger>
@@ -261,15 +205,13 @@ export const CustomContent: Story = {
 	render: () => (
 		<Tooltip>
 			<TooltipTrigger>
-				<Button title="Rich Tooltip" />
+				<Button>Rich Tooltip</Button>
 			</TooltipTrigger>
 			<TooltipContent>
-				<View style={{ gap: 4 }}>
-					<Text style={{ fontWeight: "bold", color: "white" }}>John Doe</Text>
-					<Text style={{ color: "white", opacity: 0.8 }}>
-						Software Engineer
-					</Text>
-					<Text style={{ color: "white", opacity: 0.8 }}>Online</Text>
+				<View className="gap-1">
+					<Text className="font-bold text-white">John Doe</Text>
+					<Text className="text-white opacity-80">Software Engineer</Text>
+					<Text className="text-white opacity-80">Online</Text>
 				</View>
 			</TooltipContent>
 		</Tooltip>
@@ -278,17 +220,17 @@ export const CustomContent: Story = {
 
 export const WithSideOffset: Story = {
 	render: () => (
-		<View style={{ gap: 24 }}>
+		<View className="gap-6">
 			<Tooltip>
 				<TooltipTrigger>
-					<Button title="Default Offset" />
+					<Button>Default Offset</Button>
 				</TooltipTrigger>
 				<TooltipContent>Default side offset (4px)</TooltipContent>
 			</Tooltip>
 
 			<Tooltip>
 				<TooltipTrigger>
-					<Button title="Large Offset" />
+					<Button>Large Offset</Button>
 				</TooltipTrigger>
 				<TooltipContent sideOffset={20}>
 					Large side offset (20px)
@@ -297,7 +239,7 @@ export const WithSideOffset: Story = {
 
 			<Tooltip>
 				<TooltipTrigger>
-					<Button title="No Offset" />
+					<Button>No Offset</Button>
 				</TooltipTrigger>
 				<TooltipContent sideOffset={0}>No side offset (0px)</TooltipContent>
 			</Tooltip>
@@ -309,7 +251,7 @@ export const LongContent: Story = {
 	render: () => (
 		<Tooltip>
 			<TooltipTrigger>
-				<Button title="Long Tooltip" />
+				<Button>Long Tooltip</Button>
 			</TooltipTrigger>
 			<TooltipContent>
 				This is a very long tooltip that demonstrates how the component handles
@@ -321,29 +263,29 @@ export const LongContent: Story = {
 	),
 };
 
-export const CustomProvider: Story = {
+export const ProviderWithDelay: Story = {
 	render: () => (
 		<TooltipProvider delayDuration={200}>
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Custom Provider (200ms delay)</Text>
-				<View style={{ flexDirection: "row", gap: 12 }}>
+				<View className="flex-row gap-3">
 					<Tooltip>
 						<TooltipTrigger>
-							<Button title="Fast 1" />
+							<Button>Fast 1</Button>
 						</TooltipTrigger>
 						<TooltipContent>Quick tooltip 1</TooltipContent>
 					</Tooltip>
 
 					<Tooltip>
 						<TooltipTrigger>
-							<Button title="Fast 2" />
+							<Button>Fast 2</Button>
 						</TooltipTrigger>
 						<TooltipContent>Quick tooltip 2</TooltipContent>
 					</Tooltip>
 
 					<Tooltip delayDuration={1000}>
 						<TooltipTrigger>
-							<Button title="Slow Override" />
+							<Button>Slow Override</Button>
 						</TooltipTrigger>
 						<TooltipContent>
 							This one overrides the provider delay

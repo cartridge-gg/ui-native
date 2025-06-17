@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Animated, Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export type ToastVariant = "default" | "success" | "error" | "warning";
 
@@ -12,7 +12,7 @@ export interface ToastProps {
 	visible: boolean;
 	onClose?: () => void;
 	duration?: number;
-	style?: any;
+	className?: string;
 }
 
 export const Toast: React.FC<ToastProps> = ({
@@ -22,9 +22,8 @@ export const Toast: React.FC<ToastProps> = ({
 	visible,
 	onClose,
 	duration = 4000,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
 	const slideAnim = useRef(new Animated.Value(-100)).current;
 	const opacityAnim = useRef(new Animated.Value(0)).current;
 
@@ -74,119 +73,60 @@ export const Toast: React.FC<ToastProps> = ({
 		});
 	};
 
-	const getVariantStyles = () => {
-		switch (variant) {
-			case "success":
-				return {
-					backgroundColor: colors.constructive[100],
-					borderColor: colors.constructive[100],
-				};
-			case "error":
-				return {
-					backgroundColor: colors.destructive[100],
-					borderColor: colors.destructive[100],
-				};
-			case "warning":
-				return {
-					backgroundColor: colors.primary[100],
-					borderColor: colors.primary[100],
-				};
-			default:
-				return {
-					backgroundColor: colors.background[200],
-					borderColor: colors.background[300],
-				};
-		}
+	const variantClasses = {
+		default: "bg-background-200 border-background-300",
+		success: "bg-constructive-100 border-constructive-100",
+		error: "bg-destructive-100 border-destructive-100",
+		warning: "bg-primary-100 border-primary-100",
 	};
 
-	const getTextColor = () => {
-		switch (variant) {
-			case "success":
-			case "error":
-			case "warning":
-				return colors.background[100]; // Dark text on colored background
-			default:
-				return colors.foreground[100]; // Light text on dark background
-		}
+	const textColorClasses = {
+		default: "text-foreground-100",
+		success: "text-background-100",
+		error: "text-background-100",
+		warning: "text-background-100",
 	};
-
-	const variantStyles = getVariantStyles();
-	const textColor = getTextColor();
-
-	const styles = StyleSheet.create({
-		container: {
-			position: "absolute",
-			top: 50,
-			left: 16,
-			right: 16,
-			zIndex: 1000,
-		},
-		toast: {
-			...variantStyles,
-			borderRadius: 8,
-			borderWidth: 1,
-			padding: 16,
-			flexDirection: "row",
-			alignItems: "flex-start",
-			justifyContent: "space-between",
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 3.84,
-			elevation: 5,
-		},
-		content: {
-			flex: 1,
-			gap: 4,
-		},
-		title: {
-			fontSize: 14,
-			fontWeight: "600",
-			color: textColor,
-		},
-		description: {
-			fontSize: 12,
-			color: textColor,
-			opacity: 0.9,
-		},
-		closeButton: {
-			width: 24,
-			height: 24,
-			borderRadius: 12,
-			justifyContent: "center",
-			alignItems: "center",
-			marginLeft: 12,
-		},
-		closeButtonText: {
-			fontSize: 16,
-			fontWeight: "bold",
-			color: textColor,
-		},
-	});
 
 	if (!visible) return null;
 
 	return (
-		<View style={[styles.container, style]}>
+		<View className={cn("absolute top-12 left-4 right-4 z-50", className)}>
 			<Animated.View
-				style={[
-					styles.toast,
-					{
-						transform: [{ translateY: slideAnim }],
-						opacity: opacityAnim,
-					},
-				]}
+				className={cn(
+					"rounded-lg border p-4 flex-row items-start justify-between shadow-lg",
+					variantClasses[variant],
+				)}
+				style={{
+					transform: [{ translateY: slideAnim }],
+					opacity: opacityAnim,
+				}}
 			>
-				<View style={styles.content}>
-					{title && <Text style={styles.title}>{title}</Text>}
-					{description && <Text style={styles.description}>{description}</Text>}
+				<View className="flex-1 gap-1">
+					{title && (
+						<Text
+							className={cn("text-sm font-semibold", textColorClasses[variant])}
+						>
+							{title}
+						</Text>
+					)}
+					{description && (
+						<Text
+							className={cn("text-xs opacity-90", textColorClasses[variant])}
+						>
+							{description}
+						</Text>
+					)}
 				</View>
 				{onClose && (
-					<Pressable style={styles.closeButton} onPress={hideToast}>
-						<Text style={styles.closeButtonText}>×</Text>
+					<Pressable
+						className="w-6 h-6 rounded-full justify-center items-center ml-3"
+						onPress={hideToast}
+					>
+						<Text
+							className={cn("text-base font-bold", textColorClasses[variant])}
+						>
+							×
+						</Text>
 					</Pressable>
 				)}
 			</Animated.View>

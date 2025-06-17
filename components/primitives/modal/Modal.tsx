@@ -1,7 +1,7 @@
 import type React from "react";
-import { Pressable, Modal as RNModal, StyleSheet, View } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Pressable, Modal as RNModal, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export interface ModalProps {
 	visible: boolean;
@@ -9,22 +9,22 @@ export interface ModalProps {
 	title?: string;
 	children: React.ReactNode;
 	showCloseButton?: boolean;
-	style?: any;
+	className?: string;
 }
 
 export interface ModalHeaderProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export interface ModalContentProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export interface ModalFooterProps {
 	children: React.ReactNode;
-	style?: any;
+	className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -33,56 +33,8 @@ export const Modal: React.FC<ModalProps> = ({
 	title,
 	children,
 	showCloseButton = true,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		overlay: {
-			flex: 1,
-			backgroundColor: "rgba(0, 0, 0, 0.5)",
-			justifyContent: "center",
-			alignItems: "center",
-			padding: 20,
-		},
-		content: {
-			backgroundColor: colors.background[100],
-			borderRadius: 12,
-			borderWidth: 4,
-			borderColor: colors.background[300],
-			padding: 24,
-			maxWidth: "90%",
-			maxHeight: "80%",
-			minWidth: 300,
-		},
-		header: {
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-			marginBottom: 16,
-		},
-		title: {
-			fontSize: 18,
-			fontWeight: "600",
-			color: colors.foreground[100],
-			flex: 1,
-		},
-		closeButton: {
-			width: 32,
-			height: 32,
-			borderRadius: 6,
-			backgroundColor: colors.background[200],
-			justifyContent: "center",
-			alignItems: "center",
-			marginLeft: 12,
-		},
-		closeButtonText: {
-			fontSize: 16,
-			color: colors.foreground[400],
-			fontWeight: "bold",
-		},
-	});
-
 	return (
 		<RNModal
 			visible={visible}
@@ -90,17 +42,32 @@ export const Modal: React.FC<ModalProps> = ({
 			animationType="fade"
 			onRequestClose={onClose}
 		>
-			<Pressable style={styles.overlay} onPress={onClose}>
+			<Pressable
+				className="flex-1 bg-black/50 justify-center items-center p-5"
+				onPress={onClose}
+			>
 				<Pressable
-					style={[styles.content, style]}
+					className={cn(
+						"bg-background-100 rounded-xl border-4 border-background-300 p-6 max-w-[90%] max-h-[80%] min-w-[300px]",
+						className,
+					)}
 					onPress={(e) => e.stopPropagation()}
 				>
 					{(title || showCloseButton) && (
-						<View style={styles.header}>
-							{title && <Text style={styles.title}>{title}</Text>}
+						<View className="flex-row justify-between items-center mb-4">
+							{title && (
+								<Text className="text-lg font-semibold text-foreground-100 flex-1">
+									{title}
+								</Text>
+							)}
 							{showCloseButton && (
-								<Pressable style={styles.closeButton} onPress={onClose}>
-									<Text style={styles.closeButtonText}>×</Text>
+								<Pressable
+									className="w-8 h-8 rounded-md bg-background-200 justify-center items-center ml-3"
+									onPress={onClose}
+								>
+									<Text className="text-base text-foreground-400 font-bold">
+										×
+									</Text>
 								</Pressable>
 							)}
 						</View>
@@ -114,46 +81,34 @@ export const Modal: React.FC<ModalProps> = ({
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		header: {
-			marginBottom: 16,
-			paddingBottom: 12,
-			borderBottomWidth: 1,
-			borderBottomColor: colors.background[300],
-		},
-	});
-
-	return <View style={[styles.header, style]}>{children}</View>;
+	return (
+		<View className={cn("mb-4 pb-3 border-b border-background-300", className)}>
+			{children}
+		</View>
+	);
 };
 
 export const ModalContent: React.FC<ModalContentProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	return <View style={style}>{children}</View>;
+	return <View className={className}>{children}</View>;
 };
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({
 	children,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		footer: {
-			marginTop: 16,
-			paddingTop: 12,
-			borderTopWidth: 1,
-			borderTopColor: colors.background[300],
-			flexDirection: "row",
-			justifyContent: "flex-end",
-			gap: 8,
-		},
-	});
-
-	return <View style={[styles.footer, style]}>{children}</View>;
+	return (
+		<View
+			className={cn(
+				"mt-4 pt-3 border-t border-background-300 flex-row justify-end gap-2",
+				className,
+			)}
+		>
+			{children}
+		</View>
+	);
 };

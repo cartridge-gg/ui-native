@@ -3,37 +3,40 @@ import React, { useState } from "react";
 import {
 	Pressable,
 	type TextInputProps as RNTextInputProps,
-	StyleSheet,
 	TextInput,
 	View,
 } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
-const inputVariants = cva("", {
-	variants: {
-		variant: {
-			default: "default",
-			username: "username",
+const inputVariants = cva(
+	"w-full rounded-md border px-4 font-mono text-sm leading-[18px] text-foreground-100",
+	{
+		variants: {
+			variant: {
+				default: "bg-background-200 border-background-300",
+				username: "bg-background-200 border-background-300",
+			},
+			size: {
+				default: "h-10",
+				lg: "h-12 text-[15px] leading-5",
+			},
 		},
-		size: {
-			default: "default",
-			lg: "lg",
+		defaultVariants: {
+			variant: "default",
+			size: "default",
 		},
 	},
-	defaultVariants: {
-		variant: "default",
-		size: "default",
-	},
-});
+);
 
 export interface InputProps
-	extends Omit<RNTextInputProps, "style">,
+	extends Omit<RNTextInputProps, "style" | "className">,
 		VariantProps<typeof inputVariants> {
 	error?: { message: string };
 	isLoading?: boolean;
 	onClear?: () => void;
 	label?: string;
-	style?: any;
+	className?: string;
 }
 
 // Error Message Component
@@ -45,7 +48,7 @@ function ErrorMessage({ label }: ErrorMessageProps) {
 	if (!label) return null;
 
 	return (
-		<View style={styles.errorContainer}>
+		<View className="flex-row items-center gap-1">
 			<Text color="destructive" variant="sans-regular-14">
 				⚠️ {label}
 			</Text>
@@ -62,14 +65,17 @@ interface ClearButtonProps {
 function ClearButton({ onClear, isLoading }: ClearButtonProps) {
 	if (isLoading) {
 		return (
-			<View style={styles.clearButton}>
+			<View className="w-6 h-6 justify-center items-center rounded-full bg-background-300">
 				<Text color="tertiary">⏳</Text>
 			</View>
 		);
 	}
 
 	return (
-		<Pressable style={styles.clearButton} onPress={onClear}>
+		<Pressable
+			className="w-6 h-6 justify-center items-center rounded-full bg-background-300"
+			onPress={onClear}
+		>
 			<Text color="tertiary">✕</Text>
 		</Pressable>
 	);
@@ -85,43 +91,32 @@ export const Input = React.forwardRef<TextInput, InputProps>(
 			size = "default",
 			label,
 			value,
-			style,
+			className,
 			...props
 		},
 		ref,
 	) => {
 		const [isFocused, setIsFocused] = useState(false);
 
-		const getInputStyle = () => {
-			const baseStyles = [
-				styles.input,
-				// Variant styles
-				variant === "username" ? styles.usernameVariant : styles.defaultVariant,
-				// Size styles
-				size === "lg" ? styles.lgSize : styles.defaultSize,
-				// State styles
-				isFocused && styles.focused,
-				error && styles.error,
-				// Add padding for clear button if needed
-				value && onClear && styles.withClearButton,
-			].filter(Boolean);
-
-			return baseStyles;
-		};
-
 		return (
-			<View style={styles.container}>
+			<View className="gap-3">
 				{label && (
-					<Text variant="label" color="muted" style={styles.label}>
+					<Text variant="label" color="muted" className="mb-1">
 						{label}
 					</Text>
 				)}
 
-				<View style={styles.inputContainer}>
+				<View className="relative">
 					<TextInput
 						ref={ref}
 						value={value}
-						style={[getInputStyle(), style]}
+						className={cn(
+							inputVariants({ variant, size }),
+							isFocused && "border-primary bg-background-300",
+							error && "border-destructive-100",
+							value && onClear && "pr-12",
+							className,
+						)}
 						placeholderTextColor="#505050" // foreground-400
 						onFocus={() => setIsFocused(true)}
 						onBlur={() => setIsFocused(false)}
@@ -129,7 +124,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
 					/>
 
 					{value && onClear && (
-						<View style={styles.clearButtonContainer}>
+						<View className="absolute right-1.5 top-1/2 -translate-y-3">
 							<ClearButton onClear={onClear} isLoading={isLoading} />
 						</View>
 					)}
@@ -142,70 +137,3 @@ export const Input = React.forwardRef<TextInput, InputProps>(
 );
 
 Input.displayName = "Input";
-
-const styles = StyleSheet.create({
-	container: {
-		gap: 12,
-	},
-	label: {
-		marginBottom: 4,
-	},
-	inputContainer: {
-		position: "relative",
-	},
-	input: {
-		width: "100%",
-		borderRadius: 6,
-		borderWidth: 1,
-		paddingHorizontal: 16,
-		fontFamily: "IBMPlexMono", // mono font
-		fontSize: 14,
-		lineHeight: 18,
-		color: "#ffffff", // foreground-100
-	},
-	defaultVariant: {
-		backgroundColor: "#1e221f", // background-200
-		borderColor: "#242824", // background-300
-	},
-	usernameVariant: {
-		backgroundColor: "#1e221f", // background-200
-		borderColor: "#242824", // background-300
-	},
-	defaultSize: {
-		height: 40,
-	},
-	lgSize: {
-		height: 48,
-		fontSize: 15,
-		lineHeight: 20,
-	},
-	focused: {
-		borderColor: "#fbcb4a", // primary
-		backgroundColor: "#242824", // background-300
-	},
-	error: {
-		borderColor: "#e66666", // destructive-100
-	},
-	withClearButton: {
-		paddingRight: 48,
-	},
-	clearButtonContainer: {
-		position: "absolute",
-		right: 6,
-		top: "50%",
-		transform: [{ translateY: -12 }],
-	},
-	clearButton: {
-		width: 24,
-		height: 24,
-		justifyContent: "center",
-		alignItems: "center",
-		borderRadius: 12,
-		backgroundColor: "#242824", // background-300
-	},
-	errorContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 4,
-	},
-});

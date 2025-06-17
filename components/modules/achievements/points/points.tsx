@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { View } from "react-native";
 import { CalendarIcon } from "../../../icons/state/CalendarIcon";
 import { SparklesIcon } from "../../../icons/state/SparklesIcon";
 import { Separator } from "../../../primitives/separator/Separator";
-import { useTheme } from "../../../theme/ThemeProvider";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 // Simple date utility for React Native
 const getDate = (timestamp: number) => {
@@ -29,57 +29,35 @@ const getDate = (timestamp: number) => {
 interface AchievementPointsProps {
 	points: number;
 	timestamp?: number;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export function AchievementPoints({
 	points,
 	timestamp,
-	style,
+	className,
 }: AchievementPointsProps) {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 8, // gap-2 = 8px
-		},
-		pointsContainer: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 4, // gap-1 = 4px
-		},
-		pointsText: {
-			fontSize: 12, // text-xs
-			color: timestamp ? colors.foreground[400] : colors.foreground[300],
-			textDecorationLine: timestamp ? "line-through" : "none",
-		},
-		separator: {
-			backgroundColor: colors.background[400],
-			height: 8, // h-2 = 8px
-			marginLeft: 2, // ml-0.5 = 2px
-		},
-		timestampContainer: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 4, // gap-1 = 4px
-		},
-		timestampText: {
-			fontSize: 12, // text-xs
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
-			<View style={styles.pointsContainer}>
+		<View className={cn("flex-row items-center gap-2", className)}>
+			<View className="flex-row items-center gap-1">
 				<SparklesIcon size="xs" variant={timestamp ? "line" : "solid"} />
-				<Text style={styles.pointsText}>{points.toLocaleString()}</Text>
+				<Text
+					className={cn(
+						"text-xs",
+						timestamp
+							? "text-theme-foreground-muted line-through"
+							: "text-theme-foreground-muted",
+					)}
+				>
+					{points.toLocaleString()}
+				</Text>
 			</View>
 
 			{timestamp && (
-				<Separator style={styles.separator} orientation="vertical" />
+				<Separator
+					className="bg-theme-background-muted h-2 ml-0.5"
+					orientation="vertical"
+				/>
 			)}
 
 			{timestamp && <Timestamp timestamp={timestamp} />}
@@ -88,24 +66,12 @@ export function AchievementPoints({
 }
 
 function Timestamp({ timestamp }: { timestamp: number }) {
-	const { colors } = useTheme();
-
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			gap: 4, // gap-1 = 4px
-		},
-		text: {
-			fontSize: 12, // text-xs
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
-		<View style={styles.container}>
+		<View className="flex-row items-center gap-1">
 			<CalendarIcon size="xs" variant="line" />
-			<Text style={styles.text}>{getDate(timestamp * 1000)}</Text>
+			<Text className="text-xs text-theme-foreground-muted">
+				{getDate(timestamp * 1000)}
+			</Text>
 		</View>
 	);
 }

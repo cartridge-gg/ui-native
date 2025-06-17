@@ -1,14 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import {
-	LayoutAnimation,
-	Platform,
-	Pressable,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { LayoutAnimation, Platform, Pressable, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 // Accordion Context
 interface AccordionContextType {
@@ -29,7 +22,7 @@ export interface AccordionProps {
 	collapsible?: boolean;
 	disabled?: boolean;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
@@ -40,7 +33,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 	collapsible = false,
 	disabled = false,
 	children,
-	style,
+	className,
 }) => {
 	const [internalValue, setInternalValue] = useState(
 		defaultValue || (type === "single" ? "" : []),
@@ -67,7 +60,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 				disabled,
 			}}
 		>
-			<View style={[styles.container, style]}>{children}</View>
+			<View className={cn("gap-0", className)}>{children}</View>
 		</AccordionContext.Provider>
 	);
 };
@@ -88,14 +81,14 @@ export interface AccordionItemProps {
 	value: string;
 	disabled?: boolean;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AccordionItem: React.FC<AccordionItemProps> = ({
 	value,
 	disabled: itemDisabled = false,
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(AccordionContext);
 
@@ -137,7 +130,9 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
 		<AccordionItemContext.Provider
 			value={{ value, isOpen, onToggle: handleToggle, disabled: isDisabled }}
 		>
-			<View style={[styles.item, style]}>{children}</View>
+			<View className={cn("border-b border-white/10", className)}>
+				{children}
+			</View>
 		</AccordionItemContext.Provider>
 	);
 };
@@ -145,16 +140,15 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
 export interface AccordionTriggerProps {
 	hideIcon?: boolean;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 	hideIcon = false,
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(AccordionItemContext);
-	const { colors } = useTheme();
 
 	if (!context) {
 		throw new Error("AccordionTrigger must be used within an AccordionItem");
@@ -175,29 +169,13 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 		onToggle();
 	};
 
-	const triggerStyles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-			paddingVertical: 12,
-			opacity: disabled ? 0.5 : 1,
-		},
-		content: {
-			flex: 1,
-			flexDirection: "row",
-			alignItems: "center",
-		},
-		icon: {
-			marginLeft: 8,
-			transform: [{ rotate: isOpen ? "90deg" : "0deg" }],
-			color: colors.foreground[400],
-		},
-	});
-
 	return (
 		<Pressable
-			style={[triggerStyles.container, style]}
+			className={cn(
+				"flex-row items-center justify-between py-3",
+				disabled && "opacity-50",
+				className,
+			)}
 			onPress={handlePress}
 			disabled={disabled}
 			accessibilityRole="button"
@@ -206,20 +184,30 @@ export const AccordionTrigger: React.FC<AccordionTriggerProps> = ({
 				disabled,
 			}}
 		>
-			<View style={triggerStyles.content}>{children}</View>
-			{!hideIcon && <Text style={triggerStyles.icon}>▶</Text>}
+			<View className="flex-1 flex-row items-center">{children}</View>
+			{!hideIcon && (
+				<Text
+					className={cn(
+						"ml-2 text-foreground-400 transition-transform",
+						isOpen && "rotate-90",
+					)}
+					style={{ transform: [{ rotate: isOpen ? "90deg" : "0deg" }] }}
+				>
+					▶
+				</Text>
+			)}
 		</Pressable>
 	);
 };
 
 export interface AccordionContentProps {
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const AccordionContent: React.FC<AccordionContentProps> = ({
 	children,
-	style,
+	className,
 }) => {
 	const context = useContext(AccordionItemContext);
 
@@ -231,19 +219,5 @@ export const AccordionContent: React.FC<AccordionContentProps> = ({
 
 	if (!isOpen) return null;
 
-	return <View style={[styles.content, style]}>{children}</View>;
+	return <View className={cn("pb-3 gap-1", className)}>{children}</View>;
 };
-
-const styles = StyleSheet.create({
-	container: {
-		gap: 0,
-	},
-	item: {
-		borderBottomWidth: 1,
-		borderBottomColor: "rgba(255, 255, 255, 0.1)",
-	},
-	content: {
-		paddingBottom: 12,
-		gap: 4,
-	},
-});

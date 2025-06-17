@@ -1,6 +1,7 @@
 import type React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
+import { cn } from "../../utils/cn";
 
 export type CheckboxVariant =
 	| "line"
@@ -27,7 +28,7 @@ export interface CheckboxProps {
 	variant?: CheckboxVariant;
 	size?: CheckboxSize;
 	disabled?: boolean;
-	style?: any;
+	className?: string;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -36,7 +37,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 	variant = "line",
 	size = "default",
 	disabled = false,
-	style,
+	className,
 }) => {
 	const { colors } = useTheme();
 
@@ -70,19 +71,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
 	const sizeStyles = getSizeStyles(size);
 	const iconVariant = getIconVariant();
-
-	const styles = StyleSheet.create({
-		container: {
-			...sizeStyles,
-			justifyContent: "center",
-			alignItems: "center",
-			borderRadius: 2,
-			opacity: disabled ? 0.5 : 1,
-		},
-		checkIcon: {
-			position: "absolute",
-		},
-	});
 
 	const renderIcon = () => {
 		const iconSize = sizeStyles.width * 0.7;
@@ -220,7 +208,15 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
 	return (
 		<Pressable
-			style={[styles.container, style]}
+			className={cn(
+				"justify-center items-center rounded-sm",
+				disabled && "opacity-50",
+				className,
+			)}
+			style={{
+				width: sizeStyles.width,
+				height: sizeStyles.height,
+			}}
 			onPress={() => {
 				if (!disabled && onCheckedChange) {
 					onCheckedChange(!checked);

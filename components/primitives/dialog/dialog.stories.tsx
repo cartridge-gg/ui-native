@@ -77,10 +77,7 @@ export const SimpleDialog: Story = {
 				<DialogHeader>
 					<DialogTitle>Simple Dialog</DialogTitle>
 				</DialogHeader>
-				<Text
-					variant="body"
-					style={{ textAlign: "center", marginVertical: 16 }}
-				>
+				<Text variant="body" className="text-center my-4">
 					This is a simple dialog with just a title and some content.
 				</Text>
 			</DialogContent>
@@ -101,13 +98,13 @@ export const LongContent: Story = {
 						Please read the following terms and conditions carefully.
 					</DialogDescription>
 				</DialogHeader>
-				<View style={{ marginVertical: 16 }}>
-					<Text variant="body" style={{ marginBottom: 12 }}>
+				<View className="my-4">
+					<Text variant="body" className="mb-3">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
 						eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
 						ad minim veniam, quis nostrud exercitation ullamco laboris.
 					</Text>
-					<Text variant="body" style={{ marginBottom: 12 }}>
+					<Text variant="body" className="mb-3">
 						Duis aute irure dolor in reprehenderit in voluptate velit esse
 						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
 						cupidatat non proident, sunt in culpa qui officia deserunt mollit
@@ -136,7 +133,7 @@ export const ControlledDialog: Story = {
 		const [open, setOpen] = React.useState(false);
 
 		return (
-			<View style={{ gap: 12 }}>
+			<View className="gap-3">
 				<Dialog open={open} onOpenChange={setOpen}>
 					<DialogTrigger>
 						<Button variant="primary">Open Controlled Dialog</Button>

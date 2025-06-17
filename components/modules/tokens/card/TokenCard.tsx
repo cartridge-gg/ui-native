@@ -1,8 +1,8 @@
 import type React from "react";
 import { useMemo } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { Image, Pressable, View } from "react-native";
 import { Text } from "../../../typography/Text";
+import { cn } from "../../../utils/cn";
 
 export interface TokenCardProps {
 	image: string;
@@ -12,7 +12,7 @@ export interface TokenCardProps {
 	change?: string;
 	variant?: "default";
 	onPress?: () => void;
-	style?: any;
+	className?: string;
 }
 
 export const TokenCard: React.FC<TokenCardProps> = ({
@@ -23,99 +23,65 @@ export const TokenCard: React.FC<TokenCardProps> = ({
 	change,
 	variant = "default",
 	onPress,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
-	const backgroundColor = useMemo(() => {
+	const getBackgroundStyle = () => {
 		if (change?.includes("+")) {
-			return `${colors.constructive[100]}08`; // 3% opacity
+			return { backgroundColor: "#10b98108" }; // constructive with 3% opacity
 		}
 		if (change?.includes("-")) {
-			return `${colors.destructive[100]}08`; // 3% opacity
+			return { backgroundColor: "#ef444408" }; // destructive with 3% opacity
 		}
-		return colors.background[200];
-	}, [change, colors]);
+		return {};
+	};
 
-	const changeColor = useMemo(() => {
+	const getChangeColorClass = () => {
 		if (change?.includes("+")) {
-			return colors.constructive[100];
+			return "text-theme-constructive";
 		}
 		if (change?.includes("-")) {
-			return colors.destructive[100];
+			return "text-theme-destructive";
 		}
-		return colors.foreground[300];
-	}, [change, colors]);
-
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			paddingHorizontal: 16,
-			paddingVertical: 12,
-			backgroundColor: colors.background[200],
-			gap: 12,
-		},
-		thumbnail: {
-			width: 40,
-			height: 40,
-			borderRadius: 20,
-			backgroundColor: colors.background[300],
-		},
-		content: {
-			flex: 1,
-			flexDirection: "column",
-			gap: 2,
-		},
-		rightContent: {
-			alignItems: "flex-end",
-			gap: 2,
-		},
-		title: {
-			fontSize: 14,
-			fontWeight: "600",
-			color: colors.foreground[100],
-		},
-		amount: {
-			fontSize: 12,
-			color: colors.foreground[300],
-		},
-		value: {
-			fontSize: 14,
-			fontWeight: "500",
-			color: colors.foreground[100],
-		},
-		change: {
-			fontSize: 12,
-			fontWeight: "500",
-			color: changeColor,
-		},
-	});
+		return "text-theme-foreground-muted";
+	};
 
 	const content = (
-		<View style={[styles.container, { backgroundColor }, style]}>
+		<View
+			className={cn(
+				"flex-row items-center px-4 py-3 bg-theme-background-subtle gap-3",
+				className,
+			)}
+			style={getBackgroundStyle()}
+		>
 			<Image
 				source={{ uri: image }}
-				style={styles.thumbnail}
+				className="w-10 h-10 rounded-full bg-theme-border"
 				resizeMode="cover"
 			/>
-			<View style={styles.content}>
-				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.amount}>{amount}</Text>
+			<View className="flex-1 flex-col gap-0.5">
+				<Text className="text-sm font-semibold text-theme-foreground">
+					{title}
+				</Text>
+				<Text className="text-xs text-theme-foreground-muted">{amount}</Text>
 			</View>
-			<View style={styles.rightContent}>
-				{value && <Text style={styles.value}>{value}</Text>}
-				{change && <Text style={styles.change}>{change}</Text>}
+			<View className="items-end gap-0.5">
+				{value && (
+					<Text className="text-sm font-medium text-theme-foreground">
+						{value}
+					</Text>
+				)}
+				{change && (
+					<Text className={cn("text-xs font-medium", getChangeColorClass())}>
+						{change}
+					</Text>
+				)}
 			</View>
 		</View>
 	);
 
 	if (onPress) {
 		return (
-			<Pressable
-				onPress={onPress}
-				style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-			>
+			<Pressable onPress={onPress} className="active:opacity-80">
 				{content}
 			</Pressable>
 		);

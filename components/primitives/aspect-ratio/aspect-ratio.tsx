@@ -1,5 +1,6 @@
 import type React from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 
 interface AspectRatioProps {
 	/**
@@ -8,7 +9,7 @@ interface AspectRatioProps {
 	 */
 	ratio?: number;
 	children: React.ReactNode;
-	style?: ViewStyle;
+	className?: string;
 }
 
 /**
@@ -18,14 +19,11 @@ interface AspectRatioProps {
 export const AspectRatio: React.FC<AspectRatioProps> = ({
 	ratio = 1,
 	children,
-	style,
+	className,
 }) => {
-	const styles = StyleSheet.create({
-		container: {
-			width: "100%",
-			aspectRatio: ratio,
-		},
-	});
-
-	return <View style={[styles.container, style]}>{children}</View>;
+	return (
+		<View className={cn("w-full", className)} style={{ aspectRatio: ratio }}>
+			{children}
+		</View>
+	);
 };

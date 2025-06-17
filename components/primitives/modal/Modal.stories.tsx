@@ -22,7 +22,7 @@ export const Basic: Story = {
 
 		return (
 			<View>
-				<Button title="Open Modal" onPress={() => setVisible(true)} />
+				<Button onPress={() => setVisible(true)}>Open Modal</Button>
 
 				<Modal
 					visible={visible}
@@ -42,7 +42,7 @@ export const WithoutTitle: Story = {
 
 		return (
 			<View>
-				<Button title="Open Modal" onPress={() => setVisible(true)} />
+				<Button onPress={() => setVisible(true)}>Open Modal</Button>
 
 				<Modal visible={visible} onClose={() => setVisible(false)}>
 					<Text>This modal has no title, just content and a close button.</Text>
@@ -58,7 +58,7 @@ export const WithHeaderContentFooter: Story = {
 
 		return (
 			<View>
-				<Button title="Open Modal" onPress={() => setVisible(true)} />
+				<Button onPress={() => setVisible(true)}>Open Modal</Button>
 
 				<Modal
 					visible={visible}
@@ -66,31 +66,27 @@ export const WithHeaderContentFooter: Story = {
 					showCloseButton={false}
 				>
 					<ModalHeader>
-						<Text style={{ fontSize: 18, fontWeight: "bold" }}>
-							Custom Header
-						</Text>
-						<Text style={{ fontSize: 12, color: "#808080", marginTop: 4 }}>
+						<Text className="text-lg font-bold">Custom Header</Text>
+						<Text className="text-xs text-gray-500 mt-1">
 							This is a custom header with description
 						</Text>
 					</ModalHeader>
 
 					<ModalContent>
-						<Text style={{ marginBottom: 12 }}>
+						<Text className="mb-3">
 							This modal uses the compound component pattern with separate
 							header, content, and footer sections.
 						</Text>
-						<Text style={{ fontSize: 12, color: "#808080" }}>
+						<Text className="text-xs text-gray-500">
 							You can customize each section independently.
 						</Text>
 					</ModalContent>
 
 					<ModalFooter>
-						<Button
-							title="Cancel"
-							variant="secondary"
-							onPress={() => setVisible(false)}
-						/>
-						<Button title="Confirm" onPress={() => setVisible(false)} />
+						<Button variant="secondary" onPress={() => setVisible(false)}>
+							Cancel
+						</Button>
+						<Button onPress={() => setVisible(false)}>Confirm</Button>
 					</ModalFooter>
 				</Modal>
 			</View>
@@ -104,22 +100,19 @@ export const LongContent: Story = {
 
 		return (
 			<View>
-				<Button title="Open Modal" onPress={() => setVisible(true)} />
+				<Button onPress={() => setVisible(true)}>Open Modal</Button>
 
 				<Modal
 					visible={visible}
 					onClose={() => setVisible(false)}
 					title="Long Content Modal"
 				>
-					<Text style={{ marginBottom: 12 }}>
+					<Text className="mb-3">
 						This modal contains a lot of content to demonstrate scrolling
 						behavior.
 					</Text>
 					{Array.from({ length: 10 }, (_, i) => (
-						<Text
-							key={i}
-							style={{ marginBottom: 8, fontSize: 12, color: "#808080" }}
-						>
+						<Text key={i} className="mb-2 text-xs text-gray-500">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
 							eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
 							enim ad minim veniam, quis nostrud exercitation ullamco laboris.
@@ -137,11 +130,9 @@ export const ConfirmationDialog: Story = {
 
 		return (
 			<View>
-				<Button
-					title="Delete Item"
-					variant="destructive"
-					onPress={() => setVisible(true)}
-				/>
+				<Button variant="destructive" onPress={() => setVisible(true)}>
+					Delete Item
+				</Button>
 
 				<Modal
 					visible={visible}
@@ -150,25 +141,21 @@ export const ConfirmationDialog: Story = {
 					showCloseButton={false}
 				>
 					<ModalContent>
-						<Text style={{ marginBottom: 8 }}>
+						<Text className="mb-2">
 							Are you sure you want to delete this item?
 						</Text>
-						<Text style={{ fontSize: 12, color: "#808080" }}>
+						<Text className="text-xs text-gray-500">
 							This action cannot be undone.
 						</Text>
 					</ModalContent>
 
 					<ModalFooter>
-						<Button
-							title="Cancel"
-							variant="secondary"
-							onPress={() => setVisible(false)}
-						/>
-						<Button
-							title="Delete"
-							variant="destructive"
-							onPress={() => setVisible(false)}
-						/>
+						<Button variant="secondary" onPress={() => setVisible(false)}>
+							Cancel
+						</Button>
+						<Button variant="destructive" onPress={() => setVisible(false)}>
+							Delete
+						</Button>
 					</ModalFooter>
 				</Modal>
 			</View>

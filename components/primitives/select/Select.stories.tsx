@@ -34,7 +34,7 @@ export const Default: Story = {
 		const [value, setValue] = useState("");
 
 		return (
-			<View style={{ width: 200 }}>
+			<View className="w-50">
 				<Select
 					options={sampleOptions}
 					value={value}
@@ -51,7 +51,7 @@ export const Simplified: Story = {
 		const [value, setValue] = useState("apple");
 
 		return (
-			<View style={{ width: 200 }}>
+			<View className="w-50">
 				<Select
 					options={sampleOptions}
 					value={value}
@@ -68,7 +68,7 @@ export const WithDisabledOptions: Story = {
 		const [value, setValue] = useState("");
 
 		return (
-			<View style={{ width: 200 }}>
+			<View className="w-50">
 				<Select
 					options={sampleOptionsWithDisabled}
 					value={value}
@@ -82,7 +82,7 @@ export const WithDisabledOptions: Story = {
 
 export const Disabled: Story = {
 	render: () => (
-		<View style={{ width: 200 }}>
+		<View className="w-50">
 			<Select options={sampleOptions} value="apple" disabled />
 		</View>
 	),
@@ -98,7 +98,7 @@ export const LongList: Story = {
 		}));
 
 		return (
-			<View style={{ width: 200 }}>
+			<View className="w-50">
 				<Select
 					options={longOptions}
 					value={value}

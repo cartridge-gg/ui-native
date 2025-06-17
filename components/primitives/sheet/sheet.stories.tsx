@@ -58,7 +58,7 @@ export const RightSide: Story = {
 						This sheet slides in from the right side of the screen.
 					</SheetDescription>
 				</SheetHeader>
-				<Text variant="body" style={{ marginVertical: 16 }}>
+				<Text variant="body" className="my-4">
 					This is the content area of the sheet. You can put any content here.
 				</Text>
 				<SheetFooter>
@@ -85,17 +85,17 @@ export const LeftSide: Story = {
 						This sheet slides in from the left side of the screen.
 					</SheetDescription>
 				</SheetHeader>
-				<View style={{ marginVertical: 16 }}>
-					<Text variant="body" style={{ marginBottom: 12 }}>
+				<View className="my-4">
+					<Text variant="body" className="mb-3">
 						Navigation Menu
 					</Text>
-					<Button variant="tertiary" style={{ marginBottom: 8 }}>
+					<Button variant="tertiary" className="mb-2">
 						Home
 					</Button>
-					<Button variant="tertiary" style={{ marginBottom: 8 }}>
+					<Button variant="tertiary" className="mb-2">
 						Profile
 					</Button>
-					<Button variant="tertiary" style={{ marginBottom: 8 }}>
+					<Button variant="tertiary" className="mb-2">
 						Settings
 					</Button>
 				</View>
@@ -117,17 +117,17 @@ export const BottomSheet: Story = {
 						This sheet slides up from the bottom of the screen.
 					</SheetDescription>
 				</SheetHeader>
-				<View style={{ marginVertical: 16 }}>
-					<Text variant="body" style={{ marginBottom: 12 }}>
+				<View className="my-4">
+					<Text variant="body" className="mb-3">
 						Quick Actions
 					</Text>
-					<Button variant="outline" style={{ marginBottom: 8 }}>
+					<Button variant="outline" className="mb-2">
 						Share
 					</Button>
-					<Button variant="outline" style={{ marginBottom: 8 }}>
+					<Button variant="outline" className="mb-2">
 						Copy Link
 					</Button>
-					<Button variant="outline" style={{ marginBottom: 8 }}>
+					<Button variant="outline" className="mb-2">
 						Download
 					</Button>
 				</View>
@@ -154,7 +154,7 @@ export const TopSheet: Story = {
 						This sheet slides down from the top of the screen.
 					</SheetDescription>
 				</SheetHeader>
-				<Text variant="body" style={{ marginVertical: 16 }}>
+				<Text variant="body" className="my-4">
 					This is useful for notifications or quick information displays.
 				</Text>
 			</SheetContent>
@@ -175,7 +175,7 @@ export const WithoutCloseButton: Story = {
 						This sheet doesn't have a close button in the corner.
 					</SheetDescription>
 				</SheetHeader>
-				<Text variant="body" style={{ marginVertical: 16 }}>
+				<Text variant="body" className="my-4">
 					You can only close this sheet by tapping outside or using the button
 					below.
 				</Text>
@@ -194,7 +194,7 @@ export const ControlledSheet: Story = {
 		const [open, setOpen] = React.useState(false);
 
 		return (
-			<View style={{ gap: 12 }}>
+			<View className="gap-3">
 				<Sheet open={open} onOpenChange={setOpen}>
 					<SheetTrigger>
 						<Button variant="primary">Open Controlled Sheet</Button>

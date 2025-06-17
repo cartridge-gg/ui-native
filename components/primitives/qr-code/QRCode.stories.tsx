@@ -21,22 +21,22 @@ export const Default: Story = {
 	render: () => <QRCode value="https://example.com" />,
 };
 
-export const CustomSize: Story = {
+export const DifferentSizes: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
-			<View style={{ gap: 8, alignItems: "center" }}>
+		<View className="gap-6 items-center">
+			<View className="gap-2 items-center">
 				<Text variant="label">Small (100px)</Text>
-				<QRCode value="Small QR Code" size={100} />
+				<QRCode value="https://example.com" size={100} />
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">Medium (200px)</Text>
-				<QRCode value="Medium QR Code" size={200} />
+				<QRCode value="https://example.com" size={200} />
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">Large (300px)</Text>
-				<QRCode value="Large QR Code" size={300} />
+				<QRCode value="https://example.com" size={300} />
 			</View>
 		</View>
 	),
@@ -44,29 +44,32 @@ export const CustomSize: Story = {
 
 export const CustomColors: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
-			<View style={{ gap: 8, alignItems: "center" }}>
+		<View className="gap-6 items-center">
+			<View className="gap-2 items-center">
 				<Text variant="label">Blue QR Code</Text>
 				<QRCode
-					value="Blue QR Code"
+					value="https://example.com/blue"
+					size={150}
 					foregroundColor="#3b82f6"
-					backgroundColor="#eff6ff"
+					backgroundColor="#e0f2fe"
 				/>
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">Green QR Code</Text>
 				<QRCode
-					value="Green QR Code"
-					foregroundColor="#10b981"
-					backgroundColor="#ecfdf5"
+					value="https://example.com/green"
+					size={150}
+					foregroundColor="#22c55e"
+					backgroundColor="#f0fdf4"
 				/>
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">Red QR Code</Text>
 				<QRCode
-					value="Red QR Code"
+					value="https://example.com/red"
+					size={150}
 					foregroundColor="#ef4444"
 					backgroundColor="#fef2f2"
 				/>
@@ -75,77 +78,71 @@ export const CustomColors: Story = {
 	),
 };
 
-export const WithLogo: Story = {
+export const WithLogos: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
-			<View style={{ gap: 8, alignItems: "center" }}>
+		<View className="gap-6 items-center">
+			<View className="gap-2 items-center">
 				<Text variant="label">QR Code with Emoji Logo</Text>
-				<QRCodeWithLogo
+				<QRCode
 					value="https://example.com/profile"
-					logo={<Text style={{ fontSize: 24 }}>🚀</Text>}
+					logo={<Text className="text-2xl">🚀</Text>}
 					logoSize={50}
 				/>
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">QR Code with Text Logo</Text>
-				<QRCodeWithLogo
+				<QRCode
 					value="https://company.com"
-					logo={<Text style={{ fontSize: 12, fontWeight: "bold" }}>LOGO</Text>}
+					logo={<Text className="text-xs font-bold">LOGO</Text>}
 					logoSize={40}
-					logoBackgroundColor="#ffffff"
 				/>
 			</View>
 		</View>
 	),
 };
 
-export const ScannerFrame: Story = {
+export const WithScannerFrame: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
-			<View style={{ gap: 8, alignItems: "center" }}>
+		<View className="gap-6 items-center">
+			<View className="gap-2 items-center">
 				<Text variant="label">Default Scanner Frame</Text>
 				<QRCodeScannerFrame />
 			</View>
 
-			<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="gap-2 items-center">
 				<Text variant="label">Custom Scanner Frame</Text>
 				<QRCodeScannerFrame
-					size={200}
-					cornerLength={40}
-					cornerWidth={6}
-					borderColor="#10b981"
+					size={250}
+					borderColor="#ff6b6b"
+					borderWidth={4}
+					cornerLength={30}
 				/>
 			</View>
 		</View>
 	),
 };
 
-export const InteractiveGenerator: Story = {
+export const QRGenerator: Story = {
 	render: () => {
-		const [inputValue, setInputValue] = useState("https://example.com");
 		const [qrValue, setQrValue] = useState("https://example.com");
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">QR Code Generator</Text>
 
-				<View style={{ width: "100%", maxWidth: 300, gap: 12 }}>
+				<View className="w-full max-w-xs gap-3">
 					<Input
-						value={inputValue}
-						onChangeText={setInputValue}
 						placeholder="Enter text or URL"
-					/>
-					<Button
-						title="Generate QR Code"
-						onPress={() => setQrValue(inputValue)}
+						value={qrValue}
+						onChangeText={setQrValue}
 					/>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">Generated QR Code:</Text>
 					<QRCode value={qrValue} size={200} />
-					<Text variant="caption" color="muted" style={{ textAlign: "center" }}>
+					<Text variant="caption" color="muted" className="text-center">
 						{qrValue}
 					</Text>
 				</View>
@@ -156,27 +153,23 @@ export const InteractiveGenerator: Story = {
 
 export const WalletAddress: Story = {
 	render: () => {
-		const walletAddress = "0x742d35Cc6634C0532925a3b8D4C2C4e4C8b4C8b4";
+		const walletAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">Wallet Address QR</Text>
 
-				<QRCodeWithLogo
+				<QRCode
 					value={walletAddress}
-					logo={<Text style={{ fontSize: 20 }}>💰</Text>}
+					logo={<Text className="text-xl">💰</Text>}
 					logoSize={45}
-					size={250}
+					size={200}
 				/>
 
-				<View style={{ gap: 4, alignItems: "center" }}>
+				<View className="gap-1 items-center">
 					<Text variant="label">Wallet Address:</Text>
-					<Text
-						variant="caption"
-						color="muted"
-						style={{ fontFamily: "monospace" }}
-					>
-						{walletAddress.slice(0, 10)}...{walletAddress.slice(-8)}
+					<Text variant="caption" color="muted" className="font-mono">
+						{walletAddress}
 					</Text>
 				</View>
 			</View>
@@ -189,30 +182,25 @@ export const ContactCard: Story = {
 		const vCard = `BEGIN:VCARD
 VERSION:3.0
 FN:John Doe
-ORG:Example Company
-TEL:+1-555-123-4567
+TEL:+1234567890
 EMAIL:john@example.com
-URL:https://johndoe.com
 END:VCARD`;
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">Contact Card QR</Text>
 
-				<QRCodeWithLogo
+				<QRCode
 					value={vCard}
-					logo={<Text style={{ fontSize: 20 }}>👤</Text>}
+					logo={<Text className="text-xl">👤</Text>}
 					logoSize={45}
-					size={250}
+					size={200}
 				/>
 
-				<View style={{ gap: 4, alignItems: "center" }}>
+				<View className="gap-1 items-center">
 					<Text variant="label">John Doe</Text>
 					<Text variant="caption" color="muted">
-						Example Company
-					</Text>
-					<Text variant="caption" color="muted">
-						john@example.com
+						+1234567890 • john@example.com
 					</Text>
 				</View>
 			</View>
@@ -220,25 +208,25 @@ END:VCARD`;
 	},
 };
 
-export const WiFiCredentials: Story = {
+export const WiFiQR: Story = {
 	render: () => {
-		const wifiConfig = "WIFI:T:WPA;S:MyNetwork;P:MyPassword123;H:false;;";
+		const wifiConfig = "WIFI:T:WPA;S:MyNetwork;P:MyPassword;H:false;;";
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">WiFi QR Code</Text>
 
-				<QRCodeWithLogo
+				<QRCode
 					value={wifiConfig}
-					logo={<Text style={{ fontSize: 20 }}>📶</Text>}
+					logo={<Text className="text-xl">📶</Text>}
 					logoSize={45}
-					size={250}
+					size={200}
 				/>
 
-				<View style={{ gap: 4, alignItems: "center" }}>
+				<View className="gap-1 items-center">
 					<Text variant="label">Network: MyNetwork</Text>
 					<Text variant="caption" color="muted">
-						Scan to connect automatically
+						Scan to connect to WiFi
 					</Text>
 				</View>
 			</View>
@@ -248,47 +236,37 @@ export const WiFiCredentials: Story = {
 
 export const SocialMedia: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
+		<View className="gap-6 items-center">
 			<Text variant="heading-md">Social Media QR Codes</Text>
 
-			<View
-				style={{
-					flexDirection: "row",
-					gap: 24,
-					flexWrap: "wrap",
-					justifyContent: "center",
-				}}
-			>
-				<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="flex-row gap-6 justify-around">
+				<View className="gap-2 items-center">
 					<Text variant="label">Twitter</Text>
-					<QRCodeWithLogo
+					<QRCode
 						value="https://twitter.com/username"
-						logo={<Text style={{ fontSize: 16 }}>🐦</Text>}
+						logo={<Text className="text-base">🐦</Text>}
 						logoSize={35}
-						size={150}
-						foregroundColor="#1da1f2"
+						size={120}
 					/>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">Instagram</Text>
-					<QRCodeWithLogo
+					<QRCode
 						value="https://instagram.com/username"
-						logo={<Text style={{ fontSize: 16 }}>📷</Text>}
+						logo={<Text className="text-base">📷</Text>}
 						logoSize={35}
-						size={150}
-						foregroundColor="#e4405f"
+						size={120}
 					/>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">LinkedIn</Text>
-					<QRCodeWithLogo
+					<QRCode
 						value="https://linkedin.com/in/username"
-						logo={<Text style={{ fontSize: 16 }}>💼</Text>}
+						logo={<Text className="text-base">💼</Text>}
 						logoSize={35}
-						size={150}
-						foregroundColor="#0077b5"
+						size={120}
 					/>
 				</View>
 			</View>
@@ -298,32 +276,27 @@ export const SocialMedia: Story = {
 
 export const EventTicket: Story = {
 	render: () => {
-		const ticketData = JSON.stringify({
-			event: "Tech Conference 2024",
-			date: "2024-03-15",
-			seat: "A-123",
-			price: "$299",
-			ticketId: "TC2024-001234",
-		});
+		const ticketData = `EVENT:Tech Conference 2024
+DATE:2024-12-15
+VENUE:Convention Center
+TICKET:VIP-001`;
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">Event Ticket QR</Text>
 
-				<QRCodeWithLogo
+				<QRCode
 					value={ticketData}
-					logo={<Text style={{ fontSize: 20 }}>🎫</Text>}
+					logo={<Text className="text-xl">🎫</Text>}
 					logoSize={45}
-					size={250}
+					size={200}
+					errorCorrectionLevel="M"
 				/>
 
-				<View style={{ gap: 4, alignItems: "center" }}>
+				<View className="gap-1 items-center">
 					<Text variant="label">Tech Conference 2024</Text>
 					<Text variant="caption" color="muted">
-						March 15, 2024 • Seat A-123
-					</Text>
-					<Text variant="caption" color="muted">
-						Ticket ID: TC2024-001234
+						December 15, 2024 • VIP Ticket
 					</Text>
 				</View>
 			</View>
@@ -334,27 +307,24 @@ export const EventTicket: Story = {
 export const PaymentQR: Story = {
 	render: () => {
 		const paymentData =
-			"bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa?amount=0.001&label=Coffee";
+			"bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa?amount=0.001";
 
 		return (
-			<View style={{ gap: 16, alignItems: "center" }}>
+			<View className="gap-4 items-center">
 				<Text variant="heading-md">Payment QR Code</Text>
 
-				<QRCodeWithLogo
+				<QRCode
 					value={paymentData}
-					logo={<Text style={{ fontSize: 20 }}>₿</Text>}
+					logo={<Text className="text-xl">₿</Text>}
 					logoSize={45}
-					size={250}
-					foregroundColor="#f7931a"
+					size={200}
+					errorCorrectionLevel="H"
 				/>
 
-				<View style={{ gap: 4, alignItems: "center" }}>
+				<View className="gap-1 items-center">
 					<Text variant="label">Bitcoin Payment</Text>
 					<Text variant="caption" color="muted">
 						Amount: 0.001 BTC
-					</Text>
-					<Text variant="caption" color="muted">
-						Label: Coffee
 					</Text>
 				</View>
 			</View>
@@ -364,59 +334,52 @@ export const PaymentQR: Story = {
 
 export const ErrorCorrectionLevels: Story = {
 	render: () => (
-		<View style={{ gap: 24, alignItems: "center" }}>
+		<View className="gap-6 items-center">
 			<Text variant="heading-md">Error Correction Levels</Text>
 
-			<View
-				style={{
-					flexDirection: "row",
-					gap: 16,
-					flexWrap: "wrap",
-					justifyContent: "center",
-				}}
-			>
-				<View style={{ gap: 8, alignItems: "center" }}>
+			<View className="flex-row gap-4 justify-around">
+				<View className="gap-2 items-center">
 					<Text variant="label">Level L (Low)</Text>
 					<QRCode
-						value="Error correction level L"
+						value="Error correction test"
 						errorCorrectionLevel="L"
-						size={150}
+						size={100}
 					/>
 					<Text variant="caption" color="muted">
 						~7% recovery
 					</Text>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">Level M (Medium)</Text>
 					<QRCode
-						value="Error correction level M"
+						value="Error correction test"
 						errorCorrectionLevel="M"
-						size={150}
+						size={100}
 					/>
 					<Text variant="caption" color="muted">
 						~15% recovery
 					</Text>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">Level Q (Quartile)</Text>
 					<QRCode
-						value="Error correction level Q"
+						value="Error correction test"
 						errorCorrectionLevel="Q"
-						size={150}
+						size={100}
 					/>
 					<Text variant="caption" color="muted">
 						~25% recovery
 					</Text>
 				</View>
 
-				<View style={{ gap: 8, alignItems: "center" }}>
+				<View className="gap-2 items-center">
 					<Text variant="label">Level H (High)</Text>
 					<QRCode
-						value="Error correction level H"
+						value="Error correction test"
 						errorCorrectionLevel="H"
-						size={150}
+						size={100}
 					/>
 					<Text variant="caption" color="muted">
 						~30% recovery

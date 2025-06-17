@@ -93,7 +93,7 @@ export const SearchExample: Story = {
 		const [selectedItem, setSelectedItem] = useState("");
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Selected: {selectedItem || "None"}</Text>
 				<Command onSelect={setSelectedItem}>
 					<CommandInput placeholder="Search for apps..." />
@@ -123,7 +123,7 @@ export const CommandPalette: Story = {
 		const [selectedAction, setSelectedAction] = useState("");
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Last Action: {selectedAction || "None"}</Text>
 				<Command onSelect={setSelectedAction}>
 					<CommandInput placeholder="What do you want to do?" />
@@ -208,8 +208,8 @@ export const DialogExample: Story = {
 		const [selectedCommand, setSelectedCommand] = useState("");
 
 		return (
-			<View style={{ gap: 16 }}>
-				<Button title="Open Command Palette" onPress={() => setOpen(true)} />
+			<View className="gap-4">
+				<Button onPress={() => setOpen(true)}>Open Command Palette</Button>
 				<Text variant="label">Selected: {selectedCommand || "None"}</Text>
 
 				<CommandDialog open={open} onOpenChange={setOpen}>
@@ -272,7 +272,7 @@ export const EmojiSearch: Story = {
 		const categories = [...new Set(emojis.map((e) => e.category))];
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Selected: {selectedEmoji}</Text>
 				<Command onSelect={setSelectedEmoji}>
 					<CommandInput placeholder="Search emojis..." />
@@ -315,7 +315,7 @@ export const ContactSearch: Story = {
 		];
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Text variant="label">Selected: {selectedContact || "None"}</Text>
 				<Command onSelect={setSelectedContact}>
 					<CommandInput placeholder="Search contacts..." />
@@ -324,9 +324,9 @@ export const ContactSearch: Story = {
 						<CommandGroup heading="Team Members">
 							{contacts.map((contact) => (
 								<CommandItem key={contact.email} value={contact.name}>
-									<View style={{ flex: 1 }}>
-										<Text style={{ fontWeight: "600" }}>{contact.name}</Text>
-										<Text style={{ fontSize: 12, opacity: 0.7 }}>
+									<View className="flex-1">
+										<Text className="font-semibold">{contact.name}</Text>
+										<Text className="text-xs opacity-70">
 											{contact.role} • {contact.email}
 										</Text>
 									</View>
@@ -342,11 +342,10 @@ export const ContactSearch: Story = {
 
 export const CustomStyling: Story = {
 	render: () => (
-		<Command style={{ backgroundColor: "#1a1a1a", borderColor: "#333" }}>
+		<Command className="bg-gray-800 border-gray-600">
 			<CommandInput
 				placeholder="Dark theme search..."
-				style={{ backgroundColor: "#2a2a2a" }}
-				inputStyle={{ color: "#fff" }}
+				className="bg-gray-700 text-white"
 			/>
 			<CommandList>
 				<CommandEmpty>No results found.</CommandEmpty>

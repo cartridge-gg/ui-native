@@ -1,12 +1,9 @@
 import type React from "react";
-import {
-	Text as RNText,
-	type TextProps as RNTextProps,
-	StyleSheet,
-} from "react-native";
-import { FONT_STYLES, type FontStyleKey } from "../theme/fonts";
+import { Text as RNText, type TextProps as RNTextProps } from "react-native";
+import type { FontStyleKey } from "../theme/fonts";
+import { cn } from "../utils/cn";
 
-export interface TextProps extends Omit<RNTextProps, "children"> {
+export interface TextProps extends Omit<RNTextProps, "children" | "className"> {
 	variant?: FontStyleKey;
 	color?:
 		| "primary"
@@ -16,62 +13,67 @@ export interface TextProps extends Omit<RNTextProps, "children"> {
 		| "destructive"
 		| "constructive";
 	children: React.ReactNode;
+	className?: string;
 }
 
 export function Text({
 	variant = "body",
 	color = "primary",
-	style,
+	className,
 	children,
 	...props
 }: TextProps) {
-	const fontStyle = FONT_STYLES[variant];
-	const colorStyle = getColorStyle(color);
+	const variantClasses = getVariantClasses(variant);
+	const colorClass = getColorClass(color);
 
 	return (
-		<RNText style={[fontStyle, colorStyle, style]} {...props}>
+		<RNText className={cn(variantClasses, colorClass, className)} {...props}>
 			{children}
 		</RNText>
 	);
 }
 
-const getColorStyle = (color: TextProps["color"]) => {
-	switch (color) {
-		case "primary":
-			return styles.colorPrimary;
-		case "secondary":
-			return styles.colorSecondary;
-		case "tertiary":
-			return styles.colorTertiary;
-		case "muted":
-			return styles.colorMuted;
-		case "destructive":
-			return styles.colorDestructive;
-		case "constructive":
-			return styles.colorConstructive;
-		default:
-			return styles.colorPrimary;
-	}
+const getVariantClasses = (variant: FontStyleKey): string => {
+	const variantMap: Record<FontStyleKey, string> = {
+		// Sans variants
+		"sans-regular-10": "font-sans text-[10px] leading-3",
+		"sans-regular-12": "font-sans text-xs leading-4",
+		"sans-regular-14": "font-sans text-sm leading-5",
+		"sans-regular-16": "font-sans text-base leading-6",
+		"sans-medium-12": "font-sans font-medium text-xs leading-4",
+		"sans-medium-14": "font-sans font-medium text-sm leading-5",
+		"sans-semibold-12": "font-sans font-semibold text-xs leading-4",
+		"sans-semibold-14": "font-sans font-semibold text-sm leading-5",
+		"sans-semibold-18": "font-sans font-semibold text-lg leading-7",
+		"sans-bold-14": "font-sans font-bold text-sm leading-5",
+		"sans-bold-18": "font-sans font-bold text-lg leading-7",
+
+		// Mono variants
+		"mono-regular-14": "font-mono text-sm leading-5",
+		"mono-regular-16": "font-mono text-base leading-6",
+		"mono-medium-16": "font-mono font-medium text-base leading-6",
+		"mono-semibold-16": "font-mono font-semibold text-base leading-6",
+
+		// Common UI patterns
+		"heading-lg": "font-sans font-semibold text-lg leading-[22px]",
+		"heading-xl": "font-sans font-semibold text-2xl leading-[29px]",
+		body: "font-sans text-sm leading-5",
+		caption: "font-sans text-xs leading-4",
+		label: "font-sans font-semibold text-xs leading-4 tracking-wider",
+	};
+
+	return variantMap[variant] || variantMap.body;
 };
 
-const styles = StyleSheet.create({
-	// Colors
-	colorPrimary: {
-		color: "#ffffff",
-	},
-	colorSecondary: {
-		color: "#9c9c9c",
-	},
-	colorTertiary: {
-		color: "#808080",
-	},
-	colorMuted: {
-		color: "#505050",
-	},
-	colorDestructive: {
-		color: "#e66666",
-	},
-	colorConstructive: {
-		color: "#6de27c",
-	},
-});
+const getColorClass = (color: TextProps["color"]): string => {
+	const colorMap = {
+		primary: "text-white",
+		secondary: "text-[#9c9c9c]",
+		tertiary: "text-[#808080]",
+		muted: "text-[#505050]",
+		destructive: "text-[#e66666]",
+		constructive: "text-[#6de27c]",
+	};
+
+	return colorMap[color || "primary"];
+};

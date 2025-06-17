@@ -1,7 +1,7 @@
 import type React from "react";
 import { useMemo } from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 
 // Simple QR Code generation algorithm
 interface QRCodeProps {
@@ -9,7 +9,7 @@ interface QRCodeProps {
 	size?: number;
 	backgroundColor?: string;
 	foregroundColor?: string;
-	style?: ViewStyle;
+	className?: string;
 	errorCorrectionLevel?: "L" | "M" | "Q" | "H";
 }
 
@@ -65,16 +65,11 @@ const generateQRMatrix = (value: string, size = 21): boolean[][] => {
 export const QRCode: React.FC<QRCodeProps> = ({
 	value,
 	size = 200,
-	backgroundColor,
-	foregroundColor,
-	style,
+	backgroundColor = "white",
+	foregroundColor = "black",
+	className,
 	errorCorrectionLevel = "M",
 }) => {
-	const { colors } = useTheme();
-
-	const defaultBackgroundColor = backgroundColor || colors.background[100];
-	const defaultForegroundColor = foregroundColor || colors.foreground[100];
-
 	const matrix = useMemo(() => {
 		const matrixSize = Math.max(21, Math.ceil(value.length / 4) + 17);
 		return generateQRMatrix(value, matrixSize);
@@ -82,38 +77,30 @@ export const QRCode: React.FC<QRCodeProps> = ({
 
 	const moduleSize = size / matrix.length;
 
-	const styles = StyleSheet.create({
-		container: {
-			width: size,
-			height: size,
-			backgroundColor: defaultBackgroundColor,
-			padding: moduleSize,
-		},
-		row: {
-			flexDirection: "row",
-			height: moduleSize,
-		},
-		module: {
-			width: moduleSize,
-			height: moduleSize,
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
+		<View
+			className={cn("bg-white", className)}
+			style={{
+				width: size,
+				height: size,
+				backgroundColor,
+				padding: moduleSize,
+			}}
+		>
 			{matrix.map((row, rowIndex) => (
-				<View key={rowIndex} style={styles.row}>
+				<View
+					key={rowIndex}
+					className="flex-row"
+					style={{ height: moduleSize }}
+				>
 					{row.map((module, colIndex) => (
 						<View
 							key={colIndex}
-							style={[
-								styles.module,
-								{
-									backgroundColor: module
-										? defaultForegroundColor
-										: defaultBackgroundColor,
-								},
-							]}
+							style={{
+								width: moduleSize,
+								height: moduleSize,
+								backgroundColor: module ? foregroundColor : backgroundColor,
+							}}
 						/>
 					))}
 				</View>
@@ -132,37 +119,30 @@ export interface QRCodeWithLogoProps extends QRCodeProps {
 export const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
 	logo,
 	logoSize = 40,
-	logoBackgroundColor,
+	logoBackgroundColor = "white",
 	...qrProps
 }) => {
-	const { colors } = useTheme();
-	const defaultLogoBackgroundColor =
-		logoBackgroundColor || colors.background[100];
-
-	const styles = StyleSheet.create({
-		container: {
-			position: "relative",
-		},
-		logoContainer: {
-			position: "absolute",
-			top: "50%",
-			left: "50%",
-			width: logoSize,
-			height: logoSize,
-			backgroundColor: defaultLogoBackgroundColor,
-			borderRadius: 8,
-			justifyContent: "center",
-			alignItems: "center",
-			transform: [{ translateX: -logoSize / 2 }, { translateY: -logoSize / 2 }],
-			borderWidth: 2,
-			borderColor: colors.background[100],
-		},
-	});
-
 	return (
-		<View style={styles.container}>
+		<View className="relative">
 			<QRCode {...qrProps} />
-			{logo && <View style={styles.logoContainer}>{logo}</View>}
+			{logo && (
+				<View
+					className="absolute justify-center items-center rounded-lg border-2 border-white"
+					style={{
+						top: "50%",
+						left: "50%",
+						width: logoSize,
+						height: logoSize,
+						backgroundColor: logoBackgroundColor,
+						transform: [
+							{ translateX: -logoSize / 2 },
+							{ translateY: -logoSize / 2 },
+						],
+					}}
+				>
+					{logo}
+				</View>
+			)}
 		</View>
 	);
 };
@@ -173,70 +153,77 @@ export interface QRCodeScannerFrameProps {
 	cornerLength?: number;
 	cornerWidth?: number;
 	borderColor?: string;
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const QRCodeScannerFrame: React.FC<QRCodeScannerFrameProps> = ({
 	size = 250,
 	cornerLength = 30,
 	cornerWidth = 4,
-	borderColor,
-	style,
+	borderColor = "rgb(59, 130, 246)", // blue-500
+	className,
 }) => {
-	const { colors } = useTheme();
-	const defaultBorderColor = borderColor || colors.primary[100];
-
-	const styles = StyleSheet.create({
-		container: {
-			width: size,
-			height: size,
-			position: "relative",
-		},
-		corner: {
-			position: "absolute",
-			width: cornerLength,
-			height: cornerLength,
-		},
-		topLeft: {
-			top: 0,
-			left: 0,
-			borderTopWidth: cornerWidth,
-			borderLeftWidth: cornerWidth,
-			borderTopColor: defaultBorderColor,
-			borderLeftColor: defaultBorderColor,
-		},
-		topRight: {
-			top: 0,
-			right: 0,
-			borderTopWidth: cornerWidth,
-			borderRightWidth: cornerWidth,
-			borderTopColor: defaultBorderColor,
-			borderRightColor: defaultBorderColor,
-		},
-		bottomLeft: {
-			bottom: 0,
-			left: 0,
-			borderBottomWidth: cornerWidth,
-			borderLeftWidth: cornerWidth,
-			borderBottomColor: defaultBorderColor,
-			borderLeftColor: defaultBorderColor,
-		},
-		bottomRight: {
-			bottom: 0,
-			right: 0,
-			borderBottomWidth: cornerWidth,
-			borderRightWidth: cornerWidth,
-			borderBottomColor: defaultBorderColor,
-			borderRightColor: defaultBorderColor,
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
-			<View style={[styles.corner, styles.topLeft]} />
-			<View style={[styles.corner, styles.topRight]} />
-			<View style={[styles.corner, styles.bottomLeft]} />
-			<View style={[styles.corner, styles.bottomRight]} />
+		<View
+			className={cn("relative", className)}
+			style={{ width: size, height: size }}
+		>
+			{/* Top Left Corner */}
+			<View
+				className="absolute"
+				style={{
+					top: 0,
+					left: 0,
+					width: cornerLength,
+					height: cornerLength,
+					borderTopWidth: cornerWidth,
+					borderLeftWidth: cornerWidth,
+					borderTopColor: borderColor,
+					borderLeftColor: borderColor,
+				}}
+			/>
+			{/* Top Right Corner */}
+			<View
+				className="absolute"
+				style={{
+					top: 0,
+					right: 0,
+					width: cornerLength,
+					height: cornerLength,
+					borderTopWidth: cornerWidth,
+					borderRightWidth: cornerWidth,
+					borderTopColor: borderColor,
+					borderRightColor: borderColor,
+				}}
+			/>
+			{/* Bottom Left Corner */}
+			<View
+				className="absolute"
+				style={{
+					bottom: 0,
+					left: 0,
+					width: cornerLength,
+					height: cornerLength,
+					borderBottomWidth: cornerWidth,
+					borderLeftWidth: cornerWidth,
+					borderBottomColor: borderColor,
+					borderLeftColor: borderColor,
+				}}
+			/>
+			{/* Bottom Right Corner */}
+			<View
+				className="absolute"
+				style={{
+					bottom: 0,
+					right: 0,
+					width: cornerLength,
+					height: cornerLength,
+					borderBottomWidth: cornerWidth,
+					borderRightWidth: cornerWidth,
+					borderBottomColor: borderColor,
+					borderRightColor: borderColor,
+				}}
+			/>
 		</View>
 	);
 };

@@ -28,7 +28,7 @@ export const Active: Story = {
 
 export const Collection: Story = {
 	render: () => (
-		<View style={{ gap: 16, padding: 16 }}>
+		<View className="gap-4 p-4">
 			<AchievementCounter count={0} total={5} />
 			<AchievementCounter count={3} total={5} />
 			<AchievementCounter count={5} total={5} />

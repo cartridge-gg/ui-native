@@ -1,12 +1,7 @@
 import type React from "react";
-import {
-	StyleSheet,
-	TouchableOpacity,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../theme/ThemeProvider";
+import { TouchableOpacity, View } from "react-native";
 import { Text } from "../typography/Text";
+import { cn } from "../utils/cn";
 
 // Header variant types
 type HeaderVariant = "expanded" | "compressed" | "hidden";
@@ -23,7 +18,6 @@ interface LayoutHeaderProps {
 	onSettings?: () => void;
 	hideSettings?: boolean;
 	className?: string;
-	style?: ViewStyle;
 }
 
 export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
@@ -36,108 +30,21 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 	onClose,
 	onSettings,
 	hideSettings = false,
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	if (variant === "hidden") return null;
-
-	const styles = StyleSheet.create({
-		container: {
-			backgroundColor: colors.background[100],
-			borderBottomWidth: 1,
-			borderBottomColor: colors.border[200],
-		},
-		expandedContainer: {
-			height: 176,
-			flexDirection: "column",
-		},
-		compressedContainer: {
-			flexDirection: "column",
-		},
-		backgroundCover: {
-			width: "100%",
-			height: variant === "expanded" ? 136 : 64,
-			backgroundColor: colors.background[300], // Placeholder for cover image
-		},
-		headerContent: {
-			padding: 24,
-			paddingBottom: variant === "expanded" ? 0 : 24,
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-		},
-		leftContent: {
-			flexDirection: "row",
-			alignItems: "center",
-			flex: 1,
-			minWidth: 0,
-			gap: 12,
-		},
-		iconWrapper: {
-			flexShrink: 0,
-			borderRadius: 8,
-			backgroundColor: colors.background[200],
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		expandedIconWrapper: {
-			width: 80,
-			height: 80,
-			backgroundColor: colors.background[100],
-			padding: 4,
-		},
-		compressedIconWrapper: {
-			width: 40,
-			height: 40,
-		},
-		textContent: {
-			flex: 1,
-			gap: variant === "expanded" ? 6 : 2,
-		},
-		title: {
-			color: colors.foreground[100],
-		},
-		description: {
-			color: colors.foreground[300],
-		},
-		actionBar: {
-			position: "absolute",
-			top: 0,
-			left: 0,
-			right: 0,
-			height: 64,
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-			paddingHorizontal: 8,
-			zIndex: 50,
-		},
-		actionButton: {
-			width: 40,
-			height: 40,
-			borderRadius: 20,
-			backgroundColor: colors.background[200],
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		rightActions: {
-			flexDirection: "row",
-			gap: 8,
-		},
-	});
 
 	const IconWrapper = ({ children }: { children: React.ReactNode }) => (
 		<View
-			style={[
-				styles.iconWrapper,
+			className={cn(
+				"flex-shrink-0 rounded-lg bg-theme-background-subtle justify-center items-center",
 				variant === "expanded"
-					? styles.expandedIconWrapper
-					: styles.compressedIconWrapper,
-			]}
+					? "w-20 h-20 bg-theme-background p-1"
+					: "w-10 h-10",
+			)}
 		>
 			{variant === "expanded" && (
-				<View style={[styles.iconWrapper, { width: "100%", height: "100%" }]}>
+				<View className="w-full h-full rounded-lg bg-theme-background-subtle justify-center items-center">
 					{children}
 				</View>
 			)}
@@ -147,44 +54,46 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 
 	return (
 		<View
-			style={[
-				styles.container,
-				variant === "expanded"
-					? styles.expandedContainer
-					: styles.compressedContainer,
-				style,
-			]}
+			className={cn(
+				"bg-theme-background border-b border-theme-border",
+				variant === "expanded" ? "h-44 flex-col" : "flex-col",
+				className,
+			)}
 		>
 			{/* Background cover */}
-			<View style={styles.backgroundCover} />
+			<View
+				className="w-full bg-theme-border"
+				style={{ height: variant === "expanded" ? 136 : 64 }}
+			/>
 
 			{/* Header content */}
 			<View
-				style={[
-					styles.headerContent,
-					variant === "expanded" && {
-						position: "absolute",
-						bottom: 0,
-						left: 0,
-						right: 0,
-					},
-				]}
+				className={cn(
+					"p-6 flex-row items-center justify-between",
+					variant === "expanded"
+						? "pb-0 absolute bottom-0 left-0 right-0"
+						: "pb-6",
+				)}
 			>
-				<View style={styles.leftContent}>
+				<View className="flex-row items-center flex-1 min-w-0 gap-3">
 					<IconWrapper>
 						{icon || (
 							<View
+								className="bg-theme-border rounded"
 								style={{
 									width: variant === "expanded" ? 32 : 24,
 									height: variant === "expanded" ? 32 : 24,
-									backgroundColor: colors.background[300],
-									borderRadius: 4,
 								}}
 							/>
 						)}
 					</IconWrapper>
 
-					<View style={styles.textContent}>
+					<View
+						className={cn(
+							"flex-1",
+							variant === "expanded" ? "gap-1.5" : "gap-0.5",
+						)}
+					>
 						{title && (
 							<Text
 								variant={
@@ -192,14 +101,14 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 										? "sans-semibold-18"
 										: "sans-semibold-14"
 								}
-								style={styles.title}
+								className="text-theme-foreground"
 								numberOfLines={1}
 							>
 								{title}
 							</Text>
 						)}
 						{description && (
-							<Text variant="caption" style={styles.description}>
+							<Text variant="caption" className="text-theme-foreground-muted">
 								{description}
 							</Text>
 						)}
@@ -210,23 +119,32 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 			</View>
 
 			{/* Action bar with back/close/settings buttons */}
-			<View style={styles.actionBar}>
+			<View className="absolute top-0 left-0 right-0 h-16 flex-row items-center justify-between px-2 z-50">
 				<View>
 					{onBack ? (
-						<TouchableOpacity style={styles.actionButton} onPress={onBack}>
-							<Text style={{ color: colors.foreground[100] }}>←</Text>
+						<TouchableOpacity
+							className="w-10 h-10 rounded-full bg-theme-background-subtle justify-center items-center"
+							onPress={onBack}
+						>
+							<Text className="text-theme-foreground">←</Text>
 						</TouchableOpacity>
 					) : onClose ? (
-						<TouchableOpacity style={styles.actionButton} onPress={onClose}>
-							<Text style={{ color: colors.foreground[100] }}>×</Text>
+						<TouchableOpacity
+							className="w-10 h-10 rounded-full bg-theme-background-subtle justify-center items-center"
+							onPress={onClose}
+						>
+							<Text className="text-theme-foreground">×</Text>
 						</TouchableOpacity>
 					) : null}
 				</View>
 
-				<View style={styles.rightActions}>
+				<View className="flex-row gap-2">
 					{onSettings && !hideSettings && (
-						<TouchableOpacity style={styles.actionButton} onPress={onSettings}>
-							<Text style={{ color: colors.foreground[100] }}>⚙</Text>
+						<TouchableOpacity
+							className="w-10 h-10 rounded-full bg-theme-background-subtle justify-center items-center"
+							onPress={onSettings}
+						>
+							<Text className="text-theme-foreground">⚙</Text>
 						</TouchableOpacity>
 					)}
 				</View>

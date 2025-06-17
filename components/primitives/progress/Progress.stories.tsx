@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { Text } from "../../typography/Text";
+import { Button } from "../button/Button";
 import { Progress } from "./Progress";
 
 const meta: Meta<typeof Progress> = {
@@ -56,22 +58,31 @@ export const Animated: Story = {
 		}, []);
 
 		return (
-			<View style={{ gap: 16 }}>
+			<View className="gap-4">
 				<Progress value={progress} />
+				<Text>Progress: {progress}%</Text>
+				<Button onPress={() => setProgress((prev) => Math.min(100, prev + 10))}>
+					Increase
+				</Button>
+				<Button onPress={() => setProgress((prev) => Math.max(0, prev - 10))}>
+					Decrease
+				</Button>
 			</View>
 		);
 	},
 };
 
-export const MultipleStates: Story = {
+export const DifferentStates: Story = {
 	render: () => (
-		<View style={{ gap: 16 }}>
+		<View className="gap-4">
 			<Progress value={0} />
-			<Progress value={25} />
+			<Text>Empty (0%)</Text>
+
 			<Progress value={50} />
-			<Progress value={75} />
+			<Text>Half (50%)</Text>
+
 			<Progress value={100} />
-			<Progress value={100} completed color="#6de27c" />
+			<Text>Complete (100%)</Text>
 		</View>
 	),
 };

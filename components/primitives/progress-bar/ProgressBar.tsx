@@ -1,13 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import {
-	Animated,
-	StyleSheet,
-	TextStyle,
-	View,
-	type ViewStyle,
-} from "react-native";
-import { useTheme } from "../../theme/ThemeProvider";
+import { Animated, View } from "react-native";
 import { Text } from "../../typography/Text";
+import { cn } from "../../utils/cn";
 
 export interface ProgressBarProps {
 	value: number; // 0-100
@@ -17,7 +11,7 @@ export interface ProgressBarProps {
 	showLabel?: boolean;
 	label?: string;
 	animated?: boolean;
-	style?: ViewStyle;
+	className?: string;
 	trackColor?: string;
 	fillColor?: string;
 }
@@ -30,11 +24,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 	showLabel = false,
 	label,
 	animated = true,
-	style,
+	className,
 	trackColor,
 	fillColor,
 }) => {
-	const { colors } = useTheme();
 	const animatedValue = useRef(new Animated.Value(0)).current;
 
 	const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
@@ -51,95 +44,73 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 		}
 	}, [percentage, animated, animatedValue]);
 
-	const getVariantColors = () => {
+	const getVariantClasses = () => {
 		switch (variant) {
 			case "success":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.constructive[100],
-				};
+				return "bg-theme-constructive";
 			case "warning":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || "#f59e0b",
-				};
+				return "bg-orange-500";
 			case "error":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.destructive[100],
-				};
+				return "bg-theme-destructive";
 			default:
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.primary[100],
-				};
+				return "bg-theme-primary";
 		}
 	};
 
-	const getSizeStyles = () => {
+	const getSizeClasses = () => {
 		switch (size) {
 			case "sm":
-				return { height: 4, borderRadius: 2 };
+				return "h-1 rounded-sm";
 			case "lg":
-				return { height: 12, borderRadius: 6 };
+				return "h-3 rounded-md";
 			default:
-				return { height: 8, borderRadius: 4 };
+				return "h-2 rounded";
 		}
 	};
 
-	const variantColors = getVariantColors();
-	const sizeStyles = getSizeStyles();
-
-	const styles = StyleSheet.create({
-		container: {
-			width: "100%",
-		},
-		track: {
-			backgroundColor: variantColors.track,
-			...sizeStyles,
-			overflow: "hidden",
-		},
-		fill: {
-			height: "100%",
-			backgroundColor: variantColors.fill,
-			borderRadius: sizeStyles.borderRadius,
-		},
-		labelContainer: {
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-			marginBottom: 4,
-		},
-		label: {
-			fontSize: 14,
-			color: colors.foreground[200],
-		},
-		percentage: {
-			fontSize: 12,
-			color: colors.foreground[300],
-		},
-	});
+	const getSizeBorderRadius = () => {
+		switch (size) {
+			case "sm":
+				return 2;
+			case "lg":
+				return 6;
+			default:
+				return 4;
+		}
+	};
 
 	return (
-		<View style={[styles.container, style]}>
+		<View className={cn("w-full", className)}>
 			{(showLabel || label) && (
-				<View style={styles.labelContainer}>
-					<Text style={styles.label}>{label || "Progress"}</Text>
-					<Text style={styles.percentage}>{Math.round(percentage)}%</Text>
+				<View className="flex-row justify-between items-center mb-1">
+					<Text className="text-sm text-theme-foreground-subtle">
+						{label || "Progress"}
+					</Text>
+					<Text className="text-xs text-theme-foreground-muted">
+						{Math.round(percentage)}%
+					</Text>
 				</View>
 			)}
-			<View style={styles.track}>
+			<View
+				className={cn(
+					"w-full bg-theme-border overflow-hidden",
+					getSizeClasses(),
+				)}
+				style={{
+					backgroundColor: trackColor || undefined,
+				}}
+			>
 				<Animated.View
-					style={[
-						styles.fill,
-						{
-							width: animatedValue.interpolate({
-								inputRange: [0, 100],
-								outputRange: ["0%", "100%"],
-								extrapolate: "clamp",
-							}),
-						},
-					]}
+					className={cn("h-full", getVariantClasses())}
+					style={{
+						backgroundColor: fillColor || undefined,
+						borderRadius: getSizeBorderRadius(),
+						width: animatedValue.interpolate({
+							inputRange: [0, 100],
+							outputRange: ["0%", "100%"],
+							extrapolate: "clamp",
+						}),
+					}}
 				/>
 			</View>
 		</View>
@@ -155,7 +126,7 @@ export interface CircularProgressProps {
 	variant?: "default" | "success" | "warning" | "error";
 	showLabel?: boolean;
 	animated?: boolean;
-	style?: ViewStyle;
+	className?: string;
 	trackColor?: string;
 	fillColor?: string;
 	children?: React.ReactNode;
@@ -169,12 +140,11 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
 	variant = "default",
 	showLabel = true,
 	animated = true,
-	style,
+	className,
 	trackColor,
 	fillColor,
 	children,
 }) => {
-	const { colors } = useTheme();
 	const animatedValue = useRef(new Animated.Value(0)).current;
 
 	const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
@@ -193,88 +163,60 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
 		}
 	}, [percentage, animated, animatedValue]);
 
-	const getVariantColors = () => {
+	const getVariantColor = () => {
 		switch (variant) {
 			case "success":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.constructive[100],
-				};
+				return fillColor || "#10b981"; // green-500
 			case "warning":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || "#f59e0b",
-				};
+				return fillColor || "#f59e0b"; // amber-500
 			case "error":
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.destructive[100],
-				};
+				return fillColor || "#ef4444"; // red-500
 			default:
-				return {
-					track: trackColor || colors.background[300],
-					fill: fillColor || colors.primary[100],
-				};
+				return fillColor || "#3b82f6"; // blue-500
 		}
 	};
 
-	const variantColors = getVariantColors();
-
-	const styles = StyleSheet.create({
-		container: {
-			width: size,
-			height: size,
-			justifyContent: "center",
-			alignItems: "center",
-			position: "relative",
-		},
-		track: {
-			position: "absolute",
-			width: size,
-			height: size,
-			borderRadius: size / 2,
-			borderWidth: strokeWidth,
-			borderColor: variantColors.track,
-		},
-		content: {
-			justifyContent: "center",
-			alignItems: "center",
-		},
-		label: {
-			fontSize: size * 0.15,
-			fontWeight: "bold",
-			color: colors.foreground[200],
-		},
-	});
-
-	// Create animated stroke dash offset
-	const strokeDashoffset = animatedValue.interpolate({
-		inputRange: [0, 100],
-		outputRange: [circumference, 0],
-		extrapolate: "clamp",
-	});
+	const variantColor = getVariantColor();
+	const trackColorValue = trackColor || "#e5e7eb"; // gray-200
 
 	return (
-		<View style={[styles.container, style]}>
+		<View
+			className={cn("justify-center items-center relative", className)}
+			style={{ width: size, height: size }}
+		>
 			{/* Track circle */}
-			<View style={styles.track} />
+			<View
+				className="absolute rounded-full"
+				style={{
+					width: size,
+					height: size,
+					borderWidth: strokeWidth,
+					borderColor: trackColorValue,
+				}}
+			/>
 
 			{/* Progress circle - simplified for React Native */}
 			<Animated.View
-				style={[
-					styles.track,
-					{
-						borderColor: variantColors.fill,
-						transform: [{ rotate: "-90deg" }],
-					},
-				]}
+				className="absolute rounded-full"
+				style={{
+					width: size,
+					height: size,
+					borderWidth: strokeWidth,
+					borderColor: variantColor,
+					transform: [{ rotate: "-90deg" }],
+				}}
 			/>
 
 			{/* Content */}
-			<View style={styles.content}>
+			<View className="justify-center items-center">
 				{children ||
 					(showLabel && (
-						<Text style={styles.label}>{Math.round(percentage)}%</Text>
+						<Text
+							className="font-bold text-theme-foreground-subtle"
+							style={{ fontSize: size * 0.15 }}
+						>
+							{Math.round(percentage)}%
+						</Text>
 					))}
 			</View>
 		</View>
@@ -286,70 +228,32 @@ export interface StepProgressProps {
 	steps: string[];
 	currentStep: number;
 	variant?: "default" | "success" | "warning" | "error";
-	style?: ViewStyle;
+	className?: string;
 }
 
 export const StepProgress: React.FC<StepProgressProps> = ({
 	steps,
 	currentStep,
 	variant = "default",
-	style,
+	className,
 }) => {
-	const { colors } = useTheme();
-
 	const getVariantColor = () => {
 		switch (variant) {
 			case "success":
-				return colors.constructive[100];
+				return "#10b981"; // green-500
 			case "warning":
-				return "#f59e0b";
+				return "#f59e0b"; // amber-500
 			case "error":
-				return colors.destructive[100];
+				return "#ef4444"; // red-500
 			default:
-				return colors.primary[100];
+				return "#3b82f6"; // blue-500
 		}
 	};
 
 	const variantColor = getVariantColor();
 
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-		},
-		stepContainer: {
-			alignItems: "center",
-			flex: 1,
-		},
-		stepCircle: {
-			width: 32,
-			height: 32,
-			borderRadius: 16,
-			justifyContent: "center",
-			alignItems: "center",
-			borderWidth: 2,
-			marginBottom: 8,
-		},
-		stepNumber: {
-			fontSize: 14,
-			fontWeight: "bold",
-		},
-		stepLabel: {
-			fontSize: 12,
-			textAlign: "center",
-			color: colors.foreground[300],
-		},
-		connector: {
-			height: 2,
-			flex: 1,
-			marginHorizontal: 8,
-			marginBottom: 24,
-		},
-	});
-
 	return (
-		<View style={[styles.container, style]}>
+		<View className={cn("flex-row items-center justify-between", className)}>
 			{steps.map((step, index) => {
 				const isCompleted = index < currentStep;
 				const isCurrent = index === currentStep;
@@ -357,49 +261,36 @@ export const StepProgress: React.FC<StepProgressProps> = ({
 
 				return (
 					<React.Fragment key={index}>
-						<View style={styles.stepContainer}>
+						<View className="items-center flex-1">
 							<View
-								style={[
-									styles.stepCircle,
-									{
-										backgroundColor:
-											isCompleted || isCurrent
-												? variantColor
-												: colors.background[200],
-										borderColor:
-											isCompleted || isCurrent
-												? variantColor
-												: colors.background[300],
-									},
-								]}
+								className="w-8 h-8 rounded-full justify-center items-center border-2 mb-2"
+								style={{
+									backgroundColor:
+										isCompleted || isCurrent ? variantColor : "#f3f4f6", // gray-100
+									borderColor:
+										isCompleted || isCurrent ? variantColor : "#d1d5db", // gray-300
+								}}
 							>
 								<Text
-									style={[
-										styles.stepNumber,
-										{
-											color:
-												isCompleted || isCurrent
-													? colors.background[100]
-													: colors.foreground[300],
-										},
-									]}
+									className="text-sm font-bold"
+									style={{
+										color: isCompleted || isCurrent ? "white" : "#6b7280", // gray-500
+									}}
 								>
 									{isCompleted ? "✓" : index + 1}
 								</Text>
 							</View>
-							<Text style={styles.stepLabel}>{step}</Text>
+							<Text className="text-xs text-center text-theme-foreground-muted">
+								{step}
+							</Text>
 						</View>
 
 						{index < steps.length - 1 && (
 							<View
-								style={[
-									styles.connector,
-									{
-										backgroundColor: isCompleted
-											? variantColor
-											: colors.background[300],
-									},
-								]}
+								className="h-0.5 flex-1 mx-2 mb-6"
+								style={{
+									backgroundColor: isCompleted ? variantColor : "#d1d5db", // gray-300
+								}}
 							/>
 						)}
 					</React.Fragment>
