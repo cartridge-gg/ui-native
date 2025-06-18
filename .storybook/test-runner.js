@@ -52,9 +52,9 @@ module.exports = {
 				"Helvetica",
 				"system-ui",
 			];
-			fonts.forEach((font) => {
+			for (const font of fonts) {
 				document.fonts.load(`1em ${font}`);
-			});
+			}
 		});
 
 		// Get the story's container element - selecting the nested content div
