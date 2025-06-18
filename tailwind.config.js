@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-const { cartridgeTWPreset } = require("../ui/src/preset");
+const { cartridgeTWPreset } = require("./ui/src/preset");
+const { platformSelect } = require("nativewind/theme");
 
 module.exports = {
 	content: [
-		"./App.{js,ts,tsx}",
-		"./components/**/*.{js,ts,tsx}",
-		"./.storybook/**/*.{js,jsx,ts,tsx}",
+		"./src/**/*.{js,ts,tsx}",
+		"./app/**/*.{js,ts,tsx}",
 	],
-
 	presets: [require("nativewind/preset"), cartridgeTWPreset],
 	theme: {
 		extend: {

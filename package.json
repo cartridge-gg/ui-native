@@ -1,7 +1,11 @@
 {
 	"name": "@cartridge/ui-native",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "app/index.tsx",
+	"imports": {
+		"#*": "src/*",
+		"#app/*": "app/*"
+	},
 	"scripts": {
 		"android": "expo start --android",
 		"ios": "expo start --ios",
@@ -19,13 +23,14 @@
 		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report"
 	},
 	"dependencies": {
+		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
 		"@expo-google-fonts/inter": "^0.3.0",
 		"@gorhom/bottom-sheet": "^5.1.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"expo": "^53.0.11",
 		"expo-clipboard": "^7.1.4",
-		"expo-font": "^13.3.1",
+		"expo-font": "~13.3.1",
 		"expo-haptics": "^14.1.4",
 		"expo-status-bar": "~2.2.3",
 		"nativewind": "^4.1.23",
@@ -39,7 +44,9 @@
 		"react-native-safe-area-context": "^5.4.0",
 		"react-native-svg": "^15.11.2",
 		"react-native-toast-message": "^2.3.0",
-		"react-native-web": "^0.20.0"
+		"react-native-web": "^0.20.0",
+		"tailwind-merge": "^3.3.1",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
