@@ -19,7 +19,9 @@
 		"test:storybook:update": "start-server-and-test 'pnpm storybook' 6006 'pnpm test-storybook --url http://127.0.0.1:6006 -u'",
 		"test:storybook": "start-server-and-test 'pnpm storybook' 6006 'pnpm test-storybook --url http://127.0.0.1:6006'",
 		"screenshots:generate": "node scripts/generate-screenshots.js",
-		"screenshots:update": "node scripts/generate-screenshots.js --update",
+		"screenshots:summary": "node scripts/visual-comparison.js --list",
+		"screenshots:update": "node scripts/update-snapshots.js",
+		"screenshots:compare": "node scripts/visual-comparison.js",
 		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report"
 	},
 	"dependencies": {

@@ -414,21 +414,21 @@ git commit -m "Migrated TokenCard"
 
 ```bash
 # 1. Discover and assess
-node scripts/visual-comparison.js --list
+pnpm screenshots:summary
 
 # 2. Implement component (manual development)
 
 # 3. Generate snapshot
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 
 # 4. Compare and analyze
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 
 # 5. Fix and iterate
 # (make changes, then repeat steps 3-4)
 
 # 6. Validate final result
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 
 # 7. Create migration commit
 git add .
