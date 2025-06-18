@@ -12,6 +12,7 @@
 			"#app/*": ["./app/*"]
 		},
 		"noImplicitAny": false,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"esModuleInterop": true
 	}
 }

@@ -124,4 +124,4 @@ export const FONT_STYLES = {
 	label: { ...createFontStyle("sans", "semibold", 12, 16), letterSpacing: 0.5 },
 } as const;
 
-export type FontStyleKey = keyof typeof FONT_STYLES; 
+export type FontStyleKey = keyof typeof FONT_STYLES;
