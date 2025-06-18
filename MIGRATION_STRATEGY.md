@@ -54,25 +54,25 @@ These map to Tailwind classes like:
 ### 2. Snapshot Update Tool
 ```bash
 # Update all snapshots
-node scripts/update-snapshots.js
+pnpm screenshots:update
 
 # Update specific component snapshots
-node scripts/update-snapshots.js achievement
-node scripts/update-snapshots.js button
-node scripts/update-snapshots.js "activities.*card"
+pnpm screenshots:update achievement
+pnpm screenshots:update button
+pnpm screenshots:update "activities.*card"
 ```
 
 ### 3. Visual Comparison Tool
 ```bash
 # Compare specific snapshots
-node scripts/visual-comparison.js achievement
-node scripts/visual-comparison.js button
+pnpm screenshots:compare achievement
+pnpm screenshots:compare button
 
 # List all available snapshots
-node scripts/visual-comparison.js --list
+pnpm screenshots:compare --list
 
 # Get help
-node scripts/visual-comparison.js --help
+pnpm screenshots:compare --help
 ```
 
 ## Migration Process
@@ -90,7 +90,7 @@ node scripts/visual-comparison.js --help
 #### Step 2: Check Migration Status
 ```bash
 # List all snapshots and their migration status
-node scripts/visual-comparison.js --list
+pnpm screenshots:summary
 ```
 
 Look for:
@@ -125,6 +125,13 @@ Look for:
    # Create component directory if needed
    mkdir -p ui-native/components/modules/activities/card
    ```
+   
+   **Important File Naming Convention**:
+   - All new files must use **kebab-case** naming
+   - Examples:
+     - `achievement-card.tsx` ✅ (not `AchievementCard.tsx` or `achievementCard.tsx`)
+     - `button-group.tsx` ✅ (not `ButtonGroup.tsx`)
+     - `token-balance.tsx` ✅ (not `TokenBalance.tsx`)
 
 2. **Implement the component**:
    - Keep most Tailwind classes using NativeWind (minimal conversion needed)
@@ -213,13 +220,13 @@ Look for:
 #### Step 6: Generate Initial Snapshot
 ```bash
 # Generate snapshot for the new component
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 ```
 
 #### Step 7: Perform Visual Comparison
 ```bash
 # Compare with UI version
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 ```
 
 **Expected outputs**:
@@ -276,10 +283,10 @@ Based on the analysis, fix issues in order of impact:
 #### Step 10: Re-test After Each Fix
 ```bash
 # Update snapshot after changes
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 
 # Re-run comparison
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 ```
 
 **Iteration Guidelines**:
@@ -498,7 +505,10 @@ pnpm screenshots:compare [component-name]
 # 6. Validate final result
 pnpm screenshots:compare [component-name]
 
-# 7. Create migration commit
+# 7. Check lint and format
+pnpm lint
+
+# 8. Create migration commit
 git add .
 git commit -m "Migrated [ComponentName]"
 ```
@@ -519,6 +529,7 @@ git commit -m "Migrated [ComponentName]"
 12. **Use Subpath Imports**: Replace relative imports like `@/utils` with subpath imports like `#utils` for proper React Native path resolution
 13. **Avoid forwardRef in React 19**: Since React 19 treats refs as regular props, do not use forwardRef when creating new components - use direct ref props instead
 14. **Keep Storybook Titles Consistent**: Always use the exact same story title from the UI version (e.g., "Primitives/Icons" not "Components/Icons") to maintain consistency and proper categorization
+15. **Use Kebab-Case for File Names**: All new files must use kebab-case naming (e.g., `achievement-card.tsx`, `button-group.tsx`) to maintain consistency across the codebase
 
 ## Conclusion
 
