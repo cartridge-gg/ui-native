@@ -30,7 +30,7 @@ Story Patterns:
 }
 
 function findMatchingStories(pattern) {
-	const storybookDir = path.join(__dirname, "..", "components");
+	const storybookDir = path.join(__dirname, "..", "src", "components");
 	const storyFiles = [];
 
 	function findStoryFiles(dir) {
