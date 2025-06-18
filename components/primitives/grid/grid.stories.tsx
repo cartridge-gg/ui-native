@@ -21,7 +21,10 @@ type Story = StoryObj<typeof meta>;
 const GridBox = ({
 	label,
 	height = 60,
-}: { label: string; height?: number }) => {
+}: {
+	label: string;
+	height?: number;
+}) => {
 	const { colors } = useTheme();
 	return (
 		<View

@@ -1,2 +1,2 @@
+export { type ColorTheme, darkColors, lightColors } from "./colors";
 export { ThemeProvider, useTheme } from "./ThemeProvider";
-export { lightColors, darkColors, type ColorTheme } from "./colors";

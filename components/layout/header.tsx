@@ -26,6 +26,39 @@ interface LayoutHeaderProps {
 	style?: ViewStyle;
 }
 
+// IconWrapper component moved outside to avoid nested component definition
+interface IconWrapperProps {
+	children: React.ReactNode;
+	variant: HeaderVariant;
+	styles: {
+		iconWrapper: ViewStyle;
+		expandedIconWrapper: ViewStyle;
+		compressedIconWrapper: ViewStyle;
+	};
+}
+
+const IconWrapper: React.FC<IconWrapperProps> = ({
+	children,
+	variant,
+	styles,
+}) => (
+	<View
+		style={[
+			styles.iconWrapper,
+			variant === "expanded"
+				? styles.expandedIconWrapper
+				: styles.compressedIconWrapper,
+		]}
+	>
+		{variant === "expanded" && (
+			<View style={[styles.iconWrapper, { width: "100%", height: "100%" }]}>
+				{children}
+			</View>
+		)}
+		{variant !== "expanded" && children}
+	</View>
+);
+
 export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 	title,
 	description,
@@ -127,24 +160,6 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 		},
 	});
 
-	const IconWrapper = ({ children }: { children: React.ReactNode }) => (
-		<View
-			style={[
-				styles.iconWrapper,
-				variant === "expanded"
-					? styles.expandedIconWrapper
-					: styles.compressedIconWrapper,
-			]}
-		>
-			{variant === "expanded" && (
-				<View style={[styles.iconWrapper, { width: "100%", height: "100%" }]}>
-					{children}
-				</View>
-			)}
-			{variant !== "expanded" && children}
-		</View>
-	);
-
 	return (
 		<View
 			style={[
@@ -171,7 +186,14 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 				]}
 			>
 				<View style={styles.leftContent}>
-					<IconWrapper>
+					<IconWrapper
+						variant={variant}
+						styles={{
+							iconWrapper: styles.iconWrapper,
+							expandedIconWrapper: styles.expandedIconWrapper,
+							compressedIconWrapper: styles.compressedIconWrapper,
+						}}
+					>
 						{icon || (
 							<View
 								style={{

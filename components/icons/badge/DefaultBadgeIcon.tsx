@@ -8,7 +8,6 @@ export const DefaultBadgeIcon: React.FC<IconProps> = (props) => {
 		<BaseIcon {...props} viewBox="0 0 48 48">
 			<Defs>
 				<LinearGradient
-					id="badgeGradient"
 					x1="24"
 					y1="-19.5"
 					x2="24"

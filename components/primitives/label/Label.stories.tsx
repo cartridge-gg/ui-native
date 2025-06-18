@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { View } from "react-native";
-import { TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Label } from "./Label";
 

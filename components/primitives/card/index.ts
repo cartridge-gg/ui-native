@@ -1,12 +1,12 @@
 export {
 	Card,
+	CardContent,
+	CardDescription,
 	CardHeader,
 	CardHeaderRight,
 	CardIcon,
-	CardTitle,
-	CardDescription,
-	CardContent,
 	CardListContent,
 	CardListItem,
 	CardListItemIcon,
+	CardTitle,
 } from "./Card";

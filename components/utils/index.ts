@@ -1,1 +1,1 @@
-export { cn, clsx } from "./cn";
+export { clsx, cn } from "./cn";

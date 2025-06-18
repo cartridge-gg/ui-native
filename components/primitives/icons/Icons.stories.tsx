@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
 import type { ComponentType } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 import type {
 	DirectionalIconProps,
@@ -106,9 +106,9 @@ import { ArrowTurnDownIcon } from "../../icons/utility/ArrowTurnDownIcon";
 import { AwardIcon } from "../../icons/utility/AwardIcon";
 import { AwardSimpleIcon } from "../../icons/utility/AwardSimpleIcon";
 import { BranchIcon } from "../../icons/utility/BranchIcon";
-import { CheckIcon as UtilityCheckIcon } from "../../icons/utility/CheckIcon";
 import { CheckboxCheckedIcon } from "../../icons/utility/CheckboxCheckedIcon";
 import { CheckboxUncheckedIcon } from "../../icons/utility/CheckboxUncheckedIcon";
+import { CheckIcon as UtilityCheckIcon } from "../../icons/utility/CheckIcon";
 import { ChessIcon } from "../../icons/utility/ChessIcon";
 import { CircleCheckIcon } from "../../icons/utility/CircleCheckIcon";
 import { CircleIcon } from "../../icons/utility/CircleIcon";
