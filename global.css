@@ -1,6 +1,6 @@
-@import "./ui/src/themes/default.css";
-@import "./ui/src/themes/dark.css";
-@import "./ui/src/themes/fonts.css";
+@import "./src/themes/default.css";
+@import "./src/themes/dark.css";
+@import "./src/themes/fonts.css";
 
 @tailwind base;
 @tailwind components;

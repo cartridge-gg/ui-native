@@ -6,6 +6,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
+<<<<<<< HEAD
 		"includes": [
 			"**",
 			"!**/node_modules",
@@ -16,6 +17,15 @@
 			"!**/__image_snapshots__",
 			"!**/visual-comparisons",
 			"!ui"
+=======
+		"ignore": [
+			"node_modules",
+			".expo",
+			"dist",
+			"build",
+			"__image_snapshots__",
+			"ui"
+>>>>>>> 5432a87 (Port tailwind preset to ui-native)
 		]
 	},
 	"linter": {
