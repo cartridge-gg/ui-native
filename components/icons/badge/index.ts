@@ -1,12 +1,13 @@
 // Badge icons
-export * from "./DefaultBadgeIcon";
+
 export * from "./BronzeIcon";
-export * from "./SilverIcon";
-export * from "./GoldIcon";
 export * from "./BronzeTagIcon";
-export * from "./SilverTagIcon";
-export * from "./GoldTagIcon";
+export * from "./DefaultBadgeIcon";
 export * from "./DefaultIcon";
+export * from "./GoldIcon";
+export * from "./GoldTagIcon";
+export * from "./SilverIcon";
+export * from "./SilverTagIcon";
 
 // Collections for stories
 export const badgeIcons = {

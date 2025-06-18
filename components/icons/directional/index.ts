@@ -1,9 +1,9 @@
-export * from "./ArrowIcon";
-export * from "./ChevronIcon";
-export * from "./CaratIcon";
-export * from "./WedgeIcon";
 export * from "./ArrowFromLineIcon";
+export * from "./ArrowIcon";
 export * from "./ArrowToLineIcon";
+export * from "./CaratIcon";
+export * from "./ChevronIcon";
+export * from "./WedgeIcon";
 
 // Collections for stories
 export const directionalIcons = {

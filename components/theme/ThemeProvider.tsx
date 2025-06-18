@@ -1,6 +1,6 @@
 import { useColorScheme } from "nativewind";
 import type React from "react";
-import { type ReactNode, createContext, useContext } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import { type ColorTheme, darkColors, lightColors } from "./colors";
 
 interface ThemeContextType {

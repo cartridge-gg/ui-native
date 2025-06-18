@@ -41,25 +41,24 @@ export const BrandIcons = {
 	WalletConnectIcon,
 };
 
+export * from "./AppleIcon";
+export * from "./ArgentIcon";
+export * from "./CartridgeIcon";
+export * from "./ChromeIcon";
+export * from "./DiscordIcon";
 // Brand icons
 export * from "./EthereumIcon";
-export * from "./StarknetIcon";
 export * from "./GitHubIcon";
-export * from "./DiscordIcon";
-export * from "./XIcon";
-export * from "./TelegramIcon";
 export * from "./MetamaskIcon";
 export * from "./PhantomIcon";
-export * from "./WalletConnectIcon";
 export * from "./SolanaIcon";
-export * from "./TwitterIcon";
-export * from "./AppleIcon";
-export * from "./CartridgeIcon";
-
+export * from "./StarknetIcon";
 // New brand icons
 export * from "./StripeIcon";
-export * from "./ChromeIcon";
-export * from "./ArgentIcon";
+export * from "./TelegramIcon";
+export * from "./TwitterIcon";
+export * from "./WalletConnectIcon";
+export * from "./XIcon";
 
 // Collections for stories
 export const brandIcons = {
