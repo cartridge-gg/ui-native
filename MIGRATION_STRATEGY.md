@@ -155,10 +155,45 @@ Look for:
    <div className="gap-2"> -> <View className="gap-2">
    ```
 
+4. **Import patterns**:
+   ```typescript
+   // IMPORTANT: Use subpath imports for utils
+   // Web version (relative import)
+   import { cn } from "@/utils";
+   
+   // React Native version (subpath import)
+   import { cn } from "#utils";
+   
+   // This ensures proper path resolution in React Native
+   // Configure in package.json:
+   // "imports": {
+   //   "#utils": "./src/utils/index.ts"
+   // }
+   ```
+
+5. **React 19 Considerations**:
+   ```typescript
+   // IMPORTANT: forwardRef is not required in React 19
+   // Old pattern (React 18 and below)
+   export const Button = forwardRef<View, ButtonProps>((props, ref) => {
+     // component implementation
+   });
+   
+   // New pattern (React 19+)
+   export const Button = (props: ButtonProps & { ref?: React.Ref<View> }) => {
+     // component implementation with direct ref usage
+   };
+   
+   // Do NOT use forwardRef when migrating to React 19
+   // Refs are now regular props and don't need special handling
+   ```
+
 #### Step 5: Create Story File
 1. **Copy and adapt the UI story**:
    ```typescript
    // Ensure story structure matches UI version exactly
+   // IMPORTANT: Keep the same title as the UI version
+   // Example: title: "Primitives/Icons" (not "Components/Icons")
    // Use same prop values and component arrangements
    // Replace web-specific elements with React Native equivalents
    ```
@@ -170,6 +205,7 @@ Look for:
    // IMPORTANT: Convert flex to flex-row for horizontal layouts
    // Use same test data and prop combinations
    // Ensure className props work identically
+   // Maintain exact story names and hierarchy from UI version
    ```
 
 ### Phase 3: Visual Verification
@@ -388,6 +424,38 @@ git commit -m "Migrated TokenCard"
 - Verify color classes like `bg-background-100` and `text-foreground` work correctly
 - Verify import statements include NativeWind setup
 
+### 8. forwardRef Usage in React 19
+**Problem**: TypeScript errors or warnings about forwardRef in React 19
+**Solution**:
+- Remove forwardRef wrapper completely
+- Convert ref to a regular prop: `ref?: React.Ref<ComponentType>`
+- Update component signature to accept ref as a normal prop
+- Example conversion:
+  ```typescript
+  // Before (React 18)
+  export const Icon = forwardRef<Svg, IconProps>((props, ref) => ...);
+  
+  // After (React 19)
+  export const Icon = (props: IconProps & { ref?: React.Ref<Svg> }) => ...;
+  ```
+
+### 9. Inconsistent Story Titles
+**Problem**: Visual comparison may not match if story titles differ between UI and UI-native
+**Solution**:
+- Always copy the exact title from the UI story
+- Do not change the category hierarchy
+- Examples:
+  ```typescript
+  // ✅ Correct - matches UI version
+  title: "Primitives/Icons"
+  
+  // ❌ Wrong - different category
+  title: "Components/Icons"
+  
+  // ❌ Wrong - different hierarchy
+  title: "Icons"
+  ```
+
 ## Automation Opportunities
 
 ### Future Enhancements
@@ -448,6 +516,9 @@ git commit -m "Migrated [ComponentName]"
 9. **Leverage NativeWind**: Keep most Tailwind classes unchanged to maintain consistency
 10. **Mind the Flex Direction**: Always convert `flex` to `flex-row` for horizontal layouts
 11. **Verify Configuration**: Ensure NativeWind setup matches UI library configuration
+12. **Use Subpath Imports**: Replace relative imports like `@/utils` with subpath imports like `#utils` for proper React Native path resolution
+13. **Avoid forwardRef in React 19**: Since React 19 treats refs as regular props, do not use forwardRef when creating new components - use direct ref props instead
+14. **Keep Storybook Titles Consistent**: Always use the exact same story title from the UI version (e.g., "Primitives/Icons" not "Components/Icons") to maintain consistency and proper categorization
 
 ## Conclusion
 

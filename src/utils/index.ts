@@ -1,2 +1,2 @@
-export * from "./cn";
-export * from "./fonts";
+export * from "#utils/cn";
+export * from "#utils/fonts";

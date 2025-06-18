@@ -65,20 +65,20 @@ function listAvailableSnapshots() {
 		: [];
 
 	console.log(`\n📁 UI Snapshots (${uiSnapshots.length}):`);
-	uiSnapshots.forEach((snapshot) => {
+	for (const snapshot of uiSnapshots) {
 		const hasNative = nativeSnapshots.includes(snapshot);
 		const status = hasNative ? "✅" : "❌";
 		console.log(`   ${status} ${snapshot}`);
-	});
+	}
 
 	console.log(
 		`\n📁 UI-Native Only Snapshots (${nativeSnapshots.filter((s) => !uiSnapshots.includes(s)).length}):`,
 	);
-	nativeSnapshots
-		.filter((s) => !uiSnapshots.includes(s))
-		.forEach((snapshot) => {
-			console.log(`   🔶 ${snapshot}`);
-		});
+	for (const snapshot of nativeSnapshots.filter(
+		(s) => !uiSnapshots.includes(s),
+	)) {
+		console.log(`   🔶 ${snapshot}`);
+	}
 
 	console.log("\n📊 Summary:");
 	console.log(`   • UI snapshots: ${uiSnapshots.length}`);
@@ -132,7 +132,7 @@ function checkImageMagick() {
 	try {
 		execSync("magick -version", { stdio: "ignore" });
 		return true;
-	} catch (error) {
+	} catch (_error) {
 		console.log(
 			"⚠️  ImageMagick not found. Please install it for visual diff generation:",
 		);
@@ -221,7 +221,7 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
 			}
 
 			return { perfect: false, diffPixels, totalPixels };
-		} catch (e) {
+		} catch (_e) {
 			console.log("⚠️  Could not calculate exact pixel differences");
 			return { perfect: false, diffPixels: "unknown" };
 		}
@@ -231,7 +231,7 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
 	}
 }
 
-function generateFixSuggestions(analysisResult, uiImage, nativeImage) {
+function generateFixSuggestions(analysisResult, _uiImage, _nativeImage) {
 	console.log("\n💡 Fix Suggestions");
 	console.log("==================");
 
@@ -286,7 +286,7 @@ function generateFixSuggestions(analysisResult, uiImage, nativeImage) {
 	console.log("   4. Re-run this tool after each fix to track progress");
 }
 
-function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
+function generateVisualDiff(uiImage, nativeImage, outputPath, _snapshotName) {
 	try {
 		// Get dimensions of both images
 		const uiDimensions = execSync(
@@ -370,7 +370,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 				`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "Differences (Red = Changed)" "${path.join(COMPARISON_OUTPUT_DIR, "temp-diff-label.png")}"`,
 				{ stdio: "ignore" },
 			);
-		} catch (labelError) {
+		} catch (_labelError) {
 			console.log("⚠️  Label creation failed, continuing without labels...");
 		}
 
@@ -403,7 +403,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 						{ stdio: "ignore" },
 					);
 					console.log("✅ Difference highlighting created (method 1)");
-				} catch (method1Error) {
+				} catch (_method1Error) {
 					// Method 2: Use ImageMagick's built-in compare with proper highlighting
 					try {
 						console.log("⚠️  Method 1 failed, trying method 2...");
@@ -427,7 +427,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 							stdio: "ignore",
 						});
 						console.log("✅ Difference highlighting created (method 2)");
-					} catch (method2Error) {
+					} catch (_method2Error) {
 						// Method 3: Manual approach - create red overlay only where pixels differ
 						try {
 							console.log("⚠️  Method 2 failed, trying method 3...");
@@ -460,7 +460,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 								{ stdio: "ignore" },
 							);
 							console.log("✅ Difference highlighting created (method 3)");
-						} catch (method3Error) {
+						} catch (_method3Error) {
 							console.log("⚠️  All diff methods failed, using side-by-side...");
 							// Ultimate fallback: side-by-side comparison
 							execSync(
@@ -470,7 +470,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 						}
 					}
 				}
-			} catch (diffError) {
+			} catch (_diffError) {
 				console.log(
 					"⚠️  Difference highlighting failed, using basic comparison...",
 				);
@@ -485,7 +485,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 					},
 				);
 			}
-		} catch (error) {
+		} catch (_error) {
 			console.log(
 				"⚠️  All difference methods failed, using basic side-by-side...",
 			);
@@ -565,7 +565,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 			console.log(
 				`📏 Final output dimensions: ${displayWidth * 3 + 30}x${displayHeight + labelHeight + 30}`,
 			);
-		} catch (combineError) {
+		} catch (_combineError) {
 			console.log(
 				"⚠️  Label combination failed, creating simple side-by-side...",
 			);
@@ -595,16 +595,16 @@ function generateVisualDiff(uiImage, nativeImage, outputPath, snapshotName) {
 			"temp-diff-with-label.png",
 		];
 
-		tempFiles.forEach((file) => {
+		for (const file of tempFiles) {
 			const filePath = path.join(COMPARISON_OUTPUT_DIR, file);
 			if (fs.existsSync(filePath)) {
 				try {
 					fs.unlinkSync(filePath);
-				} catch (cleanupError) {
+				} catch (_cleanupError) {
 					// Ignore cleanup errors
 				}
 			}
-		});
+		}
 
 		// Generate fix suggestions
 		generateFixSuggestions(analysisResult, uiImage, nativeImage);
@@ -641,7 +641,7 @@ function calculateSimilarity(uiImage, nativeImage) {
 			totalPixels,
 			diffPercentage,
 		};
-	} catch (error) {
+	} catch (_error) {
 		// Fallback to file size comparison
 		const uiStats = fs.statSync(uiImage);
 		const nativeStats = fs.statSync(nativeImage);
@@ -666,7 +666,8 @@ function compareSnapshots(snapshots) {
 		return;
 	}
 
-	snapshots.forEach((filename, index) => {
+	for (let index = 0; index < snapshots.length; index++) {
+		const filename = snapshots[index];
 		const snapshotName = filename.replace(".png", "");
 		const uiImage = path.join(UI_SNAPSHOTS_DIR, filename);
 		const nativeImage = path.join(UI_NATIVE_SNAPSHOTS_DIR, filename);
@@ -780,7 +781,7 @@ function compareSnapshots(snapshots) {
 				console.log("❌ Images need alignment based on file size");
 			}
 		}
-	});
+	}
 }
 
 // Main execution

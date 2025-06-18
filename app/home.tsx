@@ -12,11 +12,10 @@ import {
 	Inter_700Bold,
 	useFonts as useInterFonts,
 } from "@expo-google-fonts/inter";
-import { StatusBar } from "expo-status-bar";
 
 import "../global.css";
 import { View } from "react-native";
-import { Text } from "#components/primitives/text/Text";
+import { Text } from "#components/primitives/text";
 
 export function Home() {
 	const [interFontsLoaded] = useInterFonts({
