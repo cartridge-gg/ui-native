@@ -1,26 +1,16 @@
-import { View } from "react-native";
+import { SpinnerIcon } from "#components/icons";
+import type { IconProps } from "#components/icons/types";
 import { cn } from "#utils";
 
-export interface SpinnerProps {
-	className?: string;
-	size?: "sm" | "md" | "lg";
-}
-
-export function Spinner({ className, size = "md" }: SpinnerProps) {
-	const sizeClasses = {
-		sm: "h-4 w-4",
-		md: "h-6 w-6",
-		lg: "h-8 w-8",
-	};
-
+export function Spinner({ className, ...props }: IconProps) {
 	return (
-		<View
+		<SpinnerIcon
 			className={cn(
-				"border-2 border-foreground-400 border-t-transparent rounded-full",
-				"animate-spin",
-				sizeClasses[size],
+				"text-foreground-400",
+				"[&:not([data-no-animation])]:animate-spin",
 				className,
 			)}
+			{...props}
 		/>
 	);
 }
