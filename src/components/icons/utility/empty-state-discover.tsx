@@ -29,5 +29,3 @@ export const EmptyStateDiscoverIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateDiscoverIcon.displayName = "EmptyStateDiscoverIcon";

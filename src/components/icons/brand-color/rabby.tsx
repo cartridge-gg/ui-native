@@ -84,5 +84,3 @@ export const RabbyColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-RabbyColorIcon.displayName = "RabbyColorIcon";

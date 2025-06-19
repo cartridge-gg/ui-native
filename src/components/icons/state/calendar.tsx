@@ -35,5 +35,3 @@ export const CalendarIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CalendarIcon.displayName = "CalendarIcon";

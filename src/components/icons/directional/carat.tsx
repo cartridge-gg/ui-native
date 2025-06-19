@@ -33,5 +33,3 @@ export const CaratIcon = memo<DirectionalIconProps>(
 		);
 	},
 );
-
-CaratIcon.displayName = "CaratIcon";

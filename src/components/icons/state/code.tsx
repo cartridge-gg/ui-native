@@ -35,5 +35,3 @@ export const CodeIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CodeIcon.displayName = "CodeIcon";

@@ -35,5 +35,3 @@ export const TrackIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-TrackIcon.displayName = "TrackIcon";

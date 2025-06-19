@@ -23,5 +23,3 @@ export const AlertIcon = memo<IconProps>(
 		);
 	},
 );
-
-AlertIcon.displayName = "AlertIcon";

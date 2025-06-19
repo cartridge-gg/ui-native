@@ -21,5 +21,3 @@ export const MysteryIcon = memo<IconProps>(
 		);
 	},
 );
-
-MysteryIcon.displayName = "MysteryIcon";

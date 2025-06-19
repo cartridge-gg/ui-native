@@ -35,5 +35,3 @@ export const DoveIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-DoveIcon.displayName = "DoveIcon";

@@ -21,5 +21,3 @@ export const DopeWarsIcon = memo<IconProps>(
 		);
 	},
 );
-
-DopeWarsIcon.displayName = "DopeWarsIcon";

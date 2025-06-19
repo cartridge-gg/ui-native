@@ -21,5 +21,3 @@ export const SignOutIcon = memo<IconProps>(
 		);
 	},
 );
-
-SignOutIcon.displayName = "SignOutIcon";

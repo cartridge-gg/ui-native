@@ -35,5 +35,3 @@ export const TagIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-TagIcon.displayName = "TagIcon";

@@ -21,5 +21,3 @@ export const QrCodeIcon = memo<IconProps>(
 		);
 	},
 );
-
-QrCodeIcon.displayName = "QrCodeIcon";

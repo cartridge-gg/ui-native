@@ -35,5 +35,3 @@ export const WrenchIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-WrenchIcon.displayName = "WrenchIcon";

@@ -35,5 +35,3 @@ export const DesktopIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-DesktopIcon.displayName = "DesktopIcon";

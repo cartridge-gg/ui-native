@@ -57,5 +57,3 @@ export const EmptyStateIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateIcon.displayName = "EmptyStateIcon";

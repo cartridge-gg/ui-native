@@ -21,5 +21,3 @@ export const CheckIcon = memo<IconProps>(
 		);
 	},
 );
-
-CheckIcon.displayName = "CheckIcon";

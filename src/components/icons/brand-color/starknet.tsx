@@ -30,5 +30,3 @@ export const StarknetColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-StarknetColorIcon.displayName = "StarknetColorIcon";

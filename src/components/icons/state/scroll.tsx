@@ -35,5 +35,3 @@ export const ScrollIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ScrollIcon.displayName = "ScrollIcon";

@@ -35,5 +35,3 @@ export const PencilIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-PencilIcon.displayName = "PencilIcon";

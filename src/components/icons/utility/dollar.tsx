@@ -21,5 +21,3 @@ export const DollarIcon = memo<IconProps>(
 		);
 	},
 );
-
-DollarIcon.displayName = "DollarIcon";

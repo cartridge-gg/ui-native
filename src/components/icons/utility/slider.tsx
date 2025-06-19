@@ -21,5 +21,3 @@ export const SliderIcon = memo<IconProps>(
 		);
 	},
 );
-
-SliderIcon.displayName = "SliderIcon";

@@ -35,5 +35,3 @@ export const ShapesIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ShapesIcon.displayName = "ShapesIcon";

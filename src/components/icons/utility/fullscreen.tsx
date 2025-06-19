@@ -21,5 +21,3 @@ export const FullscreenIcon = memo<IconProps>(
 		);
 	},
 );
-
-FullscreenIcon.displayName = "FullscreenIcon";

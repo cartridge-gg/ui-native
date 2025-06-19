@@ -37,5 +37,3 @@ export const GoldTagIcon = memo<IconProps>(
 		);
 	},
 );
-
-GoldTagIcon.displayName = "GoldTagIcon";

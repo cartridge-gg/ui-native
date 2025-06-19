@@ -21,5 +21,3 @@ export const ArgentIcon = memo<IconProps>(
 		);
 	},
 );
-
-ArgentIcon.displayName = "ArgentIcon";

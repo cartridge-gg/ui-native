@@ -21,5 +21,3 @@ export const QuestionIcon = memo<IconProps>(
 		);
 	},
 );
-
-QuestionIcon.displayName = "QuestionIcon";

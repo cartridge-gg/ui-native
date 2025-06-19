@@ -35,5 +35,3 @@ export const CreditCardIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CreditCardIcon.displayName = "CreditCardIcon";

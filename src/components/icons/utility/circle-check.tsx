@@ -21,5 +21,3 @@ export const CircleCheckIcon = memo<IconProps>(
 		);
 	},
 );
-
-CircleCheckIcon.displayName = "CircleCheckIcon";

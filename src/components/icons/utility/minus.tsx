@@ -18,5 +18,3 @@ export const MinusIcon = memo<IconProps>(
 		);
 	},
 );
-
-MinusIcon.displayName = "MinusIcon";

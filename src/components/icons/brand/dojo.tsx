@@ -25,5 +25,3 @@ export const DojoIcon = memo<IconProps>(
 		);
 	},
 );
-
-DojoIcon.displayName = "DojoIcon";

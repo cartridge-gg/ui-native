@@ -29,5 +29,3 @@ export const BraavosIcon = memo<IconProps>(
 		);
 	},
 );
-
-BraavosIcon.displayName = "BraavosIcon";

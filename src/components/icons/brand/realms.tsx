@@ -21,5 +21,3 @@ export const RealmsIcon = memo<IconProps>(
 		);
 	},
 );
-
-RealmsIcon.displayName = "RealmsIcon";

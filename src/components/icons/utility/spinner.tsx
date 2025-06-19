@@ -26,5 +26,3 @@ export const SpinnerIcon = memo<IconProps>(
 		);
 	},
 );
-
-SpinnerIcon.displayName = "SpinnerIcon";

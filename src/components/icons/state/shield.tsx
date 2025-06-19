@@ -35,5 +35,3 @@ export const ShieldIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ShieldIcon.displayName = "ShieldIcon";

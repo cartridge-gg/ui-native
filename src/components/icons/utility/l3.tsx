@@ -27,5 +27,3 @@ export const L3Icon = memo<IconProps>(({ className, size, ref, ...props }) => {
 		</Svg>
 	);
 });
-
-L3Icon.displayName = "L3Icon";

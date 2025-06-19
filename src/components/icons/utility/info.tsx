@@ -21,5 +21,3 @@ export const InfoIcon = memo<IconProps>(
 		);
 	},
 );
-
-InfoIcon.displayName = "InfoIcon";

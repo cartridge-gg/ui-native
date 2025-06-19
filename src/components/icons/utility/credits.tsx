@@ -21,5 +21,3 @@ export const CreditsIcon = memo<IconProps>(
 		);
 	},
 );
-
-CreditsIcon.displayName = "CreditsIcon";

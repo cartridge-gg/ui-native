@@ -37,5 +37,3 @@ export const SingularDiamondIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SingularDiamondIcon.displayName = "SingularDiamondIcon";

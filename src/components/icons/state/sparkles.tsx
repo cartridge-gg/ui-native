@@ -35,5 +35,3 @@ export const SparklesIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SparklesIcon.displayName = "SparklesIcon";

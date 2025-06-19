@@ -35,5 +35,3 @@ export const EyeIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-EyeIcon.displayName = "EyeIcon";

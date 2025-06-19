@@ -21,5 +21,3 @@ export const SpiderWebIcon = memo<IconProps>(
 		);
 	},
 );
-
-SpiderWebIcon.displayName = "SpiderWebIcon";

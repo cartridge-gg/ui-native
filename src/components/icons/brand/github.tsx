@@ -21,5 +21,3 @@ export const GitHubIcon = memo<IconProps>(
 		);
 	},
 );
-
-GitHubIcon.displayName = "GitHubIcon";

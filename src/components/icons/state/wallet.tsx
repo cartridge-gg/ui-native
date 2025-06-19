@@ -35,5 +35,3 @@ export const WalletIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-WalletIcon.displayName = "WalletIcon";

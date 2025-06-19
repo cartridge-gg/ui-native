@@ -23,5 +23,3 @@ export const MetaMaskIcon = memo<IconProps>(
 		);
 	},
 );
-
-MetaMaskIcon.displayName = "MetaMaskIcon";

@@ -35,5 +35,3 @@ export const CloneIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CloneIcon.displayName = "CloneIcon";

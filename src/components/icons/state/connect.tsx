@@ -35,5 +35,3 @@ export const ConnectIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ConnectIcon.displayName = "ConnectIcon";

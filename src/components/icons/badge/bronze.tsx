@@ -146,5 +146,3 @@ export const BronzeIcon = memo<IconProps>(
 		);
 	},
 );
-
-BronzeIcon.displayName = "BronzeIcon";

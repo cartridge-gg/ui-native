@@ -35,5 +35,3 @@ export const TrophyIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-TrophyIcon.displayName = "TrophyIcon";

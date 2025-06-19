@@ -29,5 +29,3 @@ export const TouchIcon = memo<IconProps>(
 		);
 	},
 );
-
-TouchIcon.displayName = "TouchIcon";

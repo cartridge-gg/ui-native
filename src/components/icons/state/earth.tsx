@@ -35,5 +35,3 @@ export const EarthIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-EarthIcon.displayName = "EarthIcon";

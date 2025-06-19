@@ -36,5 +36,3 @@ export const MobileIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-MobileIcon.displayName = "MobileIcon";

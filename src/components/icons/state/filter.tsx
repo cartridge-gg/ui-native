@@ -35,5 +35,3 @@ export const FilterIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-FilterIcon.displayName = "FilterIcon";

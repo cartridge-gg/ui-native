@@ -21,5 +21,3 @@ export const SolanaIcon = memo<IconProps>(
 		);
 	},
 );
-
-SolanaIcon.displayName = "SolanaIcon";

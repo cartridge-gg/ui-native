@@ -35,5 +35,3 @@ export const EmptyStateLeaderboardIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateLeaderboardIcon.displayName = "EmptyStateLeaderboardIcon";

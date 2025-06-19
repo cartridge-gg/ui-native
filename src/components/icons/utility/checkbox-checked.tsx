@@ -25,5 +25,3 @@ export const CheckboxCheckedIcon = memo<IconProps>(
 		);
 	},
 );
-
-CheckboxCheckedIcon.displayName = "CheckboxCheckedIcon";

@@ -21,5 +21,3 @@ export const AchievementIcon = memo<IconProps>(
 		);
 	},
 );
-
-AchievementIcon.displayName = "AchievementIcon";

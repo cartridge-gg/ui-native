@@ -21,5 +21,3 @@ export const AppleIcon = memo<IconProps>(
 		);
 	},
 );
-
-AppleIcon.displayName = "AppleIcon";

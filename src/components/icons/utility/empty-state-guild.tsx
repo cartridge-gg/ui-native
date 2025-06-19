@@ -29,5 +29,3 @@ export const EmptyStateGuildIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateGuildIcon.displayName = "EmptyStateGuildIcon";

@@ -37,5 +37,3 @@ export const BronzeTagIcon = memo<IconProps>(
 		);
 	},
 );
-
-BronzeTagIcon.displayName = "BronzeTagIcon";

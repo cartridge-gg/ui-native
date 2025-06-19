@@ -35,5 +35,3 @@ export const TerminalIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-TerminalIcon.displayName = "TerminalIcon";

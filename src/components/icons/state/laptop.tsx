@@ -35,5 +35,3 @@ export const LaptopIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-LaptopIcon.displayName = "LaptopIcon";

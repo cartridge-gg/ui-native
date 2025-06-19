@@ -21,5 +21,3 @@ export const GearIcon = memo<IconProps>(
 		);
 	},
 );
-
-GearIcon.displayName = "GearIcon";

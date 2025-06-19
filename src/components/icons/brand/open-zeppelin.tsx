@@ -29,5 +29,3 @@ export const OpenZeppelinIcon = memo<IconProps>(
 		);
 	},
 );
-
-OpenZeppelinIcon.displayName = "OpenZeppelinIcon";

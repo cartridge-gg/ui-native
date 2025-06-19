@@ -35,5 +35,3 @@ export const BoltIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-BoltIcon.displayName = "BoltIcon";

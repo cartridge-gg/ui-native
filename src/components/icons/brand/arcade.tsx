@@ -35,5 +35,3 @@ export const ArcadeIcon = memo<IconProps>(
 		);
 	},
 );
-
-ArcadeIcon.displayName = "ArcadeIcon";

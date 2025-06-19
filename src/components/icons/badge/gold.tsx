@@ -55,5 +55,3 @@ export const GoldIcon = memo<IconProps>(
 		);
 	},
 );
-
-GoldIcon.displayName = "GoldIcon";

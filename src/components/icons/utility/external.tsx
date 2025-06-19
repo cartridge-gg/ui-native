@@ -21,5 +21,3 @@ export const ExternalIcon = memo<IconProps>(
 		);
 	},
 );
-
-ExternalIcon.displayName = "ExternalIcon";

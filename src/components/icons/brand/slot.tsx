@@ -29,5 +29,3 @@ export const SlotIcon = memo<IconProps>(
 		);
 	},
 );
-
-SlotIcon.displayName = "SlotIcon";

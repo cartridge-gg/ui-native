@@ -21,5 +21,3 @@ export const DiscordIcon = memo<IconProps>(
 		);
 	},
 );
-
-DiscordIcon.displayName = "DiscordIcon";

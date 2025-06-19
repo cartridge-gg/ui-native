@@ -23,5 +23,3 @@ export const MagnifyingGlassIcon = memo<IconProps>(
 		);
 	},
 );
-
-MagnifyingGlassIcon.displayName = "MagnifyingGlassIcon";

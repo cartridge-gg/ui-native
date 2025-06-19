@@ -178,7 +178,7 @@ Look for:
    // }
    ```
 
-5. **React 19 Considerations**:
+   5. **React 19 Considerations**:
    ```typescript
    // IMPORTANT: forwardRef is not required in React 19
    // Old pattern (React 18 and below)
@@ -187,12 +187,35 @@ Look for:
    });
    
    // New pattern (React 19+)
-   export const Button = (props: ButtonProps & { ref?: React.Ref<View> }) => {
+   export function Button(props: ButtonProps & { ref?: React.Ref<View> }) {
      // component implementation with direct ref usage
-   };
+   }
    
    // Do NOT use forwardRef when migrating to React 19
    // Refs are now regular props and don't need special handling
+   
+   // IMPORTANT: Remove displayName from components
+   // Old pattern (often used with forwardRef)
+   Button.displayName = "Button";
+   
+   // New pattern - do NOT include displayName
+   // Simply export the component without displayName assignment
+   
+   // IMPORTANT: Prefer function declarations over const assignments
+   // Old pattern (const assignment)
+   export const Button = (props: ButtonProps) => {
+     return <View>...</View>;
+   };
+   
+   // Preferred pattern (function declaration)
+   export function Button(props: ButtonProps) {
+     return <View>...</View>;
+   }
+   
+   // Exception: Use const when wrapping with memo or other HOCs
+   export const Button = memo((props: ButtonProps) => {
+     return <View>...</View>;
+   });
    ```
 
 #### Step 5: Create Story File
@@ -443,7 +466,9 @@ git commit -m "Migrated TokenCard"
   export const Icon = forwardRef<Svg, IconProps>((props, ref) => ...);
   
   // After (React 19)
-  export const Icon = (props: IconProps & { ref?: React.Ref<Svg> }) => ...;
+  export function Icon(props: IconProps & { ref?: React.Ref<Svg> }) {
+    // implementation
+  }
   ```
 
 ### 9. Inconsistent Story Titles
@@ -528,8 +553,10 @@ git commit -m "Migrated [ComponentName]"
 11. **Verify Configuration**: Ensure NativeWind setup matches UI library configuration
 12. **Use Subpath Imports**: Replace relative imports like `@/utils` with subpath imports like `#utils` for proper React Native path resolution
 13. **Avoid forwardRef in React 19**: Since React 19 treats refs as regular props, do not use forwardRef when creating new components - use direct ref props instead
-14. **Keep Storybook Titles Consistent**: Always use the exact same story title from the UI version (e.g., "Primitives/Icons" not "Components/Icons") to maintain consistency and proper categorization
-15. **Use Kebab-Case for File Names**: All new files must use kebab-case naming (e.g., `achievement-card.tsx`, `button-group.tsx`) to maintain consistency across the codebase
+14. **Remove displayName**: Do not include `displayName` assignments on components - these are not needed in the migration and should be removed
+15. **Prefer Function Declarations**: Use function declarations (`function Component()`) instead of const assignments (`const Component = () =>`) unless the component needs to be wrapped with `memo` or other higher-order components
+16. **Keep Storybook Titles Consistent**: Always use the exact same story title from the UI version (e.g., "Primitives/Icons" not "Components/Icons") to maintain consistency and proper categorization
+17. **Use lower-kebab-case for File Names**: All new files must use kebab-case naming (e.g., `achievement-card.tsx`, `button-group.tsx`) to maintain consistency across the codebase
 
 ## Conclusion
 

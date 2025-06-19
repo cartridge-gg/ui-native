@@ -21,5 +21,3 @@ export const SearchIcon = memo<IconProps>(
 		);
 	},
 );
-
-SearchIcon.displayName = "SearchIcon";

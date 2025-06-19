@@ -35,5 +35,3 @@ export const LaurelIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-LaurelIcon.displayName = "LaurelIcon";

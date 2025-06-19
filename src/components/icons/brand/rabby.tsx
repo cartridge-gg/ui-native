@@ -25,5 +25,3 @@ export const RabbyIcon = memo<IconProps>(
 		);
 	},
 );
-
-RabbyIcon.displayName = "RabbyIcon";

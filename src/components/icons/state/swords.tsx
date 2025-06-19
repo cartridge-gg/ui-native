@@ -35,5 +35,3 @@ export const SwordsIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SwordsIcon.displayName = "SwordsIcon";

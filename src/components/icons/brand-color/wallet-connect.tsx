@@ -21,5 +21,3 @@ export const WalletConnectColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-WalletConnectColorIcon.displayName = "WalletConnectColorIcon";

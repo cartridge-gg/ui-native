@@ -21,5 +21,3 @@ export const RobotIcon = memo<IconProps>(
 		);
 	},
 );
-
-RobotIcon.displayName = "RobotIcon";

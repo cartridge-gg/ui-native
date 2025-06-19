@@ -33,5 +33,3 @@ export const MirrorWedgeIcon = memo<IconProps>(
 		);
 	},
 );
-
-MirrorWedgeIcon.displayName = "MirrorWedgeIcon";

@@ -21,5 +21,3 @@ export const WarningIcon = memo<IconProps>(
 		);
 	},
 );
-
-WarningIcon.displayName = "WarningIcon";

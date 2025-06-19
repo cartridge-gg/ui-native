@@ -21,5 +21,3 @@ export const CheckboxUncheckedIcon = memo<IconProps>(
 		);
 	},
 );
-
-CheckboxUncheckedIcon.displayName = "CheckboxUncheckedIcon";

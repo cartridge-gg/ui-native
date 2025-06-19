@@ -35,5 +35,3 @@ export const BellIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-BellIcon.displayName = "BellIcon";

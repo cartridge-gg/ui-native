@@ -21,5 +21,3 @@ export const PacmanIcon = memo<IconProps>(
 		);
 	},
 );
-
-PacmanIcon.displayName = "PacmanIcon";

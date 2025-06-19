@@ -21,5 +21,3 @@ export const ChessIcon = memo<IconProps>(
 		);
 	},
 );
-
-ChessIcon.displayName = "ChessIcon";

@@ -21,5 +21,3 @@ export const DiscordColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-DiscordColorIcon.displayName = "DiscordColorIcon";

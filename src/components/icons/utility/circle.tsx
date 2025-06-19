@@ -18,5 +18,3 @@ export const CircleIcon = memo<IconProps>(
 		);
 	},
 );
-
-CircleIcon.displayName = "CircleIcon";

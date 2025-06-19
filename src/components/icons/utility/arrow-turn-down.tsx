@@ -21,5 +21,3 @@ export const ArrowTurnDownIcon = memo<IconProps>(
 		);
 	},
 );
-
-ArrowTurnDownIcon.displayName = "ArrowTurnDownIcon";

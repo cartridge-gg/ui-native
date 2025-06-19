@@ -21,5 +21,3 @@ export const TelegramIcon = memo<IconProps>(
 		);
 	},
 );
-
-TelegramIcon.displayName = "TelegramIcon";

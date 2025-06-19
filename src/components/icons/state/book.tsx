@@ -35,5 +35,3 @@ export const BookIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-BookIcon.displayName = "BookIcon";

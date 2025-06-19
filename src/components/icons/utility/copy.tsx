@@ -21,5 +21,3 @@ export const CopyIcon = memo<IconProps>(
 		);
 	},
 );
-
-CopyIcon.displayName = "CopyIcon";

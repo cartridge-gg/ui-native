@@ -21,5 +21,3 @@ export const TransferIcon = memo<IconProps>(
 		);
 	},
 );
-
-TransferIcon.displayName = "TransferIcon";

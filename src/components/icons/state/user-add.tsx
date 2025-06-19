@@ -37,5 +37,3 @@ export const UserAddIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-UserAddIcon.displayName = "UserAddIcon";

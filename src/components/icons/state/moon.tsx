@@ -35,5 +35,3 @@ export const MoonIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-MoonIcon.displayName = "MoonIcon";
