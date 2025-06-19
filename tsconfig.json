@@ -6,9 +6,13 @@
 		"jsxImportSource": "nativewind",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["src/*"]
+			"#*": ["./src/*"],
+			"#components/*": ["./src/components/*"],
+			"#utils/*": ["./src/utils/*"],
+			"#app/*": ["./app/*"]
 		},
 		"noImplicitAny": false,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"esModuleInterop": true
 	}
 }

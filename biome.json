@@ -15,7 +15,7 @@
 			"!pnpm-lock.yaml",
 			"!**/__image_snapshots__",
 			"!**/visual-comparisons",
-			"!ui"
+			"!**/ui"
 		]
 	},
 	"linter": {

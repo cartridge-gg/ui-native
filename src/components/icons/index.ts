@@ -1,0 +1,15 @@
+export * from "#components/icons/badge";
+export * as badgeIcons from "#components/icons/badge";
+export * from "#components/icons/brand";
+export * as brandIcons from "#components/icons/brand";
+export * from "#components/icons/brand-color";
+export * as brandColorIcons from "#components/icons/brand-color";
+export * from "#components/icons/directional";
+export * as directionalIcons from "#components/icons/directional";
+export { ErrorAlertIcon } from "#components/icons/error-alert-icon";
+export * from "#components/icons/state";
+export * as stateIcons from "#components/icons/state";
+export * from "#components/icons/types";
+export * from "#components/icons/utility";
+export * as utilityIcons from "#components/icons/utility";
+export * from "#components/icons/utils";

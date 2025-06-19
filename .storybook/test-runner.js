@@ -37,6 +37,15 @@ module.exports = {
       `,
 		});
 
+		// Disable spinner animations specifically for React Native components
+		await page.evaluate(() => {
+			// Add data-no-animation attribute to all elements to disable spinner animations
+			const allElements = document.querySelectorAll("*");
+			for (const el of allElements) {
+				el.setAttribute("data-no-animation", "true");
+			}
+		});
+
 		// Wait for animations to be disabled and content to settle
 		await page.waitForTimeout(1000);
 
@@ -52,9 +61,9 @@ module.exports = {
 				"Helvetica",
 				"system-ui",
 			];
-			fonts.forEach((font) => {
+			for (const font of fonts) {
 				document.fonts.load(`1em ${font}`);
-			});
+			}
 		});
 
 		// Get the story's container element - selecting the nested content div

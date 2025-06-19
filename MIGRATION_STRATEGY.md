@@ -13,28 +13,66 @@ This document outlines the systematic process for migrating UI components from t
 
 ## Tools
 
-### 1. Snapshot Update Tool
+### 1. NativeWind Setup
+NativeWind enables using Tailwind CSS classes directly in React Native components, eliminating the need for style prop conversions.
+
+**Key Benefits**:
+- Keep existing Tailwind classes unchanged
+- Maintain design system consistency
+- Simplify migration process
+- Support for responsive design and theme switching
+
+**Configuration Requirements**:
+- Ensure `tailwind.config.js` is properly configured for React Native
+- Verify custom theme colors from `dark.css` are mapped to Tailwind classes
+- Map CSS custom properties (--background-100, --foreground, etc.) to Tailwind color tokens
+- Check that all Tailwind plugins are compatible with NativeWind
+
+**React Native vs Web Differences**:
+React Native has different default behaviors that require Tailwind class adjustments:
+
+| Web Behavior | React Native Behavior | Class Adjustment |
+|--------------|----------------------|------------------|
+| `flex` defaults to `flex-direction: row` | `flex` defaults to `flex-direction: column` | `flex` → `flex-row` |
+| `flex-col` explicit column direction | `flex` already defaults to column | `flex-col` → `flex` (optional) |
+| `position: relative` is default | No default positioning | May need explicit `relative` |
+| `box-sizing: border-box` default | Different box model | Check padding/border interactions |
+| `overflow: visible` default | `overflow: hidden` default | May need `overflow-visible` |
+
+**Color System**:
+The UI library uses CSS custom properties defined in `dark.css` for theming:
+- Background colors: `--background-100` through `--background-500`
+- Foreground colors: `--foreground`, `--foreground-100` through `--foreground-400`
+- Translucent variants: `--translucent-dark-*` and `--translucent-light-*`
+- Spacer color: `--spacer-100`
+
+These map to Tailwind classes like:
+- `bg-background-100`, `bg-background-200`, etc.
+- `text-foreground`, `text-foreground-200`, etc.
+- `bg-translucent-dark-100`, `bg-translucent-light-150`, etc.
+
+### 2. Snapshot Update Tool
 ```bash
 # Update all snapshots
-node scripts/update-snapshots.js
+pnpm screenshots:update
 
 # Update specific component snapshots
-node scripts/update-snapshots.js achievement
-node scripts/update-snapshots.js button
-node scripts/update-snapshots.js "activities.*card"
+pnpm screenshots:update achievement
+pnpm screenshots:update button
+pnpm screenshots:update "activities.*card"
 ```
 
-### 2. Visual Comparison Tool
+### 3. Visual Comparison Tool
 ```bash
 # Compare specific snapshots
-node scripts/visual-comparison.js achievement
-node scripts/visual-comparison.js button
+pnpm screenshots:compare achievement
+pnpm screenshots:compare button
 
 # List all available snapshots
-node scripts/visual-comparison.js --list
+pnpm screenshots:compare --list
 
 # Get help
-node scripts/visual-comparison.js --help
+pnpm screenshots:compare --help
 ```
 
 ## Migration Process
@@ -52,7 +90,7 @@ node scripts/visual-comparison.js --help
 #### Step 2: Check Migration Status
 ```bash
 # List all snapshots and their migration status
-node scripts/visual-comparison.js --list
+pnpm screenshots:summary
 ```
 
 Look for:
@@ -72,9 +110,9 @@ Look for:
 2. **Identify key elements**:
    - Props interface
    - Component structure
-   - Styling approach (Tailwind classes)
+   - Styling approach (Tailwind classes with CSS custom properties)
    - Dependencies (icons, sub-components)
-   - Theme integration
+   - Theme integration (check dark.css for color definitions)
 
 3. **Check the story file**:
    ```bash
@@ -87,36 +125,117 @@ Look for:
    # Create component directory if needed
    mkdir -p ui-native/components/modules/activities/card
    ```
+   
+   **Important File Naming Convention**:
+   - All new files must use **kebab-case** naming
+   - Examples:
+     - `achievement-card.tsx` ✅ (not `AchievementCard.tsx` or `achievementCard.tsx`)
+     - `button-group.tsx` ✅ (not `ButtonGroup.tsx`)
+     - `token-balance.tsx` ✅ (not `TokenBalance.tsx`)
 
 2. **Implement the component**:
-   - Convert Tailwind classes to React Native styles
-   - Use theme colors from `ui-native/components/theme/colors.ts`
+   - Keep most Tailwind classes using NativeWind (minimal conversion needed)
+   - **Critical**: Convert `flex` to `flex-row` for horizontal layouts
    - Replace HTML elements with React Native equivalents
    - Ensure prop interfaces match exactly
+   - Verify theme integration works with NativeWind
 
-3. **Key conversion patterns**:
+3. **Key conversion patterns with NativeWind**:
    ```typescript
-   // UI (Web) -> UI-Native (React Native)
-   <div className="flex"> -> <View style={{ flexDirection: 'row' }}>
-   <span className="text-sm"> -> <Text style={{ fontSize: 14 }}>
-   className="bg-primary-100" -> style={{ backgroundColor: colors.primary[100] }}
-   className="p-3" -> style={{ padding: 12 }}
-   className="gap-2" -> style={{ gap: 8 }}
+   // HTML elements to React Native components
+   <div> -> <View>
+   <span> -> <Text>
+   <p> -> <Text>
+   <img> -> <Image>
+   <button> -> <Pressable> or custom Button component
+   
+   // Tailwind class adjustments for React Native defaults
+   // Web flex defaults to row, React Native defaults to column
+   <div className="flex"> -> <View className="flex-row">
+   <div className="flex-col"> -> <View className="flex"> (or <View className="flex-col">)
+   
+   // Most other classes remain the same
+   <span className="text-sm"> -> <Text className="text-sm">
+   <div className="bg-background-100"> -> <View className="bg-background-100">
+   <div className="text-foreground"> -> <Text className="text-foreground">
+   <div className="p-3"> -> <View className="p-3">
+   <div className="gap-2"> -> <View className="gap-2">
+   ```
+
+4. **Import patterns**:
+   ```typescript
+   // IMPORTANT: Use subpath imports for utils
+   // Web version (relative import)
+   import { cn } from "@/utils";
+   
+   // React Native version (subpath import)
+   import { cn } from "#utils";
+   
+   // This ensures proper path resolution in React Native
+   // Configure in package.json:
+   // "imports": {
+   //   "#utils": "./src/utils/index.ts"
+   // }
+   ```
+
+   5. **React 19 Considerations**:
+   ```typescript
+   // IMPORTANT: forwardRef is not required in React 19
+   // Old pattern (React 18 and below)
+   export const Button = forwardRef<View, ButtonProps>((props, ref) => {
+     // component implementation
+   });
+   
+   // New pattern (React 19+)
+   export function Button(props: ButtonProps & { ref?: React.Ref<View> }) {
+     // component implementation with direct ref usage
+   }
+   
+   // Do NOT use forwardRef when migrating to React 19
+   // Refs are now regular props and don't need special handling
+   
+   // IMPORTANT: Remove displayName from components
+   // Old pattern (often used with forwardRef)
+   Button.displayName = "Button";
+   
+   // New pattern - do NOT include displayName
+   // Simply export the component without displayName assignment
+   
+   // IMPORTANT: Prefer function declarations over const assignments
+   // Old pattern (const assignment)
+   export const Button = (props: ButtonProps) => {
+     return <View>...</View>;
+   };
+   
+   // Preferred pattern (function declaration)
+   export function Button(props: ButtonProps) {
+     return <View>...</View>;
+   }
+   
+   // Exception: Use const when wrapping with memo or other HOCs
+   export const Button = memo((props: ButtonProps) => {
+     return <View>...</View>;
+   });
    ```
 
 #### Step 5: Create Story File
 1. **Copy and adapt the UI story**:
    ```typescript
    // Ensure story structure matches UI version exactly
+   // IMPORTANT: Keep the same title as the UI version
+   // Example: title: "Primitives/Icons" (not "Components/Icons")
    // Use same prop values and component arrangements
    // Replace web-specific elements with React Native equivalents
    ```
 
 2. **Key story patterns**:
    ```typescript
-   // Replace <div> with <View>
-   // Ensure gap values match (Tailwind gap-3 = 12px)
+   // Replace HTML elements with React Native equivalents
+   // Keep most Tailwind classes unchanged (NativeWind handles conversion)
+   // IMPORTANT: Convert flex to flex-row for horizontal layouts
    // Use same test data and prop combinations
+   // Ensure className props work identically
+   // Maintain exact story names and hierarchy from UI version
    ```
 
 ### Phase 3: Visual Verification
@@ -124,13 +243,13 @@ Look for:
 #### Step 6: Generate Initial Snapshot
 ```bash
 # Generate snapshot for the new component
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 ```
 
 #### Step 7: Perform Visual Comparison
 ```bash
 # Compare with UI version
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 ```
 
 **Expected outputs**:
@@ -163,32 +282,34 @@ Review the comparison results:
 Based on the analysis, fix issues in order of impact:
 
 1. **Dimension Mismatches**:
-   - Check padding/margin values
-   - Verify container sizing
-   - Ensure gap values match
+   - Check Tailwind class consistency, especially flex direction
+   - Convert `flex` to `flex-row` for horizontal layouts
+   - Verify NativeWind configuration
+   - Ensure responsive breakpoints work correctly
 
 2. **Color Differences**:
-   - Verify theme integration
+   - Verify theme integration with NativeWind
    - Check dark/light mode consistency
-   - Ensure exact color value matches
+   - Ensure custom theme colors from dark.css are configured in tailwind.config.js
+   - Verify CSS custom properties (--background-100, --foreground, etc.) are properly mapped
 
 3. **Typography Issues**:
-   - Check font sizes and weights
-   - Verify line heights
-   - Ensure text alignment
+   - Check Tailwind typography classes (text-sm, font-bold, etc.)
+   - Verify font configuration in NativeWind
+   - Ensure text alignment classes work correctly
 
 4. **Icon/Image Problems**:
    - Verify icon variants and sizes
    - Check image handling (URLs vs local)
-   - Ensure sub-icon positioning
+   - Ensure sub-icon positioning with Tailwind classes
 
 #### Step 10: Re-test After Each Fix
 ```bash
 # Update snapshot after changes
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 
 # Re-run comparison
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 ```
 
 **Iteration Guidelines**:
@@ -206,13 +327,14 @@ For the final 1-5% similarity gap:
    - Font rendering variations
 
 2. **Story-level adjustments**:
-   - Gap between components in stories
-   - Container sizing
-   - Background colors
+   - Gap between components in stories (using Tailwind classes)
+   - Container sizing (using Tailwind width/height classes)
+   - Background colors (using Tailwind bg-* classes)
 
 3. **Platform-specific considerations**:
    - React Native vs Web rendering differences
    - Font availability and fallbacks
+   - NativeWind configuration differences
 
 ### Phase 5: Validation and Documentation
 
@@ -311,9 +433,60 @@ git commit -m "Migrated TokenCard"
 ### 5. Spacing Inconsistencies
 **Problem**: Gaps and padding don't match
 **Solution**:
-- Convert Tailwind classes accurately (gap-3 = 12px)
-- Check flex properties
-- Verify margin/padding values
+- Ensure Tailwind classes are identical between UI and UI-native
+- Check NativeWind configuration for custom spacing values
+- Verify flex properties work correctly with NativeWind
+
+### 6. Flex Direction Mismatches
+**Problem**: Components appear stacked vertically instead of horizontally
+**Solution**:
+- Change `className="flex"` to `className="flex-row"` for horizontal layouts
+- Remember React Native defaults to column direction, web defaults to row
+- Check all flex containers in the component
+- Verify items-center and justify-center work with correct flex direction
+
+### 7. NativeWind Configuration Issues
+**Problem**: Tailwind classes not working as expected in React Native
+**Solution**:
+- Verify NativeWind is properly installed and configured
+- Check that `tailwind.config.js` includes React Native file extensions
+- Ensure CSS custom properties from `dark.css` are mapped to Tailwind tokens
+- Verify color classes like `bg-background-100` and `text-foreground` work correctly
+- Verify import statements include NativeWind setup
+
+### 8. forwardRef Usage in React 19
+**Problem**: TypeScript errors or warnings about forwardRef in React 19
+**Solution**:
+- Remove forwardRef wrapper completely
+- Convert ref to a regular prop: `ref?: React.Ref<ComponentType>`
+- Update component signature to accept ref as a normal prop
+- Example conversion:
+  ```typescript
+  // Before (React 18)
+  export const Icon = forwardRef<Svg, IconProps>((props, ref) => ...);
+  
+  // After (React 19)
+  export function Icon(props: IconProps & { ref?: React.Ref<Svg> }) {
+    // implementation
+  }
+  ```
+
+### 9. Inconsistent Story Titles
+**Problem**: Visual comparison may not match if story titles differ between UI and UI-native
+**Solution**:
+- Always copy the exact title from the UI story
+- Do not change the category hierarchy
+- Examples:
+  ```typescript
+  // ✅ Correct - matches UI version
+  title: "Primitives/Icons"
+  
+  // ❌ Wrong - different category
+  title: "Components/Icons"
+  
+  // ❌ Wrong - different hierarchy
+  title: "Icons"
+  ```
 
 ## Automation Opportunities
 
@@ -341,23 +514,26 @@ git commit -m "Migrated TokenCard"
 
 ```bash
 # 1. Discover and assess
-node scripts/visual-comparison.js --list
+pnpm screenshots:summary
 
 # 2. Implement component (manual development)
 
 # 3. Generate snapshot
-node scripts/update-snapshots.js [component-name]
+pnpm screenshots:update [component-name]
 
 # 4. Compare and analyze
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 
 # 5. Fix and iterate
 # (make changes, then repeat steps 3-4)
 
 # 6. Validate final result
-node scripts/visual-comparison.js [component-name]
+pnpm screenshots:compare [component-name]
 
-# 7. Create migration commit
+# 7. Check lint and format
+pnpm lint
+
+# 8. Create migration commit
 git add .
 git commit -m "Migrated [ComponentName]"
 ```
@@ -372,6 +548,15 @@ git commit -m "Migrated [ComponentName]"
 6. **Maintain Quality**: Don't compromise on similarity thresholds
 7. **Commit Regularly**: Create a commit after each successful component migration
 8. **Track Progress**: Use consistent commit messages for easy progress tracking
+9. **Leverage NativeWind**: Keep most Tailwind classes unchanged to maintain consistency
+10. **Mind the Flex Direction**: Always convert `flex` to `flex-row` for horizontal layouts
+11. **Verify Configuration**: Ensure NativeWind setup matches UI library configuration
+12. **Use Subpath Imports**: Replace relative imports like `@/utils` with subpath imports like `#utils` for proper React Native path resolution
+13. **Avoid forwardRef in React 19**: Since React 19 treats refs as regular props, do not use forwardRef when creating new components - use direct ref props instead
+14. **Remove displayName**: Do not include `displayName` assignments on components - these are not needed in the migration and should be removed
+15. **Prefer Function Declarations**: Use function declarations (`function Component()`) instead of const assignments (`const Component = () =>`) unless the component needs to be wrapped with `memo` or other higher-order components
+16. **Keep Storybook Titles Consistent**: Always use the exact same story title from the UI version (e.g., "Primitives/Icons" not "Components/Icons") to maintain consistency and proper categorization
+17. **Use lower-kebab-case for File Names**: All new files must use kebab-case naming (e.g., `achievement-card.tsx`, `button-group.tsx`) to maintain consistency across the codebase
 
 ## Conclusion
 
