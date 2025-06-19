@@ -33,5 +33,28 @@ const config: StorybookConfig = {
 	typescript: {
 		reactDocgen: "react-docgen-typescript",
 	},
+
+	async viteFinal(config) {
+		// Configure esbuild to handle JSX in .mjs files from @rn-primitives/slot
+		config.optimizeDeps = config.optimizeDeps || {};
+		config.optimizeDeps.esbuildOptions =
+			config.optimizeDeps.esbuildOptions || {};
+		config.optimizeDeps.esbuildOptions.loader = {
+			...config.optimizeDeps.esbuildOptions.loader,
+			".mjs": "jsx",
+		};
+
+		// Also configure build esbuild options
+		config.build = config.build || {};
+		config.build.rollupOptions = config.build.rollupOptions || {};
+		config.build.rollupOptions.external =
+			config.build.rollupOptions.external || [];
+
+		// Force include @rn-primitives/slot in dependency optimization
+		config.optimizeDeps.include = config.optimizeDeps.include || [];
+		config.optimizeDeps.include.push("@rn-primitives/slot");
+
+		return config;
+	},
 };
 export default config;

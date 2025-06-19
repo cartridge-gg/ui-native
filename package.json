@@ -28,6 +28,7 @@
 		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
 		"@expo-google-fonts/inter": "^0.3.0",
 		"@gorhom/bottom-sheet": "^5.1.4",
+		"@rn-primitives/slot": "^1.2.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"expo": "^53.0.11",
