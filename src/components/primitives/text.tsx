@@ -1,22 +1,29 @@
-import type * as React from "react";
-import { Text as RNText, type TextProps as RNTextProps } from "react-native";
+import * as Slot from "@rn-primitives/slot";
+import * as React from "react";
+import { Text as RNText } from "react-native";
 import { cn } from "#utils";
 
-export interface TextProps extends RNTextProps {
-	children?: React.ReactNode;
-}
+export const TextClassContext = React.createContext<string | undefined>(
+	undefined,
+);
 
 export function Text({
 	className,
-	style,
-	ref,
+	asChild = false,
 	...props
-}: TextProps & { ref?: React.Ref<RNText> }) {
+}: React.ComponentProps<typeof RNText> & {
+	ref?: React.RefObject<RNText>;
+	asChild?: boolean;
+}) {
+	const textClass = React.useContext(TextClassContext);
+	const Component = asChild ? Slot.Text : RNText;
 	return (
-		<RNText
-			className={cn("text-foreground font-sans text-base", className)}
-			style={style}
-			ref={ref}
+		<Component
+			className={cn(
+				"text-base text-foreground web:select-text font-sans",
+				textClass,
+				className,
+			)}
 			{...props}
 		/>
 	);
