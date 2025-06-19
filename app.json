@@ -9,7 +9,7 @@
 		"experiments": {
 			"tsconfigPaths": true
 		},
-		"plugins": ["expo-font"],
+		"plugins": ["expo-font", "react-native-reanimated/plugin"],
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
