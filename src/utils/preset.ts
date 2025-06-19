@@ -99,6 +99,7 @@ export const cartridgePreset: Partial<Config> = {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 4px)",
 				sm: "calc(var(--radius) - 6px)",
+				full: "9999px",
 			},
 			keyframes: {
 				"accordion-down": {
