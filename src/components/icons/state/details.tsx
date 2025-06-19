@@ -35,5 +35,3 @@ export const DetailsIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-DetailsIcon.displayName = "DetailsIcon";

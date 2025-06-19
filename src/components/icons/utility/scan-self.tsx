@@ -27,5 +27,3 @@ export const ScanSelfIcon = memo<IconProps>(
 		);
 	},
 );
-
-ScanSelfIcon.displayName = "ScanSelfIcon";

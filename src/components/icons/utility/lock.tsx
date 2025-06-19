@@ -21,5 +21,3 @@ export const LockIcon = memo<IconProps>(
 		);
 	},
 );
-
-LockIcon.displayName = "LockIcon";

@@ -49,5 +49,3 @@ export const ArrowFromLineIcon = memo<DirectionalIconProps>(
 		);
 	},
 );
-
-ArrowFromLineIcon.displayName = "ArrowFromLineIcon";

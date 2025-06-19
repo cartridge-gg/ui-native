@@ -35,5 +35,3 @@ export const ShoppingCartIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ShoppingCartIcon.displayName = "ShoppingCartIcon";

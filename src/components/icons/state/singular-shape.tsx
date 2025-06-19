@@ -37,5 +37,3 @@ export const SingularShapeIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SingularShapeIcon.displayName = "SingularShapeIcon";

@@ -35,5 +35,3 @@ export const PulseIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-PulseIcon.displayName = "PulseIcon";

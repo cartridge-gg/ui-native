@@ -28,5 +28,3 @@ export const ShoppingCancelIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ShoppingCancelIcon.displayName = "ShoppingCancelIcon";

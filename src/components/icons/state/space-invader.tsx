@@ -35,5 +35,3 @@ export const SpaceInvaderIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SpaceInvaderIcon.displayName = "SpaceInvaderIcon";

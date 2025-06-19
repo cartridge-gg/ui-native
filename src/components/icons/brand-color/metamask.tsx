@@ -61,5 +61,3 @@ export const MetaMaskColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-MetaMaskColorIcon.displayName = "MetaMaskColorIcon";

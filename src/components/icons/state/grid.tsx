@@ -35,5 +35,3 @@ export const GridIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-GridIcon.displayName = "GridIcon";

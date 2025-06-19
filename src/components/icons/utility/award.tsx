@@ -21,5 +21,3 @@ export const AwardIcon = memo<IconProps>(
 		);
 	},
 );
-
-AwardIcon.displayName = "AwardIcon";

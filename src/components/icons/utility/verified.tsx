@@ -21,5 +21,3 @@ export const VerifiedIcon = memo<IconProps>(
 		);
 	},
 );
-
-VerifiedIcon.displayName = "VerifiedIcon";

@@ -29,5 +29,3 @@ export const EmptyStateInventoryIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateInventoryIcon.displayName = "EmptyStateInventoryIcon";

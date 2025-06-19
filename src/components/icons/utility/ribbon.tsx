@@ -21,5 +21,3 @@ export const RibbonIcon = memo<IconProps>(
 		);
 	},
 );
-
-RibbonIcon.displayName = "RibbonIcon";

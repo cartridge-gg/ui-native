@@ -21,5 +21,3 @@ export const TrashIcon = memo<IconProps>(
 		);
 	},
 );
-
-TrashIcon.displayName = "TrashIcon";

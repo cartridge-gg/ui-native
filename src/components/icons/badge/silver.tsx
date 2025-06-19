@@ -184,5 +184,3 @@ export const SilverIcon = memo<IconProps>(
 		);
 	},
 );
-
-SilverIcon.displayName = "SilverIcon";

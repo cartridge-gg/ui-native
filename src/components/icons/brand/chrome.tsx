@@ -21,5 +21,3 @@ export const ChromeIcon = memo<IconProps>(
 		);
 	},
 );
-
-ChromeIcon.displayName = "ChromeIcon";

@@ -38,5 +38,3 @@ export const SilverTagIcon = memo<IconProps>(
 		);
 	},
 );
-
-SilverTagIcon.displayName = "SilverTagIcon";

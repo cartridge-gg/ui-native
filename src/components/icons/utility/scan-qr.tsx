@@ -21,5 +21,3 @@ export const ScanQrIcon = memo<IconProps>(
 		);
 	},
 );
-
-ScanQrIcon.displayName = "ScanQrIcon";

@@ -58,5 +58,3 @@ export const CreditIcon = memo<IconProps>(
 		);
 	},
 );
-
-CreditIcon.displayName = "CreditIcon";

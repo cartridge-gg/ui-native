@@ -40,5 +40,3 @@ export const SingularOvalIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SingularOvalIcon.displayName = "SingularOvalIcon";

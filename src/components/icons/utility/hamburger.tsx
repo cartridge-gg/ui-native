@@ -21,5 +21,3 @@ export const HamburgerIcon = memo<IconProps>(
 		);
 	},
 );
-
-HamburgerIcon.displayName = "HamburgerIcon";

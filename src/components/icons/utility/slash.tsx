@@ -23,5 +23,3 @@ export const SlashIcon = memo<IconProps>(
 		);
 	},
 );
-
-SlashIcon.displayName = "SlashIcon";

@@ -29,5 +29,3 @@ export const PasskeyIcon = memo<IconProps>(
 		);
 	},
 );
-
-PasskeyIcon.displayName = "PasskeyIcon";

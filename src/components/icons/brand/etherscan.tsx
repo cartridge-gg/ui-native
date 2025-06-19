@@ -25,5 +25,3 @@ export const EtherscanIcon = memo<IconProps>(
 		);
 	},
 );
-
-EtherscanIcon.displayName = "EtherscanIcon";

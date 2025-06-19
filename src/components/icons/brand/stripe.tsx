@@ -23,5 +23,3 @@ export const StripeIcon = memo<IconProps>(
 		);
 	},
 );
-
-StripeIcon.displayName = "StripeIcon";

@@ -35,5 +35,3 @@ export const GemIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-GemIcon.displayName = "GemIcon";

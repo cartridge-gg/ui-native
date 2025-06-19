@@ -99,5 +99,3 @@ export const CheckboxIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CheckboxIcon.displayName = "CheckboxIcon";

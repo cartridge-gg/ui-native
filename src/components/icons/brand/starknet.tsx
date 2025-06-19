@@ -21,5 +21,3 @@ export const StarknetIcon = memo<IconProps>(
 		);
 	},
 );
-
-StarknetIcon.displayName = "StarknetIcon";

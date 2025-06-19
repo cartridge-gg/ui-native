@@ -55,15 +55,25 @@ function convertIcon(webIconPath, nativeIconPath) {
 	// Determine if this is a directional or state icon based on the file path
 	const isDirectional = webIconPath.includes("/directional/");
 	const isState = webIconPath.includes("/state/");
-	const paramType = isDirectional
-		? "DirectionalIconProps"
-		: isState
-			? "StateIconProps"
-			: "IconProps";
 
 	// Check if the original icon has variants (directional or state icons)
 	const hasVariants =
 		webContent.includes("variant") && webContent.includes("switch");
+
+	// Check if it has solid/line variants (state icon)
+	const hasSolidLineVariants =
+		hasVariants &&
+		webContent.includes('case "solid"') &&
+		webContent.includes('case "line"');
+
+	// If it has variants but isn't in directional folder, check if it's a state icon
+	const isStateIcon = isState || hasSolidLineVariants;
+
+	const paramType = isDirectional
+		? "DirectionalIconProps"
+		: isStateIcon
+			? "StateIconProps"
+			: "IconProps";
 
 	// Extract the variant switch logic for directional/state icons
 	let variantLogic = "";
@@ -299,8 +309,6 @@ export const ${iconName} = memo<${paramType}>(
 		);
 	},
 );
-
-${iconName}.displayName = "${iconName}";
 `;
 
 	// Create directory if it doesn't exist

@@ -35,5 +35,3 @@ export const CoinsIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-CoinsIcon.displayName = "CoinsIcon";

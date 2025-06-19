@@ -27,5 +27,3 @@ export const EmptyStateActivityIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateActivityIcon.displayName = "EmptyStateActivityIcon";

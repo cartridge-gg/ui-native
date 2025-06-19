@@ -51,5 +51,3 @@ export const DisconnectIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-DisconnectIcon.displayName = "DisconnectIcon";

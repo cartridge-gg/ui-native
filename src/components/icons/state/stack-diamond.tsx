@@ -43,5 +43,3 @@ export const StackDiamondIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-StackDiamondIcon.displayName = "StackDiamondIcon";

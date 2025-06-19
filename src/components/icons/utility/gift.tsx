@@ -1,10 +1,10 @@
 import { memo } from "react";
 import Svg, { Path } from "react-native-svg";
 
-import type { IconProps } from "#components/icons/types";
+import type { StateIconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
-export const GiftIcon = memo<IconProps>(
+export const GiftIcon = memo<StateIconProps>(
 	({ className, size, variant, ref, ...props }) => {
 		return (
 			<Svg
@@ -35,5 +35,3 @@ export const GiftIcon = memo<IconProps>(
 		);
 	},
 );
-
-GiftIcon.displayName = "GiftIcon";

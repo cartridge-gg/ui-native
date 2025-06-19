@@ -35,5 +35,3 @@ export const PaperPlaneIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-PaperPlaneIcon.displayName = "PaperPlaneIcon";

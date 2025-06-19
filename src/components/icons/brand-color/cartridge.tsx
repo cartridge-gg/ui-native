@@ -22,5 +22,3 @@ export const CartridgeColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-CartridgeColorIcon.displayName = "CartridgeColorIcon";

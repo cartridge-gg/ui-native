@@ -89,5 +89,3 @@ export const DefaultIcon = memo<IconProps>(
 		);
 	},
 );
-
-DefaultIcon.displayName = "DefaultIcon";

@@ -21,5 +21,3 @@ export const WebsiteIcon = memo<IconProps>(
 		);
 	},
 );
-
-WebsiteIcon.displayName = "WebsiteIcon";

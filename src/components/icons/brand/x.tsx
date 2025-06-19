@@ -19,5 +19,3 @@ export const XIcon = memo<IconProps>(({ className, size, ref, ...props }) => {
 		</Svg>
 	);
 });
-
-XIcon.displayName = "XIcon";

@@ -23,5 +23,3 @@ export const FnIcon = memo<IconProps>(({ className, size, ref, ...props }) => {
 		</Svg>
 	);
 });
-
-FnIcon.displayName = "FnIcon";

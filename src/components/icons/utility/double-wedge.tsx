@@ -25,5 +25,3 @@ export const DoubleWedgeIcon = memo<IconProps>(
 		);
 	},
 );
-
-DoubleWedgeIcon.displayName = "DoubleWedgeIcon";

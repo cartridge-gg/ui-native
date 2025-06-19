@@ -21,5 +21,3 @@ export const TimesCircleIcon = memo<IconProps>(
 		);
 	},
 );
-
-TimesCircleIcon.displayName = "TimesCircleIcon";

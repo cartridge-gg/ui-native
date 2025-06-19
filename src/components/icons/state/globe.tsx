@@ -35,5 +35,3 @@ export const GlobeIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-GlobeIcon.displayName = "GlobeIcon";

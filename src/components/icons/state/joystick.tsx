@@ -35,5 +35,3 @@ export const JoystickIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-JoystickIcon.displayName = "JoystickIcon";

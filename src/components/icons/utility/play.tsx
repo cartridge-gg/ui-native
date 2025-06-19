@@ -21,5 +21,3 @@ export const PlayIcon = memo<IconProps>(
 		);
 	},
 );
-
-PlayIcon.displayName = "PlayIcon";

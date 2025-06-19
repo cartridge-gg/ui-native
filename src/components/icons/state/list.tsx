@@ -35,5 +35,3 @@ export const ListIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ListIcon.displayName = "ListIcon";

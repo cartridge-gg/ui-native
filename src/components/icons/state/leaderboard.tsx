@@ -35,5 +35,3 @@ export const LeaderboardIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-LeaderboardIcon.displayName = "LeaderboardIcon";

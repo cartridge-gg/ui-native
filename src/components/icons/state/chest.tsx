@@ -35,5 +35,3 @@ export const ChestIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ChestIcon.displayName = "ChestIcon";

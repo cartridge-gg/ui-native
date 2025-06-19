@@ -35,5 +35,3 @@ export const ClockIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-ClockIcon.displayName = "ClockIcon";

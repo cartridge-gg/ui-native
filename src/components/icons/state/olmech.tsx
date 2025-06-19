@@ -131,5 +131,3 @@ export const OlmechIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-OlmechIcon.displayName = "OlmechIcon";

@@ -35,5 +35,3 @@ export const WandIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-WandIcon.displayName = "WandIcon";

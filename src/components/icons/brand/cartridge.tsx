@@ -25,5 +25,3 @@ export const CartridgeIcon = memo<IconProps>(
 		);
 	},
 );
-
-CartridgeIcon.displayName = "CartridgeIcon";

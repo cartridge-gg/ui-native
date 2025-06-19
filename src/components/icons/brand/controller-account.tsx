@@ -29,5 +29,3 @@ export const ControllerAccountIcon = memo<IconProps>(
 		);
 	},
 );
-
-ControllerAccountIcon.displayName = "ControllerAccountIcon";

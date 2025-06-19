@@ -21,5 +21,3 @@ export const SafariIcon = memo<IconProps>(
 		);
 	},
 );
-
-SafariIcon.displayName = "SafariIcon";

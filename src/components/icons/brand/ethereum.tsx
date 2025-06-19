@@ -21,5 +21,3 @@ export const EthereumIcon = memo<IconProps>(
 		);
 	},
 );
-
-EthereumIcon.displayName = "EthereumIcon";

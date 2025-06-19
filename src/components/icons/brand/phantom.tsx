@@ -23,5 +23,3 @@ export const PhantomIcon = memo<IconProps>(
 		);
 	},
 );
-
-PhantomIcon.displayName = "PhantomIcon";

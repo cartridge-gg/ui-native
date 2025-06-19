@@ -65,5 +65,3 @@ export const StackShapeIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-StackShapeIcon.displayName = "StackShapeIcon";

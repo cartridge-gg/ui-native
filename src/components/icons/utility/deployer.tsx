@@ -25,5 +25,3 @@ export const DeployerIcon = memo<IconProps>(
 		);
 	},
 );
-
-DeployerIcon.displayName = "DeployerIcon";

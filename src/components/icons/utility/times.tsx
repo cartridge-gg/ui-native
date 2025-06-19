@@ -21,5 +21,3 @@ export const TimesIcon = memo<IconProps>(
 		);
 	},
 );
-
-TimesIcon.displayName = "TimesIcon";

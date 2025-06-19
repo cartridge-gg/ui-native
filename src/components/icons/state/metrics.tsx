@@ -35,5 +35,3 @@ export const MetricsIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-MetricsIcon.displayName = "MetricsIcon";

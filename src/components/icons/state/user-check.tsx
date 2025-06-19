@@ -37,5 +37,3 @@ export const UserCheckIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-UserCheckIcon.displayName = "UserCheckIcon";

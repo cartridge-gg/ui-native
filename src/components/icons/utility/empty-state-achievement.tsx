@@ -35,5 +35,3 @@ export const EmptyStateAchievementIcon = memo<IconProps>(
 		);
 	},
 );
-
-EmptyStateAchievementIcon.displayName = "EmptyStateAchievementIcon";

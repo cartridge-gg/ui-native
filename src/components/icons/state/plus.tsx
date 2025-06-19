@@ -35,5 +35,3 @@ export const PlusIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-PlusIcon.displayName = "PlusIcon";

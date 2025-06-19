@@ -44,5 +44,3 @@ export const EthereumLightColorIcon = memo<IconProps>(
 		);
 	},
 );
-
-EthereumLightColorIcon.displayName = "EthereumLightColorIcon";

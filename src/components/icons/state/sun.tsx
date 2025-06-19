@@ -35,5 +35,3 @@ export const SunIcon = memo<StateIconProps>(
 		);
 	},
 );
-
-SunIcon.displayName = "SunIcon";

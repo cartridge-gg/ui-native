@@ -21,5 +21,3 @@ export const DotsIcon = memo<IconProps>(
 		);
 	},
 );
-
-DotsIcon.displayName = "DotsIcon";

@@ -21,5 +21,3 @@ export const BranchIcon = memo<IconProps>(
 		);
 	},
 );
-
-BranchIcon.displayName = "BranchIcon";
