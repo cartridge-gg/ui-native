@@ -58,7 +58,13 @@ jobs:
             6. **Add inline comments**: Use `mcp__github__add_pull_request_review_comment_to_pending_review` for each specific piece of feedback on particular lines, including code change suggestions where appropriate using multiline comments and the suggestion syntax:
 
             ```suggestion
-              // Example improved code here
+              const ExampleButton: React.FC<Props> = ({ title, onPress, variant = 'primary' }) => {
+                return (
+                  <TouchableOpacity onPress={onPress} className={`p-4 ${variant === 'primary' ? 'bg-blue-500' : 'bg-gray-300'}`}>
+                    <Text className="text-white text-center">{title}</Text>
+                  </TouchableOpacity>
+                );
+              };
             ```
 
             7. **Submit the review**: Use `mcp__github__submit_pending_pull_request_review` with event type "COMMENT" (not "REQUEST_CHANGES") to publish all comments as a non-blocking review
@@ -121,4 +127,4 @@ jobs:
             **Important**: Submit as "COMMENT" type so the review doesn't block the PR.
 
           # Add MCP GitHub tools for inline comments and project-specific testing
-          allowed_tools: "mcp__github__create_pending_pull_request_review,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__add_pull_request_review_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"
+          allowed_tools: "mcp__github__create_pending_pull_request_review,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__add_pull_request_review_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff,Bash(pnpm start),Bash(pnpm storybook),Bash(pnpm lint),Bash(pnpm test:storybook),Bash(pnpm screenshots:generate),Bash(pnpm build-storybook)"
