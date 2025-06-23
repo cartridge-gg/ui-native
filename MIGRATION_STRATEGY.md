@@ -4,6 +4,248 @@
 
 This document outlines the systematic process for migrating UI components from the web-based UI library to the React Native UI-native library, ensuring visual parity and functional consistency.
 
+## Component Dependency Graph
+
+The following diagram shows the dependency relationships between all UI components in the library:
+
+```mermaid
+graph TD
+    %% Core Foundation Layer
+    subgraph "Foundation Layer"
+        RN[React Native<br/>View, Text, Pressable, Image, etc.]
+        CVA[class-variance-authority<br/>Component Variants]
+        TW[Tailwind/NativeWind<br/>Styling System]
+        Utils[Utils<br/>cn, fonts]
+    end
+
+    %% Icon System
+    subgraph "Icon System"
+        IconTypes[Icon Types<br/>IconProps, DirectionalIconProps]
+        IconUtils[Icon Utils<br/>iconVariants]
+        
+        subgraph "Icon Categories"
+            BadgeIcons[Badge Icons<br/>Bronze, Gold, Silver, etc.]
+            BrandIcons[Brand Icons<br/>Apple, Ethereum, Starknet, etc.]
+            BrandColorIcons[Brand Color Icons<br/>Argent, Cartridge, Discord, etc.]
+            DirectionalIcons[Directional Icons<br/>Arrow, Carat, Wedge, etc.]
+            StateIcons[State Icons<br/>Bell, Bolt, Book, etc.]
+            UtilityIcons[Utility Icons<br/>Check, Copy, Dots, Spinner, etc.]
+        end
+    end
+
+    %% Primitive Components
+    subgraph "Primitive Components"
+        Text[Text<br/>Base text component]
+        Button[Button<br/>Interactive element]
+        Input[Input<br/>Text input with validation]
+        Textarea[Textarea<br/>Multi-line text input]
+        Card[Card<br/>Container with header/content]
+        Badge[Badge<br/>Status indicator]
+        Separator[Separator<br/>Visual divider]
+        Skeleton[Skeleton<br/>Loading placeholder]
+        Spinner[Spinner<br/>Loading indicator]
+        Label[Label<br/>Form labels]
+        
+        %% Additional UI Primitives
+        Accordion[Accordion]
+        AlertDialog[Alert Dialog]
+        Alert[Alert]
+        AspectRatio[Aspect Ratio]
+        Breadcrumb[Breadcrumb]
+        Checkbox[Checkbox]
+        Command[Command]
+        Dialog[Dialog]
+        Drawer[Drawer]
+        DropdownMenu[Dropdown Menu]
+        Menubar[Menubar]
+        Popover[Popover]
+        Progress[Progress]
+        RadioGroup[Radio Group]
+        Select[Select]
+        Sheet[Sheet]
+        Switch[Switch]
+        Table[Table]
+        Tabs[Tabs]
+        Toast[Toast]
+        Tooltip[Tooltip]
+        Toggle[Toggle]
+        ToggleGroup[Toggle Group]
+    end
+
+    %% Typography System
+    subgraph "Typography"
+        TextClassContext[Text Class Context<br/>Styling context]
+        MonoText[Mono Typography<br/>Monospace text variants]
+        SansText[Sans Typography<br/>Sans-serif text variants]
+    end
+
+    %% Module Components
+    subgraph "Module Components"
+        subgraph "Activities"
+            ActivityCard[Activity Card]
+            ActivityDetail[Activity Detail]
+            ActivityHeader[Activity Header]
+        end
+        
+        subgraph "Achievements"
+            AchievementCard[Achievement Card]
+            AchievementPin[Achievement Pin]
+            AchievementProgress[Achievement Progress]
+            PlayerAvatar[Player Avatar]
+            PlayerBadge[Player Badge]
+        end
+        
+        subgraph "Arcade"
+            GameHeader[Game Header]
+            GameSelect[Game Select]
+            MenuButton[Menu Button]
+            MenuItem[Menu Item]
+        end
+        
+        subgraph "Collectibles"
+            CollectibleCard[Collectible Card]
+            CollectiblePreview[Collectible Preview]
+            CollectibleProperties[Collectible Properties]
+        end
+        
+        subgraph "Amount/Tokens"
+            AmountInput[Amount Input]
+            TokenBalance[Token Balance]
+            TokenSelect[Token Select]
+        end
+        
+        subgraph "Layout"
+            Header[Header]
+            Container[Container]
+            BottomTabs[Bottom Tabs]
+        end
+    end
+
+    %% Dependencies - Foundation
+    IconTypes --> Utils
+    IconUtils --> CVA
+    IconUtils --> Utils
+    BadgeIcons --> IconTypes
+    BadgeIcons --> IconUtils
+    BrandIcons --> IconTypes
+    BrandIcons --> IconUtils
+    BrandColorIcons --> IconTypes
+    BrandColorIcons --> IconUtils
+    DirectionalIcons --> IconTypes
+    DirectionalIcons --> IconUtils
+    StateIcons --> IconTypes
+    StateIcons --> IconUtils
+    UtilityIcons --> IconTypes
+    UtilityIcons --> IconUtils
+
+    %% Dependencies - Primitives
+    Text --> RN
+    Text --> Utils
+    TextClassContext --> Text
+    
+    Button --> RN
+    Button --> CVA
+    Button --> Utils
+    Button --> UtilityIcons
+    Button --> Spinner
+    Button --> TextClassContext
+    
+    Input --> RN
+    Input --> CVA
+    Input --> Utils
+    Input --> UtilityIcons
+    
+    Textarea --> RN
+    Textarea --> CVA
+    Textarea --> Utils
+    Textarea --> UtilityIcons
+    
+    Card --> RN
+    Card --> Utils
+    
+    Badge --> RN
+    Badge --> CVA
+    Badge --> Utils
+    
+    Spinner --> RN
+    Spinner --> Utils
+    Spinner --> UtilityIcons
+    
+    %% Complex Component Dependencies
+    Select --> UtilityIcons
+    DropdownMenu --> UtilityIcons
+    Command --> UtilityIcons
+    Command --> Dialog
+    Toast --> UtilityIcons
+    Sheet --> UtilityIcons
+    
+    %% Module Dependencies
+    ActivityCard --> Card
+    ActivityCard --> Badge
+    ActivityCard --> BrandColorIcons
+    
+    AchievementCard --> Card
+    AchievementCard --> Badge
+    AchievementCard --> BadgeIcons
+    
+    GameHeader --> Header
+    GameHeader --> Button
+    GameHeader --> BrandIcons
+    
+    CollectibleCard --> Card
+    CollectibleCard --> Button
+    CollectibleCard --> UtilityIcons
+    
+    AmountInput --> Input
+    AmountInput --> Button
+    AmountInput --> UtilityIcons
+    
+    TokenSelect --> Select
+    TokenSelect --> BrandColorIcons
+    
+    Header --> Button
+    Header --> BrandIcons
+    
+    %% Typography Dependencies
+    MonoText --> Text
+    SansText --> Text
+
+    %% Styling with better contrast
+    classDef foundation fill:#1e3a8a,stroke:#1e40af,stroke-width:2px,color:#ffffff
+    classDef icons fill:#7c3aed,stroke:#8b5cf6,stroke-width:2px,color:#ffffff
+    classDef primitives fill:#059669,stroke:#10b981,stroke-width:2px,color:#ffffff
+    classDef modules fill:#dc2626,stroke:#ef4444,stroke-width:2px,color:#ffffff
+    classDef typography fill:#be185d,stroke:#ec4899,stroke-width:2px,color:#ffffff
+    
+    class RN,CVA,TW,Utils foundation
+    class IconTypes,IconUtils,BadgeIcons,BrandIcons,BrandColorIcons,DirectionalIcons,StateIcons,UtilityIcons icons
+    class Text,Button,Input,Textarea,Card,Badge,Separator,Skeleton,Spinner,Label,Accordion,AlertDialog,Alert,AspectRatio,Breadcrumb,Checkbox,Command,Dialog,Drawer,DropdownMenu,Menubar,Popover,Progress,RadioGroup,Select,Sheet,Switch,Table,Tabs,Toast,Tooltip,Toggle,ToggleGroup primitives
+    class ActivityCard,ActivityDetail,ActivityHeader,AchievementCard,AchievementPin,AchievementProgress,PlayerAvatar,PlayerBadge,GameHeader,GameSelect,MenuButton,MenuItem,CollectibleCard,CollectiblePreview,CollectibleProperties,AmountInput,TokenBalance,TokenSelect,Header,Container,BottomTabs modules
+    class TextClassContext,MonoText,SansText typography
+```
+
+### Component Architecture Overview
+
+The UI library follows a well-structured layered architecture:
+
+- **Foundation Layer** (Blue): React Native primitives, styling system, and utilities
+- **Icon System** (Purple): 100+ icons organized by category with shared infrastructure
+- **Primitive Components** (Green): 35+ core building blocks for forms, layout, and feedback
+- **Module Components** (Red): 15+ specialized components for specific use cases
+- **Typography System** (Pink): Text components with context-based styling
+
+### Migration Order Recommendations
+
+Based on the dependency graph, migrate components in this order:
+
+1. **Foundation & Utils** - Ensure core utilities and styling are working
+2. **Icon System** - Migrate icon types, utilities, and all icon categories
+3. **Typography** - Set up text components and context
+4. **Basic Primitives** - Text, Button, Card, Badge, Separator, etc.
+5. **Form Primitives** - Input, Textarea, Checkbox, Select, etc.
+6. **Complex Primitives** - Dialog, Sheet, Command, Toast, etc.
+7. **Module Components** - Activities, Achievements, Arcade, etc.
+
 ## Goals
 
 - **Visual Parity**: Achieve 99%+ visual similarity between UI and UI-native components
