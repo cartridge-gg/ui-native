@@ -5,7 +5,7 @@ import defaultTheme from "tailwindcss/defaultTheme";
 import twAnimate from "tailwindcss-animate";
 
 export const cartridgePreset: Partial<Config> = {
-	presets: [nativewind()],
+	presets: [nativewind],
 	darkMode: "selector",
 	theme: {
 		container: {

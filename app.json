@@ -1,32 +1,46 @@
 {
-	"expo": {
-		"name": "vite-rnw-example",
-		"slug": "vite-rnw-example",
-		"version": "1.0.0",
-		"web": {
-			"favicon": "./assets/favicon.png"
-		},
-		"experiments": {
-			"tsconfigPaths": true
-		},
-		"plugins": ["expo-font", "react-native-reanimated/plugin"],
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
-		"splash": {
-			"image": "./assets/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"assetBundlePatterns": ["**/*"],
-		"ios": {
-			"supportsTablet": true
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
+	"name": "vite-rnw-example",
+	"slug": "vite-rnw-example",
+	"version": "1.0.0",
+	"web": {
+		"favicon": "./assets/favicon.png"
+	},
+	"experiments": {
+		"tsconfigPaths": true
+	},
+	"plugins": [
+		[
+			"expo-font",
+			{
+				"fonts": [
+					"node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf",
+					"node_modules/@expo-google-fonts/inter/Inter_500Medium.ttf",
+					"node_modules/@expo-google-fonts/inter/Inter_600SemiBold.ttf",
+					"node_modules/@expo-google-fonts/inter/Inter_700Bold.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_400Regular.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_500Medium.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_600SemiBold.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_700Bold.ttf"
+				]
 			}
+		]
+	],
+	"orientation": "portrait",
+	"icon": "./assets/icon.png",
+	"userInterfaceStyle": "light",
+	"splash": {
+		"image": "./assets/splash.png",
+		"resizeMode": "contain",
+		"backgroundColor": "#ffffff"
+	},
+	"assetBundlePatterns": ["**/*"],
+	"ios": {
+		"supportsTablet": true
+	},
+	"android": {
+		"adaptiveIcon": {
+			"foregroundImage": "./assets/adaptive-icon.png",
+			"backgroundColor": "#ffffff"
 		}
 	}
 }
