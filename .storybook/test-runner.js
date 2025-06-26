@@ -36,6 +36,9 @@ module.exports = {
         }
       `,
 		});
+		await page.evaluate(() => {
+			window.__STORYBOOK_IMAGE_SNAPSHOT__ = "1";
+		});
 
 		// Disable spinner animations specifically for React Native components
 		await page.evaluate(() => {
