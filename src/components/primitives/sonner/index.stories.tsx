@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../button";
-import { toast } from ".";
+import { SonnerToaster, toast } from ".";
 
 const meta: Meta<typeof SonnerDemo> = {
 	title: "Primitives/Sonner",
@@ -9,9 +9,9 @@ const meta: Meta<typeof SonnerDemo> = {
 	decorators: [
 		(Story) => (
 			<>
-				{/* TODO: Fix timeout on stanpshot testing */}
-				{/* <SonnerToaster /> */}
 				<Story />
+				{/* Make sure to have this at the end of the story */}
+				<SonnerToaster />
 			</>
 		),
 	],
