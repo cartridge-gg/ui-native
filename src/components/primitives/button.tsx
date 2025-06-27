@@ -82,11 +82,13 @@ export interface ButtonProps
 		VariantProps<typeof buttonVariants> {
 	isLoading?: boolean;
 	isActive?: boolean;
+	textClassName?: string;
 }
 
 export function Button({
 	ref,
 	className,
+	textClassName,
 	variant,
 	size,
 	isLoading,
@@ -100,7 +102,7 @@ export function Button({
 			value={buttonTextVariants({
 				variant,
 				size,
-				className: "web:pointer-events-none",
+				className: cn("web:pointer-events-none", textClassName),
 			})}
 		>
 			<Pressable
