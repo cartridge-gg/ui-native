@@ -83,7 +83,7 @@ function cleanupOldFiles() {
 		const files = fs.readdirSync(SNAPSHOTS_DIR);
 		let cleaned = 0;
 
-		files.forEach((file) => {
+		for (const file of files) {
 			const filePath = path.join(SNAPSHOTS_DIR, file);
 			const stat = fs.statSync(filePath);
 
@@ -104,7 +104,7 @@ function cleanupOldFiles() {
 					console.warn(`Warning: Could not remove ${file}:`, error.message);
 				}
 			}
-		});
+		}
 
 		console.log(`✅ Cleaned up ${cleaned} old files\n`);
 	} else {
@@ -175,22 +175,22 @@ function analyzeScreenshots() {
 		console.log("\n📋 Screenshot summary:");
 		const categories = {};
 
-		screenshots.forEach((file) => {
+		for (const file of screenshots) {
 			const category = file.split("--")[0] || "other";
 			if (!categories[category]) categories[category] = 0;
 			categories[category]++;
-		});
+		}
 
-		Object.entries(categories).forEach(([category, count]) => {
+		for (const [category, count] of Object.entries(categories)) {
 			console.log(`  ${category}: ${count} screenshots`);
-		});
+		}
 	}
 
 	if (diffs.length > 0) {
 		console.log("\n⚠️  Visual differences detected:");
-		diffs.forEach((diff) => {
+		for (const diff of diffs) {
 			console.log(`  - ${diff}`);
-		});
+		}
 	}
 }
 

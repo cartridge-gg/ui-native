@@ -1,6 +1,5 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
-import { ThemeProvider } from "../components/theme/ThemeProvider";
 import "../global.css";
 
 const preview: Preview = {
@@ -30,9 +29,7 @@ const preview: Preview = {
 				document.body.style.backgroundColor = "#161a17";
 			}, []);
 
-			return React.createElement(ThemeProvider, {
-				children: React.createElement(Story),
-			});
+			return Story();
 		},
 	],
 	tags: ["autodocs"],
