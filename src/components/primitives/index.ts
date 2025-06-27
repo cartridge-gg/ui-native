@@ -6,5 +6,6 @@ export * from "./separator";
 export * from "./skeleton";
 export * from "./sonner";
 export * from "./spinner";
+export * from "./switch";
 export * from "./text";
 export * from "./tooltip";
