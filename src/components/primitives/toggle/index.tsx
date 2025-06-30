@@ -6,7 +6,7 @@ import { cn } from "#utils";
 import * as TogglePrimitive from "./toggle";
 import type * as ToggleTypes from "./types";
 
-const toggleVariants = cva(
+export const toggleVariants = cva(
 	"web:inline-flex native:flex items-center justify-center rounded-md text-sm font-medium web:transition-colors web:hover:bg-background-200 web:hover:text-foreground-400 web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-foreground web:disabled:pointer-events-none disabled:opacity-50 web:data-[state=on]:bg-background-500 web:data-[state=on]:text-foreground-200",
 	{
 		variants: {
@@ -28,7 +28,7 @@ const toggleVariants = cva(
 	},
 );
 
-const toggleTextVariants = cva(
+export const toggleTextVariants = cva(
 	"text-sm native:text-base text-foreground font-medium",
 	{
 		variants: {
