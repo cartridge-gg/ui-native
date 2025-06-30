@@ -8,4 +8,5 @@ export * from "./sonner";
 export * from "./spinner";
 export * from "./switch";
 export * from "./text";
+export * from "./toggle";
 export * from "./tooltip";
