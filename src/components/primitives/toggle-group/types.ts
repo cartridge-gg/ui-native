@@ -35,7 +35,6 @@ export type RootProps = (SingleRootProps | MultipleRootProps) & {
 	 * Platform: WEB ONLY
 	 */
 	loop?: boolean;
-	type: "single" | "multiple";
 } & SlottableViewProps;
 
 export type ItemProps = SlottablePressableProps & {
