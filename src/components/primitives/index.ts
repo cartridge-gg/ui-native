@@ -1,6 +1,7 @@
 export * from "./badge";
 export * from "./button";
 export * from "./card";
+export * from "./checkbox";
 export * from "./input";
 export * from "./label";
 export * from "./menubar";
@@ -9,6 +10,7 @@ export * from "./skeleton";
 export * from "./sonner";
 export * from "./spinner";
 export * from "./switch";
+export * from "./table";
 export * from "./tabs";
 export * from "./text";
 export * from "./textarea";
