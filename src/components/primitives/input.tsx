@@ -45,7 +45,7 @@ type ErrorProps = {
 	className?: string;
 };
 
-export function ErrorMessage({ label, className }: ErrorProps) {
+export function InputErrorMessage({ label, className }: ErrorProps) {
 	return (
 		<View
 			className={cn(
@@ -120,7 +120,7 @@ export function Input({
 					</View>
 				)}
 			</View>
-			{!!error && <ErrorMessage label={error.message} />}
+			{!!error && <InputErrorMessage label={error.message} />}
 		</View>
 	);
 }

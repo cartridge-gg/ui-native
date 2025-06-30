@@ -48,7 +48,7 @@ type ErrorProps = {
 	className?: string;
 };
 
-export function ErrorMessage({ label, className }: ErrorProps) {
+export function TextareaErrorMessage({ label, className }: ErrorProps) {
 	return (
 		<View
 			className={cn(
@@ -142,7 +142,7 @@ export function Textarea({
 					</View>
 				)}
 			</View>
-			{!!error && <ErrorMessage label={error.message} />}
+			{!!error && <TextareaErrorMessage label={error.message} />}
 		</View>
 	);
 }
