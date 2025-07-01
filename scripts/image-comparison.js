@@ -27,7 +27,7 @@ function checkImageMagick() {
 	try {
 		execSync("magick -version", { stdio: "ignore" });
 		return true;
-	} catch (error) {
+	} catch (_error) {
 		console.log(
 			"⚠️  ImageMagick not found. Please install it for visual diff generation:",
 		);
@@ -116,7 +116,7 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
 			}
 
 			return { perfect: false, diffPixels, totalPixels };
-		} catch (e) {
+		} catch (_e) {
 			console.log("⚠️  Could not calculate exact pixel differences");
 			return { perfect: false, diffPixels: "unknown" };
 		}
@@ -126,7 +126,7 @@ function analyzeSpecificDifferences(uiImage, nativeImage) {
 	}
 }
 
-function generateFixSuggestions(analysisResult, uiImage, nativeImage) {
+function generateFixSuggestions(analysisResult, _uiImage, _nativeImage) {
 	console.log("\n💡 Fix Suggestions");
 	console.log("==================");
 
@@ -263,7 +263,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath) {
 				`magick -size ${labelWidth}x${labelHeight} xc:white -pointsize 20 -gravity center -fill black -annotate +0+0 "50/50 Blend (Shows Differences)" "${path.join(COMPARISON_OUTPUT_DIR, "temp-diff-label.png")}"`,
 				{ stdio: "ignore" },
 			);
-		} catch (labelError) {
+		} catch (_labelError) {
 			console.log("⚠️  Label creation failed, continuing without labels...");
 		}
 
@@ -295,14 +295,14 @@ function generateVisualDiff(uiImage, nativeImage, outputPath) {
 					{ stdio: "ignore" },
 				);
 				console.log("✅ 50/50 blend overlay created");
-			} catch (overlayErr) {
+			} catch (_overlayErr) {
 				console.log("⚠️  Overlay failed, using side-by-side...");
 				execSync(
 					`cp "${path.join(COMPARISON_OUTPUT_DIR, "temp-diff.png")}" "${path.join(COMPARISON_OUTPUT_DIR, "temp-diff-overlay.png")}"`,
 					{ stdio: "ignore" },
 				);
 			}
-		} catch (error) {
+		} catch (_error) {
 			console.log(
 				"⚠️  All difference methods failed, using basic side-by-side...",
 			);
@@ -380,7 +380,7 @@ function generateVisualDiff(uiImage, nativeImage, outputPath) {
 			console.log(
 				`📏 Final output dimensions: ${displayWidth * 3 + 30}x${displayHeight + labelHeight + 30}`,
 			);
-		} catch (combineError) {
+		} catch (_combineError) {
 			console.log(
 				"⚠️  Label combination failed, creating simple side-by-side...",
 			);
@@ -408,16 +408,16 @@ function generateVisualDiff(uiImage, nativeImage, outputPath) {
 			"temp-diff-with-label.png",
 		];
 
-		tempFiles.forEach((file) => {
+		for (const file of tempFiles) {
 			const filePath = path.join(COMPARISON_OUTPUT_DIR, file);
 			if (fs.existsSync(filePath)) {
 				try {
 					fs.unlinkSync(filePath);
-				} catch (cleanupError) {
+				} catch (_cleanupError) {
 					// Ignore cleanup errors
 				}
 			}
-		});
+		}
 
 		// Generate fix suggestions
 		generateFixSuggestions(analysisResult, uiImage, nativeImage);
@@ -454,7 +454,7 @@ function calculateSimilarity(uiImage, nativeImage) {
 			totalPixels,
 			diffPercentage,
 		};
-	} catch (error) {
+	} catch (_error) {
 		// Fallback to file size comparison
 		const uiStats = fs.statSync(uiImage);
 		const nativeStats = fs.statSync(nativeImage);

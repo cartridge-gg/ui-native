@@ -1,3 +1,7 @@
+@import "./src/themes/default.css";
+@import "./src/themes/dark.css";
+@import "./src/themes/fonts.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

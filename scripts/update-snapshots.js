@@ -30,7 +30,7 @@ Story Patterns:
 }
 
 function findMatchingStories(pattern) {
-	const storybookDir = path.join(__dirname, "..", "components");
+	const storybookDir = path.join(__dirname, "..", "src", "components");
 	const storyFiles = [];
 
 	function findStoryFiles(dir) {
@@ -70,10 +70,10 @@ function updateSnapshots(storyFiles = []) {
 	if (storyPattern) {
 		console.log(`📋 Pattern: "${storyPattern}"`);
 		console.log(`📁 Found ${storyFiles.length} matching story files:`);
-		storyFiles.forEach((file) => {
+		for (const file of storyFiles) {
 			const relativePath = path.relative(path.join(__dirname, ".."), file);
 			console.log(`   • ${relativePath}`);
-		});
+		}
 		console.log("");
 	} else {
 		console.log("📋 Updating all snapshots");
@@ -85,7 +85,7 @@ function updateSnapshots(storyFiles = []) {
 
 		if (storyPattern && storyFiles.length > 0) {
 			// Create a temporary test pattern that matches our story files
-			const testPatterns = storyFiles.map((file) => {
+			const _testPatterns = storyFiles.map((file) => {
 				const relativePath = path.relative(path.join(__dirname, ".."), file);
 				return relativePath.replace(/\\/g, "/").replace(".stories.tsx", "");
 			});
@@ -105,7 +105,7 @@ function updateSnapshots(storyFiles = []) {
 		console.log(`💻 Command: ${command}`);
 		console.log("");
 
-		const result = execSync(command, {
+		const _result = execSync(command, {
 			stdio: "inherit",
 			cwd: path.join(__dirname, ".."),
 		});

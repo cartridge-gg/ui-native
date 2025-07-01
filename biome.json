@@ -15,9 +15,21 @@
 			"!pnpm-lock.yaml",
 			"!**/__image_snapshots__",
 			"!**/visual-comparisons",
-			"!ui"
+			"!**/ui"
 		]
 	},
+	"overrides": [
+		{
+			"includes": ["src/components/primitives/text.tsx"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": "off"
+					}
+				}
+			}
+		}
+	],
 	"linter": {
 		"rules": {
 			"correctness": {
@@ -30,6 +42,19 @@
 			"suspicious": {
 				"noArrayIndexKey": "warn",
 				"noExplicitAny": "warn"
+			},
+			"style": {
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"paths": {
+							"react-native": {
+								"importNames": ["Text"],
+								"message": "Importing 'Text' from 'react-native' is not allowed. Import Text from '#components' instead."
+							}
+						}
+					}
+				}
 			}
 		}
 	}

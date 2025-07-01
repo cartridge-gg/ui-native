@@ -1,0 +1,11 @@
+export { ArgentColorIcon } from "#components/icons/brand-color/argent";
+export { CartridgeColorIcon } from "#components/icons/brand-color/cartridge";
+export { DiscordColorIcon } from "#components/icons/brand-color/discord";
+export { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
+export { EthereumDarkColorIcon } from "#components/icons/brand-color/ethereum-dark";
+export { EthereumLightColorIcon } from "#components/icons/brand-color/ethereum-light";
+export { MetaMaskColorIcon } from "#components/icons/brand-color/metamask";
+export { PhantomColorIcon } from "#components/icons/brand-color/phantom";
+export { RabbyColorIcon } from "#components/icons/brand-color/rabby";
+export { StarknetColorIcon } from "#components/icons/brand-color/starknet";
+export { WalletConnectColorIcon } from "#components/icons/brand-color/wallet-connect";
