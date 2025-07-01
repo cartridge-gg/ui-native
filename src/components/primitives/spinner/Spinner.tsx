@@ -1,5 +1,4 @@
-import { SpinnerIcon } from "#components/icons";
-import type { IconProps } from "#components/icons/types";
+import { type IconProps, SpinnerIcon } from "#components";
 import { cn } from "#utils";
 
 export function Spinner({ className, ...props }: IconProps) {

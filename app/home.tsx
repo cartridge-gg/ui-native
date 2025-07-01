@@ -1,7 +1,5 @@
 import { View } from "react-native";
-import { Button } from "#components/primitives/button";
-import { SonnerToaster, toast } from "#components/primitives/sonner";
-import { Text } from "#components/primitives/text";
+import { Button, SonnerToaster, Text, toast } from "#components";
 
 import "../global.css";
 

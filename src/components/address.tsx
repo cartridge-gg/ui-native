@@ -1,9 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import { useCallback } from "react";
 import { Linking, Pressable } from "react-native";
-import { CopyIcon } from "#components/icons/utility";
-import { toast } from "#components/primitives/sonner";
-import { Text, TextClassContext } from "#components/primitives/text";
+import { CopyIcon, Text, TextClassContext, toast } from "#components";
 import { cn, type FormatAddressOptions, formatAddress } from "#utils";
 
 type AddressProps = {

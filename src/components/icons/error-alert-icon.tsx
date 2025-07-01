@@ -1,8 +1,4 @@
-import {
-	AlertIcon as AlertIconRaw,
-	InfoIcon,
-	WarningIcon,
-} from "#components/icons/utility";
+import { AlertIcon as AlertIconRaw, InfoIcon, WarningIcon } from "#components";
 import { cn } from "#utils";
 
 export type ErrorAlertIconProps = {

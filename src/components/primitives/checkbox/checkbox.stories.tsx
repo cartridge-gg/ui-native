@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "#components";
 import { Checkbox as UICheckbox } from "./";
 
 const meta: Meta<typeof Checkbox> = {

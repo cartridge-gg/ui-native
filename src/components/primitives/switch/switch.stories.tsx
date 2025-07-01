@@ -1,7 +1,7 @@
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Switch } from "#components/primitives/switch";
+import { Switch } from "#components";
 
 const meta: Meta<typeof Switch> = {
 	title: "Primitives/Switch",

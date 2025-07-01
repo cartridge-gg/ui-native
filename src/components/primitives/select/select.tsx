@@ -12,9 +12,9 @@ import {
 	type LayoutChangeEvent,
 	type LayoutRectangle,
 	Pressable,
-	Text,
 	View,
 } from "react-native";
+import { Text } from "#components";
 import type {
 	ContentProps,
 	GroupProps,

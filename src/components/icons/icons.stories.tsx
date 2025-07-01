@@ -5,17 +5,15 @@ import {
 	badgeIcons,
 	brandColorIcons,
 	brandIcons,
+	type DirectionalIconProps,
 	directionalIcons,
+	type IconProps,
+	type StateIconProps,
+	size,
 	stateIcons,
+	Text,
 	utilityIcons,
-} from "#components/icons";
-import type {
-	DirectionalIconProps,
-	IconProps,
-	StateIconProps,
-} from "#components/icons/types";
-import { size } from "#components/icons/utils";
-import { Text } from "#components/primitives/text";
+} from "#components";
 import { cn } from "#utils";
 
 const iconsByCategory = {

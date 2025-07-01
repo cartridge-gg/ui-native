@@ -1,5 +1,4 @@
-import { DotsIcon, WedgeIcon } from "#components";
-import { Text, TextClassContext } from "#components/primitives/text";
+import { DotsIcon, Text, TextClassContext, WedgeIcon } from "#components";
 import { cn } from "#utils";
 import * as BreadcrumbPrimitive from "./breadcrumb";
 import type * as BreadcrumbTypes from "./types";

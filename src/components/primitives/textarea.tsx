@@ -3,13 +3,12 @@ import * as React from "react";
 import {
 	type NativeSyntheticEvent,
 	Pressable,
-	Text,
 	TextInput,
 	type TextInputContentSizeChangeEventData,
 	type TextInputProps,
 	View,
 } from "react-native";
-import { AlertIcon, SpinnerIcon, TimesCircleIcon } from "#components/icons";
+import { AlertIcon, SpinnerIcon, Text, TimesCircleIcon } from "#components";
 import { cn } from "#utils";
 
 interface TextareaProps

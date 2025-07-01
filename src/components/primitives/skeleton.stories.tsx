@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { View } from "react-native";
-import { Skeleton as UISkeleton } from "#components/primitives/skeleton";
+import { Skeleton as UISkeleton } from "#components";
 
 const meta: Meta<typeof Skeleton> = {
 	title: "Primitives/Skeleton",

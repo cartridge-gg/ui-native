@@ -1,18 +1,19 @@
 import * as Clipboard from "expo-clipboard";
 import { useCallback } from "react";
 import { constants } from "starknet";
-import { SlotIcon, StarknetIcon } from "#components/icons/brand";
-import { StarknetColorIcon } from "#components/icons/brand-color";
-import { QuestionIcon } from "#components/icons/utility";
 import {
 	Button,
+	QuestionIcon,
 	Skeleton,
+	SlotIcon,
+	StarknetColorIcon,
+	StarknetIcon,
+	Text,
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "#components/primitives";
-import { toast } from "#components/primitives/sonner";
-import { Text } from "#components/primitives/text";
+	toast,
+} from "#components";
 import { getChainName, isSlotChain } from "#utils";
 
 // Simplified hex to string for tooltip without viem dependency

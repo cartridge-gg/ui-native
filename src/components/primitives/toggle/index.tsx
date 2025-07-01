@@ -1,7 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import type { IconProps } from "#components/icons";
-import { TextClassContext } from "#components/primitives/text";
+import { type IconProps, TextClassContext } from "#components";
 import { cn } from "#utils";
 import * as TogglePrimitive from "./toggle";
 import type * as ToggleTypes from "./types";

@@ -1,13 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import {
-	Pressable,
-	Text,
-	TextInput,
-	type TextInputProps,
-	View,
-} from "react-native";
-import { AlertIcon, SpinnerIcon, TimesCircleIcon } from "#components/icons";
+import { Pressable, TextInput, type TextInputProps, View } from "react-native";
+import { AlertIcon, SpinnerIcon, Text, TimesCircleIcon } from "#components";
 import { cn } from "#utils";
 
 interface InputProps

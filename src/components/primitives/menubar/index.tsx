@@ -1,6 +1,6 @@
 import type * as React from "react";
-import { Platform, Text, type TextProps, View } from "react-native";
-import { CheckIcon, TextClassContext, WedgeIcon } from "#components";
+import { Platform, type TextProps, View } from "react-native";
+import { CheckIcon, Text, TextClassContext, WedgeIcon } from "#components";
 import { cn } from "#utils";
 import * as MenubarPrimitive from "./menubar";
 import type * as MenubarTypes from "./types";

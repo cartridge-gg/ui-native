@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type * as React from "react";
-import { Text, type TextProps } from "react-native";
+import type { TextProps } from "react-native";
+import { Text } from "#components";
 import { cn } from "#utils";
 
 const labelVariants = cva(
@@ -10,6 +10,6 @@ const labelVariants = cva(
 export function Label({
 	className,
 	...props
-}: TextProps & VariantProps<typeof labelVariants> & { ref?: React.Ref<Text> }) {
+}: TextProps & VariantProps<typeof labelVariants>) {
 	return <Text className={cn(labelVariants(), className)} {...props} />;
 }

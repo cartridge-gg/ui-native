@@ -1,9 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { Pressable } from "react-native";
-import { ExternalIcon } from "#components/icons";
-import { Spinner } from "#components/primitives/spinner";
-import { TextClassContext } from "#components/primitives/text";
+import { ExternalIcon, Spinner, TextClassContext } from "#components";
 import { cn } from "#utils";
 
 export const buttonVariants = cva(

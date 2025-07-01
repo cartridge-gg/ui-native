@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type React from "react";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { PLACEHOLDER } from "ui/src/assets";
-import { EthereumIcon } from "#components/icons/brand";
+import { EthereumIcon, Text } from "#components";
 import {
 	CardContent,
 	CardDescription,

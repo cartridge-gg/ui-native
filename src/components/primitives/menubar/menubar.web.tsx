@@ -6,12 +6,8 @@ import {
 import * as Slot from "@rn-primitives/slot";
 import { EmptyGestureResponderEvent } from "@rn-primitives/utils";
 import * as React from "react";
-import {
-	type GestureResponderEvent,
-	Pressable,
-	Text,
-	View,
-} from "react-native";
+import { type GestureResponderEvent, Pressable, View } from "react-native";
+import { Text } from "#components";
 import type {
 	CheckboxItemProps,
 	ContentProps,

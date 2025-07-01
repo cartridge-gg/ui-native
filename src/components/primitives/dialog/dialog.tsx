@@ -6,9 +6,9 @@ import {
 	BackHandler,
 	type GestureResponderEvent,
 	Pressable,
-	Text,
 	View,
 } from "react-native";
+import { Text } from "#components";
 import type {
 	CloseProps,
 	ContentProps,

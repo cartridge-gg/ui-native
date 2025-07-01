@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Text } from "react-native";
 import {
 	TableBody,
 	TableCell,
@@ -7,8 +6,9 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
+	Text,
 	Table as UITable,
-} from "./";
+} from "#components";
 
 const meta: Meta<typeof Table> = {
 	title: "Primitives/Table",

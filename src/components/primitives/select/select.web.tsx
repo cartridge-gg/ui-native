@@ -2,7 +2,8 @@ import * as Select from "@radix-ui/react-select";
 import { useControllableState } from "@rn-primitives/hooks";
 import * as Slot from "@rn-primitives/slot";
 import * as React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "#components";
 import type {
 	ContentProps,
 	GroupProps,

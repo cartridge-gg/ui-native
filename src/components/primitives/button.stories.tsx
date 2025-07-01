@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ArrowToLineIcon, CoinsIcon, GiftIcon } from "#components/icons";
-import { Button } from "#components/primitives/button";
+import { ArrowToLineIcon, Button, CoinsIcon, GiftIcon } from "#components";
 
 const meta: Meta<typeof Button> = {
 	title: "Primitives/Button",
