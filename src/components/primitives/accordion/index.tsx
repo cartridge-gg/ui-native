@@ -80,7 +80,7 @@ export function AccordionTrigger({
 				<AccordionPrimitive.Trigger {...props} asChild>
 					<Trigger
 						className={cn(
-							"w-full flex flex-row items-center justify-between text-sm text-foreground-400 web:transition-all web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-muted-foreground",
+							"w-full flex flex-row items-center justify-between text-sm text-foreground-400 web:transition-all web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-foreground",
 							className,
 						)}
 					>
