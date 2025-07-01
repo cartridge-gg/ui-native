@@ -6,7 +6,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "./index";
+} from "#components";
 
 const meta: Meta<typeof SelectComponent> = {
 	title: "Primitives/Select",

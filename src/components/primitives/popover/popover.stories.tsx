@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Text } from "#components/primitives/text";
-import { PopoverContent, PopoverTrigger, Popover as UIPopover } from "./index";
+import {
+	PopoverContent,
+	PopoverTrigger,
+	Text,
+	Popover as UIPopover,
+} from "#components";
 
 const meta: Meta<typeof Popover> = {
 	title: "Primitives/Popover",

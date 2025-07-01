@@ -1,7 +1,7 @@
 import * as Slot from "@rn-primitives/slot";
 import * as React from "react";
 import { type GestureResponderEvent, Pressable, View } from "react-native";
-import { cn } from "../../../utils/cn";
+import { cn } from "#utils";
 import type { ContentProps, ListProps, RootProps, TriggerProps } from "./types";
 
 interface RootContext extends RootProps {

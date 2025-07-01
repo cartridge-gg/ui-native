@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Text } from "#components/primitives/text";
 import {
 	HoverCardContent,
 	HoverCardTrigger,
+	Text,
 	HoverCard as UIHoverCard,
-} from "./index";
+} from "#components";
 
 const meta: Meta<typeof HoverCard> = {
 	title: "Primitives/Hover Card",

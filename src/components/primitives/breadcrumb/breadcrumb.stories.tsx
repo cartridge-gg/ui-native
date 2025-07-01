@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SlashIcon } from "#components";
 import {
 	Breadcrumb,
 	BreadcrumbEllipsis,
@@ -8,7 +7,8 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "./index";
+	SlashIcon,
+} from "#components";
 
 const meta: Meta<typeof Breadcrumb> = {
 	title: "Primitives/Breadcrumb",
