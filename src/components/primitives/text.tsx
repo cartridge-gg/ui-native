@@ -12,7 +12,7 @@ export function Text({
 	asChild = false,
 	...props
 }: React.ComponentProps<typeof RNText> & {
-	ref?: React.RefObject<RNText>;
+	ref?: React.Ref<RNText>;
 	asChild?: boolean;
 }) {
 	const textClass = React.useContext(TextClassContext);

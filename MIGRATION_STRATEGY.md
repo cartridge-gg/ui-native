@@ -713,7 +713,38 @@ git commit -m "Migrated TokenCard"
   }
   ```
 
-### 9. Inconsistent Story Titles
+### 9. Button Component Flex Class Duplication
+**Problem**: Button size variant has redundant flex classes like "h-10 w-10 flex items-center"
+**Solution**:
+- Remove redundant "flex" class since "flex-row" is already in the base classes
+- Change "h-10 w-10 flex items-center" to "h-10 w-10 items-center"
+- The base buttonVariants already includes "flex-row" for proper flex behavior
+
+### 10. CSS Transform Incompatibility
+**Problem**: CSS transforms like `-translate-y-1/2` don't work in React Native
+**Solution**:
+- Replace CSS transform classes with flexbox positioning
+- Change `"absolute right-1.5 top-1/2 -translate-y-1/2"` to `"absolute right-1.5 inset-y-0 flex-row items-center justify-center"`
+- This provides proper centering that works across platforms
+- Alternative: Use explicit transform style objects when needed
+
+### 11. TypeScript Import Issues with NativeWind
+**Problem**: `@ts-ignore` used for NativeWind preset import
+**Solution**:
+- Replace broad `@ts-ignore` with specific comment explaining the necessity
+- Use `const nativewind = require("nativewind/preset");` instead of ES6 import
+- Add explanatory comment: "NativeWind preset doesn't export proper TypeScript types"
+- This provides better code documentation while handling the type issue properly
+
+### 12. Web-Specific Pointer Events
+**Problem**: `onPointerEnter` and `onPointerLeave` events are web-specific and may not function on mobile platforms
+**Solution**:
+- Import `Platform` from `react-native`
+- Add platform checks: `onPointerEnter={Platform.OS === 'web' ? () => setIsHovered(true) : undefined}`
+- This ensures hover functionality only runs on web where it's supported
+- Alternative: Use `onPressIn`/`onPressOut` for cross-platform touch interactions
+
+### 13. Inconsistent Story Titles
 **Problem**: Visual comparison may not match if story titles differ between UI and UI-native
 **Solution**:
 - Always copy the exact title from the UI story

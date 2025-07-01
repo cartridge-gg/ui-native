@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import {
 	type NativeSyntheticEvent,
+	Platform,
 	Pressable,
 	TextInput,
 	type TextInputContentSizeChangeEventData,
@@ -111,8 +112,12 @@ export function Textarea({
 		<View className="flex-col gap-y-3">
 			<View
 				className="relative"
-				onPointerEnter={() => setIsHovered(true)}
-				onPointerLeave={() => setIsHovered(false)}
+				onPointerEnter={
+					Platform.OS === "web" ? () => setIsHovered(true) : undefined
+				}
+				onPointerLeave={
+					Platform.OS === "web" ? () => setIsHovered(false) : undefined
+				}
 			>
 				<TextInput
 					value={value}
@@ -136,7 +141,7 @@ export function Textarea({
 					{...props}
 				/>
 				{(isFocused || isHovered) && !!value && !!onClear && (
-					<View className="absolute right-1.5 top-1/2 -translate-y-1/2">
+					<View className="absolute right-1.5 inset-y-0 flex-row items-center justify-center">
 						<Clear isLoading={!!isLoading} onClear={onClear} />
 					</View>
 				)}
