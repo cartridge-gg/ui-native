@@ -1,10 +1,17 @@
 {
 	"name": "@cartridge/ui-native",
 	"version": "1.0.0",
-	"main": "app/index.tsx",
+	"main": "dist/index.js",
 	"imports": {
 		"#*": "src/*",
 		"#app/*": "app/*"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.ts",
+			"default": "./dist/index.js",
+			"import": "./dist/index.js"
+		}
 	},
 	"scripts": {
 		"android": "expo start --android",
@@ -22,7 +29,8 @@
 		"screenshots:summary": "node scripts/visual-comparison.js --list",
 		"screenshots:update": "node scripts/update-snapshots.js",
 		"screenshots:compare": "node scripts/visual-comparison.js",
-		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report"
+		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report",
+		"build:lib": "tsc -p ./tsconfig.json"
 	},
 	"dependencies": {
 		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
