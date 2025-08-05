@@ -3,14 +3,19 @@
 	"version": "1.0.0",
 	"main": "dist/index.js",
 	"imports": {
-		"#*": "src/*",
-		"#app/*": "app/*"
+		"#*": "./src/*",
+		"#app/*": "./app/*"
 	},
 	"exports": {
 		".": {
-			"types": "./dist/index.ts",
-			"default": "./dist/index.js",
-			"import": "./dist/index.js"
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./tw": {
+			"types": "./dist/utils/preset.d.ts",
+			"import": "./dist/utils/preset.js",
+			"default": "./dist/utils/preset.js"
 		}
 	},
 	"scripts": {
@@ -30,7 +35,7 @@
 		"screenshots:update": "node scripts/update-snapshots.js",
 		"screenshots:compare": "node scripts/visual-comparison.js",
 		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report",
-		"build:lib": "tsc -p ./tsconfig.json"
+		"build:lib": "tsc -p ./tsconfig.json && tsc-alias"
 	},
 	"dependencies": {
 		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
@@ -81,7 +86,8 @@
 		"sonner-native": "^0.21.0",
 		"starknet": "^7.6.2",
 		"tailwind-merge": "^3.3.1",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"tsc-alias": "^1.8.16"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",

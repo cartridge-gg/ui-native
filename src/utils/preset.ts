@@ -1,13 +1,9 @@
 import type { Config } from "tailwindcss";
 
-// NativeWind preset doesn't export proper TypeScript types
-const nativewind = require("nativewind/preset");
-
 import defaultTheme from "tailwindcss/defaultTheme";
 import twAnimate from "tailwindcss-animate";
 
 export const cartridgePreset: Partial<Config> = {
-	presets: [nativewind],
 	darkMode: "selector",
 	theme: {
 		container: {
