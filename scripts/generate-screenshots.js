@@ -42,7 +42,7 @@ async function ensureStorybookRunning() {
 
 	return new Promise((resolve, reject) => {
 		// Start Storybook in background
-		const storybookProcess = spawn("pnpm", ["storybook"], {
+		const storybookProcess = spawn("bun", ["storybook"], {
 			stdio: "pipe",
 			detached: false,
 		});
@@ -128,9 +128,9 @@ async function generateScreenshots(updateMode = false) {
 			STORYBOOK_IMAGE_SNAPSHOT_FAILURE_THRESHOLD_TYPE: "percent",
 		};
 
-		console.log(`Running: pnpm ${command}\n`);
+		console.log(`Running: bun ${command}\n`);
 
-		execSync(`pnpm ${command}`, {
+		execSync(`bun ${command}`, {
 			stdio: "inherit",
 			env,
 			cwd: process.cwd(),
@@ -253,7 +253,7 @@ async function main() {
 			console.log("   3. Commit new/updated screenshots to version control");
 		} else {
 			console.log("\n💡 Troubleshooting:");
-			console.log("   1. Ensure Storybook is running: pnpm storybook");
+			console.log("   1. Ensure Storybook is running: bun storybook");
 			console.log("   2. Check for TypeScript/build errors");
 			console.log(
 				"   3. Try running with --update flag to regenerate baselines",

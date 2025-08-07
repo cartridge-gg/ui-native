@@ -21,7 +21,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
 # Add cargo to PATH
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-RUN npm i -g pnpm
+RUN npm i -g bun
 
 # Setup display with consistent resolution
 RUN Xvfb :99 -screen 0 1280x1024x24 2>/dev/null & 
@@ -32,7 +32,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN bun i
 
 # Default command that can be overridden
 CMD ["bash"]

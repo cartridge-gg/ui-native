@@ -6,29 +6,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Core Development
 
-- `pnpm start` - Starts Expo development server for React Native
-- `pnpm android` - Launch Android development build
-- `pnpm ios` - Launch iOS development build  
-- `pnpm web` - Launch web version using React Native Web
-- `pnpm prebuild` - Generate native platform code (iOS/Android)
+- `bun start` - Starts Expo development server for React Native
+- `bun android` - Launch Android development build
+- `bun ios` - Launch iOS development build  
+- `bun web` - Launch web version using React Native Web
+- `bun prebuild` - Generate native platform code (iOS/Android)
 
 ### Component Development
 
-- `pnpm storybook` - Launches Storybook development server on port 6006
-- `pnpm build-storybook` - Builds Storybook for production
+- `bun storybook` - Launches Storybook development server on port 6006
+- `bun build-storybook` - Builds Storybook for production
 
 ### Testing & Quality Assurance
 
-- `pnpm test:storybook` - Runs visual regression tests against Storybook
-- `pnpm test:storybook:update` - Updates visual regression test baselines
-- `pnpm screenshots:generate` - Generates screenshots for all 203+ components
-- `pnpm screenshots:update` - Updates screenshot baselines
-- `pnpm screenshots:clean` - Generates screenshots without cleanup
+- `bun test:storybook` - Runs visual regression tests against Storybook
+- `bun test:storybook:update` - Updates visual regression test baselines
+- `bun screenshots:generate` - Generates screenshots for all 203+ components
+- `bun screenshots:update` - Updates screenshot baselines
+- `bun screenshots:clean` - Generates screenshots without cleanup
 
 ### Code Quality
 
-- `pnpm lint` - Runs Biome linting and formatting checks
-- `pnpm format` - Applies Biome formatting automatically
+- `bun lint` - Runs Biome linting and formatting checks
+- `bun format` - Applies Biome formatting automatically
 
 ## Architecture Overview
 
@@ -102,18 +102,18 @@ The repository includes a comprehensive visual testing infrastructure:
 
 ### Code Quality Requirements
 
-- **Always run linting** before committing: `pnpm lint`
+- **Always run linting** before committing: `bun lint`
 - **TypeScript compliance** - All TypeScript errors must be resolved
-- **Visual testing** - Run `pnpm screenshots:generate` after component changes
+- **Visual testing** - Run `bun screenshots:generate` after component changes
 - **Cross-platform testing** - Verify components work on iOS, Android, and Web
 
 ### Common Development Tasks
 
 **Working with Components:**
 
-- After modifying components, run `pnpm storybook` to verify visually
-- Generate new screenshots with `pnpm screenshots:generate`
-- Update baselines with `pnpm screenshots:update` if changes are intentional
+- After modifying components, run `bun storybook` to verify visually
+- Generate new screenshots with `bun screenshots:generate`
+- Update baselines with `bun screenshots:update` if changes are intentional
 - Check visual comparisons in `visual-comparisons/index.html`
 
 **Adding New Components:**
@@ -134,8 +134,8 @@ The repository includes a comprehensive visual testing infrastructure:
 **Visual Testing Workflow:**
 
 1. Make component changes
-2. Run `pnpm storybook` to preview changes
-3. Run `pnpm screenshots:generate` to capture new visuals
+2. Run `bun storybook` to preview changes
+3. Run `bun screenshots:generate` to capture new visuals
 4. Review generated comparisons in `visual-comparisons/`
 5. Update baselines if changes are intentional
 

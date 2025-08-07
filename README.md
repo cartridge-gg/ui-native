@@ -15,22 +15,22 @@ A comprehensive React Native component library that mirrors the web UI library, 
 ### Installation
 ```bash
 # Install dependencies
-pnpm install
+bun install
 
 # Start Storybook for development
-pnpm storybook
+bun storybook
 
 # Start React Native development
-pnpm start
+bun start
 ```
 
 ### Screenshot Generation
 ```bash
 # Generate screenshots for all components
-pnpm screenshots:generate
+bun screenshots:generate
 
 # Update existing screenshot baselines
-pnpm screenshots:update
+bun screenshots:update
 
 # View visual comparisons
 open visual-comparisons/index.html
@@ -57,28 +57,28 @@ open visual-comparisons/index.html
 ### Storybook Development
 ```bash
 # Start Storybook
-pnpm storybook
+bun storybook
 
 # Build Storybook
-pnpm build-storybook
+bun build-storybook
 ```
 
 ### Testing
 ```bash
 # Run visual tests
-pnpm test:storybook
+bun test:storybook
 
 # Update visual baselines
-pnpm test:storybook:update
+bun test:storybook:update
 ```
 
 ### Linting and Formatting
 ```bash
 # Lint code
-pnpm lint
+bun lint
 
 # Format code
-pnpm format
+bun format
 ```
 
 ## Screenshot System
@@ -94,9 +94,9 @@ See [SCREENSHOT_GENERATION.md](./SCREENSHOT_GENERATION.md) for detailed document
 
 ### Quick Screenshot Commands
 ```bash
-pnpm screenshots:generate  # Generate all screenshots
-pnpm screenshots:update    # Update baselines
-pnpm screenshots:clean     # Generate without cleanup
+bun screenshots:generate  # Generate all screenshots
+bun screenshots:update    # Update baselines
+bun screenshots:clean     # Generate without cleanup
 ```
 
 ## Visual Comparisons
@@ -152,20 +152,20 @@ These differences are expected and documented in the visual comparison reports.
 ### Adding New Components
 1. Create component in appropriate category (`primitives/`, `modules/`, etc.)
 2. Add comprehensive Storybook stories
-3. Run `pnpm screenshots:generate` to capture visuals
+3. Run `bun screenshots:generate` to capture visuals
 4. Update documentation as needed
 
 ## Scripts Reference
 
 | Script | Description |
 |--------|-------------|
-| `pnpm storybook` | Start Storybook development server |
-| `pnpm build-storybook` | Build Storybook for production |
-| `pnpm screenshots:generate` | Generate all component screenshots |
-| `pnpm screenshots:update` | Update screenshot baselines |
-| `pnpm test:storybook` | Run visual regression tests |
-| `pnpm lint` | Lint codebase |
-| `pnpm format` | Format codebase |
+| `bun storybook` | Start Storybook development server |
+| `bun build-storybook` | Build Storybook for production |
+| `bun screenshots:generate` | Generate all component screenshots |
+| `bun screenshots:update` | Update screenshot baselines |
+| `bun test:storybook` | Run visual regression tests |
+| `bun lint` | Lint codebase |
+| `bun format` | Format codebase |
 
 ## Documentation
 
