@@ -9,7 +9,8 @@
 			"#*": ["./src/*"],
 			"#components/*": ["./src/components/*"],
 			"#utils/*": ["./src/utils/*"],
-			"#app/*": ["./app/*"]
+			"#app/*": ["./app/*"],
+			"#controller/*": ["./controller-rs/account-wasm/pkg-controller/*"]
 		},
 		"noImplicitAny": false,
 		"skipLibCheck": true,

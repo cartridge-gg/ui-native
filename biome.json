@@ -12,7 +12,7 @@
 			"!**/.expo",
 			"!**/dist",
 			"!**/build",
-			"!pnpm-lock.yaml",
+			"!bun.lock",
 			"!**/__image_snapshots__",
 			"!**/visual-comparisons",
 			"!**/ui"

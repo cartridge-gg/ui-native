@@ -10,9 +10,6 @@ npm-debug.*
 *.orig.*
 web-build/
 
-
-
-
 ios
 android
 

@@ -296,25 +296,25 @@ These map to Tailwind classes like:
 ### 2. Snapshot Update Tool
 ```bash
 # Update all snapshots
-pnpm screenshots:update
+bun screenshots:update
 
 # Update specific component snapshots
-pnpm screenshots:update achievement
-pnpm screenshots:update button
-pnpm screenshots:update "activities.*card"
+bun screenshots:update achievement
+bun screenshots:update button
+bun screenshots:update "activities.*card"
 ```
 
 ### 3. Visual Comparison Tool
 ```bash
 # Compare specific snapshots
-pnpm screenshots:compare achievement
-pnpm screenshots:compare button
+bun screenshots:compare achievement
+bun screenshots:compare button
 
 # List all available snapshots
-pnpm screenshots:compare --list
+bun screenshots:compare --list
 
 # Get help
-pnpm screenshots:compare --help
+bun screenshots:compare --help
 ```
 
 ## Migration Process
@@ -332,7 +332,7 @@ pnpm screenshots:compare --help
 #### Step 2: Check Migration Status
 ```bash
 # List all snapshots and their migration status
-pnpm screenshots:summary
+bun screenshots:summary
 ```
 
 Look for:
@@ -485,13 +485,13 @@ Look for:
 #### Step 6: Generate Initial Snapshot
 ```bash
 # Generate snapshot for the new component
-pnpm screenshots:update [component-name]
+bun screenshots:update [component-name]
 ```
 
 #### Step 7: Perform Visual Comparison
 ```bash
 # Compare with UI version
-pnpm screenshots:compare [component-name]
+bun screenshots:compare [component-name]
 ```
 
 **Expected outputs**:
@@ -548,10 +548,10 @@ Based on the analysis, fix issues in order of impact:
 #### Step 10: Re-test After Each Fix
 ```bash
 # Update snapshot after changes
-pnpm screenshots:update [component-name]
+bun screenshots:update [component-name]
 
 # Re-run comparison
-pnpm screenshots:compare [component-name]
+bun screenshots:compare [component-name]
 ```
 
 **Iteration Guidelines**:
@@ -787,24 +787,24 @@ git commit -m "Migrated TokenCard"
 
 ```bash
 # 1. Discover and assess
-pnpm screenshots:summary
+bun screenshots:summary
 
 # 2. Implement component (manual development)
 
 # 3. Generate snapshot
-pnpm screenshots:update [component-name]
+bun screenshots:update [component-name]
 
 # 4. Compare and analyze
-pnpm screenshots:compare [component-name]
+bun screenshots:compare [component-name]
 
 # 5. Fix and iterate
 # (make changes, then repeat steps 3-4)
 
 # 6. Validate final result
-pnpm screenshots:compare [component-name]
+bun screenshots:compare [component-name]
 
 # 7. Check lint and format
-pnpm lint
+bun lint
 
 # 8. Create migration commit
 git add .

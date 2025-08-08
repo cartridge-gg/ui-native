@@ -1,6 +1,6 @@
 {
-	"name": "vite-rnw-example",
-	"slug": "vite-rnw-example",
+	"name": "Cartridge Marketplace",
+	"slug": "cartridge-marketplace",
 	"version": "1.0.0",
 	"web": {
 		"favicon": "./assets/favicon.png"
@@ -13,14 +13,14 @@
 			"expo-font",
 			{
 				"fonts": [
-					"node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf",
-					"node_modules/@expo-google-fonts/inter/Inter_500Medium.ttf",
-					"node_modules/@expo-google-fonts/inter/Inter_600SemiBold.ttf",
-					"node_modules/@expo-google-fonts/inter/Inter_700Bold.ttf",
-					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_400Regular.ttf",
-					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_500Medium.ttf",
-					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_600SemiBold.ttf",
-					"node_modules/@expo-google-fonts/ibm-plex-mono/IBMPlexMono_700Bold.ttf"
+					"node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf",
+					"node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf",
+					"node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf",
+					"node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/400Regular/IBMPlexMono_400Regular.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/500Medium/IBMPlexMono_500Medium.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/600SemiBold/IBMPlexMono_600SemiBold.ttf",
+					"node_modules/@expo-google-fonts/ibm-plex-mono/700Bold/IBMPlexMono_700Bold.ttf"
 				]
 			}
 		]
@@ -35,12 +35,17 @@
 	},
 	"assetBundlePatterns": ["**/*"],
 	"ios": {
-		"supportsTablet": true
+		"supportsTablet": true,
+		"bundleIdentifier": "com.cartridge.marketplace",
+    "associatedDomains": [
+      "webcredentials:x.cartridge.gg"
+    ]
 	},
 	"android": {
 		"adaptiveIcon": {
 			"foregroundImage": "./assets/adaptive-icon.png",
 			"backgroundColor": "#ffffff"
-		}
+		},
+		"package": "com.cartridge.marketplace"
 	}
 }

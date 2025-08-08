@@ -1,0 +1,1 @@
+export const CARTRIDGE_API_URL = "https://api.cartridge.gg/query";

@@ -1,3 +1,6 @@
 [submodule "ui"]
 	path = ui
 	url = https://github.com/cartridge-gg/ui.git
+[submodule "controller-rs"]
+	path = controller-rs
+	url = https://github.com/cartridge-gg/controller-rs.git

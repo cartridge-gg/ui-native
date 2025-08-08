@@ -82,9 +82,9 @@ jobs:
             This is a React Native UI component library that mirrors the web UI library. Key considerations:
 
             **Development Workflow:**
-            - Use `pnpm storybook` for component development and preview
-            - Run `pnpm screenshots:generate` after component changes to update visual tests
-            - Use `pnpm lint` for code quality checks with Biome
+            - Use `bun storybook` for component development and preview
+            - Run `bun screenshots:generate` after component changes to update visual tests
+            - Use `bun lint` for code quality checks with Biome
             - Test across iOS, Android, and Web platforms
 
             **Component Development:**
@@ -95,7 +95,7 @@ jobs:
 
             **Visual Testing:**
             - Generate screenshots for new/modified components
-            - Update baselines with `pnpm screenshots:update` when changes are intentional
+            - Update baselines with `bun screenshots:update` when changes are intentional
             - Review visual comparisons in `visual-comparisons/index.html`
 
             **Platform Considerations:**
