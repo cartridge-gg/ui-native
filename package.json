@@ -5,13 +5,15 @@
 	"main": "expo-router/entry",
 	"imports": {
 		"#*": "src/*",
-		"#app/*": "app/*"
+		"#app/*": "app/*",
+		"#controller/*": "controller-rs/account-wasm/pkg-controller/*"
 	},
 	"scripts": {
 		"android": "expo run:android",
 		"ios": "expo run:ios",
 		"start": "expo start",
 		"prebuild": "expo prebuild",
+    "postinstall": "(cd controller-rs/account-wasm && bun build:deps)",
 		"lint": "biome check --write --max-diagnostics=200 .",
 		"web": "BROWSER=none expo start --web",
 		"storybook": "storybook dev -p 6006",
