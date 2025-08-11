@@ -23,7 +23,8 @@
 					"node_modules/@expo-google-fonts/ibm-plex-mono/700Bold/IBMPlexMono_700Bold.ttf"
 				]
 			}
-		]
+		],
+		"expo-web-browser"
 	],
 	"orientation": "portrait",
 	"icon": "./assets/icon.png",
