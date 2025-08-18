@@ -1,57 +1,36 @@
-import type { AddStarknetChainParameters } from "@starknet-io/types-js";
 import * as WebBrowser from "expo-web-browser";
-import type { WalletAccount } from "starknet";
 import { KEYCHAIN_URL } from "#utils/const";
-import BaseProvider from "#utils/provider";
+import { RequestFn, StarknetWindowObject } from "@starknet-io/types-js";
+import { icon } from "#utils/icon";
 
-export class MobileProvider extends BaseProvider {
+export class MobileProvider implements StarknetWindowObject {
 	public id = "controller_mobile";
 	public name = "Controller Mobile";
 	public version = "0.9.3-mobile";
+	public icon = icon;
 
-	constructor() {
-		super();
-	}
-
-	async probe() {
-		throw new Error("Not implemented");
-		return undefined;
-	}
+	constructor() {}
 
 	async connect() {
 		try {
-			const res = await WebBrowser.openBrowserAsync(KEYCHAIN_URL);
+			const res = await WebBrowser.openAuthSessionAsync(KEYCHAIN_URL);
 			console.log(res);
 		} catch (error) {
 			console.error("Error opening browser:", error);
 		}
 
-		return {
-			address: "0x0",
-			chainId: "0x0",
-		} as unknown as WalletAccount;
+		return {};
 	}
 
-	async switchStarknetChain(chainId: string) {
-		throw new Error("Not implemented");
-		return false;
-	}
-
-	async addStarknetChain(chain: AddStarknetChainParameters) {
-		throw new Error("Not implemented");
-		return false;
-	}
-
-	// extension methods
-	isReady() {
-		return true;
-	}
-
-	async disconnect() {
+	request: RequestFn = async (_call) => {
 		throw new Error("Not implemented");
 	}
 
-	async logout() {
+	on() {
 		throw new Error("Not implemented");
-	}
+  }
+
+  off() {
+		throw new Error("Not implemented");
+  }
 }
