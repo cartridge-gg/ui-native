@@ -93,7 +93,6 @@ const provider = jsonRpcProvider({
 function StarknetProvider({ children }: PropsWithChildren) {
   return (
     <StarknetConfig
-      autoConnect
       defaultChainId={mainnet.id}
       chains={[mainnet, sepolia]}
       connectors={[controller]}
