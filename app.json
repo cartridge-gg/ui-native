@@ -38,9 +38,7 @@
 	"ios": {
 		"supportsTablet": true,
 		"bundleIdentifier": "com.cartridge.marketplace",
-    "associatedDomains": [
-      "webcredentials:x.cartridge.gg"
-    ]
+		"associatedDomains": ["webcredentials:x.cartridge.gg"]
 	},
 	"android": {
 		"adaptiveIcon": {

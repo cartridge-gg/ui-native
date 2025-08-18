@@ -1,12 +1,15 @@
 import "../global.css";
 
+import { type Chain, mainnet, sepolia } from "@starknet-react/chains";
+import { jsonRpcProvider, StarknetConfig } from "@starknet-react/core";
 import { Stack } from "expo-router";
 import { verifyInstallation } from "nativewind";
-import { useEffect } from "react";
+import { type PropsWithChildren, useEffect } from "react";
 import { cssInterop } from "react-native-css-interop";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TextClassContext } from "#components";
+import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
 
 export default function Layout() {
 	useEffect(() => {
@@ -17,13 +20,15 @@ export default function Layout() {
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
 				<TextClassContext.Provider value="text-foreground">
-					<StackContainer
-						headerClassName="bg-background text-foreground"
-						contentClassName="bg-background"
-					>
-						<Stack.Screen name="index" options={{ headerShown: false }} />
-						<Stack.Screen name="connect" options={{ title: "Connect" }} />
-					</StackContainer>
+					<StarknetProvider>
+						<StackContainer
+							headerClassName="bg-background text-foreground"
+							contentClassName="bg-background"
+						>
+							<Stack.Screen name="index" options={{ headerShown: false }} />
+							<Stack.Screen name="connect" options={{ title: "Connect" }} />
+						</StackContainer>
+					</StarknetProvider>
 				</TextClassContext.Provider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
@@ -71,3 +76,31 @@ cssInterop(StackContainer, {
 		},
 	},
 });
+
+const controller = new MobileConnector();
+const provider = jsonRpcProvider({
+	rpc: (chain: Chain) => {
+		switch (chain.id) {
+			case mainnet.id:
+				return { nodeUrl: RPC_MAINNET_URL };
+			case sepolia.id:
+				return { nodeUrl: RPC_SEPOLIA_URL };
+			default:
+				return null;
+		}
+	},
+});
+
+function StarknetProvider({ children }: PropsWithChildren) {
+	return (
+		<StarknetConfig
+			autoConnect
+			defaultChainId={mainnet.id}
+			chains={[mainnet, sepolia]}
+			connectors={[controller]}
+			provider={provider}
+		>
+			{children}
+		</StarknetConfig>
+	);
+}
