@@ -1,6 +1,7 @@
 {
 	"name": "Cartridge Marketplace",
 	"slug": "cartridge-marketplace",
+	"scheme": "cartridge-marketplace",
 	"version": "1.0.0",
 	"web": {
 		"favicon": "./assets/favicon.png"
