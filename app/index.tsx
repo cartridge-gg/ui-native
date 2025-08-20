@@ -1,13 +1,13 @@
 import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
 import { useCallback, useMemo } from "react";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { Button, SonnerToaster, Spinner, Text } from "#components";
 import { MobileConnector } from "#utils";
-import { Link } from "expo-router";
-
+import { Stack, Link } from "expo-router";
+import { toast } from "sonner-native";
 
 export default function RootScreen() {
-  const { connectAsync, connectors } = useConnect();
+  const { connect, connectors, error } = useConnect();
   const { status } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -17,18 +17,22 @@ export default function RootScreen() {
   );
 
   const onConnect = useCallback(() => {
-    connectAsync({ connector }).catch(console.error);
-  }, [connectAsync]);
+    connect({ connector });
+  }, [connect]);
 
   return (
-    <View className="flex-1 items-center justify-center bg-background-100 gap-4">
+    <SafeAreaView className="flex-1 items-center justify-center bg-background-100 gap-4">
+      <Stack.Screen options={{ title: "Controller Example (Mobile)" }} />
       {(() => {
         switch (status) {
           case "disconnected":
             return (
-              <Button onPress={onConnect}>
-                <Text>Connect</Text>
-              </Button>
+              <>
+                <Button onPress={onConnect}>
+                  <Text>Connect</Text>
+                </Button>
+                {error && <Text>{error.message}</Text>}
+              </>
             );
           case "connected":
             return (
@@ -49,6 +53,6 @@ export default function RootScreen() {
         }
       })()}
       <SonnerToaster />
-    </View>
+    </SafeAreaView>
   );
 }

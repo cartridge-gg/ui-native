@@ -6,7 +6,7 @@ import {
   typedData,
 } from "starknet";
 import { useCallback, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import {
   Button,
   Text,
@@ -46,11 +46,12 @@ export default function SignMessage() {
   }, [account, address, message, signature]);
 
   return (
-    <ScrollView contentContainerClassName="px-4 pb-16 gap-2">
-      <View className="bg-background-400 p-4 rounded-lg border border-foreground-400">
-        <Text>{JSON.stringify(message, null, 2)}</Text>
-      </View>
-      {/* <Textarea
+    <SafeAreaView>
+      <ScrollView contentContainerClassName="px-4 pb-16 gap-2">
+        <View className="bg-background-400 p-4 rounded-lg border border-foreground-400">
+          <Text>{JSON.stringify(message, null, 2)}</Text>
+        </View>
+        {/* <Textarea
         value={JSON.stringify(message, null, 2)}
         onChangeText={(text) => setMessage(JSON.parse(text))}
         multiline={true}
@@ -58,20 +59,21 @@ export default function SignMessage() {
         selectTextOnFocus={false}
         editable={false}
       /> */}
-      <Button onPress={onSign}>
-        <Text>Sign Message</Text>
-      </Button>
+        <Button onPress={onSign}>
+          <Text>Sign Message</Text>
+        </Button>
 
-      {signature && (
-        <>
-          <Text>Signature: ({isValid === undefined ? "not validated" : isValid ? "is valid" : "is invalid"})</Text>
-          <Text>{JSON.stringify(signature, null, 2)}</Text>
-          <Button onPress={onValidate}>
-            <Text>Validate Signature</Text>
-          </Button>
-        </>
-      )}
-    </ScrollView>
+        {signature && (
+          <>
+            <Text>Signature: ({isValid === undefined ? "not validated" : isValid ? "is valid" : "is invalid"})</Text>
+            <Text>{JSON.stringify(signature, null, 2)}</Text>
+            <Button onPress={onValidate}>
+              <Text>Validate Signature</Text>
+            </Button>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 

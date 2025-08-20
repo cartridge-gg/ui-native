@@ -30,7 +30,7 @@ export class MobileConnector extends Connector {
 	}
 
 	async connect() {
-		const account = await this.account();
+    const account = await this.controller.connect();
     const chainId = await this.chainId();
 
     return {

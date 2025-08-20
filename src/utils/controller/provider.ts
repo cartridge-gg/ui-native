@@ -23,15 +23,16 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
     switch (res.type) {
       case "success":
         const url = new URL(res.url);
-        const account = url.searchParams.get("account");
-        const chainId = url.searchParams.get("chainId");
-        if (!account || !chainId) {
-          throw new Error("Keychain didn't return account or chainId");
+        const address = url.searchParams.get("address");
+        const chainId = url.searchParams.get("chain_id");
+        const rpcUrl = url.searchParams.get("rpc_url");
+        if (!address || !chainId || !rpcUrl) {
+          throw new Error("Keychain didn't return address, chain_id or rpc_url");
         }
         this.account = new MobileAccount({
           provider: this,
-          rpcUrl: url.searchParams.get("rpcUrl") ?? "",
-          address: account,
+          rpcUrl,
+          address,
           keychain: this,
         });
         return this.account;
@@ -43,15 +44,15 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
 	}
 
 	request: RequestFn = async (_call) => {
-		throw new Error("Not implemented");
+		throw new Error("Not implemented: MobileProvider.request");
 	}
 
 	on() {
-		throw new Error("Not implemented");
+    console.warn("Not implemented: MobileProvider.on");
   }
 
   off() {
-		throw new Error("Not implemented");
+    console.warn("Not implemented: MobileProvider.off");
   }
 
   disconnect() {

@@ -6,11 +6,11 @@ import { PropsWithChildren, useEffect } from "react";
 import { cssInterop } from "react-native-css-interop";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { SafeAreaView } from "react-native";
 import { TextClassContext } from "#components";
 import { jsonRpcProvider, StarknetConfig, Connector } from "@starknet-react/core";
 import { Chain, mainnet, sepolia } from "@starknet-react/chains";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
+import { Toaster } from "sonner-native";
 
 export default function Layout() {
   useEffect(() => {
@@ -21,16 +21,12 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <TextClassContext.Provider value="text-foreground">
+          <Toaster position="bottom-center" />
           <StarknetProvider>
             <StackContainer
               headerClassName="bg-background text-foreground"
               contentClassName="bg-background"
-            >
-              <SafeAreaView>
-                <Stack.Screen name="index" options={{ title: "Controller Example (Mobile)" }} />
-                <Stack.Screen name="sign-message" options={{ title: "Sign Message" }} />
-              </SafeAreaView>
-            </StackContainer>
+            />
           </StarknetProvider>
         </TextClassContext.Provider>
       </SafeAreaProvider>
