@@ -2,6 +2,7 @@ import { RequestFn, StarknetWindowObject } from "@starknet-io/types-js";
 import { icon } from "#utils/icon";
 import { MobileAccount } from "./account";
 import { MobileKeychain } from "./keychain";
+import { TypedData } from "starknet";
 
 export class MobileProvider extends MobileKeychain implements StarknetWindowObject {
 	public id = "controller_mobile";
@@ -25,7 +26,7 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
         const url = new URL(res.url);
         const address = url.searchParams.get("address");
         const chainId = url.searchParams.get("chain_id");
-        const rpcUrl = url.searchParams.get("rpc_url");
+        const rpcUrl = decodeURIComponent(url.searchParams.get("rpc_url") ?? "");
         if (!address || !chainId || !rpcUrl) {
           throw new Error("Keychain didn't return address, chain_id or rpc_url");
         }
@@ -43,8 +44,17 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
     }
 	}
 
-	request: RequestFn = async (_call) => {
-		throw new Error("Not implemented: MobileProvider.request");
+	request: RequestFn = async (call) => {
+    switch (call.type) {
+      case "wallet_signTypedData": {
+        if (!this.account) {
+          throw new Error("Account not found");
+        }
+        return this.account?.signMessage(call.params as TypedData);
+      }
+      default:
+        throw new Error(`Not implemented: MobileProvider.request: ${call.type}`);
+    }
 	}
 
 	on() {

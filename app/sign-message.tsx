@@ -66,7 +66,9 @@ export default function SignMessage() {
         {signature && (
           <>
             <Text>Signature: ({isValid === undefined ? "not validated" : isValid ? "is valid" : "is invalid"})</Text>
-            <Text>{JSON.stringify(signature, null, 2)}</Text>
+            <View className="bg-background-400 p-4 rounded-lg border border-foreground-400">
+              <Text>{JSON.stringify(signature, null, 2)}</Text>
+            </View>
             <Button onPress={onValidate}>
               <Text>Validate Signature</Text>
             </Button>

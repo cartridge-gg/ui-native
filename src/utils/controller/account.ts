@@ -40,15 +40,15 @@ export class MobileAccount extends WalletAccount {
   async signMessage(typedData: TypedData): Promise<SIGNATURE> {
     const p = new URLSearchParams();
     p.set("typedData", encodeURIComponent(JSON.stringify(typedData)));
-    const res = await this.keychain.open("/sign-message?" + p.toString());
+    const res = await this.keychain.open("/sign-message", {searchParams: p});
     switch (res.type) {
       case "success":
         const url = new URL(res.url);
-        const signature = url.searchParams.get("signature");
+        const signature = url.searchParams.getAll("signature");
         if (!signature) {
           throw new Error("Signature not found");
         }
-        return JSON.parse(decodeURIComponent(signature)) as SIGNATURE;
+        return signature as SIGNATURE;
       default:
         throw new Error("User cancelled");
     }

@@ -3,9 +3,14 @@ import { KEYCHAIN_URL } from "#utils/const";
 import * as Linking from "expo-linking";
 
 export class MobileKeychain {
-  open(path: string, options: WebBrowser.AuthSessionOpenOptions = {}): Promise<WebBrowser.WebBrowserAuthSessionResult> {
-    const callbackUri = Linking.createURL(path);
-    const authUrl = `${KEYCHAIN_URL}?callback_uri=${encodeURIComponent(callbackUri)}`;
+  open(
+    path: string,
+    options: WebBrowser.AuthSessionOpenOptions & {searchParams?: URLSearchParams} = {}
+  ): Promise<WebBrowser.WebBrowserAuthSessionResult> {
+    const callbackUri = Linking.createURL("");
+    const p = options.searchParams ?? new URLSearchParams();
+    p.set("callback_uri", encodeURIComponent(callbackUri));
+    const authUrl = `${KEYCHAIN_URL}${path}?${p.toString()}`;
     return WebBrowser.openAuthSessionAsync(authUrl, callbackUri, options);
   }
 }
