@@ -29,8 +29,14 @@ export class MobileConnector extends Connector {
 		return true;
 	}
 
-	connect() {
-		return this.controller.connect();
+	async connect() {
+		const account = await this.account();
+    const chainId = await this.chainId();
+
+    return {
+      account: account.address,
+      chainId: BigInt(chainId),
+    };
 	}
 
 	async disconnect() {

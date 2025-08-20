@@ -3,6 +3,8 @@ import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { Button, SonnerToaster, Spinner, Text } from "#components";
 import { MobileConnector } from "#utils";
+import { Link } from "expo-router";
+
 
 export default function RootScreen() {
   const { connectAsync, connectors } = useConnect();
@@ -20,7 +22,6 @@ export default function RootScreen() {
 
   return (
     <View className="flex-1 items-center justify-center bg-background-100 gap-4">
-      <Text className="text-2xl font-bold">Cartridge Marketplace</Text>
       {(() => {
         switch (status) {
           case "disconnected":
@@ -31,9 +32,17 @@ export default function RootScreen() {
             );
           case "connected":
             return (
-              <Button onPress={() => disconnect()}>
-                <Text>Disconnect</Text>
-              </Button>
+              <>
+                <Link href="/sign-message" asChild>
+                  <Button>
+                    <Text>Sign Message</Text>
+                  </Button>
+                </Link>
+
+                <Button onPress={() => disconnect()}>
+                  <Text>Disconnect</Text>
+                </Button>
+              </>
             );
           default:
             return <Spinner />;

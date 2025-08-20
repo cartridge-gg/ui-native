@@ -15,16 +15,26 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
     super();
   }
 
-	async connect(): Promise<ConnectorData> {
-    const res = await this.open();
+	async connect(): Promise<MobileAccount> {
+    const res = await this.open("/", {
+      preferEphemeralSession: !this.account,
+    });
 
     switch (res.type) {
       case "success":
-        const query = new URLSearchParams(res.url.split("?")[1]);
-        return {
-          account: query.get("account") ?? undefined,
-          chainId: query.get("chainId") ? BigInt(query.get("chainId")!) : undefined,
-        };
+        const url = new URL(res.url);
+        const account = url.searchParams.get("account");
+        const chainId = url.searchParams.get("chainId");
+        if (!account || !chainId) {
+          throw new Error("Keychain didn't return account or chainId");
+        }
+        this.account = new MobileAccount({
+          provider: this,
+          rpcUrl: url.searchParams.get("rpcUrl") ?? "",
+          address: account,
+          keychain: this,
+        });
+        return this.account;
       default:
       case "cancel":
       case "dismiss":

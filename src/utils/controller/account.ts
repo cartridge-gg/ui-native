@@ -12,9 +12,9 @@ import { MobileKeychain } from "./keychain";
 export class MobileAccount extends WalletAccount {
   public keychain: MobileKeychain;
 
-  constructor(provider: MobileProvider, rpcUrl: string, address: string, keychain: MobileKeychain) {
+  constructor({provider, rpcUrl, address, keychain}: {provider: MobileProvider, rpcUrl: string, address: string, keychain: MobileKeychain}) {
     super({ nodeUrl: rpcUrl }, provider, address);
-    this.keychain = new MobileKeychain();
+    this.keychain = keychain;
   }
 
   async execute(calls: AllowArray<Call>): Promise<InvokeFunctionResponse> {

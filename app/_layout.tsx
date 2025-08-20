@@ -6,6 +6,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { cssInterop } from "react-native-css-interop";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import { TextClassContext } from "#components";
 import { jsonRpcProvider, StarknetConfig, Connector } from "@starknet-react/core";
 import { Chain, mainnet, sepolia } from "@starknet-react/chains";
@@ -25,12 +26,15 @@ export default function Layout() {
               headerClassName="bg-background text-foreground"
               contentClassName="bg-background"
             >
-              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <SafeAreaView>
+                <Stack.Screen name="index" options={{ title: "Controller Example (Mobile)" }} />
+                <Stack.Screen name="sign-message" options={{ title: "Sign Message" }} />
+              </SafeAreaView>
             </StackContainer>
           </StarknetProvider>
         </TextClassContext.Provider>
       </SafeAreaProvider>
-    </GestureHandlerRootView>
+    </GestureHandlerRootView >
   );
 }
 
