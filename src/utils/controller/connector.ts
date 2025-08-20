@@ -1,6 +1,7 @@
 import {Connector} from "@starknet-react/core";
-import { MobileProvider } from "#utils/controller";
 import { RequestFn } from "@starknet-io/types-js";
+import { MobileProvider } from "./provider";
+import { MobileAccount } from "./account";
 
 export class MobileConnector extends Connector {
 	public id: string;
@@ -24,24 +25,31 @@ export class MobileConnector extends Connector {
 		return true;
 	}
 
-	ready() {
-		return Promise.resolve(true);
+	async ready() {
+		return true;
 	}
 
 	connect() {
 		return this.controller.connect();
 	}
 
-	disconnect() {
-		throw new Error("Not implemented");
+	async disconnect() {
+    this.controller.disconnect();
 	}
 
-	account() {
-		throw new Error("Not implemented");
-	}
+	async account(): Promise<MobileAccount> {
+    const account = this.controller.account;
+    if (!account) {
+      throw new Error("No account found");
+    }
 
-	chainId() {
-		throw new Error("Not implemented");
+    return account;
+  }
+
+	async chainId() {
+    const account = await this.account();
+    const chainId = await account.getChainId();
+    return BigInt(chainId);
 	}
 
 	request: RequestFn = async (call) => {
