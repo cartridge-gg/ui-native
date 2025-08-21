@@ -26,6 +26,7 @@
 		"screenshots:clean": "node scripts/generate-screenshots.js --no-cleanup --no-report"
 	},
 	"dependencies": {
+		"@cartridge/controller": "^0.9.3",
 		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
 		"@expo-google-fonts/inter": "^0.3.0",
 		"@gorhom/bottom-sheet": "^5.1.4",

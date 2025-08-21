@@ -2,7 +2,8 @@ import { RequestFn, StarknetWindowObject } from "@starknet-io/types-js";
 import { icon } from "#utils/icon";
 import { MobileAccount } from "./account";
 import { MobileKeychain } from "./keychain";
-import { TypedData } from "starknet";
+import { constants, TypedData } from "starknet";
+import { Chain, ControllerOptions } from "@cartridge/controller";
 
 export class MobileProvider extends MobileKeychain implements StarknetWindowObject {
 	public id = "controller_mobile";
@@ -10,15 +11,29 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
 	public version = "0.9.3-mobile";
 	public icon = icon;
 
+  private options: ControllerOptions;
   public account?: MobileAccount;
 
-	constructor() {
+	constructor(options: ControllerOptions = {}) {
     super();
+
+    const chains: Chain[] = [
+      {rpcUrl: "https://api.cartridge.gg/x/starknet/sepolia"},
+      {rpcUrl: "https://api.cartridge.gg/x/starknet/mainnet"},
+      ...(options.chains ?? []),
+    ];
+    const defaultChainId =
+      options.defaultChainId || constants.StarknetChainId.SN_MAIN;
+    this.options = {...options, chains, defaultChainId}
   }
 
 	async connect(): Promise<MobileAccount> {
     const res = await this.open("/", {
       preferEphemeralSession: !this.account,
+      params: new URLSearchParams({
+        policies: encodeURIComponent(JSON.stringify(this.options.policies)),
+        rpc_url: encodeURIComponent(this.options.defaultChainId!),
+      }),
     });
 
     switch (res.type) {
@@ -68,9 +83,4 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
   disconnect() {
     this.account = undefined;
   }
-}
-
-type ConnectorData = {
-  account?: string;
-  chainId?: bigint;
 }

@@ -18,12 +18,12 @@ export class MobileAccount extends WalletAccount {
   }
 
   async execute(calls: AllowArray<Call>): Promise<InvokeFunctionResponse> {
-    const p = new URLSearchParams();
+    const params = new URLSearchParams();
     const _calls = Array.isArray(calls) ? calls : [calls];
     for (const call of _calls) {
-      p.append("calls", encodeURIComponent(JSON.stringify(call)));
+      params.append("calls", encodeURIComponent(JSON.stringify(call)));
     }
-    const res = await this.keychain.open("/execute?" + p.toString());
+    const res = await this.keychain.open("/execute", { params });
     switch (res.type) {
       case "success":
         const url = new URL(res.url);
@@ -38,9 +38,9 @@ export class MobileAccount extends WalletAccount {
   }
 
   async signMessage(typedData: TypedData): Promise<SIGNATURE> {
-    const p = new URLSearchParams();
-    p.set("typedData", encodeURIComponent(JSON.stringify(typedData)));
-    const res = await this.keychain.open("/sign-message", {searchParams: p});
+    const params = new URLSearchParams();
+    params.set("typedData", encodeURIComponent(JSON.stringify(typedData)));
+    const res = await this.keychain.open("/sign-message", { params });
     switch (res.type) {
       case "success":
         const url = new URL(res.url);

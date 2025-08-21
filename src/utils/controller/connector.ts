@@ -2,6 +2,7 @@ import {Connector} from "@starknet-react/core";
 import { RequestFn } from "@starknet-io/types-js";
 import { MobileProvider } from "./provider";
 import { MobileAccount } from "./account";
+import { ControllerOptions } from "@cartridge/controller";
 
 export class MobileConnector extends Connector {
 	public id: string;
@@ -10,8 +11,8 @@ export class MobileConnector extends Connector {
 
 	public controller: MobileProvider;
 
-	constructor() {
-		const controller = new MobileProvider();
+	constructor(options?: ControllerOptions) {
+		const controller = new MobileProvider(options);
 
 		super();
 
