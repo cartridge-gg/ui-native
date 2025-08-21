@@ -7,10 +7,11 @@ export class MobileKeychain {
     path: string,
     {params, ...options}: WebBrowser.AuthSessionOpenOptions & {params?: URLSearchParams} = {}
   ): Promise<WebBrowser.WebBrowserAuthSessionResult> {
-    const callbackUri = Linking.createURL("");
+    const redirect_uri = Linking.createURL("");
     const p = params ?? new URLSearchParams();
-    p.set("callback_uri", encodeURIComponent(callbackUri));
+    p.set("redirect_uri", encodeURIComponent(redirect_uri));
     const authUrl = `${KEYCHAIN_URL}${path}?${p.toString()}`;
-    return WebBrowser.openAuthSessionAsync(authUrl, callbackUri, options);
+    console.log(`authUrl: ${authUrl}`);
+    return WebBrowser.openAuthSessionAsync(authUrl, redirect_uri, options);
   }
 }

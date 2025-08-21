@@ -2,8 +2,9 @@ import { RequestFn, StarknetWindowObject } from "@starknet-io/types-js";
 import { icon } from "#utils/icon";
 import { MobileAccount } from "./account";
 import { MobileKeychain } from "./keychain";
-import { constants, TypedData } from "starknet";
+import { constants, ec, stark, TypedData } from "starknet";
 import { Chain, ControllerOptions } from "@cartridge/controller";
+import * as SecureStore from "expo-secure-store";
 
 export class MobileProvider extends MobileKeychain implements StarknetWindowObject {
 	public id = "controller_mobile";
@@ -28,9 +29,18 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
   }
 
 	async connect(): Promise<MobileAccount> {
-    const res = await this.open("/", {
+    const privKey = stark.randomAddress();
+    const pubKey = ec.starkCurve.getStarkKey(privKey);
+
+    await SecureStore.setItemAsync("sessionSigner", JSON.stringify({
+      privKey,
+      pubKey,
+    }));
+
+    const res = await this.open("/session", {
       preferEphemeralSession: !this.account,
       params: new URLSearchParams({
+        public_key: pubKey,
         policies: encodeURIComponent(JSON.stringify(this.options.policies)),
         rpc_url: encodeURIComponent(this.options.chains![0].rpcUrl!),
       }),
@@ -51,6 +61,10 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
           address,
           keychain: this,
         });
+
+        // TODO: Doesn't have to be secure storage
+        await SecureStore.setItemAsync("lastUsedConnector", this.id);
+
         return this.account;
       default:
       case "cancel":
