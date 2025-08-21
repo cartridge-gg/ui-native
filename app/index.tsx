@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native";
 import { Button, SonnerToaster, Spinner, Text } from "#components";
 import { MobileConnector } from "#utils";
 import { Stack, Link } from "expo-router";
-import { toast } from "sonner-native";
 
 export default function RootScreen() {
   const { connect, connectors, error } = useConnect();

@@ -32,7 +32,7 @@ export class MobileProvider extends MobileKeychain implements StarknetWindowObje
       preferEphemeralSession: !this.account,
       params: new URLSearchParams({
         policies: encodeURIComponent(JSON.stringify(this.options.policies)),
-        rpc_url: encodeURIComponent(this.options.defaultChainId!),
+        rpc_url: encodeURIComponent(this.options.chains![0].rpcUrl!),
       }),
     });
 
