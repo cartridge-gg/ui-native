@@ -1,7 +1,7 @@
 {
-  "name": "Cartridge Marketplace",
-  "slug": "cartridge-marketplace",
-  "scheme": "cartridge-marketplace",
+  "name": "Cartridge Arcade",
+  "slug": "cartridge-arcade",
+  "scheme": "cartridge-arcade",
   "version": "1.0.0",
   "web": {
     "favicon": "./assets/favicon.png"
@@ -47,7 +47,7 @@
   ],
   "ios": {
     "supportsTablet": true,
-    "bundleIdentifier": "com.cartridge.marketplace",
+    "bundleIdentifier": "com.cartridge.arcade",
     "associatedDomains": [
       "webcredentials:x.cartridge.gg"
     ],
@@ -60,6 +60,6 @@
       "foregroundImage": "./assets/adaptive-icon.png",
       "backgroundColor": "#ffffff"
     },
-    "package": "com.cartridge.marketplace"
+    "package": "com.cartridge.arcade"
   }
 }
