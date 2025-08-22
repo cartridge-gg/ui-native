@@ -1,8 +1,8 @@
-import {Connector} from "@starknet-react/core";
-import { RequestFn } from "@starknet-io/types-js";
+import type { ControllerOptions } from "@cartridge/controller";
+import type { RequestFn } from "@starknet-io/types-js";
+import { Connector } from "@starknet-react/core";
+import type { MobileAccount } from "./account";
 import { MobileProvider } from "./provider";
-import { MobileAccount } from "./account";
-import { ControllerOptions } from "@cartridge/controller";
 
 export class MobileConnector extends Connector {
 	public id: string;
@@ -17,9 +17,9 @@ export class MobileConnector extends Connector {
 		super();
 
 		this.controller = controller;
-    this.id = controller.id;
-    this.name = controller.name;
-    this.icon = controller.icon;
+		this.id = controller.id;
+		this.name = controller.name;
+		this.icon = controller.icon;
 	}
 
 	available() {
@@ -31,37 +31,37 @@ export class MobileConnector extends Connector {
 	}
 
 	async connect() {
-    const account = await this.controller.connect();
-    const chainId = await this.chainId();
+		const account = await this.controller.connect();
+		const chainId = await this.chainId();
 
-    return {
-      account: account.address,
-      chainId: BigInt(chainId),
-    };
+		return {
+			account: account.address,
+			chainId: BigInt(chainId),
+		};
 	}
 
 	async disconnect() {
-    this.controller.disconnect();
+		this.controller.disconnect();
 	}
 
 	async account(): Promise<MobileAccount> {
-    const account = this.controller.account;
-    if (!account) {
-      throw new Error("No account found");
-    }
+		const account = this.controller.account;
+		if (!account) {
+			throw new Error("No account found");
+		}
 
-    return account;
-  }
+		return account;
+	}
 
 	async chainId() {
-    const account = await this.account();
-    const chainId = await account.getChainId();
-    return BigInt(chainId);
+		const account = await this.account();
+		const chainId = await account.getChainId();
+		return BigInt(chainId);
 	}
 
 	request: RequestFn = async (call) => {
 		return this.controller.request(call);
-	}
+	};
 
 	static fromConnectors(connectors: Connector[]): Connector {
 		const connector = connectors.find((c) => c.id === "controller_mobile");
