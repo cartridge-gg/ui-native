@@ -1,6 +1,7 @@
 {
-	"name": "Cartridge Marketplace",
-	"slug": "cartridge-marketplace",
+	"name": "Cartridge Arcade",
+	"slug": "cartridge-arcade",
+	"scheme": "cartridge-arcade",
 	"version": "1.0.0",
 	"web": {
 		"favicon": "./assets/favicon.png"
@@ -23,6 +24,14 @@
 					"node_modules/@expo-google-fonts/ibm-plex-mono/700Bold/IBMPlexMono_700Bold.ttf"
 				]
 			}
+		],
+		"expo-web-browser",
+		[
+			"expo-secure-store",
+			{
+				"configureAndroidBackup": true,
+				"faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+			}
 		]
 	],
 	"orientation": "portrait",
@@ -36,16 +45,17 @@
 	"assetBundlePatterns": ["**/*"],
 	"ios": {
 		"supportsTablet": true,
-		"bundleIdentifier": "com.cartridge.marketplace",
-    "associatedDomains": [
-      "webcredentials:x.cartridge.gg"
-    ]
+		"bundleIdentifier": "com.cartridge.arcade",
+		"associatedDomains": ["webcredentials:x.cartridge.gg"],
+		"config": {
+			"usesNonExemptEncryption": false
+		}
 	},
 	"android": {
 		"adaptiveIcon": {
 			"foregroundImage": "./assets/adaptive-icon.png",
 			"backgroundColor": "#ffffff"
 		},
-		"package": "com.cartridge.marketplace"
+		"package": "com.cartridge.arcade"
 	}
 }

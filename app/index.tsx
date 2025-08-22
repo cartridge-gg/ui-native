@@ -1,15 +1,57 @@
-import { router } from "expo-router";
-import { View } from "react-native";
-import { Button, SonnerToaster, Text } from "#components";
+import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
+import { Link, Stack } from "expo-router";
+import { useCallback, useMemo } from "react";
+import { SafeAreaView } from "react-native";
+import { Button, SonnerToaster, Spinner, Text } from "#components";
+import { MobileConnector } from "#utils";
 
 export default function RootScreen() {
+	const { connect, connectors, error } = useConnect();
+	const { status } = useAccount();
+	const { disconnect } = useDisconnect();
+
+	const connector = useMemo(
+		() => MobileConnector.fromConnectors(connectors),
+		[connectors],
+	);
+
+	const onConnect = useCallback(() => {
+		connect({ connector });
+	}, [connect, connector]);
+
 	return (
-		<View className="flex-1 items-center justify-center bg-background-100 gap-4">
-			<Text className="text-2xl font-bold">Cartridge Marketplace</Text>
-			<Button onPress={() => router.push("/connect")}>
-				<Text>Connect</Text>
-			</Button>
+		<SafeAreaView className="flex-1 items-center justify-center bg-background-100 gap-4">
+			<Stack.Screen options={{ title: "Controller Example (Mobile)" }} />
+			{(() => {
+				switch (status) {
+					case "disconnected":
+						return (
+							<>
+								<Button onPress={onConnect}>
+									<Text>Connect</Text>
+								</Button>
+								{error && <Text>{error.message}</Text>}
+							</>
+						);
+					case "connected":
+						return (
+							<>
+								<Link href="/sign-message" asChild>
+									<Button>
+										<Text>Sign Message</Text>
+									</Button>
+								</Link>
+
+								<Button onPress={() => disconnect()}>
+									<Text>Disconnect</Text>
+								</Button>
+							</>
+						);
+					default:
+						return <Spinner />;
+				}
+			})()}
 			<SonnerToaster />
-		</View>
+		</SafeAreaView>
 	);
 }
