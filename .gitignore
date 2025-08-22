@@ -10,9 +10,6 @@ npm-debug.*
 *.orig.*
 web-build/
 
-
-
-
 ios
 android
 
@@ -24,3 +21,5 @@ android
 *storybook.log
 storybook-static/
 visual-comparison/
+
+.env.*
