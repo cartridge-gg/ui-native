@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 dist/
+builds/
 npm-debug.*
 *.jks
 *.p8
@@ -23,3 +24,5 @@ storybook-static/
 visual-comparison/
 
 .env.*
+build-*.ipa
+build-*.apk
