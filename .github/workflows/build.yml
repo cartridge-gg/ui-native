@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      - run: sudo xcode-select --switch /Applications/Xcode_16.app/Contents/Developer
+      - run: xcodebuild -downloadPlatform iOS
       - run: bun i
       - run: |
           npx eas build \
