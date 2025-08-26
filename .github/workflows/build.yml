@@ -25,11 +25,7 @@ jobs:
           --output ./builds/archade-app-${{ github.sha }}-${{ matrix.profile }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-  upload-all:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - uses: actions/upload-artifact@v4
         with:
-          name: archade-app-${{ github.sha }}
+          name: archade-app-${{ github.sha }}-${{ matrix.profile }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
           path: ./builds/
