@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.platform == 'ios' && 'macos-latest' || 'ubuntu-latest' }}
+    strategy:
+      matrix:
+        profile: [development, production]
+        platform: 
+          - ios
+          # - android
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: maxim-lobanov/setup-xcode@v1
+        if: matrix.platform == 'ios'
+        with:
+          xcode-version: latest-stable
+      - run: bun i
+      - run: |
+          npx eas build \
+          --local \
+          --non-interactive \
+          --profile ${{ matrix.profile }} \
+          --platform ${{ matrix.platform }} \
+          --output ./builds/cartridge-archade-${{ matrix.profile }}-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cartridge-archade-${{ matrix.profile }}-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
+          path: ./builds/

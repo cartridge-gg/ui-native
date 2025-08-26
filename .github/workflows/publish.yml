@@ -1,0 +1,38 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ${{ matrix.platform == 'ios' && 'macos-latest' || 'ubuntu-latest' }}
+    strategy:
+      matrix:
+        platform: 
+          - ios
+          # - android
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: maxim-lobanov/setup-xcode@v1
+        if: matrix.platform == 'ios'
+        with:
+          xcode-version: latest-stable
+      - run: bun i
+      - run: |
+          npx eas build \
+          --local \
+          --non-interactive \
+          --profile production \
+          --platform ${{ matrix.platform }} \
+          --output ./builds/cartridge-archade-production-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }} \
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - run: |
+          npx eas submit \
+          --platform ${{ matrix.platform }} \
+          --path ./builds/cartridge-archade-production-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
