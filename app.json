@@ -1,8 +1,9 @@
 {
 	"name": "Cartridge Arcade",
-	"slug": "cartridge-arcade",
+	"slug": "arcade",
 	"scheme": "cartridge-arcade",
 	"version": "1.0.0",
+	"owner": "cartridge",
 	"web": {
 		"favicon": "./assets/favicon.png"
 	},
@@ -57,5 +58,10 @@
 			"backgroundColor": "#ffffff"
 		},
 		"package": "com.cartridge.arcade"
+	},
+	"extra": {
+		"eas": {
+			"projectId": "a5a9815c-f840-4afa-a861-b8cbc251e9c2"
+		}
 	}
 }
