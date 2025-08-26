@@ -30,10 +30,10 @@ jobs:
           --non-interactive \
           --profile ${{ matrix.profile }} \
           --platform ${{ matrix.platform }} \
-          --output ./builds/archade-app-${{ github.sha }}-${{ matrix.profile }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
+          --output ./builds/cartridge-archade-${{ matrix.profile }}-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
-          name: archade-app-${{ github.sha }}-${{ matrix.profile }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
+          name: cartridge-archade-${{ matrix.profile }}-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
           path: ./builds/
