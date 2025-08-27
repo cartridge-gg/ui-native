@@ -13,6 +13,7 @@ export default {
 		tsconfigPaths: true,
 	},
 	plugins: [
+		"expo-dev-client",
 		[
 			"expo-font",
 			{
