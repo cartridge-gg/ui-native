@@ -17,3 +17,10 @@ jobs:
             version: 2.0.0
         - name: Run Biome
           run: biome ci .
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - uses: oven-sh/setup-bun@v2
+        - run: bun add -g expo-doctor
+        - run: bun run expo-doctor
