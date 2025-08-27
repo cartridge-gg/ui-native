@@ -57,19 +57,19 @@ open visual-comparisons/index.html
 ### Storybook Development
 ```bash
 # Start Storybook
-bun storybook
+bun storybook:dev
 
 # Build Storybook
-bun build-storybook
+bun storybook:build
 ```
 
 ### Testing
 ```bash
 # Run visual tests
-bun test:storybook
+bun storybook:test
 
 # Update visual baselines
-bun test:storybook:update
+bun storybook:test:update
 ```
 
 ### Linting and Formatting

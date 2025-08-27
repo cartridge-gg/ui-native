@@ -28,6 +28,7 @@ export default {
 				],
 			},
 		],
+		"expo-router",
 		"expo-web-browser",
 		[
 			"expo-secure-store",
