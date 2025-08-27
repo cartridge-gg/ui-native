@@ -20,9 +20,10 @@ jobs:
         if: matrix.platform == 'ios'
         with:
           xcode-version: latest-stable
+      - run: bun add -g eas-cli
       - run: bun i
       - run: |
-          npx eas build \
+          bun run eas build \
           --local \
           --non-interactive \
           --profile production \
@@ -31,7 +32,7 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       - run: |
-          npx eas submit \
+          bun run eas submit \
           --platform ${{ matrix.platform }} \
           --path ./builds/cartridge-archade-production-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
         env:

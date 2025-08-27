@@ -20,7 +20,7 @@ jobs:
         with:
           xcode-version: latest-stable
       - run: bun add -g eas-cli
-      - run: bun install
+      - run: bun i
       - run: |
           bun run eas build \
           --local \
