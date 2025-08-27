@@ -13,6 +13,7 @@ bun start --tunnel
 
 ```sh
 brew install fastlane cocoapods
+bun global add eas-cli
 
 npx eas login
 
