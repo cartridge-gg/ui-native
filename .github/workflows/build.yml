@@ -19,9 +19,9 @@ jobs:
         if: matrix.platform == 'ios'
         with:
           xcode-version: latest-stable
-      - run: bun i
+      - run: bun add -g eas-cli
       - run: |
-          npx eas build \
+          bun run eas build \
           --local \
           --non-interactive \
           --profile ${{ matrix.profile }} \
