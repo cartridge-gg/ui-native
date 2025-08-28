@@ -1,16 +1,18 @@
 import { cva } from "class-variance-authority";
+import { cssInterop } from "nativewind";
+import Svg from "react-native-svg";
 
-const base = "";
+const base = "inline-block";
 
 export const size = {
-	"2xs": "h-3 w-3",
-	xs: "h-4 w-4",
-	sm: "h-5 w-5",
-	default: "h-6 w-6",
-	lg: "h-8 w-8",
-	xl: "h-12 w-12",
-	"2xl": "h-14 w-14",
-	"3xl": "h-[72px] w-[72px]",
+	"2xs": "size-3",
+	xs: "size-4",
+	sm: "size-5",
+	default: "size-6",
+	lg: "size-8",
+	xl: "size-12",
+	"2xl": "size-14",
+	"3xl": "size-[72px]",
 };
 
 export const iconVariants = cva(base, {
@@ -19,5 +21,12 @@ export const iconVariants = cva(base, {
 	},
 	defaultVariants: {
 		size: "default",
+	},
+});
+
+// Configure cssInterop for SVG components
+cssInterop(Svg, {
+	className: {
+		target: "style",
 	},
 });

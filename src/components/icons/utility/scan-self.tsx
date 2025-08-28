@@ -5,11 +5,11 @@ import type { IconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const ScanSelfIcon = memo<IconProps>(
-	({ className, size, ref, ...props }) => {
+	({ className, size: sizeProp, ref, ...props }) => {
 		return (
 			<Svg
 				viewBox="0 0 24 24"
-				className={iconVariants({ size, className })}
+				className={iconVariants({ size: sizeProp, className })}
 				ref={ref}
 				{...props}
 			>

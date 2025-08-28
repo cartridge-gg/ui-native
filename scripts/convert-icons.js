@@ -81,18 +81,74 @@ function convertIcon(webIconPath, nativeIconPath) {
 		const switchMatch = webContent.match(/\{\(\(\) => \{([\s\S]*?)\}\)\(\)\}/);
 		if (switchMatch) {
 			variantLogic = switchMatch[1].trim();
-			// Convert lowercase SVG elements in variant logic to uppercase
-			variantLogic = variantLogic
-				.replace(/<path/g, "<Path")
-				.replace(/<\/path>/g, "</Path>")
-				.replace(/<circle/g, "<Circle")
-				.replace(/<\/circle>/g, "</Circle>")
-				.replace(/<rect/g, "<Rect")
-				.replace(/<\/rect>/g, "</Rect>")
-				.replace(/<line/g, "<Line")
-				.replace(/<\/line>/g, "</Line>")
-				.replace(/<polygon/g, "<Polygon")
-				.replace(/<\/polygon>/g, "</Polygon>");
+
+			// If the switch statement is malformed, try to extract and rebuild it
+			if (
+				variantLogic.includes("case") &&
+				(variantLogic.includes("},case") ||
+					variantLogic.includes("},}") ||
+					variantLogic.includes("},,"))
+			) {
+				// Extract all case blocks
+				const caseBlocks = [];
+				const caseMatches = variantLogic.match(
+					/case "([^"]+)":[\s]*return \([\s\S]*?\);/g,
+				);
+
+				if (caseMatches) {
+					caseBlocks.push("switch (variant) {");
+					caseMatches.forEach((match, index) => {
+						// Clean up the case block
+						const cleanMatch = match
+							.replace(/<path/g, "<Path")
+							.replace(/<\/path>/g, "</Path>")
+							.replace(/<circle/g, "<Circle")
+							.replace(/<\/circle>/g, "</Circle>")
+							.replace(/<rect/g, "<Rect")
+							.replace(/<\/rect>/g, "</Rect>")
+							.replace(/<line/g, "<Line")
+							.replace(/<\/line>/g, "</Line>")
+							.replace(/<polygon/g, "<Polygon")
+							.replace(/<\/polygon>/g, "</Polygon>")
+							.replace(/className="fill-current"/g, 'fill="currentColor"');
+
+						caseBlocks.push(`            ${cleanMatch}`);
+						if (index < caseMatches.length - 1) {
+							caseBlocks.push("            }");
+						}
+					});
+					caseBlocks.push("          }");
+					variantLogic = caseBlocks.join("\n");
+				}
+			} else {
+				// Clean up malformed switch statements
+				variantLogic = variantLogic
+					// Remove extra commas after return statements
+					.replace(/return \([\s\S]*?\);[\s]*},/g, (match) =>
+						match.replace(/},$/, "}"),
+					)
+					// Remove extra commas after case blocks
+					.replace(
+						/case "([^"]+)":[\s]*return \([\s\S]*?\);[\s]*},/g,
+						(match) => match.replace(/},$/, "}"),
+					)
+					// Fix any remaining malformed syntax
+					.replace(/},[\s]*case/g, "}\n            case")
+					.replace(/},[\s]*}/g, "}\n          }");
+
+				// Convert lowercase SVG elements in variant logic to uppercase
+				variantLogic = variantLogic
+					.replace(/<path/g, "<Path")
+					.replace(/<\/path>/g, "</Path>")
+					.replace(/<circle/g, "<Circle")
+					.replace(/<\/circle>/g, "</Circle>")
+					.replace(/<rect/g, "<Rect")
+					.replace(/<\/rect>/g, "</Rect>")
+					.replace(/<line/g, "<Line")
+					.replace(/<\/line>/g, "</Line>")
+					.replace(/<polygon/g, "<Polygon")
+					.replace(/<\/polygon>/g, "</Polygon>");
+			}
 		}
 	}
 
@@ -285,7 +341,7 @@ import type { ${paramType} } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
-	({ className, size${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
+	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
 		needsUseId
 			? `
 		const id = useId();`
@@ -294,7 +350,7 @@ export const ${iconName} = memo<${paramType}>(
 		return (
 			<Svg
 				viewBox="${viewBox}"
-				className={iconVariants({ size, className })}
+				className={iconVariants({ size: sizeProp, className })}
 				ref={ref}
 				{...props}
 			>

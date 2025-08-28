@@ -5,12 +5,12 @@ import type { IconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const DefaultIcon = memo<IconProps>(
-	({ className, size, ref, ...props }) => {
+	({ className, size: sizeProp, ref, ...props }) => {
 		const id = useId();
 		return (
 			<Svg
 				viewBox="0 0 48 48"
-				className={iconVariants({ size, className })}
+				className={iconVariants({ size: sizeProp, className })}
 				ref={ref}
 				{...props}
 			>
