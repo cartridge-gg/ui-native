@@ -14,7 +14,7 @@
 		"prebuild": "expo prebuild",
 		"lint": "biome check --write --max-diagnostics=200 .",
 		"web": "BROWSER=none expo start --web",
-		"storybook:dev": "storybook dev -p 6006",
+		"storybook:dev": "storybook dev -p 6006 --no-open",
 		"storybook:build": "storybook build",
 		"storybook:test:update": "start-server-and-test 'bun storybook:dev' 6006 'bun test-storybook --url http://127.0.0.1:6006 -u'",
 		"storybook:test": "start-server-and-test 'bun storybook:dev' 6006 'bun test-storybook --url http://127.0.0.1:6006'",

@@ -33,7 +33,9 @@ export default function Layout() {
 						<StackContainer
 							headerClassName="bg-background text-foreground"
 							contentClassName="bg-background"
-						/>
+						>
+							<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+						</StackContainer>
 					</StarknetProvider>
 				</TextClassContext.Provider>
 			</SafeAreaProvider>
