@@ -2,10 +2,11 @@ import { memo } from "react";
 import Svg, { Path } from "react-native-svg";
 
 import type { IconProps } from "#components/icons/types";
-import { iconVariants } from "#components/icons/utils";
+import { iconVariants, useSvgClass } from "#components/icons/utils";
 
 export const EmptyStateLeaderboardIcon = memo<IconProps>(
-	({ className, size: sizeProp, color, ref, ...props }) => {
+	({ className, size: sizeProp, ref, ...props }) => {
+		const svgClass = useSvgClass() ?? "fill-foreground";
 		return (
 			<Svg
 				viewBox="0 0 120 120"

@@ -134,6 +134,12 @@ function convertIcon(webIconPath, nativeIconPath) {
 		.replace(/fill="currentColor"/g, 'fill={color || "currentColor"}')
 		.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
 
+	// Add @ts-expect-error comment before className attributes
+	convertedContent = convertedContent.replace(
+		/(\s+)className=/g,
+		'$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className='
+	);
+
 	// Replace static IDs with dynamic ones if gradients or clipPaths are present
 	if (needsUseId) {
 		// Find all id attributes and replace them with dynamic references
@@ -314,15 +320,16 @@ function convertIcon(webIconPath, nativeIconPath) {
 import Svg, { ${svgImports} } from "react-native-svg";
 
 import type { ${paramType} } from "#components/icons/types";
-import { iconVariants } from "#components/icons/utils";
+import { iconVariants, useSvgClass } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
-	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, color, ref, ...props }) => {${
+	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
 		needsUseId
 			? `
 		const id = useId();`
 			: ""
 	}
+		const svgClass = useSvgClass() ?? "fill-foreground";
 		return (
 			<Svg
 				viewBox="${viewBox}"
@@ -333,9 +340,17 @@ export const ${iconName} = memo<${paramType}>(
 				${
 					hasVariants
 						? `{(() => {
-					${variantLogic.replace(/className="fill-current"/g, 'fill="currentColor"')}
+					${variantLogic
+						.replace(/fill=\{color \|\| "currentColor"\}/g, 'className={svgClass}')
+						.replace(/fill="currentColor"/g, 'className={svgClass}')
+						.replace(/fill="var\(--foreground-100\)"/g, 'className={svgClass}')
+						.replace(/(\s+)className=/g, '$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=')}
 				})()}`
 						: convertedContent
+							.replace(/fill=\{color \|\| "currentColor"\}/g, 'className={svgClass}')
+							.replace(/fill="currentColor"/g, 'className={svgClass}')
+							.replace(/fill="var\(--foreground-100\)"/g, 'className={svgClass}')
+							.replace(/(\s+)className=/g, '$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=')
 				}
 			</Svg>
 		);

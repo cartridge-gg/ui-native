@@ -2,10 +2,11 @@ import { memo } from "react";
 import Svg, { Path } from "react-native-svg";
 
 import type { IconProps } from "#components/icons/types";
-import { iconVariants } from "#components/icons/utils";
+import { iconVariants, useSvgClass } from "#components/icons/utils";
 
 export const ChessIcon = memo<IconProps>(
-	({ className, size: sizeProp, color, ref, ...props }) => {
+	({ className, size: sizeProp, ref, ...props }) => {
+		const svgClass = useSvgClass() ?? "fill-foreground";
 		return (
 			<Svg
 				viewBox="0 0 24 24"
@@ -16,7 +17,9 @@ export const ChessIcon = memo<IconProps>(
 				
         <Path
           d="M6.00005 15V17.4H18V10.2C18 6.225 14.775 3 10.8 3H4.80005V3.6L5.40005 4.8L4.80005 5.4V11.7L7.80005 12.9L9.00005 12.3L9.60005 10.2L10.8 9.6V12.6L6.00005 15ZM7.50005 7.35C7.50005 7.7625 7.16255 8.1 6.75005 8.1C6.33755 8.1 6.00005 7.7625 6.00005 7.35C6.00005 6.9375 6.33755 6.6 6.75005 6.6C7.16255 6.6 7.50005 6.9375 7.50005 7.35ZM18 18.6H6.00005H4.80005V21H6.00005H18H19.2V18.6H18Z"
-          fill={color || "currentColor"}
+          // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
+
+          className={svgClass}
         />
       
 			</Svg>

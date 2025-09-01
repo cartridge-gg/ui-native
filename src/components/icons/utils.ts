@@ -1,6 +1,7 @@
 import { cva } from "class-variance-authority";
 import { cssInterop } from "nativewind";
-import Svg from "react-native-svg";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
+import { createContext, useContext } from "react";
 
 const base = "inline-block";
 
@@ -30,3 +31,35 @@ cssInterop(Svg, {
 		target: "style",
 	},
 });
+
+cssInterop(Path, {
+	className: {
+  // @ts-expect-error
+		target: "style",
+  // @ts-expect-error
+    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+	},
+});
+
+cssInterop(Circle, {
+	className: {
+  // @ts-expect-error
+		target: "style",
+  // @ts-expect-error
+    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+	},
+});
+
+cssInterop(Rect, {
+	className: {
+  // @ts-expect-error
+		target: "style",
+  // @ts-expect-error
+    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+	},
+});
+
+// Context for SVG content styling - provides CSS custom property for fill
+export const SvgClassContext = createContext<string | undefined>(undefined);
+
+export const useSvgClass = () => useContext(SvgClassContext);

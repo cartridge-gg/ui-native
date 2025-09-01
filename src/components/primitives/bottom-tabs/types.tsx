@@ -1,4 +1,5 @@
 import type { ViewRef } from "@rn-primitives/types";
+import type { StateIconProps } from "#components/icons/types";
 
 export type BottomTabsProps = {
   variant?: "default";
@@ -24,6 +25,8 @@ export type BottomTabItemProps = {
   routeName: string;
   active?: boolean;
   onPress?: () => void;
+  // New prop for icon component
+  Icon?: React.ComponentType<StateIconProps>;
 };
 
 export type BottomTabsRef = ViewRef;

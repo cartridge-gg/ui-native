@@ -2,11 +2,12 @@ import { memo, useId } from "react";
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
 import type { IconProps } from "#components/icons/types";
-import { iconVariants } from "#components/icons/utils";
+import { iconVariants, useSvgClass } from "#components/icons/utils";
 
 export const SilverTagIcon = memo<IconProps>(
-	({ className, size: sizeProp, color, ref, ...props }) => {
+	({ className, size: sizeProp, ref, ...props }) => {
 		const id = useId();
+		const svgClass = useSvgClass() ?? "fill-foreground";
 		return (
 			<Svg
 				viewBox="0 0 20 20"

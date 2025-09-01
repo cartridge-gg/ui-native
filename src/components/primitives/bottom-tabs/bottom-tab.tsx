@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import type * as React from "react";
 import { Pressable, View } from "react-native";
 import { cn } from "#utils";
+import type { StateIconProps } from "#components/icons/types";
+import { SvgClassContext } from "#components/icons";
 
 export const bottomTabVariants = cva(
   "w-full flex-row justify-around items-stretch shrink-0",
@@ -53,6 +55,8 @@ export interface BottomTabItemProps
   routeName: string;
   active?: boolean;
   onPress?: () => void;
+  // New prop for icon component
+  Icon?: React.ComponentType<StateIconProps>;
 }
 
 export function BottomTabItem({
@@ -61,6 +65,7 @@ export function BottomTabItem({
   routeName,
   active = false,
   onPress,
+  Icon: IconComponent,
   ...props
 }: BottomTabItemProps) {
   const router = useRouter();
@@ -74,19 +79,28 @@ export function BottomTabItem({
   };
 
   return (
-    <Pressable
-      className={cn(
-        "flex-1 items-center justify-center",
-        active && "opacity-100",
-        !active && "opacity-60",
-        className,
-      )}
-      onPress={handlePress}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: active }}
-      {...props}
-    >
-      {children}
-    </Pressable>
+    <SvgClassContext.Provider value={active ? "fill-primary" : "fill-foreground-100"}>
+      <Pressable
+        className={cn(
+          "flex-1 items-center justify-center",
+          active && "opacity-100",
+          !active && "opacity-60",
+          className,
+        )}
+        onPress={handlePress}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: active }}
+        {...props}
+      >
+        {IconComponent ? (
+          <IconComponent
+            variant={active ? "solid" : "line"}
+            size="xl"
+          />
+        ) : (
+          children
+        )}
+      </Pressable>
+    </SvgClassContext.Provider>
   );
 }
