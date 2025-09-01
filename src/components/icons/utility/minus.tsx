@@ -14,10 +14,10 @@ export const MinusIcon = memo<IconProps>(
 				ref={ref}
 				{...props}
 			>
-				
-        <Path // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
- className={svgClass} d="M20 13.712v-3.391H4v3.391h16Z" />
-      
+				<Path // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
+					className={svgClass}
+					d="M20 13.712v-3.391H4v3.391h16Z"
+				/>
 			</Svg>
 		);
 	},

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { PropsWithChildren } from "react";
 import { View } from "react-native";
-import { Text, SvgClassContext } from "#components";
-import { HamburgerIcon, MagnifyingGlassIcon, CheckIcon } from "#components/icons";
+import { Text } from "#components";
 
 // Get actual CSS variable values dynamically, handling the -100 default mapping
 function getCSSVarValue(color: string): string {

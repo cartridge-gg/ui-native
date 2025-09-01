@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 import { cssInterop } from "nativewind";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { createContext, useContext } from "react";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 
 const base = "inline-block";
 
@@ -34,28 +34,46 @@ cssInterop(Svg, {
 
 cssInterop(Path, {
 	className: {
-  // @ts-expect-error
+		// @ts-expect-error
 		target: "style",
-  // @ts-expect-error
-    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+		// @ts-expect-error
+		nativeStyleToProp: {
+			width: true,
+			height: true,
+			stroke: true,
+			strokeWidth: true,
+			fill: true,
+		},
 	},
 });
 
 cssInterop(Circle, {
 	className: {
-  // @ts-expect-error
+		// @ts-expect-error
 		target: "style",
-  // @ts-expect-error
-    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+		// @ts-expect-error
+		nativeStyleToProp: {
+			width: true,
+			height: true,
+			stroke: true,
+			strokeWidth: true,
+			fill: true,
+		},
 	},
 });
 
 cssInterop(Rect, {
 	className: {
-  // @ts-expect-error
+		// @ts-expect-error
 		target: "style",
-  // @ts-expect-error
-    nativeStyleToProp: { width: true, height: true, stroke: true, strokeWidth: true, fill: true }
+		// @ts-expect-error
+		nativeStyleToProp: {
+			width: true,
+			height: true,
+			stroke: true,
+			strokeWidth: true,
+			fill: true,
+		},
 	},
 });
 

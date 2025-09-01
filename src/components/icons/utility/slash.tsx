@@ -14,16 +14,14 @@ export const SlashIcon = memo<IconProps>(
 				ref={ref}
 				{...props}
 			>
-				
-          <Path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M4.10876 14L9.46582 1H10.8178L5.46074 14H4.10876Z"
-            // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
+				<Path
+					fillRule="evenodd"
+					clipRule="evenodd"
+					d="M4.10876 14L9.46582 1H10.8178L5.46074 14H4.10876Z"
+					// @ts-expect-error TODO: className prop type issue with cssInterop-ed component
 
-            className={svgClass}
-          />
-        
+					className={svgClass}
+				/>
 			</Svg>
 		);
 	},

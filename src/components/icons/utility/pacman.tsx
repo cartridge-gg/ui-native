@@ -14,14 +14,12 @@ export const PacmanIcon = memo<IconProps>(
 				ref={ref}
 				{...props}
 			>
-				
-        <Path
-          // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
+				<Path
+					// @ts-expect-error TODO: className prop type issue with cssInterop-ed component
 
-          className={svgClass}
-          d="M19.391 15.062a8 8 0 1 1 0-6.123L12 12l7.391 3.062Z"
-        />
-      
+					className={svgClass}
+					d="M19.391 15.062a8 8 0 1 1 0-6.123L12 12l7.391 3.062Z"
+				/>
 			</Svg>
 		);
 	},

@@ -14,10 +14,12 @@ export const CircleIcon = memo<IconProps>(
 				ref={ref}
 				{...props}
 			>
-				
-        <Circle cx="12" cy="12" r="4" // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
- className={svgClass} />
-      
+				<Circle
+					cx="12"
+					cy="12"
+					r="4" // @ts-expect-error TODO: className prop type issue with cssInterop-ed component
+					className={svgClass}
+				/>
 			</Svg>
 		);
 	},

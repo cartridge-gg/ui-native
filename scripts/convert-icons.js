@@ -90,14 +90,16 @@ function convertIcon(webIconPath, nativeIconPath) {
 			if (caseMatches) {
 				const caseBlocks = [];
 				caseBlocks.push("switch (variant) {");
-				
-				caseMatches.forEach((match, index) => {
+
+				caseMatches.forEach((match, _index) => {
 					// Extract case name and content
-					const caseMatch = match.match(/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/);
+					const caseMatch = match.match(
+						/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/,
+					);
 					if (caseMatch) {
 						const caseName = caseMatch[1];
 						let caseContent = caseMatch[2];
-						
+
 						// Clean up the case content
 						caseContent = caseContent
 							.replace(/<path/g, "<Path")
@@ -110,8 +112,14 @@ function convertIcon(webIconPath, nativeIconPath) {
 							.replace(/<\/line>/g, "</Line>")
 							.replace(/<polygon/g, "<Polygon")
 							.replace(/<\/polygon>/g, "</Polygon>")
-							.replace(/className="fill-current"/g, 'fill={color || "currentColor"}')
-							.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
+							.replace(
+								/className="fill-current"/g,
+								'fill={color || "currentColor"}',
+							)
+							.replace(
+								/className="fill-foreground-200"/g,
+								'fill="currentColor"',
+							);
 
 						caseBlocks.push(`            case "${caseName}":
               return (
@@ -119,7 +127,7 @@ function convertIcon(webIconPath, nativeIconPath) {
               );`);
 					}
 				});
-				
+
 				caseBlocks.push("          }");
 				variantLogic = caseBlocks.join("\n");
 			}
@@ -137,7 +145,7 @@ function convertIcon(webIconPath, nativeIconPath) {
 	// Add @ts-expect-error comment before className attributes
 	convertedContent = convertedContent.replace(
 		/(\s+)className=/g,
-		'$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className='
+		"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
 	);
 
 	// Replace static IDs with dynamic ones if gradients or clipPaths are present
@@ -174,6 +182,18 @@ function convertIcon(webIconPath, nativeIconPath) {
 
 	// For variant-based icons, also check the variant logic content
 	const _contentToCheck = hasVariants ? variantLogic : convertedContent;
+
+	// Check if svgClass will actually be used
+	const willUseSvgClass =
+		convertedContent.includes("className={svgClass}") ||
+		(hasVariants && variantLogic.includes("className={svgClass}")) ||
+		convertedContent.includes('fill={color || "currentColor"}') ||
+		convertedContent.includes('fill="currentColor"') ||
+		convertedContent.includes('fill="var(--foreground-100)"') ||
+		(hasVariants &&
+			(variantLogic.includes('fill={color || "currentColor"}') ||
+				variantLogic.includes('fill="currentColor"') ||
+				variantLogic.includes('fill="var(--foreground-100)"')));
 
 	if (
 		convertedContent.includes("<Path") ||
@@ -320,7 +340,7 @@ function convertIcon(webIconPath, nativeIconPath) {
 import Svg, { ${svgImports} } from "react-native-svg";
 
 import type { ${paramType} } from "#components/icons/types";
-import { iconVariants, useSvgClass } from "#components/icons/utils";
+import { iconVariants${willUseSvgClass ? ", useSvgClass" : ""} } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
 	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
@@ -328,8 +348,12 @@ export const ${iconName} = memo<${paramType}>(
 			? `
 		const id = useId();`
 			: ""
+	}${
+		willUseSvgClass
+			? `
+		const svgClass = useSvgClass() ?? "fill-foreground";`
+			: ""
 	}
-		const svgClass = useSvgClass() ?? "fill-foreground";
 		return (
 			<Svg
 				viewBox="${viewBox}"
@@ -341,16 +365,31 @@ export const ${iconName} = memo<${paramType}>(
 					hasVariants
 						? `{(() => {
 					${variantLogic
-						.replace(/fill=\{color \|\| "currentColor"\}/g, 'className={svgClass}')
-						.replace(/fill="currentColor"/g, 'className={svgClass}')
-						.replace(/fill="var\(--foreground-100\)"/g, 'className={svgClass}')
-						.replace(/(\s+)className=/g, '$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=')}
+						.replace(
+							/fill=\{color \|\| "currentColor"\}/g,
+							"className={svgClass}",
+						)
+						.replace(/fill="currentColor"/g, "className={svgClass}")
+						.replace(/fill="var\(--foreground-100\)"/g, "className={svgClass}")
+						.replace(
+							/(\s+)className=/g,
+							"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+						)}
 				})()}`
 						: convertedContent
-							.replace(/fill=\{color \|\| "currentColor"\}/g, 'className={svgClass}')
-							.replace(/fill="currentColor"/g, 'className={svgClass}')
-							.replace(/fill="var\(--foreground-100\)"/g, 'className={svgClass}')
-							.replace(/(\s+)className=/g, '$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=')
+								.replace(
+									/fill=\{color \|\| "currentColor"\}/g,
+									"className={svgClass}",
+								)
+								.replace(/fill="currentColor"/g, "className={svgClass}")
+								.replace(
+									/fill="var\(--foreground-100\)"/g,
+									"className={svgClass}",
+								)
+								.replace(
+									/(\s+)className=/g,
+									"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+								)
 				}
 			</Svg>
 		);
