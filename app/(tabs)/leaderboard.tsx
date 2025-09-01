@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { View } from "react-native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
+import { View } from "react-native";
 import { ArcadeHeader, Text } from "#components";
 
 export default function LeaderboardScreen() {
-  const navigation = useNavigation<DrawerNavigationProp<any>>();
+  const navigation = useNavigation();
 
   return (
     <View className="flex-1 bg-background">

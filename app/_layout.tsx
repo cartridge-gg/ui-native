@@ -1,18 +1,13 @@
 import "../global.css";
 import "react-native-get-random-values";
 
-// SessionPolicies type definition
-type SessionPolicies = {
-  contracts?: Record<string, any>;
-  messages?: any[];
-};
 import { type Chain, mainnet, sepolia } from "@starknet-react/chains";
 import {
   type Connector,
   jsonRpcProvider,
   StarknetConfig,
 } from "@starknet-react/core";
-import { Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
 import { verifyInstallation } from "nativewind";
 import { type PropsWithChildren, useEffect } from "react";
 import { cssInterop } from "react-native-css-interop";
@@ -21,8 +16,15 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { constants } from "starknet";
 import { TextClassContext } from "#components";
-import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
+import { DojoDrawerContent } from "#components";
 import { GamesProvider } from "#context/games-context";
+import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
+
+// SessionPolicies type definition
+type SessionPolicies = {
+  contracts?: Record<string, any>;
+  messages?: any[];
+};
 
 export default function Layout() {
   useEffect(() => {
@@ -36,12 +38,20 @@ export default function Layout() {
           <Toaster position="bottom-center" />
           <StarknetProvider>
             <GamesProvider>
-              <StackContainer
-                headerClassName="bg-background text-foreground"
-                contentClassName="bg-background"
+              <Drawer
+                screenOptions={{
+                  headerShown: false,
+                  drawerStyle: {
+                    backgroundColor: '#1a1a1a',
+                    width: 320,
+                  },
+                  drawerActiveTintColor: '#6366f1',
+                  drawerInactiveTintColor: '#888888',
+                }}
+                drawerContent={() => <DojoDrawerContent />}
               >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              </StackContainer>
+                <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Drawer>
             </GamesProvider>
           </StarknetProvider>
         </TextClassContext.Provider>
@@ -49,48 +59,6 @@ export default function Layout() {
     </GestureHandlerRootView>
   );
 }
-
-interface StackContainerProps {
-  contentBackgroundColor?: string;
-  headerBackgroundColor?: string;
-  headerTintColor?: string;
-  [key: string]: unknown;
-}
-
-function StackContainer({
-  contentBackgroundColor,
-  headerBackgroundColor,
-  headerTintColor,
-  ...props
-}: StackContainerProps) {
-  return (
-    <Stack
-      screenOptions={{
-        contentStyle: { backgroundColor: contentBackgroundColor },
-        headerStyle: { backgroundColor: headerBackgroundColor },
-        headerTintColor,
-      }}
-      {...props}
-    />
-  );
-}
-
-// Enable cssInterop for Stack.Screen options
-cssInterop(StackContainer, {
-  headerClassName: {
-    target: false,
-    nativeStyleToProp: {
-      backgroundColor: "headerBackgroundColor",
-      color: "headerTintColor",
-    },
-  },
-  contentClassName: {
-    target: false,
-    nativeStyleToProp: {
-      backgroundColor: "contentBackgroundColor",
-    },
-  },
-});
 
 export const ETH_CONTRACT_ADDRESS =
   "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7";
@@ -194,3 +162,4 @@ function StarknetProvider({ children }: PropsWithChildren) {
     </StarknetConfig>
   );
 }
+

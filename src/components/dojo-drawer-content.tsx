@@ -1,56 +1,90 @@
-import React, { useState } from 'react';
-import { View, ScrollView, Pressable, Image, ActivityIndicator } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Button } from '#components';
+import React, { useState } from "react";
 import {
-  PlayIcon,
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button, Text } from "#components";
+import {
   AwardIcon,
   GearIcon,
   MagnifyingGlassIcon,
-} from '#components/icons';
-import { cn } from '#utils';
-import { useGames } from '#context/games-context';
-import { type DojoGame } from '#utils/api';
+  PlayIcon,
+  TimesIcon,
+} from "#components/icons";
+import { useGames } from "#context/games-context";
+import { cn } from "#utils";
+import type { DojoGame } from "#utils/api";
 
-interface DojoDrawerContentProps {
-  onGameSelect?: (game: DojoGame) => void;
-}
-
-export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
+export function DojoDrawerContent() {
   const insets = useSafeAreaInsets();
   const { games, loading, error } = useGames();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const categories = [
-    { id: 'all', name: 'All Games', count: games.length },
-    { id: 'action', name: 'Action', count: games.filter(g => g.category === 'action').length },
-    { id: 'strategy', name: 'Strategy', count: games.filter(g => g.category === 'strategy').length },
-    { id: 'puzzle', name: 'Puzzle', count: games.filter(g => g.category === 'puzzle').length },
-    { id: 'rpg', name: 'RPG', count: games.filter(g => g.category === 'rpg').length },
-    { id: 'arcade', name: 'Arcade', count: games.filter(g => g.category === 'arcade').length },
+    { id: "all", name: "All Games", count: games.length },
+    {
+      id: "action",
+      name: "Action",
+      count: games.filter((g) => g.category === "action").length,
+    },
+    {
+      id: "strategy",
+      name: "Strategy",
+      count: games.filter((g) => g.category === "strategy").length,
+    },
+    {
+      id: "puzzle",
+      name: "Puzzle",
+      count: games.filter((g) => g.category === "puzzle").length,
+    },
+    {
+      id: "rpg",
+      name: "RPG",
+      count: games.filter((g) => g.category === "rpg").length,
+    },
+    {
+      id: "arcade",
+      name: "Arcade",
+      count: games.filter((g) => g.category === "arcade").length,
+    },
   ];
 
-  const filteredGames = selectedCategory === 'all'
-    ? games
-    : games.filter(game => game.category === selectedCategory);
+  const filteredGames =
+    selectedCategory === "all"
+      ? games
+      : games.filter((game) => game.category === selectedCategory);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-constructive-100 text-constructive-foreground';
-      case 'medium': return 'bg-primary-100 text-primary-foreground';
-      case 'hard': return 'bg-destructive-100 text-destructive-foreground';
-      default: return 'bg-background-300 text-foreground-400';
+      case "easy":
+        return "bg-constructive-100 text-constructive-foreground";
+      case "medium":
+        return "bg-primary-100 text-primary-foreground";
+      case "hard":
+        return "bg-destructive-100 text-destructive-foreground";
+      default:
+        return "bg-background-300 text-foreground-400";
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'action': return 'bg-red-500/20 text-red-400';
-      case 'strategy': return 'bg-blue-500/20 text-blue-400';
-      case 'puzzle': return 'bg-purple-500/20 text-purple-400';
-      case 'rpg': return 'bg-green-500/20 text-green-400';
-      case 'arcade': return 'bg-yellow-500/20 text-yellow-400';
-      default: return 'bg-background-300 text-foreground-400';
+      case "action":
+        return "bg-red-500/20 text-red-400";
+      case "strategy":
+        return "bg-blue-500/20 text-blue-400";
+      case "puzzle":
+        return "bg-purple-500/20 text-purple-400";
+      case "rpg":
+        return "bg-green-500/20 text-green-400";
+      case "arcade":
+        return "bg-yellow-500/20 text-yellow-400";
+      default:
+        return "bg-background-300 text-foreground-400";
     }
   };
 
@@ -63,8 +97,12 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
             <AwardIcon size="sm" className="text-primary-foreground" />
           </View>
           <View>
-            <Text className="text-foreground text-lg font-semibold">Dojo Games</Text>
-            <Text className="text-foreground-400 text-sm">Cartridge Arcade</Text>
+            <Text className="text-foreground text-lg font-semibold">
+              Dojo Games
+            </Text>
+            <Text className="text-foreground-400 text-sm">
+              Cartridge Arcade
+            </Text>
           </View>
         </View>
       </View>
@@ -73,7 +111,9 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
       <View className="p-4 border-b border-background-300">
         <View className="flex-row items-center bg-background-300 rounded-lg px-3 py-2">
           <MagnifyingGlassIcon size="sm" className="text-foreground-400 mr-2" />
-          <Text className="text-foreground-400 text-sm flex-1">Search games...</Text>
+          <Text className="text-foreground-400 text-sm flex-1">
+            Search games...
+          </Text>
         </View>
       </View>
 
@@ -92,7 +132,7 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
               "px-3 py-1.5 rounded-full mr-2",
               selectedCategory === category.id
                 ? "bg-primary-100"
-                : "bg-background-300"
+                : "bg-background-300",
             )}
           >
             <Text
@@ -100,7 +140,7 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
                 "text-sm font-medium",
                 selectedCategory === category.id
                   ? "text-primary-foreground"
-                  : "text-foreground-400"
+                  : "text-foreground-400",
               )}
             >
               {category.name} ({category.count})
@@ -114,19 +154,28 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
         {loading ? (
           <View className="flex-1 items-center justify-center py-20">
             <ActivityIndicator size="large" color="#6366f1" />
-            <Text className="text-foreground-400 mt-4">Loading Dojo games...</Text>
+            <Text className="text-foreground-400 mt-4">
+              Loading Dojo games...
+            </Text>
           </View>
         ) : error ? (
           <View className="flex-1 items-center justify-center py-20">
-            <Text className="text-destructive-100 text-center mb-4">Failed to load games</Text>
-            <Text className="text-foreground-400 text-sm text-center">{error}</Text>
+            <Text className="text-destructive-100 text-center mb-4">
+              Failed to load games
+            </Text>
+            <Text className="text-foreground-400 text-sm text-center">
+              {error}
+            </Text>
           </View>
         ) : (
           <View className="p-4 space-y-3">
             {filteredGames.map((game) => (
               <Pressable
                 key={game.id}
-                onPress={() => onGameSelect?.(game)}
+                onPress={() => {
+                  console.log('Selected game:', game.name);
+                  // Here you would navigate to the game or handle game selection
+                }}
                 className="bg-background-300 rounded-lg p-3 active:bg-background-400"
               >
                 <View className="flex-row gap-3">
@@ -143,7 +192,12 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
                       <Text className="text-foreground font-semibold text-base flex-1 mr-2">
                         {game.name}
                       </Text>
-                      <View className={cn("px-2 py-0.5 rounded-full", getDifficultyColor(game.difficulty))}>
+                      <View
+                        className={cn(
+                          "px-2 py-0.5 rounded-full",
+                          getDifficultyColor(game.difficulty),
+                        )}
+                      >
                         <Text className="text-xs font-medium capitalize">
                           {game.difficulty}
                         </Text>
@@ -162,7 +216,12 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
                             {game.playerCount.toLocaleString()} players
                           </Text>
                         </View>
-                        <View className={cn("px-2 py-0.5 rounded-full", getCategoryColor(game.category))}>
+                        <View
+                          className={cn(
+                            "px-2 py-0.5 rounded-full",
+                            getCategoryColor(game.category),
+                          )}
+                        >
                           <Text className="text-xs font-medium capitalize">
                             {game.category}
                           </Text>
@@ -189,7 +248,7 @@ export function DojoDrawerContent({ onGameSelect }: DojoDrawerContentProps) {
         <Button
           variant="outline"
           size="sm"
-          onPress={() => console.log('Settings pressed')}
+          onPress={() => console.log("Settings pressed")}
           className="w-full"
         >
           <GearIcon size="sm" className="mr-2" />
