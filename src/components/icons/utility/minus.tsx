@@ -5,7 +5,7 @@ import type { IconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const MinusIcon = memo<IconProps>(
-	({ className, size: sizeProp, ref, ...props }) => {
+	({ className, size: sizeProp, color, ref, ...props }) => {
 		return (
 			<Svg
 				viewBox="0 0 24 24"
@@ -13,7 +13,9 @@ export const MinusIcon = memo<IconProps>(
 				ref={ref}
 				{...props}
 			>
-				<Path fill="currentColor" d="M20 13.712v-3.391H4v3.391h16Z" />
+				
+        <Path fill={color || "currentColor"} d="M20 13.712v-3.391H4v3.391h16Z" />
+      
 			</Svg>
 		);
 	},

@@ -82,24 +82,24 @@ function convertIcon(webIconPath, nativeIconPath) {
 		if (switchMatch) {
 			variantLogic = switchMatch[1].trim();
 
-			// If the switch statement is malformed, try to extract and rebuild it
-			if (
-				variantLogic.includes("case") &&
-				(variantLogic.includes("},case") ||
-					variantLogic.includes("},}") ||
-					variantLogic.includes("},,"))
-			) {
-				// Extract all case blocks
-				const caseBlocks = [];
-				const caseMatches = variantLogic.match(
-					/case "([^"]+)":[\s]*return \([\s\S]*?\);/g,
-				);
+			// Extract all case blocks and rebuild the switch statement properly
+			const caseMatches = variantLogic.match(
+				/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/g,
+			);
 
-				if (caseMatches) {
-					caseBlocks.push("switch (variant) {");
-					caseMatches.forEach((match, index) => {
-						// Clean up the case block
-						const cleanMatch = match
+			if (caseMatches) {
+				const caseBlocks = [];
+				caseBlocks.push("switch (variant) {");
+				
+				caseMatches.forEach((match, index) => {
+					// Extract case name and content
+					const caseMatch = match.match(/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/);
+					if (caseMatch) {
+						const caseName = caseMatch[1];
+						let caseContent = caseMatch[2];
+						
+						// Clean up the case content
+						caseContent = caseContent
 							.replace(/<path/g, "<Path")
 							.replace(/<\/path>/g, "</Path>")
 							.replace(/<circle/g, "<Circle")
@@ -110,44 +110,18 @@ function convertIcon(webIconPath, nativeIconPath) {
 							.replace(/<\/line>/g, "</Line>")
 							.replace(/<polygon/g, "<Polygon")
 							.replace(/<\/polygon>/g, "</Polygon>")
-							.replace(/className="fill-current"/g, 'fill="currentColor"');
+							.replace(/className="fill-current"/g, 'fill={color || "currentColor"}')
+							.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
 
-						caseBlocks.push(`            ${cleanMatch}`);
-						if (index < caseMatches.length - 1) {
-							caseBlocks.push("            }");
-						}
-					});
-					caseBlocks.push("          }");
-					variantLogic = caseBlocks.join("\n");
-				}
-			} else {
-				// Clean up malformed switch statements
-				variantLogic = variantLogic
-					// Remove extra commas after return statements
-					.replace(/return \([\s\S]*?\);[\s]*},/g, (match) =>
-						match.replace(/},$/, "}"),
-					)
-					// Remove extra commas after case blocks
-					.replace(
-						/case "([^"]+)":[\s]*return \([\s\S]*?\);[\s]*},/g,
-						(match) => match.replace(/},$/, "}"),
-					)
-					// Fix any remaining malformed syntax
-					.replace(/},[\s]*case/g, "}\n            case")
-					.replace(/},[\s]*}/g, "}\n          }");
-
-				// Convert lowercase SVG elements in variant logic to uppercase
-				variantLogic = variantLogic
-					.replace(/<path/g, "<Path")
-					.replace(/<\/path>/g, "</Path>")
-					.replace(/<circle/g, "<Circle")
-					.replace(/<\/circle>/g, "</Circle>")
-					.replace(/<rect/g, "<Rect")
-					.replace(/<\/rect>/g, "</Rect>")
-					.replace(/<line/g, "<Line")
-					.replace(/<\/line>/g, "</Line>")
-					.replace(/<polygon/g, "<Polygon")
-					.replace(/<\/polygon>/g, "</Polygon>");
+						caseBlocks.push(`            case "${caseName}":
+              return (
+                ${caseContent}
+              );`);
+					}
+				});
+				
+				caseBlocks.push("          }");
+				variantLogic = caseBlocks.join("\n");
 			}
 		}
 	}
@@ -156,7 +130,9 @@ function convertIcon(webIconPath, nativeIconPath) {
 	let convertedContent = svgContent
 		.replace(/<svg[^>]*>/g, "")
 		.replace(/<\/svg>/g, "")
-		.replace(/className="fill-current"/g, 'fill="currentColor"');
+		.replace(/className="fill-current"/g, 'fill={color || "currentColor"}')
+		.replace(/fill="currentColor"/g, 'fill={color || "currentColor"}')
+		.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
 
 	// Replace static IDs with dynamic ones if gradients or clipPaths are present
 	if (needsUseId) {
@@ -341,7 +317,7 @@ import type { ${paramType} } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
-	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
+	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, color, ref, ...props }) => {${
 		needsUseId
 			? `
 		const id = useId();`

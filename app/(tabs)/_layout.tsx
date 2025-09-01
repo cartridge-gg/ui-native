@@ -7,6 +7,7 @@ import {
   PulseIcon,
   ShoppingCartIcon,
 } from "#components";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   return (
@@ -38,7 +39,7 @@ export default function TabLayout() {
                 variant={currentRoute.name === "activity" ? "solid" : "line"}
                 size="lg"
                 className="fill-[red]"
-              // color={currentRoute.name === "activity" ? "#fbcb4a" : "#727272"}
+                color={currentRoute.name === "activity" ? "#fbcb4a" : "#727272"}
               />
             </BottomTabItem>
             <BottomTabItem
