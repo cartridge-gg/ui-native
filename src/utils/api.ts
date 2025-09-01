@@ -1,5 +1,5 @@
 // Cartridge Arcade API service for Dojo games
-export const CARTRIDGE_API_URL = "https://api.cartridge.gg/query";
+import { CARTRIDGE_API_URL } from "./const";
 
 // Game model matching Cartridge Arcade structure
 export interface DojoGame {
@@ -194,18 +194,92 @@ export const mockGameEditions: GameEdition[] = [
 //   }
 // `;
 
+// GraphQL query for fetching projects (games) from Cartridge API
+const PROJECTS_QUERY = `
+  query {
+    projects {
+      id
+      name
+      description
+      logo
+      cover
+      website
+      discord
+      twitter
+      github
+      telegram
+      isActive
+    }
+  }
+`;
+
 // Cartridge Arcade API service
 export const dojoGamesApi = {
 	// Get all Dojo games from Cartridge API
 	getGames: async (): Promise<DojoGame[]> => {
 		try {
-			// For now, return mock data to simulate API call
-			// In production, this would make a GraphQL request to CARTRIDGE_API_URL
-			await new Promise((resolve) => setTimeout(resolve, 500));
-			return mockDojoGames;
+			console.log('Fetching games from:', CARTRIDGE_API_URL);
+			
+			// First, let's test if the endpoint is reachable
+			const testResponse = await fetch(CARTRIDGE_API_URL, {
+				method: 'GET',
+			});
+			console.log('Test response status:', testResponse.status);
+			
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: PROJECTS_QUERY,
+				}),
+			});
+
+			console.log('Response status:', response.status);
+			console.log('Response headers:', response.headers);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			console.log('API Response:', JSON.stringify(result, null, 2));
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+			}
+
+			const projects = result.data?.projects;
+			console.log('Fetched projects:', projects);
+			
+			if (!projects || projects.length === 0) {
+				console.log('No projects returned from API, using mock data');
+				return mockDojoGames;
+			}
+
+			// Convert projects to DojoGame format
+			const games = projects.map((project: any) => ({
+				id: project.id,
+				identifier: project.name.toLowerCase().replace(/\s+/g, '-'),
+				name: project.name,
+				description: project.description || '',
+				imageUrl: project.logo || project.cover || '',
+				playerCount: 0, // Not available in projects API
+				isActive: project.isActive || true,
+				category: 'arcade', // Default category
+				difficulty: 'medium', // Default difficulty
+				estimatedPlayTime: 15, // Default play time
+				lastPlayed: undefined,
+				contractAddress: undefined,
+				gameId: project.id,
+			}));
+
+			return games;
 		} catch (error) {
 			console.error("Failed to fetch games from Cartridge API:", error);
-			// Fallback to mock data
+			console.log('Falling back to mock data due to error');
 			return mockDojoGames;
 		}
 	},
@@ -213,8 +287,47 @@ export const dojoGamesApi = {
 	// Get game by ID
 	getGameById: async (id: string): Promise<DojoGame | null> => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 300));
-			return mockDojoGames.find((game) => game.id === id) || null;
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: `
+						query GetGameById($id: ID!) {
+							game(id: $id) {
+								id
+								identifier
+								name
+								description
+								imageUrl
+								playerCount
+								isActive
+								category
+								difficulty
+								estimatedPlayTime
+								lastPlayed
+								contractAddress
+								gameId
+							}
+						}
+					`,
+					variables: { id },
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				return null;
+			}
+
+			return result.data?.game || null;
 		} catch (error) {
 			console.error("Failed to fetch game by ID:", error);
 			return null;
@@ -226,8 +339,47 @@ export const dojoGamesApi = {
 		category: DojoGame["category"],
 	): Promise<DojoGame[]> => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 400));
-			return mockDojoGames.filter((game) => game.category === category);
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: `
+						query GetGamesByCategory($category: String!) {
+							games(category: $category) {
+								id
+								identifier
+								name
+								description
+								imageUrl
+								playerCount
+								isActive
+								category
+								difficulty
+								estimatedPlayTime
+								lastPlayed
+								contractAddress
+								gameId
+							}
+						}
+					`,
+					variables: { category },
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				return [];
+			}
+
+			return result.data?.games || [];
 		} catch (error) {
 			console.error("Failed to fetch games by category:", error);
 			return [];
@@ -237,8 +389,46 @@ export const dojoGamesApi = {
 	// Get active games
 	getActiveGames: async (): Promise<DojoGame[]> => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 200));
-			return mockDojoGames.filter((game) => game.isActive);
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: `
+						query GetActiveGames {
+							games(isActive: true) {
+								id
+								identifier
+								name
+								description
+								imageUrl
+								playerCount
+								isActive
+								category
+								difficulty
+								estimatedPlayTime
+								lastPlayed
+								contractAddress
+								gameId
+							}
+						}
+					`,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				return [];
+			}
+
+			return result.data?.games || [];
 		} catch (error) {
 			console.error("Failed to fetch active games:", error);
 			return [];
@@ -248,8 +438,41 @@ export const dojoGamesApi = {
 	// Get game editions
 	getEditions: async (): Promise<GameEdition[]> => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 300));
-			return mockGameEditions;
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: `
+						query GetEditions {
+							editions {
+								id
+								identifier
+								gameId
+								config {
+									project
+									name
+									description
+								}
+							}
+						}
+					`,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				return [];
+			}
+
+			return result.data?.editions || [];
 		} catch (error) {
 			console.error("Failed to fetch game editions:", error);
 			return [];
@@ -259,14 +482,47 @@ export const dojoGamesApi = {
 	// Get games by project (edition)
 	getGamesByProject: async (project: string): Promise<DojoGame[]> => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 400));
-			const editions = mockGameEditions.filter(
-				(edition) => edition.config.project === project,
-			);
-			const gameIds = editions.map((edition) => edition.gameId);
-			return mockDojoGames.filter(
-				(game) => game.gameId && gameIds.includes(game.gameId),
-			);
+			const response = await fetch(CARTRIDGE_API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					query: `
+						query GetGamesByProject($project: String!) {
+							games(project: $project) {
+								id
+								identifier
+								name
+								description
+								imageUrl
+								playerCount
+								isActive
+								category
+								difficulty
+								estimatedPlayTime
+								lastPlayed
+								contractAddress
+								gameId
+							}
+						}
+					`,
+					variables: { project },
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const result = await response.json();
+			
+			if (result.errors) {
+				console.error('GraphQL errors:', result.errors);
+				return [];
+			}
+
+			return result.data?.games || [];
 		} catch (error) {
 			console.error("Failed to fetch games by project:", error);
 			return [];

@@ -14,246 +14,121 @@ import {
   MagnifyingGlassIcon,
   PlayIcon,
   TimesIcon,
+  PlusIcon,
 } from "#components/icons";
 import { useGames } from "#context/games-context";
 import { cn } from "#utils";
 import type { DojoGame } from "#utils/api";
 
+// Game icons - these would be replaced with actual game icons
+const gameIcons = {
+  "All Games": "http://localhost:3845/assets/c0238313c206bd00b095d3fa54e0096b96a19698.png",
+  "Dope Wars": "http://localhost:3845/assets/d252b26cca1f9c2670bcbe92821cf501dcad501c.png",
+  "Loot Survivor": "http://localhost:3845/assets/bf6b323de1529c85df774b046bce3bb6bc97e350.png",
+  "Eternum": "http://localhost:3845/assets/cf1aa52ee11b2393ae0b5994674d8c0afa7e0b18.png",
+  "Force Prime": "http://localhost:3845/assets/018528c6836d9fb376b47d359a32b979f9a4c880.png",
+  "Evolute": "http://localhost:3845/assets/258757ca9246f3ef07d9ea82b47fa9232993614d.png",
+  "Jokers of Neon": "http://localhost:3845/assets/4e0ab931d3ca3a3470b7f76e592a3b2424c51464.png",
+  "Craft Island": "http://localhost:3845/assets/c82ef8ba76c3b66a63ddcf0aa41b55ed39e9fad4.png",
+  "Blob Arena": "http://localhost:3845/assets/41a003c891ad68e8faeb581ee5d1cd4e40d6b53c.png",
+  "Rising Revenant": "http://localhost:3845/assets/89058410c44a530bf2ff9c4680ff0c7c4d22e848.png",
+  "zKube": "http://localhost:3845/assets/bbccb67d876ca15c0e1b8e239272ec42c2c8f5e8.png",
+  "Starkane": "http://localhost:3845/assets/450286d6e542f7625a5ab508500e860a33b37963.png",
+  "Stark Arcade": "http://localhost:3845/assets/e1be04f081c1e682dd0ed7e8b3e069ee51e89ac6.png",
+  "Block Heroes": "http://localhost:3845/assets/bf6b323de1529c85df774b046bce3bb6bc97e350.png",
+};
+
+const gradientMask = "http://localhost:3845/assets/eb98ca39cbb37ae07d0d3bc271a7fa1632172eee.svg";
+const plusIcon = "http://localhost:3845/assets/d6368f530b410302b8e45431a4ac0c6077d5486d.svg";
+
 export function DojoDrawerContent() {
   const insets = useSafeAreaInsets();
   const { games, loading, error } = useGames();
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedGame, setSelectedGame] = useState<string>("All Games");
 
-  const categories = [
-    { id: "all", name: "All Games", count: games.length },
-    {
-      id: "action",
-      name: "Action",
-      count: games.filter((g) => g.category === "action").length,
-    },
-    {
-      id: "strategy",
-      name: "Strategy",
-      count: games.filter((g) => g.category === "strategy").length,
-    },
-    {
-      id: "puzzle",
-      name: "Puzzle",
-      count: games.filter((g) => g.category === "puzzle").length,
-    },
-    {
-      id: "rpg",
-      name: "RPG",
-      count: games.filter((g) => g.category === "rpg").length,
-    },
-    {
-      id: "arcade",
-      name: "Arcade",
-      count: games.filter((g) => g.category === "arcade").length,
-    },
+  const allGames = [
+    "All Games",
+    "Dope Wars",
+    "Loot Survivor",
+    "Eternum",
+    "Force Prime",
+    "Evolute",
+    "Jokers of Neon",
+    "Craft Island",
+    "Blob Arena",
+    "Rising Revenant",
+    "zKube",
+    "Starkane",
+    "Stark Arcade",
+    "Block Heroes",
   ];
 
-  const filteredGames =
-    selectedCategory === "all"
-      ? games
-      : games.filter((game) => game.category === selectedCategory);
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "easy":
-        return "bg-constructive-100 text-constructive-foreground";
-      case "medium":
-        return "bg-primary-100 text-primary-foreground";
-      case "hard":
-        return "bg-destructive-100 text-destructive-foreground";
-      default:
-        return "bg-background-300 text-foreground-400";
-    }
-  };
-
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "action":
-        return "bg-red-500/20 text-red-400";
-      case "strategy":
-        return "bg-blue-500/20 text-blue-400";
-      case "puzzle":
-        return "bg-purple-500/20 text-purple-400";
-      case "rpg":
-        return "bg-green-500/20 text-green-400";
-      case "arcade":
-        return "bg-yellow-500/20 text-yellow-400";
-      default:
-        return "bg-background-300 text-foreground-400";
-    }
-  };
-
   return (
-    <View className="flex-1 bg-background-200" style={{ paddingTop: insets.top }}>
-      {/* Header */}
-      <View className="flex-row items-center justify-between p-4 border-b border-background-300">
-        <View className="flex-row items-center gap-3">
-          <View className="w-8 h-8 bg-primary-100 rounded-lg items-center justify-center">
-            <AwardIcon size="sm" className="text-primary-foreground" />
-          </View>
-          <View>
-            <Text className="text-foreground text-lg font-semibold">
-              Dojo Games
-            </Text>
-            <Text className="text-foreground-400 text-sm">
-              Cartridge Arcade
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Search Bar */}
-      <View className="p-4 border-b border-background-300">
-        <View className="flex-row items-center bg-background-300 rounded-lg px-3 py-2">
-          <MagnifyingGlassIcon size="sm" className="text-foreground-400 mr-2" />
-          <Text className="text-foreground-400 text-sm flex-1">
-            Search games...
-          </Text>
-        </View>
-      </View>
-
-      {/* Categories */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="border-b border-background-300"
-        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
-      >
-        {categories.map((category) => (
-          <Pressable
-            key={category.id}
-            onPress={() => setSelectedCategory(category.id)}
-            className={cn(
-              "px-3 py-1.5 rounded-full mr-2",
-              selectedCategory === category.id
-                ? "bg-primary-100"
-                : "bg-background-300",
-            )}
-          >
-            <Text
-              className={cn(
-                "text-sm font-medium",
-                selectedCategory === category.id
-                  ? "text-primary-foreground"
-                  : "text-foreground-400",
-              )}
-            >
-              {category.name} ({category.count})
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
-
-      {/* Games List */}
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {loading ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#6366f1" />
-            <Text className="text-foreground-400 mt-4">
-              Loading Dojo games...
-            </Text>
-          </View>
-        ) : error ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <Text className="text-destructive-100 text-center mb-4">
-              Failed to load games
-            </Text>
-            <Text className="text-foreground-400 text-sm text-center">
-              {error}
-            </Text>
-          </View>
-        ) : (
-          <View className="p-4 space-y-3">
-            {filteredGames.map((game) => (
+    <View className="flex-1 bg-background-100" style={{ paddingTop: insets.top }}>
+      <View className="flex flex-col gap-4 items-start justify-start size-full">
+        <View className="bg-background-200 flex flex-col gap-px grow items-start justify-start min-h-px min-w-px overflow-clip w-full">
+          {/* Games List Container */}
+          <View className="bg-background-100 flex flex-col gap-2 grow items-start justify-start min-h-px min-w-px overflow-clip p-4 w-full">
+            {allGames.map((gameName, index) => (
               <Pressable
-                key={game.id}
-                onPress={() => {
-                  console.log('Selected game:', game.name);
-                  // Here you would navigate to the game or handle game selection
-                }}
-                className="bg-background-300 rounded-lg p-3 active:bg-background-400"
+                key={gameName}
+                onPress={() => setSelectedGame(gameName)}
+                className={cn(
+                  "bg-background-100 flex gap-2 items-center justify-start overflow-clip p-2 rounded w-full",
+                  selectedGame === gameName && index === 0 && "relative"
+                )}
               >
-                <View className="flex-row gap-3">
-                  {/* Game Image */}
+                {/* Special gradient mask for "All Games" when selected */}
+                {selectedGame === gameName && index === 0 && (
+                  <View className="absolute h-10 left-0 right-0 top-0">
+                    <Image
+                      source={{ uri: gradientMask }}
+                      className="absolute bg-primary-100 inset-0"
+                      resizeMode="stretch"
+                    />
+                  </View>
+                )}
+
+                {/* Game Icon */}
+                <View className="bg-background-200 flex gap-2.5 items-center justify-start p-0.5 rounded-sm size-6">
                   <Image
-                    source={{ uri: game.imageUrl }}
-                    className="w-16 h-16 rounded-lg"
+                    source={{ uri: gameIcons[gameName as keyof typeof gameIcons] }}
+                    className="bg-center bg-cover bg-no-repeat rounded-sm size-5"
                     resizeMode="cover"
                   />
+                </View>
 
-                  {/* Game Info */}
-                  <View className="flex-1">
-                    <View className="flex-row items-center justify-between mb-1">
-                      <Text className="text-foreground font-semibold text-base flex-1 mr-2">
-                        {game.name}
-                      </Text>
-                      <View
-                        className={cn(
-                          "px-2 py-0.5 rounded-full",
-                          getDifficultyColor(game.difficulty),
-                        )}
-                      >
-                        <Text className="text-xs font-medium capitalize">
-                          {game.difficulty}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Text className="text-foreground-400 text-sm mb-2 line-clamp-2">
-                      {game.description}
-                    </Text>
-
-                    <View className="flex-row items-center justify-between">
-                      <View className="flex-row items-center gap-4">
-                        <View className="flex-row items-center gap-1">
-                          <View className="w-2 h-2 bg-constructive-100 rounded-full" />
-                          <Text className="text-foreground-400 text-xs">
-                            {game.playerCount.toLocaleString()} players
-                          </Text>
-                        </View>
-                        <View
-                          className={cn(
-                            "px-2 py-0.5 rounded-full",
-                            getCategoryColor(game.category),
-                          )}
-                        >
-                          <Text className="text-xs font-medium capitalize">
-                            {game.category}
-                          </Text>
-                        </View>
-                      </View>
-
-                      <View className="flex-row items-center gap-1">
-                        <PlayIcon size="xs" className="text-foreground-400" />
-                        <Text className="text-foreground-400 text-xs">
-                          {game.estimatedPlayTime}m
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
+                {/* Game Name */}
+                <View className="flex grow items-center justify-between min-h-px min-w-px">
+                  <Text
+                    className={cn(
+                      "text-sm text-center",
+                      index === 0 ? "text-primary-100" : "text-white"
+                    )}
+                  >
+                    {gameName}
+                  </Text>
                 </View>
               </Pressable>
             ))}
           </View>
-        )}
-      </ScrollView>
 
-      {/* Footer */}
-      <View className="p-4 border-t border-background-300">
-        <Button
-          variant="outline"
-          size="sm"
-          onPress={() => console.log("Settings pressed")}
-          className="w-full"
-        >
-          <GearIcon size="sm" className="mr-2" />
-          <Text>Game Settings</Text>
-        </Button>
+          {/* Register Game Button */}
+          <View className="bg-background-100 flex flex-col gap-2.5 items-start justify-start p-3 w-full">
+            <Pressable className="bg-background-200 flex gap-1 items-center justify-center overflow-clip p-2 rounded w-full">
+              <View className="overflow-clip size-5">
+                <Image
+                  source={{ uri: plusIcon }}
+                  className="size-full"
+                  resizeMode="contain"
+                />
+              </View>
+              <Text className="text-sm text-foreground-300 text-center font-medium">
+                Register Game
+              </Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
     </View>
   );
