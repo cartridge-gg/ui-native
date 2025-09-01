@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { View } from "react-native";
-import { useNavigation } from "expo-router";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { useNavigation } from "@react-navigation/native";
 import { ArcadeHeader, Text } from "#components";
 
 export default function MarketplaceScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DrawerNavigationProp<any>>();
 
   return (
     <View className="flex-1 bg-background">
