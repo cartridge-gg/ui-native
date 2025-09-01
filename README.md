@@ -18,7 +18,7 @@ A comprehensive React Native component library that mirrors the web UI library, 
 bun install
 
 # Start Storybook for development
-bun storybook
+bun storybook:dev
 
 # Start React Native development
 bun start
@@ -159,11 +159,11 @@ These differences are expected and documented in the visual comparison reports.
 
 | Script | Description |
 |--------|-------------|
-| `bun storybook` | Start Storybook development server |
-| `bun build-storybook` | Build Storybook for production |
+| `bun storybook:dev` | Start Storybook development server |
+| `bun storybook:build` | Build Storybook for production |
 | `bun screenshots:generate` | Generate all component screenshots |
 | `bun screenshots:update` | Update screenshot baselines |
-| `bun test:storybook` | Run visual regression tests |
+| `bun storybook:test` | Run visual regression tests |
 | `bun lint` | Lint codebase |
 | `bun format` | Format codebase |
 

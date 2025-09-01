@@ -1,0 +1,92 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import { useRouter } from "expo-router";
+import type * as React from "react";
+import { Pressable, View } from "react-native";
+import { cn } from "#utils";
+
+export const bottomTabVariants = cva(
+  "w-full flex-row justify-around items-stretch shrink-0",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-background-200 border-t border-spacer-100 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)]",
+      },
+      size: {
+        default: "h-[72px] gap-x-2 px-4 pb-2",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface BottomTabContainerProps
+  extends React.ComponentProps<typeof View>,
+  VariantProps<typeof bottomTabVariants> {
+  children?: React.ReactNode;
+}
+
+export function BottomTabContainer({
+  className,
+  variant,
+  size,
+  children,
+  ...props
+}: BottomTabContainerProps) {
+  return (
+    <View
+      className={cn(bottomTabVariants({ variant, size, className }))}
+      {...props}
+    >
+      {children}
+    </View>
+  );
+}
+
+// Tab Item component specifically for expo-router navigation
+export interface BottomTabItemProps
+  extends React.ComponentProps<typeof Pressable> {
+  children?: React.ReactNode;
+  routeName: string;
+  active?: boolean;
+  onPress?: () => void;
+}
+
+export function BottomTabItem({
+  className,
+  children,
+  routeName,
+  active = false,
+  onPress,
+  ...props
+}: BottomTabItemProps) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      router.push(`/(tabs)/${routeName}`);
+    }
+  };
+
+  return (
+    <Pressable
+      className={cn(
+        "flex-1 items-center justify-center",
+        active && "opacity-100",
+        !active && "opacity-60",
+        className,
+      )}
+      onPress={handlePress}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: active }}
+      {...props}
+    >
+      {children}
+    </Pressable>
+  );
+}
