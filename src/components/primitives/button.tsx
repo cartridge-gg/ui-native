@@ -20,8 +20,7 @@ export const buttonVariants = cva(
 				// Legacy variants for compatibility
 				destructive:
 					"bg-destructive-100 text-destructive-foreground shadow-sm web:hover:bg-destructive-100 active:bg-destructive-100",
-				outline:
-					"border border-input bg-background shadow-sm web:hover:bg-background-500 web:hover:text-foreground-200 active:bg-background-500 active:text-foreground-200",
+				outline: "border border-primary bg-transparent shadow-sm text-primary",
 				ghost:
 					"web:hover:bg-background-500 web:hover:text-foreground-200 active:bg-background-500 active:text-foreground-200",
 			},

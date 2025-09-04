@@ -1,37 +1,38 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import type { Chain } from "@starknet-react/chains";
+import { createContext, type ReactNode, useContext, useState } from "react";
 import {
-  ArcadeProvider as ExternalProvider,
-  AccessModel,
-  GameModel,
-  EditionModel,
+	type AccessModel,
+	type EditionModel,
+	ArcadeProvider as ExternalProvider,
+	GameModel,
 } from "#clone/arcade/mock";
-import { Chain } from "@starknet-react/chains";
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO
 type ToriiClient = any;
 
 const CHAIN_ID = "SN_MAIN";
 
 export interface ProjectProps {
-  namespace: string;
-  project: string;
+	namespace: string;
+	project: string;
 }
 
 /**
  * Interface defining the shape of the Arcade context.
  */
 interface ArcadeContextType {
-  /** The Arcade client instance */
-  chainId: string;
-  provider: ExternalProvider;
-  pins: { [playerId: string]: string[] };
-  follows: { [playerId: string]: string[] };
-  accesses: AccessModel[];
-  games: GameModel[];
-  editions: EditionModel[];
-  chains: Chain[];
-  player: string | undefined;
-  clients: { [key: string]: ToriiClient };
-  setPlayer: (address: string | undefined) => void;
+	/** The Arcade client instance */
+	chainId: string;
+	provider: ExternalProvider;
+	pins: { [playerId: string]: string[] };
+	follows: { [playerId: string]: string[] };
+	accesses: AccessModel[];
+	games: GameModel[];
+	editions: EditionModel[];
+	chains: Chain[];
+	player: string | undefined;
+	clients: { [key: string]: ToriiClient };
+	setPlayer: (address: string | undefined) => void;
 }
 
 /**
@@ -46,36 +47,36 @@ export const ArcadeContext = createContext<ArcadeContextType | null>(null);
  * @throws {Error} If ArcadeProvider is used more than once in the component tree
  */
 export const ArcadeProvider = ({ children }: { children: ReactNode }) => {
-  const currentValue = useContext(ArcadeContext);
-  if (currentValue) {
-    throw new Error("ArcadeProvider can only be used once");
-  }
+	const currentValue = useContext(ArcadeContext);
+	if (currentValue) {
+		throw new Error("ArcadeProvider can only be used once");
+	}
 
-  const [player, setPlayer] = useState<string | undefined>();
-  const provider = new ExternalProvider(CHAIN_ID);
+	const [player, setPlayer] = useState<string | undefined>();
+	const provider = new ExternalProvider(CHAIN_ID);
 
-  return (
-    <ArcadeContext.Provider
-      value={{
-        chainId: CHAIN_ID,
-        provider,
-        pins: {},
-        follows: {},
-        accesses: [],
-        games: [
-          new GameModel(1, "loot-survivor", "Loot Survivor", true, true),
-          new GameModel(2, "dope-wars", "Dope Wars", true, true),
-          new GameModel(3, "realms-eternum", "Realms Eternum", true, true),
-          new GameModel(4, "wordlers", "Wordlers", true, true),
-        ],
-        editions: [],
-        chains: [],
-        clients: {},
-        player,
-        setPlayer,
-      }}
-    >
-      {children}
-    </ArcadeContext.Provider>
-  );
+	return (
+		<ArcadeContext.Provider
+			value={{
+				chainId: CHAIN_ID,
+				provider,
+				pins: {},
+				follows: {},
+				accesses: [],
+				games: [
+					new GameModel(1, "loot-survivor", "Loot Survivor", true, true),
+					new GameModel(2, "dope-wars", "Dope Wars", true, true),
+					new GameModel(3, "realms-eternum", "Realms Eternum", true, true),
+					new GameModel(4, "wordlers", "Wordlers", true, true),
+				],
+				editions: [],
+				chains: [],
+				clients: {},
+				player,
+				setPlayer,
+			}}
+		>
+			{children}
+		</ArcadeContext.Provider>
+	);
 };

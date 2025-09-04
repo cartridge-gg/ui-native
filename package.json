@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@cartridge/controller": "^0.9.3",
+		"@cartridge/presets": "^0.5.2",
 		"@expo-google-fonts/ibm-plex-mono": "^0.4.0",
 		"@expo-google-fonts/inter": "^0.3.0",
 		"@gorhom/bottom-sheet": "^5.1.4",
