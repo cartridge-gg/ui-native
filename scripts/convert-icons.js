@@ -81,18 +81,56 @@ function convertIcon(webIconPath, nativeIconPath) {
 		const switchMatch = webContent.match(/\{\(\(\) => \{([\s\S]*?)\}\)\(\)\}/);
 		if (switchMatch) {
 			variantLogic = switchMatch[1].trim();
-			// Convert lowercase SVG elements in variant logic to uppercase
-			variantLogic = variantLogic
-				.replace(/<path/g, "<Path")
-				.replace(/<\/path>/g, "</Path>")
-				.replace(/<circle/g, "<Circle")
-				.replace(/<\/circle>/g, "</Circle>")
-				.replace(/<rect/g, "<Rect")
-				.replace(/<\/rect>/g, "</Rect>")
-				.replace(/<line/g, "<Line")
-				.replace(/<\/line>/g, "</Line>")
-				.replace(/<polygon/g, "<Polygon")
-				.replace(/<\/polygon>/g, "</Polygon>");
+
+			// Extract all case blocks and rebuild the switch statement properly
+			const caseMatches = variantLogic.match(
+				/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/g,
+			);
+
+			if (caseMatches) {
+				const caseBlocks = [];
+				caseBlocks.push("switch (variant) {");
+
+				caseMatches.forEach((match, _index) => {
+					// Extract case name and content
+					const caseMatch = match.match(
+						/case "([^"]+)":[\s]*return \(([\s\S]*?)\);/,
+					);
+					if (caseMatch) {
+						const caseName = caseMatch[1];
+						let caseContent = caseMatch[2];
+
+						// Clean up the case content
+						caseContent = caseContent
+							.replace(/<path/g, "<Path")
+							.replace(/<\/path>/g, "</Path>")
+							.replace(/<circle/g, "<Circle")
+							.replace(/<\/circle>/g, "</Circle>")
+							.replace(/<rect/g, "<Rect")
+							.replace(/<\/rect>/g, "</Rect>")
+							.replace(/<line/g, "<Line")
+							.replace(/<\/line>/g, "</Line>")
+							.replace(/<polygon/g, "<Polygon")
+							.replace(/<\/polygon>/g, "</Polygon>")
+							.replace(
+								/className="fill-current"/g,
+								'fill={color || "currentColor"}',
+							)
+							.replace(
+								/className="fill-foreground-200"/g,
+								'fill="currentColor"',
+							);
+
+						caseBlocks.push(`            case "${caseName}":
+              return (
+                ${caseContent}
+              );`);
+					}
+				});
+
+				caseBlocks.push("          }");
+				variantLogic = caseBlocks.join("\n");
+			}
 		}
 	}
 
@@ -100,7 +138,15 @@ function convertIcon(webIconPath, nativeIconPath) {
 	let convertedContent = svgContent
 		.replace(/<svg[^>]*>/g, "")
 		.replace(/<\/svg>/g, "")
-		.replace(/className="fill-current"/g, 'fill="currentColor"');
+		.replace(/className="fill-current"/g, 'fill={color || "currentColor"}')
+		.replace(/fill="currentColor"/g, 'fill={color || "currentColor"}')
+		.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
+
+	// Add @ts-expect-error comment before className attributes
+	convertedContent = convertedContent.replace(
+		/(\s+)className=/g,
+		"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+	);
 
 	// Replace static IDs with dynamic ones if gradients or clipPaths are present
 	if (needsUseId) {
@@ -136,6 +182,18 @@ function convertIcon(webIconPath, nativeIconPath) {
 
 	// For variant-based icons, also check the variant logic content
 	const _contentToCheck = hasVariants ? variantLogic : convertedContent;
+
+	// Check if svgClass will actually be used
+	const willUseSvgClass =
+		convertedContent.includes("className={svgClass}") ||
+		(hasVariants && variantLogic.includes("className={svgClass}")) ||
+		convertedContent.includes('fill={color || "currentColor"}') ||
+		convertedContent.includes('fill="currentColor"') ||
+		convertedContent.includes('fill="var(--foreground-100)"') ||
+		(hasVariants &&
+			(variantLogic.includes('fill={color || "currentColor"}') ||
+				variantLogic.includes('fill="currentColor"') ||
+				variantLogic.includes('fill="var(--foreground-100)"')));
 
 	if (
 		convertedContent.includes("<Path") ||
@@ -282,28 +340,56 @@ function convertIcon(webIconPath, nativeIconPath) {
 import Svg, { ${svgImports} } from "react-native-svg";
 
 import type { ${paramType} } from "#components/icons/types";
-import { iconVariants } from "#components/icons/utils";
+import { iconVariants${willUseSvgClass ? ", useSvgClass" : ""} } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
-	({ className, size${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
+	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
 		needsUseId
 			? `
 		const id = useId();`
+			: ""
+	}${
+		willUseSvgClass
+			? `
+		const svgClass = useSvgClass() ?? "fill-foreground";`
 			: ""
 	}
 		return (
 			<Svg
 				viewBox="${viewBox}"
-				className={iconVariants({ size, className })}
+				className={iconVariants({ size: sizeProp, className })}
 				ref={ref}
 				{...props}
 			>
 				${
 					hasVariants
 						? `{(() => {
-					${variantLogic.replace(/className="fill-current"/g, 'fill="currentColor"')}
+					${variantLogic
+						.replace(
+							/fill=\{color \|\| "currentColor"\}/g,
+							"className={svgClass}",
+						)
+						.replace(/fill="currentColor"/g, "className={svgClass}")
+						.replace(/fill="var\(--foreground-100\)"/g, "className={svgClass}")
+						.replace(
+							/(\s+)className=/g,
+							"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+						)}
 				})()}`
 						: convertedContent
+								.replace(
+									/fill=\{color \|\| "currentColor"\}/g,
+									"className={svgClass}",
+								)
+								.replace(/fill="currentColor"/g, "className={svgClass}")
+								.replace(
+									/fill="var\(--foreground-100\)"/g,
+									"className={svgClass}",
+								)
+								.replace(
+									/(\s+)className=/g,
+									"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+								)
 				}
 			</Svg>
 		);

@@ -8,8 +8,10 @@
 		"paths": {
 			"#*": ["./src/*"],
 			"#components/*": ["./src/components/*"],
+			"#context/*": ["./src/context/*"],
 			"#utils/*": ["./src/utils/*"],
-			"#app/*": ["./app/*"]
+			"#app/*": ["./app/*"],
+			"#assets/*": ["./assets/*"]
 		},
 		"noImplicitAny": false,
 		"skipLibCheck": true,

@@ -1,6 +1,6 @@
 import { useAccount, useSignTypedData } from "@starknet-react/core";
 import { useCallback, useState } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
 	type ArraySignatureType,
 	shortString,
@@ -9,6 +9,7 @@ import {
 } from "starknet";
 import {
 	Button,
+	ScreenHeader,
 	Text,
 	// Textarea
 } from "#components";
@@ -46,7 +47,8 @@ export default function SignMessage() {
 	}, [account, address, message, signature]);
 
 	return (
-		<SafeAreaView>
+		<View className="flex-1 bg-background">
+			<ScreenHeader title="Sign Message" />
 			<ScrollView contentContainerClassName="px-4 pb-16 gap-2">
 				<View className="bg-background-400 p-4 rounded-lg border border-foreground-400">
 					<Text>{JSON.stringify(message, null, 2)}</Text>
@@ -83,7 +85,7 @@ export default function SignMessage() {
 					</>
 				)}
 			</ScrollView>
-		</SafeAreaView>
+		</View>
 	);
 }
 
