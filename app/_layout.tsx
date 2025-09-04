@@ -17,6 +17,7 @@ import { constants } from "starknet";
 import { ArcadeProvider } from "#clone/arcade/context/arcade";
 import { OwnershipsProvider } from "#clone/arcade/context/ownership";
 import { SideDrawer, TextClassContext } from "#components";
+import { ThemeProvider } from "#context/theme";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
 
 // SessionPolicies type definition
@@ -38,27 +39,26 @@ export default function Layout() {
 				<TextClassContext.Provider value="text-foreground">
 					<Toaster position="bottom-center" />
 					<StarknetProvider>
-						<ArcadeProvider>
-							<OwnershipsProvider>
-								<Drawer
-									screenOptions={{
-										headerShown: false,
-										drawerStyle: {
-											backgroundColor: "#1a1a1a",
-											width: 320,
-										},
-										drawerActiveTintColor: "#6366f1",
-										drawerInactiveTintColor: "#888888",
-									}}
-									drawerContent={SideDrawer}
-								>
-									<Drawer.Screen
-										name="(tabs)"
-										options={{ headerShown: false }}
-									/>
-								</Drawer>
-							</OwnershipsProvider>
-						</ArcadeProvider>
+						<ThemeProvider>
+							<ArcadeProvider>
+								<OwnershipsProvider>
+									<Drawer
+										screenOptions={{
+											headerShown: false,
+											drawerStyle: {
+												width: 320,
+											},
+										}}
+										drawerContent={SideDrawer}
+									>
+										<Drawer.Screen
+											name="(tabs)"
+											options={{ headerShown: false }}
+										/>
+									</Drawer>
+								</OwnershipsProvider>
+							</ArcadeProvider>
+						</ThemeProvider>
 					</StarknetProvider>
 				</TextClassContext.Provider>
 			</SafeAreaProvider>

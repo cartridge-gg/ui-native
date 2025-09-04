@@ -13,7 +13,7 @@ export function SideDrawer() {
 			style={{ paddingTop: insets.top }}
 		>
 			<View className="flex-1 flex-col">
-				<View className="bg-primary-100 bg-opacity-60 p-3 flex-row items-center">
+				<View className="bg-primary/10 p-3 flex-row items-center">
 					<View className="w-6 h-6 bg-background-200 rounded mr-3" />
 					<Text className="text-primary font-semibold text-white">
 						All Games
