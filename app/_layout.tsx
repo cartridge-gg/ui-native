@@ -10,15 +10,14 @@ import {
 import { Drawer } from "expo-router/drawer";
 import { verifyInstallation } from "nativewind";
 import { type PropsWithChildren, useEffect } from "react";
-import { cssInterop } from "react-native-css-interop";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { constants } from "starknet";
-import { TextClassContext } from "#components";
-import { DojoDrawerContent } from "#components";
-import { GamesProvider } from "#context/games-context";
+import { TextClassContext, SideDrawer } from "#components";
+import { ArcadeProvider } from "#clone/arcade/context/arcade";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
+import { OwnershipsProvider } from "#clone/arcade/context/ownership";
 
 // SessionPolicies type definition
 type SessionPolicies = {
@@ -37,22 +36,24 @@ export default function Layout() {
         <TextClassContext.Provider value="text-foreground">
           <Toaster position="bottom-center" />
           <StarknetProvider>
-            <GamesProvider>
-              <Drawer
-                screenOptions={{
-                  headerShown: false,
-                  drawerStyle: {
-                    backgroundColor: '#1a1a1a',
-                    width: 320,
-                  },
-                  drawerActiveTintColor: '#6366f1',
-                  drawerInactiveTintColor: '#888888',
-                }}
-                drawerContent={() => <DojoDrawerContent />}
-              >
-                <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
-              </Drawer>
-            </GamesProvider>
+            <ArcadeProvider>
+              <OwnershipsProvider>
+                <Drawer
+                  screenOptions={{
+                    headerShown: false,
+                    drawerStyle: {
+                      backgroundColor: '#1a1a1a',
+                      width: 320,
+                    },
+                    drawerActiveTintColor: '#6366f1',
+                    drawerInactiveTintColor: '#888888',
+                  }}
+                  drawerContent={SideDrawer}
+                >
+                  <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
+                </Drawer>
+              </OwnershipsProvider>
+            </ArcadeProvider>
           </StarknetProvider>
         </TextClassContext.Provider>
       </SafeAreaProvider>

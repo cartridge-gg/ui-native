@@ -7,6 +7,8 @@ const {
 // eslint-disable-next-line no-undef
 const config = getDefaultConfig(__dirname);
 
+config.resolver.assetExts.push("wasm");
+
 module.exports = wrapWithReanimatedMetroConfig(
 	withNativeWind(config, { input: "./global.css" }),
 );

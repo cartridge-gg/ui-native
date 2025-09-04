@@ -1,51 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
-import { View, ScrollView, ActivityIndicator } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Text } from "#components";
-import React, { useEffect, useState } from "react";
-import { dojoGamesApi, type DojoGame } from "#utils/api";
+import { useArcade } from "#clone/arcade/hooks/arcade";
 
 export default function ActivityScreen() {
-  const navigation = useNavigation();
-  const [games, setGames] = useState<DojoGame[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch games from API
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        setLoading(true);
-        const fetchedGames = await dojoGamesApi.getGames();
-        setGames(fetchedGames);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch games:", err);
-        setError("Failed to load games");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGames();
-  }, []);
-
-  if (loading) {
-    return (
-      <View className="flex-1 bg-background-100 items-center justify-center">
-        <ActivityIndicator size="large" color="#fbcb4a" />
-        <Text className="text-foreground mt-4">Loading activity...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View className="flex-1 bg-background-100 items-center justify-center px-4">
-        <Text className="text-destructive-100 text-center mb-4">Failed to load activity</Text>
-        <Text className="text-foreground-400 text-sm text-center">{error}</Text>
-      </View>
-    );
-  }
+  const { games } = useArcade();
 
   return (
     <View className="flex-1 bg-background-100">

@@ -15,7 +15,7 @@ export const bottomTabVariants = cva(
           "bg-background-200 border-t border-spacer-100 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)]",
       },
       size: {
-        default: "h-[88px] gap-x-2 px-4 pb-2",
+        default: "h-[90px] gap-x-2 px-4 pb-2",
       },
     },
     defaultVariants: {
@@ -100,7 +100,7 @@ export function BottomTabItem({
         )}
 
         {IconComponent ? (
-          <IconComponent variant={active ? "solid" : "line"} size="xl" />
+          <IconComponent variant={active ? "solid" : "line"} size="lg" />
         ) : (
           children
         )}
