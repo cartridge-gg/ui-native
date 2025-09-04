@@ -1,29 +1,38 @@
 import { DrawerActions } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
-import { ImageBackground, View } from "react-native";
+import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import banner from "#assets/banner.png";
 import { Button, HamburgerIcon, SearchIcon, Text } from "#components";
-import { useColorScheme } from "#hooks";
 
 export function Header() {
 	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
-	const { isDarkColorScheme } = useColorScheme();
-
-	const coverDark =
-		"https://static.cartridge.gg/presets/cartridge/cover-dark.png";
-	const coverLight =
-		"https://static.cartridge.gg/presets/cartridge/cover-light.png";
-	const cover = isDarkColorScheme ? coverDark : coverLight;
 
 	return (
 		<ImageBackground
-			source={{ uri: cover }}
+			source={banner as ImageURISource}
 			resizeMode="cover"
 			imageStyle={{ opacity: 0.35 }}
 			className="w-full bg-background-200 border-b border-spacer-100"
 			style={{ paddingTop: insets.top > 0 ? insets.top : 16 }}
 		>
+			{/* Gradient shadow overlay: linear-gradient(to top, var(--background-100), transparent) */}
+			<LinearGradient
+				colors={["#161a17", "transparent"]}
+				start={{ x: 0, y: 1 }}
+				end={{ x: 0, y: 0 }}
+				style={{
+					position: "absolute",
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					opacity: 1,
+				}}
+			/>
+
 			<View className="flex-row items-center justify-between p-3">
 				{/* Left: Hamburger to open drawer */}
 				<Button
