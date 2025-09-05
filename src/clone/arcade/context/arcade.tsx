@@ -64,10 +64,22 @@ export const ArcadeProvider = ({ children }: { children: ReactNode }) => {
 				follows: {},
 				accesses: [],
 				games: [
-					new GameModel(1, "loot-survivor", "Loot Survivor", true, true),
-					new GameModel(2, "dope-wars", "Dope Wars", true, true),
-					new GameModel(3, "realms-eternum", "Realms Eternum", true, true),
-					new GameModel(4, "wordlers", "Wordlers", true, true),
+					new GameModel(1, "loot-survivor", "Loot Survivor", true, true, {
+						icon: "https://assets.cartridge.gg/games/loot-survivor/icon.png",
+						cover: "https://assets.cartridge.gg/games/loot-survivor/cover.png",
+					}),
+					new GameModel(2, "dope-wars", "Dope Wars", true, true, {
+						icon: "https://assets.cartridge.gg/games/dope-wars/icon.png",
+						cover: "https://assets.cartridge.gg/games/dope-wars/cover.png",
+					}),
+					new GameModel(3, "realms-eternum", "Realms Eternum", true, true, {
+						icon: "https://assets.cartridge.gg/games/eternum/icon.png",
+						cover: "https://assets.cartridge.gg/games/eternum/cover.png",
+					}),
+					new GameModel(4, "wordlers", "Wordlers", true, true, {
+						icon: "https://assets.cartridge.gg/games/wordlers/icon.png",
+						cover: "https://assets.cartridge.gg/games/wordlers/cover.png",
+					}),
 				],
 				editions: [],
 				chains: [],

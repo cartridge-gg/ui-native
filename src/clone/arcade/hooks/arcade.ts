@@ -77,18 +77,17 @@ export const useArcade = () => {
 			const preset = (controllerConfigs as Record<string, any>)[key];
 			const theme = preset?.theme;
 			const icon: string | undefined =
-				typeof theme?.icon === "string" ? theme.icon : undefined;
+				typeof theme?.icon === "string" ? theme.icon : game.properties?.icon;
 			const cover: string | undefined = theme?.cover
 				? typeof theme.cover === "string"
 					? theme.cover
 					: (theme.cover?.dark ?? theme.cover?.light)
-				: undefined;
-			return { ...game, image: icon, cover, theme } as typeof game & {
-				image?: string;
-				cover?: string;
-				// biome-ignore lint/suspicious/noExplicitAny: theme type from presets
-				theme?: any;
-			};
+				: game.properties?.cover;
+			return {
+				...game,
+				// biome-ignore lint/suspicious/noExplicitAny: TODO
+				properties: { ...(game as any).properties, icon, cover },
+			} as typeof game & { properties: { icon?: string; cover?: string } };
 		});
 	}, [fileteredGames]);
 

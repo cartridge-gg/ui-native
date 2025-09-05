@@ -49,6 +49,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 						size="icon"
 						accessibilityRole="button"
 						accessibilityLabel="Search"
+						onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
 					>
 						<SearchIcon />
 					</Button>
