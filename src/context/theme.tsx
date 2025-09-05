@@ -44,8 +44,6 @@ export const themes = {
 			"--secondary-100": "120 57% 78%",
 			"--destructive-100": "0 72% 65%",
 			"--constructive-100": "128 67% 66%",
-
-			"--radius": "0.5rem",
 		}),
 		dark: vars({
 			"--background-100": "135 8% 9%",
@@ -87,8 +85,6 @@ export const themes = {
 			"--secondary-100": "120 57% 78%",
 			"--destructive-100": "0 72% 65%",
 			"--constructive-100": "128 67% 66%",
-
-			"--radius": "0.5rem",
 		}),
 	},
 } as const;
