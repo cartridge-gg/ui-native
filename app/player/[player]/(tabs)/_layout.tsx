@@ -2,10 +2,10 @@ import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChestIcon, PulseIcon, TabButton, TrophyIcon } from "#components";
+import { TAB_BAR_HEIGHT } from "#utils";
 
 export default function PlayerTabsLayout() {
 	const insets = useSafeAreaInsets();
-	const baseBarHeight = 60;
 
 	return (
 		<Tabs>
@@ -17,7 +17,7 @@ export default function PlayerTabsLayout() {
 					"w-full flex-row shrink-0 bg-background-200 border-t border-spacer-100 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)] px-4"
 				}
 				style={{
-					height: baseBarHeight + insets.bottom,
+					height: TAB_BAR_HEIGHT + insets.bottom,
 					paddingBottom: insets.bottom,
 				}}
 			>

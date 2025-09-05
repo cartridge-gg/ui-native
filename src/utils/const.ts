@@ -6,3 +6,5 @@ export const RPC_MAINNET_URL = "https://api.cartridge.gg/x/starknet/mainnet";
 export const RPC_SEPOLIA_URL = "https://api.cartridge.gg/x/starknet/sepolia";
 
 export const DEFAULT_PROJECT: string = "arcade-mainnet-2";
+
+export const TAB_BAR_HEIGHT = 60;

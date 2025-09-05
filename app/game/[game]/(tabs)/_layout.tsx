@@ -9,10 +9,10 @@ import {
 	SwordsIcon,
 	TabButton,
 } from "#components";
+import { TAB_BAR_HEIGHT } from "#utils";
 
 export default function GameTabsLayout() {
 	const insets = useSafeAreaInsets();
-	const baseBarHeight = 60;
 
 	return (
 		<Tabs>
@@ -24,7 +24,7 @@ export default function GameTabsLayout() {
 					"w-full flex-row justify-around items-center shrink-0 bg-background-200 border-t border-spacer-100 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)] gap-x-2 px-4"
 				}
 				style={{
-					height: baseBarHeight + insets.bottom,
+					height: TAB_BAR_HEIGHT + insets.bottom,
 					paddingBottom: insets.bottom,
 				}}
 			>

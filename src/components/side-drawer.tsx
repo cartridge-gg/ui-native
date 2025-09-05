@@ -3,6 +3,7 @@ import { Image, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useArcade } from "#clone/arcade/hooks/arcade";
 import { Text } from "#components";
+import { TAB_BAR_HEIGHT } from "#utils";
 
 export function SideDrawer() {
 	const insets = useSafeAreaInsets();
@@ -41,7 +42,13 @@ export function SideDrawer() {
 					</View>
 				</ScrollView>
 
-				<View className="h-[90px] p-3 border-t border-background-100">
+				<View
+					className="p-3 border-t border-background-100"
+					style={{
+						height: TAB_BAR_HEIGHT + insets.bottom,
+						paddingBottom: insets.bottom,
+					}}
+				>
 					<Pressable className="bg-background-100 flex-row items-center justify-center p-3 rounded-lg">
 						<Text className="text-foreground-300 mr-2">+</Text>
 						<Text className="text-foreground-300 text-sm font-medium">
