@@ -1,15 +1,10 @@
 import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-	LeaderboardIcon,
-	PulseIcon,
-	ShoppingCartIcon,
-	TabButton,
-} from "#components";
+import { ChestIcon, PulseIcon, TabButton, TrophyIcon } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
-export default function TabLayout() {
+export default function PlayerTabsLayout() {
 	const insets = useSafeAreaInsets();
 
 	return (
@@ -26,14 +21,14 @@ export default function TabLayout() {
 					paddingBottom: insets.bottom,
 				}}
 			>
-				<TabTrigger name="activity" href="/activity" asChild>
+				<TabTrigger name="inventory" href="./inventory" asChild>
+					<TabButton Icon={ChestIcon} />
+				</TabTrigger>
+				<TabTrigger name="achievement" href="./achievement" asChild>
+					<TabButton Icon={TrophyIcon} />
+				</TabTrigger>
+				<TabTrigger name="activity" href="./activity" asChild>
 					<TabButton Icon={PulseIcon} />
-				</TabTrigger>
-				<TabTrigger name="leaderboard" href="/leaderboard" asChild>
-					<TabButton Icon={LeaderboardIcon} />
-				</TabTrigger>
-				<TabTrigger name="marketplace" href="/marketplace" asChild>
-					<TabButton Icon={ShoppingCartIcon} />
 				</TabTrigger>
 			</TabList>
 		</Tabs>

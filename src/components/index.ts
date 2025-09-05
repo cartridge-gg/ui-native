@@ -4,4 +4,6 @@ export * from "./header";
 export * from "./icons";
 export * from "./network";
 export * from "./primitives";
+export * from "./screen-info";
 export * from "./side-drawer";
+export * from "./tab-button";

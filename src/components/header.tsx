@@ -1,14 +1,13 @@
+import type { DrawerHeaderProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "expo-router";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
 import { Button, HamburgerIcon, SearchIcon, Text } from "#components";
 
-export function Header() {
+export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
-	const navigation = useNavigation();
 
 	return (
 		<ImageBackground
@@ -34,7 +33,6 @@ export function Header() {
 			/>
 
 			<View className="flex-row items-center justify-between p-3">
-				{/* Left: Hamburger to open drawer */}
 				<Button
 					variant="icon"
 					size="icon"
@@ -45,7 +43,6 @@ export function Header() {
 					<HamburgerIcon />
 				</Button>
 
-				{/* Right: Search pill and CONNECT tag */}
 				<View className="flex-row items-center gap-3">
 					<Button
 						variant="icon"

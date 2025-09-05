@@ -16,7 +16,7 @@ import { Toaster } from "sonner-native";
 import { constants } from "starknet";
 import { ArcadeProvider } from "#clone/arcade/context/arcade";
 import { OwnershipsProvider } from "#clone/arcade/context/ownership";
-import { SideDrawer, TextClassContext } from "#components";
+import { Header, SideDrawer, TextClassContext } from "#components";
 import { ThemeProvider } from "#context/theme";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
 
@@ -43,19 +43,14 @@ export default function Layout() {
 							<ArcadeProvider>
 								<OwnershipsProvider>
 									<Drawer
-										screenOptions={{
-											headerShown: false,
+										screenOptions={({ navigation }) => ({
 											drawerStyle: {
 												width: 320,
 											},
-										}}
+											header: () => <Header navigation={navigation} />,
+										})}
 										drawerContent={SideDrawer}
-									>
-										<Drawer.Screen
-											name="(tabs)"
-											options={{ headerShown: false }}
-										/>
-									</Drawer>
+									/>
 								</OwnershipsProvider>
 							</ArcadeProvider>
 						</ThemeProvider>

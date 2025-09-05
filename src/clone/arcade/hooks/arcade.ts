@@ -1,3 +1,4 @@
+import { controllerConfigs } from "@cartridge/presets";
 import { useAccount } from "@starknet-react/core";
 import { useContext, useMemo } from "react";
 import { ArcadeContext } from "#clone/arcade/context/arcade";
@@ -68,6 +69,29 @@ export const useArcade = () => {
 		});
 	}, [games, ownerships, admin, address]);
 
+	const enrichedGames = useMemo(() => {
+		return fileteredGames.map((game) => {
+			let key = game.identifier;
+			if (key === "realms-eternum") key = "eternum";
+			// biome-ignore lint/suspicious/noExplicitAny: presets typing
+			const preset = (controllerConfigs as Record<string, any>)[key];
+			const theme = preset?.theme;
+			const icon: string | undefined =
+				typeof theme?.icon === "string" ? theme.icon : undefined;
+			const cover: string | undefined = theme?.cover
+				? typeof theme.cover === "string"
+					? theme.cover
+					: (theme.cover?.dark ?? theme.cover?.light)
+				: undefined;
+			return { ...game, image: icon, cover, theme } as typeof game & {
+				image?: string;
+				cover?: string;
+				// biome-ignore lint/suspicious/noExplicitAny: theme type from presets
+				theme?: any;
+			};
+		});
+	}, [fileteredGames]);
+
 	const filteredEditions = useMemo(() => {
 		return editions
 			.filter((edition) => {
@@ -112,7 +136,7 @@ export const useArcade = () => {
 		pins,
 		follows,
 		accesses,
-		games: fileteredGames,
+		games: enrichedGames,
 		editions: filteredEditions,
 		chains,
 		clients,

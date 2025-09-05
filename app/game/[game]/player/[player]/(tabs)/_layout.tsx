@@ -9,7 +9,7 @@ import {
 } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
-export default function TabLayout() {
+export default function GamePlayerTabsLayout() {
 	const insets = useSafeAreaInsets();
 
 	return (
@@ -26,13 +26,13 @@ export default function TabLayout() {
 					paddingBottom: insets.bottom,
 				}}
 			>
-				<TabTrigger name="activity" href="/activity" asChild>
+				<TabTrigger name="activity" href="./activity" asChild>
 					<TabButton Icon={PulseIcon} />
 				</TabTrigger>
-				<TabTrigger name="leaderboard" href="/leaderboard" asChild>
+				<TabTrigger name="leaderboard" href="./leaderboard" asChild>
 					<TabButton Icon={LeaderboardIcon} />
 				</TabTrigger>
-				<TabTrigger name="marketplace" href="/marketplace" asChild>
+				<TabTrigger name="marketplace" href="./marketplace" asChild>
 					<TabButton Icon={ShoppingCartIcon} />
 				</TabTrigger>
 			</TabList>

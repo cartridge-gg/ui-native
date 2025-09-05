@@ -97,10 +97,11 @@ export const cartridgePreset: Partial<Config> = {
 				"2xs": "10px",
 			},
 			borderRadius: {
-				xl: "calc(var(--radius) + 4px)",
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 4px)",
-				sm: "calc(var(--radius) - 6px)",
+				// Use numeric values to ensure NativeWind maps to RN borderRadius correctly
+				xl: "12px",
+				lg: "8px",
+				md: "6px",
+				sm: "4px",
 				full: "9999px",
 			},
 			keyframes: {
