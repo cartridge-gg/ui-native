@@ -44,9 +44,9 @@ export default {
 	icon: "./assets/icon.png",
 	userInterfaceStyle: "light",
 	splash: {
-		image: "./assets/splash.png",
+		image: "./assets/icon.png",
 		resizeMode: "contain",
-		backgroundColor: "#ffffff",
+		backgroundColor: "#151916",
 	},
 	assetBundlePatterns: ["**/*"],
 	ios: {
@@ -61,8 +61,8 @@ export default {
 	},
 	android: {
 		adaptiveIcon: {
-			foregroundImage: "./assets/adaptive-icon.png",
-			backgroundColor: "#ffffff",
+			foregroundImage: "./assets/icon.png",
+			backgroundColor: "#151916",
 		},
 		package: isDev ? "com.cartridge.arcade.dev" : "com.cartridge.arcade",
 	},
