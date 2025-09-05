@@ -54,6 +54,7 @@ export class GameModel extends RegistryModel {
 		public name: string,
 		public published: boolean = true,
 		public whitelisted: boolean = true,
+		public properties: { icon?: string; cover?: string } = {},
 	) {
 		super();
 		// biome-ignore lint/suspicious/noExplicitAny: TODO
@@ -61,6 +62,16 @@ export class GameModel extends RegistryModel {
 	}
 	exists(): boolean {
 		return true;
+	}
+	clone(): GameModel {
+		return new GameModel(
+			this.id,
+			this.identifier,
+			this.name,
+			this.published,
+			this.whitelisted,
+			{ ...this.properties },
+		);
 	}
 }
 

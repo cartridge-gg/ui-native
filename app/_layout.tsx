@@ -46,6 +46,7 @@ export default function Layout() {
 										screenOptions={({ navigation }) => ({
 											drawerStyle: {
 												width: 320,
+												backgroundColor: "#151916",
 											},
 											header: () => <Header navigation={navigation} />,
 										})}
