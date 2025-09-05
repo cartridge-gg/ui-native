@@ -23,7 +23,7 @@ jobs:
       - run: bun add -g eas-cli
       - run: bun i
       - run: |
-          bun run eas build \
+          bunx eas-cli build \
           --local \
           --non-interactive \
           --profile production \
@@ -32,7 +32,7 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       - run: |
-          bun run eas submit \
+          bunx eas-cli submit \
           --platform ${{ matrix.platform }} \
           --path ./builds/cartridge-archade-production-${{ github.run_id }}.${{ matrix.platform == 'ios' && 'ipa' || 'apk' }}
         env:
