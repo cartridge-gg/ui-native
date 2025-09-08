@@ -36,6 +36,8 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 		return banner as ImageURISource;
 	}, [pathname, games]);
 
+	// No per-header overrides; ThemeProvider applies game theme globally on game routes
+
 	return (
 		<ImageBackground
 			source={bgSource}
