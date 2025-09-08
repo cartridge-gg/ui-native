@@ -28,19 +28,19 @@ export default function GameTabsLayout() {
 					paddingBottom: insets.bottom,
 				}}
 			>
-				<TabTrigger name="activity" href="./activity" asChild>
+				<TabTrigger name="activity" href="activity" asChild>
 					<TabButton Icon={PulseIcon} />
 				</TabTrigger>
-				<TabTrigger name="leaderboard" href="./leaderboard" asChild>
+				<TabTrigger name="leaderboard" href="leaderboard" asChild>
 					<TabButton Icon={LeaderboardIcon} />
 				</TabTrigger>
-				<TabTrigger name="marketplace" href="./marketplace" asChild>
+				<TabTrigger name="marketplace" href="marketplace" asChild>
 					<TabButton Icon={ShoppingCartIcon} />
 				</TabTrigger>
-				<TabTrigger name="guilds" href="./guilds" asChild>
+				<TabTrigger name="guilds" href="guilds" asChild>
 					<TabButton Icon={SwordsIcon} />
 				</TabTrigger>
-				<TabTrigger name="about" href="./about" asChild>
+				<TabTrigger name="about" href="about" asChild>
 					<TabButton Icon={ListIcon} />
 				</TabTrigger>
 			</TabList>
