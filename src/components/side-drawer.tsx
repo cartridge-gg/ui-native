@@ -1,7 +1,8 @@
-import { router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgUri } from "react-native-svg";
 import { useArcade } from "#clone/arcade/hooks/arcade";
 import { Input, Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
@@ -16,10 +17,7 @@ export function SideDrawer() {
 	);
 
 	return (
-		<View
-			className="flex-1 bg-background-200"
-			style={{ paddingTop: insets.top }}
-		>
+		<View className="flex-1" style={{ paddingTop: insets.top }}>
 			<View className="flex-1 flex-col">
 				<View className="p-4">
 					<Input
@@ -35,43 +33,20 @@ export function SideDrawer() {
 						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
 							Arcade
 						</Text>
-						<Pressable
-							onPress={() => {
-								router.push(`/activity`);
-							}}
-							className="flex-row items-center p-3 rounded-lg active:bg-background-100"
-						>
-							<Image
-								className="size-8 rounded-lg mr-3"
-								source={require("../../assets/icon.png")}
-							/>
-							<Text className="text-foreground text-sm flex-1">Arcade</Text>
-						</Pressable>
+						{/* biome-ignore lint/nursery/useUniqueElementIds: this is static */}
+						<Item id="arcade" title="Arcade" />
 
 						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
 							Games
 						</Text>
-						<View className="pb-4">
+						<View className="gap-1">
 							{filteredGames.map((g) => (
-								<Pressable
+								<Item
 									key={g.id}
-									onPress={() => {
-										router.push(`/game/${g.id}/activity`);
-									}}
-									className="flex-row items-center p-3 rounded-lg active:bg-background-100"
-								>
-									{g.properties?.icon ? (
-										<Image
-											className="size-8 rounded-lg mr-3"
-											source={{ uri: g.properties.icon }}
-										/>
-									) : (
-										<View className="size-8 rounded-lg mr-3 bg-background-150" />
-									)}
-									<Text className="text-foreground text-sm flex-1">
-										{g.name}
-									</Text>
-								</Pressable>
+									id={g.id.toString()}
+									icon={g.properties.icon}
+									title={g.name}
+								/>
 							))}
 						</View>
 					</View>
@@ -92,5 +67,44 @@ export function SideDrawer() {
 				</View>
 			</View>
 		</View>
+	);
+}
+
+function Item({
+	id,
+	icon,
+	title,
+}: {
+	id: string;
+	icon?: string;
+	title: string;
+}) {
+	return (
+		<Link href={id === "arcade" ? "/activity" : `/game/${id}/activity`} asChild>
+			<Pressable
+				key={id}
+				className="flex-row items-center p-3 active:bg-background-100 gap-2"
+			>
+				<View className="size-8 bg-background-200 rounded items-center justify-center">
+					{id === "arcade" ? (
+						<Image
+							className="size-7 rounded"
+							source={require("../../assets/icon.png")}
+						/>
+					) : icon ? (
+						typeof icon === "string" && icon.includes(".svg") ? (
+							<SvgUri className="size-7 rounded" uri={icon} />
+						) : (
+							<Image className="size-7 rounded" source={{ uri: icon }} />
+						)
+					) : (
+						<Text>{id[0].toUpperCase()}</Text>
+					)}
+				</View>
+				<Text className="text-foreground text-sm flex-1 font-medium">
+					{title}
+				</Text>
+			</Pressable>
+		</Link>
 	);
 }
