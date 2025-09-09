@@ -4,3 +4,4 @@ export * from "#utils/const";
 export * from "#utils/controller";
 export * from "#utils/fonts";
 export * from "#utils/network";
+export * from "#utils/time";

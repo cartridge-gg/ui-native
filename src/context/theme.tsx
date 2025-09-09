@@ -3,7 +3,7 @@ import { usePathname } from "expo-router";
 import { useColorScheme, vars } from "nativewind";
 import { createContext, type PropsWithChildren, useMemo } from "react";
 import { View } from "react-native";
-import { useArcade } from "#clone/arcade/hooks/arcade";
+import { useArcade } from "#clone/arcade";
 
 export const themes = {
 	default: {

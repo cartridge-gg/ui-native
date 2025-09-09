@@ -1,10 +1,9 @@
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { SvgUri } from "react-native-svg";
-import { useArcade } from "#clone/arcade/hooks/arcade";
-import { Input, Text } from "#components";
+import { useArcade } from "#clone/arcade";
+import { Input, Text, Thumbnail } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
 export function SideDrawer() {
@@ -85,22 +84,19 @@ function Item({
 				key={id}
 				className="flex-row items-center p-3 active:bg-background-100 gap-2"
 			>
-				<View className="size-8 bg-background-200 rounded items-center justify-center">
-					{id === "arcade" ? (
-						<Image
-							className="size-7 rounded"
-							source={require("../../assets/icon.png")}
-						/>
-					) : icon ? (
-						typeof icon === "string" && icon.includes(".svg") ? (
-							<SvgUri className="size-7 rounded" uri={icon} />
-						) : (
-							<Image className="size-7 rounded" source={{ uri: icon }} />
-						)
-					) : (
+				{id === "arcade" ? (
+					<Thumbnail
+						icon={require("#assets/icon.png")}
+						size="md"
+						variant="default"
+					/>
+				) : icon ? (
+					<Thumbnail icon={icon} size="md" variant="default" />
+				) : (
+					<View className="size-8 bg-background-200 rounded items-center justify-center">
 						<Text>{id[0].toUpperCase()}</Text>
-					)}
-				</View>
+					</View>
+				)}
 				<Text className="text-foreground text-sm flex-1 font-medium">
 					{title}
 				</Text>

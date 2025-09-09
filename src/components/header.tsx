@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
-import { useArcade } from "#clone/arcade/hooks/arcade";
+import { useArcade } from "#clone/arcade";
 import { Button, HamburgerIcon, SearchIcon, Text } from "#components";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
