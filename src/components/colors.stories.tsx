@@ -26,18 +26,18 @@ function getCSSVarValue(color: string): string {
 }
 
 function Colors(props: PropsWithChildren) {
-	return <View className="flex flex-row gap-4" {...props} />;
+	return <View className="flex-row gap-4" {...props} />;
 }
 
 function Palette({ color, label }: { color: string; label: string }) {
 	const displayValue = getCSSVarValue(color);
 
 	return (
-		<View className="w-36 h-36 flex flex-shrink-0 flex-col text-xs rounded-lg overflow-hidden">
-			<View className={`${color} flex-1 flex justify-center items-center`}>
+		<View className="w-36 h-36 flex-shrink-0 flex-col text-xs rounded-lg overflow-hidden">
+			<View className={`${color} flex-1 justify-center items-center`}>
 				<Text className="text-xs text-center">{displayValue}</Text>
 			</View>
-			<View className="bg-spacer-100 flex justify-center items-center h-12">
+			<View className="bg-spacer-100 justify-center items-center h-12">
 				<Text className="text-xs text-center">{label}</Text>
 			</View>
 		</View>

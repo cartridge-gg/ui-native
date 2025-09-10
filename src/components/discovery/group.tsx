@@ -1,5 +1,6 @@
 import { View } from "react-native";
-import { DiscoveryEvent, type DiscoveryEventProps } from "./discovery-event";
+import { cn } from "#utils";
+import { DiscoveryEvent, type DiscoveryEventProps } from "./event";
 
 export function DiscoveryGroup({
 	events,
@@ -10,11 +11,10 @@ export function DiscoveryGroup({
 }) {
 	return (
 		<View
-			className="select-none flex flex-col gap-y-px"
-			style={{
-				borderRadius: rounded ? 8 : 0,
-				overflow: rounded ? "hidden" : "visible",
-			}}
+			className={cn(
+				"select-none flex flex-col gap-y-px",
+				rounded && "rounded-lg overflow-hidden",
+			)}
 		>
 			{events.map((event) => (
 				<DiscoveryEvent key={event.identifier} {...event} />

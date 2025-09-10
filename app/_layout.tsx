@@ -1,5 +1,6 @@
 import "../global.css";
 import "react-native-get-random-values";
+import "../src/css-interop";
 
 import { type Chain, mainnet, sepolia } from "@starknet-react/chains";
 import {
@@ -15,7 +16,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { constants } from "starknet";
 import { ArcadeProvider, OwnershipsProvider } from "#clone/arcade";
-import { Header, SideDrawer, TextClassContext } from "#components";
+import {
+	Header,
+	SideDrawer,
+	SvgClassContext,
+	TextClassContext,
+} from "#components";
 import { ThemeProvider } from "#context/theme";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
 
@@ -36,25 +42,27 @@ export default function Layout() {
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
 				<TextClassContext.Provider value="text-foreground">
-					<Toaster position="bottom-center" />
-					<StarknetProvider>
-						<ThemeProvider>
-							<ArcadeProvider>
-								<OwnershipsProvider>
-									<Drawer
-										screenOptions={({ navigation }) => ({
-											drawerStyle: {
-												width: 320,
-												backgroundColor: "#151916",
-											},
-											header: () => <Header navigation={navigation} />,
-										})}
-										drawerContent={SideDrawer}
-									/>
-								</OwnershipsProvider>
-							</ArcadeProvider>
-						</ThemeProvider>
-					</StarknetProvider>
+					<SvgClassContext.Provider value="fill-foreground">
+						<Toaster position="bottom-center" />
+						<StarknetProvider>
+							<ThemeProvider>
+								<ArcadeProvider>
+									<OwnershipsProvider>
+										<Drawer
+											screenOptions={({ navigation }) => ({
+												drawerStyle: {
+													width: 320,
+													backgroundColor: "#151916",
+												},
+												header: () => <Header navigation={navigation} />,
+											})}
+											drawerContent={SideDrawer}
+										/>
+									</OwnershipsProvider>
+								</ArcadeProvider>
+							</ThemeProvider>
+						</StarknetProvider>
+					</SvgClassContext.Provider>
 				</TextClassContext.Provider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>

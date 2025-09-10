@@ -1,7 +1,12 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { Pressable } from "react-native";
-import { ExternalIcon, Spinner, TextClassContext } from "#components";
+import {
+	ExternalIcon,
+	Spinner,
+	SvgClassContext,
+	TextClassContext,
+} from "#components";
 import { cn } from "#utils";
 
 export const buttonVariants = cva(
@@ -74,6 +79,24 @@ export const buttonTextVariants = cva(
 	},
 );
 
+export const buttonSvgVariants = cva("", {
+	variants: {
+		variant: {
+			primary: "fill-primary-foreground",
+			secondary: "fill-foreground-100",
+			tertiary: "fill-foreground-300",
+			icon: "fill-foreground-100",
+			link: "fill-foreground-300",
+			destructive: "fill-destructive-foreground",
+			outline: "fill-foreground",
+			ghost: "fill-foreground",
+		},
+	},
+	defaultVariants: {
+		variant: "primary",
+	},
+});
+
 export interface ButtonProps
 	extends React.ComponentProps<typeof Pressable>,
 		VariantProps<typeof buttonVariants> {
@@ -95,40 +118,46 @@ export function Button({
 	...props
 }: ButtonProps) {
 	return (
-		<TextClassContext.Provider
-			value={buttonTextVariants({
+		<SvgClassContext.Provider
+			value={buttonSvgVariants({
 				variant,
-				size,
-				className: cn("web:pointer-events-none", textClassName),
 			})}
 		>
-			<Pressable
-				className={cn(
-					(disabled || isLoading) && "opacity-50 web:pointer-events-none",
-					buttonVariants({
-						variant,
-						size,
-						status: isActive ? "active" : undefined,
-						className,
-					}),
-				)}
-				ref={ref}
-				disabled={disabled || isLoading}
-				{...props}
+			<TextClassContext.Provider
+				value={buttonTextVariants({
+					variant,
+					size,
+					className: cn("web:pointer-events-none", textClassName),
+				})}
 			>
-				{(state) => (
-					<>
-						{isLoading ? (
-							<Spinner />
-						) : typeof children === "function" ? (
-							children(state)
-						) : (
-							children
-						)}
-						{variant === "link" && !isLoading && <ExternalIcon size="sm" />}
-					</>
-				)}
-			</Pressable>
-		</TextClassContext.Provider>
+				<Pressable
+					className={cn(
+						(disabled || isLoading) && "opacity-50 web:pointer-events-none",
+						buttonVariants({
+							variant,
+							size,
+							status: isActive ? "active" : undefined,
+							className,
+						}),
+					)}
+					ref={ref}
+					disabled={disabled || isLoading}
+					{...props}
+				>
+					{(state) => (
+						<>
+							{isLoading ? (
+								<Spinner />
+							) : typeof children === "function" ? (
+								children(state)
+							) : (
+								children
+							)}
+							{variant === "link" && !isLoading && <ExternalIcon size="sm" />}
+						</>
+					)}
+				</Pressable>
+			</TextClassContext.Provider>
+		</SvgClassContext.Provider>
 	);
 }

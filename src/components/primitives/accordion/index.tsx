@@ -76,7 +76,7 @@ export function AccordionTrigger({
 
 	return (
 		<TextClassContext.Provider value="text-sm text-foreground-400">
-			<AccordionPrimitive.Header className="flex">
+			<AccordionPrimitive.Header>
 				<AccordionPrimitive.Trigger {...props} asChild>
 					<Trigger
 						className={cn(
@@ -115,7 +115,7 @@ export function AccordionContent({
 				)}
 				{...props}
 			>
-				<InnerContent className={cn("flex flex-col gap-px", className)}>
+				<InnerContent className={cn("flex-col gap-px", className)}>
 					{children}
 				</InnerContent>
 			</AccordionPrimitive.Content>

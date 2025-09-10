@@ -13,7 +13,7 @@ function Tabs({
 }: TabsPrimitive.RootProps & React.RefAttributes<TabsPrimitive.RootRef>) {
 	return (
 		<TabsPrimitive.Root
-			className={cn("flex flex-col gap-2", className)}
+			className={cn("flex-col gap-2", className)}
 			{...props}
 		/>
 	);
