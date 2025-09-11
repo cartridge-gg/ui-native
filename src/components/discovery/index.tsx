@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { SectionList, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useDiscovers } from "#clone/arcade";
 import {
 	EmptyStateActivityIcon,
@@ -12,15 +12,14 @@ import {
 	UserCheckIcon,
 	UsersIcon,
 } from "#components";
-import type { DiscoveryEventProps } from "./event";
-import { DiscoveryGroup } from "./group";
+import { DiscoveryEvent, type DiscoveryEventProps } from "./event";
 
 type TabValue = "all" | "following";
 
 const INITIAL_OFFSET = 30;
 
 // Enhanced interface to match desktop complexity
-export interface DiscoveryEvent {
+export interface DiscoveryEventData {
 	identifier: string;
 	name: string;
 	timestamp: number;
@@ -34,7 +33,7 @@ export interface DiscoveryEvent {
 }
 
 export interface DiscoveryProps {
-	followingEvents?: DiscoveryEvent[];
+	followingEvents?: DiscoveryEventData[];
 	onTabChange?: (tab: TabValue) => void;
 	initialTab?: TabValue;
 }
@@ -69,7 +68,6 @@ export function Discovery({
 		logo: event.logo,
 		color: event.color,
 		count: event.count,
-		actions: event.actions,
 		achievements: event.achievements,
 		duration: event.duration,
 	});
@@ -128,34 +126,20 @@ function Content({
 	setCap: (n: number) => void;
 }) {
 	const limited = useMemo(() => events.slice(0, cap), [events, cap]);
-	const sections = useMemo(
-		() => [{ title: "Today", data: limited }],
-		[limited],
-	);
-
 	if (status === "loading" && events.length === 0) return <LoadingState />;
-	if (status === "error" || sections.length === 0) return <EmptyState />;
+	if (status === "error" || events.length === 0) return <EmptyState />;
 
 	return (
-		<SectionList
-			sections={sections}
+		<FlatList
+			data={limited}
 			keyExtractor={(item) => item.identifier}
-			renderItem={() => null}
-			renderSectionHeader={({ section: { title } }) => (
-				<View className="py-3 px-4">
-					<Text className="text-xs font-semibold text-foreground-400 tracking-wider">
-						{title}
-					</Text>
-				</View>
-			)}
-			renderSectionFooter={({ section }) => (
-				<DiscoveryGroup rounded events={section.data} />
-			)}
+			renderItem={({ item }) => <DiscoveryEvent {...item} />}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
-			contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
 			onEndReached={() => setCap(cap + 24)}
 			onEndReachedThreshold={0.5}
+			className="p-4"
+			contentContainerClassName="rounded-md overflow-hidden"
 		/>
 	);
 }

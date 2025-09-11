@@ -5,12 +5,12 @@ import type { IconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const SilverTagIcon = memo<IconProps>(
-	({ className, size: sizeProp, ref, ...props }) => {
+	({ className, size: sizeProp, color, ref, ...props }) => {
 		const id = useId();
 		return (
 			<Svg
 				viewBox="0 0 20 20"
-				className={iconVariants({ size: sizeProp, className })}
+				className={iconVariants({ size: sizeProp })}
 				ref={ref}
 				{...props}
 			>
