@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
-import { useArcade } from "#clone/arcade/hooks/arcade";
+import { useArcade } from "#clone/arcade";
 import { Button, HamburgerIcon, SearchIcon, Text } from "#components";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
@@ -51,14 +51,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 				colors={["#161a17", "transparent"]}
 				start={{ x: 0, y: 1 }}
 				end={{ x: 0, y: 0 }}
-				style={{
-					position: "absolute",
-					left: 0,
-					right: 0,
-					top: 0,
-					bottom: 0,
-					opacity: 1,
-				}}
+				className="absolute left-0 right-0 top-0 bottom-0 opacity-100"
 			/>
 
 			<View className="flex-row items-center justify-between p-3">

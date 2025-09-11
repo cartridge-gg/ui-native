@@ -20,14 +20,14 @@ export const Default: Story = {
 		return (
 			<RadioGroup value={value} onValueChange={setValue}>
 				<Pressable
-					className="flex flex-row items-center space-x-2"
+					className="flex-row items-center space-x-2"
 					onPress={() => setValue("option-one")}
 				>
 					<RadioGroupItem value="option-one" />
 					<Label>Option One</Label>
 				</Pressable>
 				<Pressable
-					className="flex flex-row items-center space-x-2"
+					className="flex-row items-center space-x-2"
 					onPress={() => setValue("option-two")}
 				>
 					<RadioGroupItem value="option-two" />

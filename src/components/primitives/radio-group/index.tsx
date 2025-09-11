@@ -32,7 +32,7 @@ export function RadioGroupItem({
 			)}
 			{...props}
 		>
-			<RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+			<RadioGroupPrimitive.Indicator className="items-center justify-center">
 				<CheckIcon size="2xs" />
 			</RadioGroupPrimitive.Indicator>
 		</RadioGroupPrimitive.Item>

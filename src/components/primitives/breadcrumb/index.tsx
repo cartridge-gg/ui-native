@@ -91,7 +91,7 @@ export function BreadcrumbEllipsis({
 }: BreadcrumbTypes.BreadcrumbEllipsisProps) {
 	return (
 		<BreadcrumbPrimitive.BreadcrumbEllipsis
-			className={cn("flex h-9 w-9 items-center justify-center", className)}
+			className={cn("h-9 w-9 items-center justify-center", className)}
 			{...props}
 		>
 			<DotsIcon size="sm" />

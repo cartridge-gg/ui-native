@@ -140,7 +140,10 @@ function convertIcon(webIconPath, nativeIconPath) {
 		.replace(/<\/svg>/g, "")
 		.replace(/className="fill-current"/g, 'fill={color || "currentColor"}')
 		.replace(/fill="currentColor"/g, 'fill={color || "currentColor"}')
-		.replace(/className="fill-foreground-200"/g, 'fill="currentColor"');
+		.replace(
+			/className="fill-foreground-200"/g,
+			'fill={color || "currentColor"}',
+		);
 
 	// Add @ts-expect-error comment before className attributes
 	convertedContent = convertedContent.replace(
@@ -183,17 +186,20 @@ function convertIcon(webIconPath, nativeIconPath) {
 	// For variant-based icons, also check the variant logic content
 	const _contentToCheck = hasVariants ? variantLogic : convertedContent;
 
-	// Check if svgClass will actually be used
-	const willUseSvgClass =
-		convertedContent.includes("className={svgClass}") ||
-		(hasVariants && variantLogic.includes("className={svgClass}")) ||
-		convertedContent.includes('fill={color || "currentColor"}') ||
-		convertedContent.includes('fill="currentColor"') ||
-		convertedContent.includes('fill="var(--foreground-100)"') ||
+	// All icons should have svgClass, except brand-color icons and icons with static colors/gradients
+	const isBrandColorIcon = webIconPath.includes("/brand-color/");
+
+	// Detect icons that have static colors, gradients, or Tailwind classes (don't need svgClass)
+	const hasStaticColors =
+		convertedContent.includes('fill="#') || // Static hex colors like fill="#FF875B"
+		convertedContent.includes("fill={`url(#") || // Gradient fills like fill={`url(#paint0_linear_...)}
+		convertedContent.includes('className="fill-') || // Tailwind fill classes like className="fill-current"
 		(hasVariants &&
-			(variantLogic.includes('fill={color || "currentColor"}') ||
-				variantLogic.includes('fill="currentColor"') ||
-				variantLogic.includes('fill="var(--foreground-100)"')));
+			(variantLogic.includes('fill="#') ||
+				variantLogic.includes("fill={`url(#") ||
+				variantLogic.includes('className="fill-')));
+
+	const willUseSvgClass = !isBrandColorIcon && !hasStaticColors;
 
 	if (
 		convertedContent.includes("<Path") ||
@@ -343,7 +349,7 @@ import type { ${paramType} } from "#components/icons/types";
 import { iconVariants${willUseSvgClass ? ", useSvgClass" : ""} } from "#components/icons/utils";
 
 export const ${iconName} = memo<${paramType}>(
-	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, ref, ...props }) => {${
+	({ className, size: sizeProp${hasVariants ? ", variant" : ""}, color, ref, ...props }) => {${
 		needsUseId
 			? `
 		const id = useId();`
@@ -351,45 +357,69 @@ export const ${iconName} = memo<${paramType}>(
 	}${
 		willUseSvgClass
 			? `
-		const svgClass = useSvgClass() ?? "fill-foreground";`
+		const hookSvgClass = useSvgClass();
+		const svgClass = className ?? hookSvgClass ?? "fill-foreground";`
 			: ""
 	}
 		return (
 			<Svg
 				viewBox="${viewBox}"
-				className={iconVariants({ size: sizeProp, className })}
+				className={iconVariants({ size: sizeProp })}
 				ref={ref}
 				{...props}
 			>
 				${
 					hasVariants
 						? `{(() => {
-					${variantLogic
-						.replace(
-							/fill=\{color \|\| "currentColor"\}/g,
-							"className={svgClass}",
-						)
-						.replace(/fill="currentColor"/g, "className={svgClass}")
-						.replace(/fill="var\(--foreground-100\)"/g, "className={svgClass}")
-						.replace(
-							/(\s+)className=/g,
-							"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
-						)}
+					${
+						willUseSvgClass
+							? variantLogic
+									.replace(
+										/fill=\{color \|\| "currentColor"\}/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="currentColor"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="var\(--foreground-100\)"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="(?!url\(#)[^"]*"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/(\s+)className=/g,
+										"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+									)
+							: variantLogic
+					}
 				})()}`
-						: convertedContent
-								.replace(
-									/fill=\{color \|\| "currentColor"\}/g,
-									"className={svgClass}",
-								)
-								.replace(/fill="currentColor"/g, "className={svgClass}")
-								.replace(
-									/fill="var\(--foreground-100\)"/g,
-									"className={svgClass}",
-								)
-								.replace(
-									/(\s+)className=/g,
-									"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
-								)
+						: willUseSvgClass
+							? convertedContent
+									.replace(
+										/fill=\{color \|\| "currentColor"\}/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="currentColor"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="var\(--foreground-100\)"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/fill="(?!url\(#)[^"]*"/g,
+										"className={color ? undefined : svgClass}\n\t\t\t\t\t\tfill={color}",
+									)
+									.replace(
+										/(\s+)className=/g,
+										"$1// @ts-expect-error TODO: className prop type issue with cssInterop-ed component\n$1className=",
+									)
+							: convertedContent
 				}
 			</Svg>
 		);

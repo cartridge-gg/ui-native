@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { Discovery } from "#components";
 
-export default function ActivityScreen() {
-	return <ScreenInfo />;
+export default function GameActivityScreen() {
+	return <Discovery />;
 }

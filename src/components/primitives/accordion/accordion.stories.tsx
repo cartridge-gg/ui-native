@@ -25,7 +25,7 @@ export const Default: Story = {
 		<Accordion type="single" collapsible>
 			<AccordionItem value="item-1">
 				<AccordionTrigger className="gap-1">
-					<View className="flex flex-row items-center gap-1">
+					<View className="flex-row items-center gap-1">
 						<Text>Approve</Text>
 						<Text className="text-foreground-200 font-bold">2 methods</Text>
 					</View>
@@ -37,7 +37,7 @@ export const Default: Story = {
 							className="flex flex-row items-center gap-1"
 						>
 							<CircleIcon size="sm" className="text-foreground-400" />
-							<View className="flex flex-row items-center gap-2">
+							<View className="flex-row items-center gap-2">
 								<Text>Method {i + 1}</Text>
 								<InfoIcon size="sm" className="text-foreground-400" />
 							</View>
@@ -54,7 +54,7 @@ export const TriggerColor: Story = {
 		<Accordion type="single" collapsible>
 			<AccordionItem value="item-1">
 				<AccordionTrigger className="gap-1 text-destructive-100">
-					<View className="flex flex-row items-center gap-1">
+					<View className="flex-row items-center gap-1">
 						<Text>Approve</Text>
 						<Text className="text-foreground-200 font-bold">2 methods</Text>
 					</View>
@@ -66,7 +66,7 @@ export const TriggerColor: Story = {
 							className="flex flex-row items-center gap-1"
 						>
 							<CircleIcon size="sm" className="text-foreground-400" />
-							<View className="flex flex-row items-center gap-2">
+							<View className="flex-row items-center gap-2">
 								<Text>Method {i + 1}</Text>
 								<InfoIcon size="sm" className="text-foreground-400" />
 							</View>

@@ -178,7 +178,7 @@ export function Content({
 				<Menubar.Item
 					ref={itemRef}
 					aria-hidden
-					style={{ position: "fixed", top: 0, left: 0, zIndex: -999999999 }}
+					className="fixed top-0 left-0 -z-[999999999]"
 					aria-disabled
 					tabIndex={-1}
 					hidden

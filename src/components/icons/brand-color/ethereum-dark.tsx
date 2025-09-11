@@ -5,11 +5,11 @@ import type { IconProps } from "#components/icons/types";
 import { iconVariants } from "#components/icons/utils";
 
 export const EthereumDarkColorIcon = memo<IconProps>(
-	({ className, size: sizeProp, ref, ...props }) => {
+	({ className, size: sizeProp, color, ref, ...props }) => {
 		return (
 			<Svg
 				viewBox="0 0 24 24"
-				className={iconVariants({ size: sizeProp, className })}
+				className={iconVariants({ size: sizeProp })}
 				ref={ref}
 				{...props}
 			>

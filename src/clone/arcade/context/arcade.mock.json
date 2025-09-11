@@ -1,0 +1,691 @@
+{
+	"games": [
+		{
+			"type": "Game",
+			"identifier": "0x016d7415cf2ba56fb52c10fed4cf73a3ac3d6c9cd2321248881b644e89f7c8e5",
+			"id": 5,
+			"published": true,
+			"whitelisted": true,
+			"color": "#D7B000",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeidzdoxxtxqsjlz63i2wriezlj45vhiyjh5gy4x2lftgdhxpx7ogty",
+			"image_data": "",
+			"external_url": "https://blobarena.xyz/amma",
+			"description": "Blob Area is a mini-game designed for a game jam, featuring unique characters known as \"Bloberts\" engaging in strategic, Pokemon-like battles. Players will navigate through exciting encounters, against other players or against AI, using their Bloberts' distinctive traits to outsmart and defeat opponents. The game's core mechanic revolves around an enhanced rock-paper-scissors style combat modified by each character's attributes.",
+			"name": "Blob Arena AMMA",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "blob-arena-amma",
+				"color": "#D7B000"
+			},
+			"properties": {
+				"preset": "blob-arena-amma",
+				"icon": "https://static.cartridge.gg/presets/blob-arena-amma/icon.png",
+				"banner": "https://static.cartridge.gg/presets/blob-arena-amma/cover.png",
+				"cover": "https://static.cartridge.gg/presets/blob-arena-amma/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x00ee4a2391262b00e6a6609ffb42e12e2c4e57ceca20194adda7df38cbe5c43d",
+			"id": 3,
+			"published": true,
+			"whitelisted": true,
+			"color": "#F59100",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafkreifz5vxphlnklsjjbmowprdlifegfjroq54znsvt3unlm64wxutg6a",
+			"image_data": "",
+			"external_url": "https://darkshuffle.io/",
+			"description": "A Provable Roguelike Deck-building Game on Starknet, powered by LORDS.",
+			"name": "Dark Shuffle",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "dark-shuffle",
+				"color": "#F59100"
+			},
+			"properties": {
+				"preset": "dark-shuffle",
+				"icon": "https://static.cartridge.gg/presets/dark-shuffle/icon.svg",
+				"banner": "https://static.cartridge.gg/presets/dark-shuffle/cover.png",
+				"cover": "https://static.cartridge.gg/presets/dark-shuffle/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x004533cf8322e4e8109cf9479dfb8d5425a5b33b2e8ea09b780760b6ebefaf1c",
+			"id": 11,
+			"published": true,
+			"whitelisted": true,
+			"color": "#11ED83",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeifuanzphldze7lk2h5qmaenrxuhheesymdlj2ubpkdq32xadrmxau",
+			"image_data": "",
+			"external_url": "https://dopewars.game/",
+			"description": "Dope Wars is an onchain adaptation of the classic arbitrage game Drug Wars, built by Cartridge in partnership with Dope DAO.",
+			"name": "Dope Wars",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "dope-wars",
+				"color": "#11ED83"
+			},
+			"properties": {
+				"preset": "dope-wars",
+				"icon": "https://static.cartridge.gg/presets/dope-wars/icon.png",
+				"banner": "https://static.cartridge.gg/presets/dope-wars/cover.png",
+				"cover": "https://static.cartridge.gg/presets/dope-wars/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x0302b30ee6c7b0042ea28ad6f9ca8f66d560109bfa100e0276cdb61f88a5010c",
+			"id": 15,
+			"published": true,
+			"whitelisted": true,
+			"color": "#BD835B",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeia2yul4j73agdllmogctvykfhgvvc2ib3nqvqtgsmonqjky3euvk4",
+			"image_data": "",
+			"external_url": "https://mageduel.evolute.network/",
+			"description": "Mage Duel is a turn-based PvP board game, inspired by Carcassonne , built by Evolute Studio",
+			"name": "Evolute: Mage Duel",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "mage-duel",
+				"color": "#BD835B"
+			},
+			"properties": {
+				"preset": "mage-duel",
+				"icon": "https://static.cartridge.gg/presets/mage-duel/icon.png",
+				"banner": "https://static.cartridge.gg/presets/mage-duel/cover.png",
+				"cover": "https://static.cartridge.gg/presets/mage-duel/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x008352ce3b1adc2110cf8444ce489d32dd320c34a80dd9720647e72a8c2093d7",
+			"id": 17,
+			"published": true,
+			"whitelisted": true,
+			"color": "#DCA2EA",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeigmb77wsvuj5syy7ruw46gbbruziukie6z6vj2iixztj2xtcblc3i",
+			"image_data": "",
+			"external_url": "https://alpha.jokersofneon.com",
+			"description": "Jokers of Neon combines familiar poker mechanics with roguelike progression and unique deck-building twists to create a fresh, competitive experience.",
+			"name": "Jokers of Neon",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "jokers-of-neon",
+				"color": "#DCA2EA"
+			},
+			"properties": {
+				"preset": "jokers-of-neon",
+				"icon": "https://static.cartridge.gg/presets/jokers-of-neon/icon.png",
+				"banner": "https://static.cartridge.gg/presets/jokers-of-neon/cover.png",
+				"cover": "https://static.cartridge.gg/presets/jokers-of-neon/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x059ed5f8aa8ca58b21cad8fd0b6d7c6da3dc9f52dc4be8a9f2d3dc3ab7904caf",
+			"id": 9,
+			"published": true,
+			"whitelisted": true,
+			"color": "#EF9758",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeiagtqrdc5krpgekfej5nsj6fz66r7jfv2hlruuvyp6jxuxse2loda",
+			"image_data": "",
+			"external_url": "https://pistols.gg",
+			"description": "10 paces, one shot. Whether you are duelling for honour or vengeance, be sure to put the bastard in the dirt.",
+			"name": "Pistols at Dawn",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "pistols",
+				"color": "#EF9758"
+			},
+			"properties": {
+				"preset": "pistols",
+				"icon": "https://static.cartridge.gg/presets/pistols/icon.png",
+				"banner": "https://static.cartridge.gg/presets/pistols/cover.png",
+				"cover": "https://static.cartridge.gg/presets/pistols/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x0647ec7114541c9ec11e29d532f000b42f601e3d2529a08ad2073fc6121c3d53",
+			"id": 7,
+			"published": true,
+			"whitelisted": true,
+			"color": "#F38332",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeiamtpbizqk4un2v7nlgkvfudmorckujwmj7orf3fgmd3jkdsyjyri",
+			"image_data": "",
+			"external_url": "https://play.ponzi.land/",
+			"description": "Welcome to the world of Ponzi , where the crypto dreams are limitless, and the meme coins are abundant. Dive into the uncharted territories of blockchain , meet the enigmatic characters behind the schemes, and uncover the secrets of the next big rug pull . Join us in this thrilling journey where fortunes are made and lost, and let your imagination run wild in the fair game of crypto adventures.",
+			"name": "Ponzi Land",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "ponziland",
+				"color": "#F38332"
+			},
+			"properties": {
+				"preset": "ponziland",
+				"icon": "https://static.cartridge.gg/presets/ponziland/icon.svg",
+				"banner": "https://static.cartridge.gg/presets/ponziland/cover.png",
+				"cover": "https://static.cartridge.gg/presets/ponziland/cover.png"
+			},
+			"socials": {}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x00579e8877c7755365d5ec1ec7d3a94a457eff5d1f40482bbe9729c064cdead2",
+			"id": 1,
+			"published": true,
+			"whitelisted": true,
+			"color": "#dc8b07",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafkreicrq4vk6gejndbbic3n4adto6l4f7vack4bolfvqyxj4n2ag5v3e4",
+			"image_data": "",
+			"external_url": "",
+			"description": "Rule the Hex.",
+			"name": "Realms",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "eternum",
+				"color": "#dc8b07"
+			},
+			"properties": {
+				"preset": "eternum",
+				"icon": "https://static.cartridge.gg/presets/eternum/icon.svg",
+				"banner": "https://static.cartridge.gg/presets/eternum/cover.png",
+				"cover": "https://static.cartridge.gg/presets/eternum/cover.png"
+			},
+			"socials": {
+				"videos": [""],
+				"images": [""]
+			}
+		},
+		{
+			"type": "Game",
+			"identifier": "0x06d1f0723dfff312ffadaed95d179af346038fc4130cfb3145f7318bdd2da3aa",
+			"id": 13,
+			"published": true,
+			"whitelisted": true,
+			"color": "#5bc3e6",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeigdyjoedbsae7tidplgdwcdq4cfhnlfs47esxx3bwvufryt5k264a",
+			"image_data": "",
+			"external_url": "https://app.zkube.xyz/",
+			"description": "zKube is an engaging puzzle game that puts players' strategic thinking to the test. Set within a dynamic grid, the objective is simple: manipulate blocks to form solid lines and earn points. Each turn, a new line of blocks emerges from the bottom of the grid, and players have the opportunity to slide any block horizontally to strategically position them. The challenge lies in clearing lines efficiently to prevent the grid from filling up. With no notion of speed or acceleration, zKube offers a purely reflective gameplay experience, allowing players to focus solely on their puzzle-solving skills. Are you ready to dive into the world of zKube and master its captivating challenges?",
+			"name": "zKube",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "zkube",
+				"color": "#5bc3e6"
+			},
+			"properties": {
+				"preset": "zkube",
+				"icon": "https://static.cartridge.gg/presets/zkube/icon.png",
+				"banner": "https://static.cartridge.gg/presets/zkube/cover.png",
+				"cover": "https://static.cartridge.gg/presets/zkube/cover.png"
+			},
+			"socials": {}
+		}
+	],
+	"editions": [
+		{
+			"type": "Edition",
+			"identifier": "0x020185e0ab367a55b068e0f8b7abda935f15b418737e7b67d84aaee133ec2572",
+			"id": 2,
+			"worldAddress": "0x06A9E4C6f0799160EA8ddC43Ff982a5f83D7f633e9732Ce42701De1288Ff705f",
+			"namespace": "s0_eternum",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 1,
+			"config": {
+				"project": "eternum-mainnet-0",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#dc8b07",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafkreieqxryubmd2si4qqdsmsdc7pnwgkjez7r6fqumf4vfrnuw4mdkh2m",
+			"image_data": "",
+			"external_url": "https://eternum.realms.world/",
+			"description": "Rule the Hex.",
+			"name": "Eternum: Season 0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "eternum"
+			},
+			"properties": {
+				"preset": "eternum",
+				"icon": "https://static.cartridge.gg/presets/eternum/icon.svg"
+			},
+			"socials": {
+				"website": "https://eternum.realms.world/",
+				"github": "https://github.com/BibliothecaDAO/eternum",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x03bff737156d61b6d5b631be781522e042b52b8fb5ce35a6779d569afdeec83d",
+			"id": 4,
+			"worldAddress": "0x06A9E4C6f0799160EA8ddC43Ff982a5f83D7f633e9732Ce42701De1288Ff705f",
+			"namespace": "ds_v1_2_0",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 3,
+			"config": {
+				"project": "arcade-darkshuffle",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#F59100",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafkreihumfvbveg3kj3wsoyohp2ufpywh37n5zxbvnyaxjf7h3z6p2qj7u",
+			"image_data": "",
+			"external_url": "https://darkshuffle.io/",
+			"description": "A Provable Roguelike Deck-building Game on Starknet, powered by LORDS.",
+			"name": "v1.2.0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "dark-shuffle"
+			},
+			"properties": {
+				"preset": "dark-shuffle",
+				"icon": "https://static.cartridge.gg/presets/dark-shuffle/icon.svg"
+			},
+			"socials": {
+				"website": "https://darkshuffle.io/",
+				"github": "https://github.com/Provable-Games/dark-shuffle",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x034be5f1befdd2b6c70d79d2f8286e248e370367604eaad46ca61a1e15bc6978",
+			"id": 8,
+			"worldAddress": "0x0628b6AF861259ce9Ce22e8Df6EBd5FBf4FDE9a7d4E6EBa086aa8Dd32325f3b0",
+			"namespace": "ponzi_land",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 7,
+			"config": {
+				"project": "arcade-ponziland",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#F38332",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeig2oppzwjufhumzwsvpb2rjp4buksizhw5oll4b2rhfz6gqy5t3ku",
+			"image_data": "",
+			"external_url": "https://play.ponzi.land/",
+			"description": "Welcome to the world of Ponzi , where the crypto dreams are limitless, and the meme coins are abundant. Dive into the uncharted territories of blockchain , meet the enigmatic characters behind the schemes, and uncover the secrets of the next big rug pull . Join us in this thrilling journey where fortunes are made and lost, and let your imagination run wild in the fair game of crypto adventures.",
+			"name": "v1.0.0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "ponziland"
+			},
+			"properties": {
+				"preset": "ponziland",
+				"icon": "https://static.cartridge.gg/presets/ponziland/icon.svg"
+			},
+			"socials": {
+				"website": "https://play.ponzi.land/",
+				"github": "https://github.com/RuneLabsxyz/PonziLand",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x00553d5aeb3a8f36f608ba6f6f2a94810517e0dce8fb2b696495ec158ebb9e78",
+			"id": 10,
+			"worldAddress": "0x008B4838140A3cbd36EbE64D4B5aAf56a30Cc3753c928a79338bF56c53F506c5",
+			"namespace": "pistols",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 9,
+			"config": {
+				"project": "arcade-pistols",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#EF9758",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeidllskilcwtxab3pjqftwoezbxskssxkftpcu5j43iqcnaxdore7u",
+			"image_data": "",
+			"external_url": "https://pistols.gg",
+			"description": "10 paces, one shot. Whether you are duelling for honour or vengeance, be sure to put the bastard in the dirt.",
+			"name": "mainnet",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "pistols"
+			},
+			"properties": {
+				"preset": "pistols",
+				"icon": "https://static.cartridge.gg/presets/pistols/icon.png"
+			},
+			"socials": {
+				"website": "https://pistols.gg",
+				"github": "https://github.com/underware-gg/pistols",
+				"videos": [""],
+				"images": [
+					"https://assets.underware.gg/pistols/screenshots/01.jpg",
+					"https://assets.underware.gg/pistols/screenshots/02.jpg",
+					"https://assets.underware.gg/pistols/screenshots/03.jpg",
+					"https://assets.underware.gg/pistols/screenshots/04.jpg",
+					"https://assets.underware.gg/pistols/screenshots/05.jpg",
+					"https://assets.underware.gg/pistols/screenshots/06.jpg"
+				]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x0404c388d9776724afeef4bb5c077785b76574a92fc2de51cf9bcb88e7ba758b",
+			"id": 12,
+			"worldAddress": "0x04F3DCcB47477c087aD9C76B8067b8AaDdeD57f8DF7f2D7543e6066bcb25332c",
+			"namespace": "dopewars",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 11,
+			"config": {
+				"project": "arcade-dopewars",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#11ED83",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeic36u6oc7ubbzve5yamwkys45pzg375r6kfrlo42vqalijuvbvkxm",
+			"image_data": "",
+			"external_url": "https://dopewars.game/",
+			"description": "Dope Wars is an onchain adaptation of the classic arbitrage game Drug Wars, built by Cartridge in partnership with Dope DAO.",
+			"name": "v1.0.0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "dope-wars"
+			},
+			"properties": {
+				"preset": "dope-wars",
+				"icon": "https://static.cartridge.gg/presets/dope-wars/icon.png"
+			},
+			"socials": {
+				"website": "https://dopewars.game/",
+				"github": "https://github.com/cartridge-gg/dopewars",
+				"videos": [
+					"https://youtu.be/bkNF9VdY2-o?si=Fh2KQLC1-qQmYPlG",
+					"https://youtu.be/-ptcWqcGiuo?si=eslLenE0vRqL-bRM",
+					"https://youtube.com/shorts/OU8rqBxHdDI?si=mgZ9zLA1wc6OWzfB"
+				],
+				"images": [
+					"https://repository-images.githubusercontent.com/614510733/32e5253b-7fd6-4e39-b536-9678ee2557bc",
+					"https://pbs.twimg.com/media/GI6077pW8AA6wrt?format=jpg&name=large"
+				]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x021f3434bb5f5a77c8af2c798be2c1eae409b908d98446f32a47101840a86a3f",
+			"id": 14,
+			"worldAddress": "0x030D5d5c610dd736faEA146B20B850AF64E34CA6e5C5A66462f76f32f48dd997",
+			"namespace": "zkube",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 13,
+			"config": {
+				"project": "zkube-v1-mainnet",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#5bc3e6",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeiag4sgs72wkirhhqweajebb6evndwypftognlhjnrkprog2gdsuxm",
+			"image_data": "",
+			"external_url": "https://app.zkube.xyz/",
+			"description": "zKube is an engaging puzzle game that puts players' strategic thinking to the test. Set within a dynamic grid, the objective is simple: manipulate blocks to form solid lines and earn points. Each turn, a new line of blocks emerges from the bottom of the grid, and players have the opportunity to slide any block horizontally to strategically position them. The challenge lies in clearing lines efficiently to prevent the grid from filling up. With no notion of speed or acceleration, zKube offers a purely reflective gameplay experience, allowing players to focus solely on their puzzle-solving skills. Are you ready to dive into the world of zKube and master its captivating challenges?",
+			"name": "v1.0.0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "zkube"
+			},
+			"properties": {
+				"preset": "zkube",
+				"icon": "https://static.cartridge.gg/presets/zkube/icon.png"
+			},
+			"socials": {
+				"website": "https://app.zkube.xyz/",
+				"github": "https://github.com/z-korp/zkube",
+				"videos": [""],
+				"images": [
+					"https://i.postimg.cc/Y00265MQ/zkube-2.jpg",
+					"https://i.postimg.cc/hGRGkZ1q/zkube-0.jpg",
+					"https://i.postimg.cc/XvKv4KsB/zkube-1.jpg",
+					"https://i.postimg.cc/gJY2Jw7S/zkube-3.jpg"
+				]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x011dc3cd0d96adca427bfa4cf624fdb447e12d947e43901a050b1a3a4418715f",
+			"id": 16,
+			"worldAddress": "0x055a227Da2AC221a6311Ec2dF35DF5c6FC25b450696f6C68Bb604c8C350D59b7",
+			"namespace": "evolute_duel",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 15,
+			"config": {
+				"project": "arcade-evolute-duel",
+				"rpc": "https://api.cartridge.gg/x/evolute-duel/katana",
+				"policies": ""
+			},
+			"color": "#BD835B",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeifkdhsxgzg2a4lplbbbw2hd3aiqyhtwqq36xrpvuvw5ffyfhp47l4",
+			"image_data": "",
+			"external_url": "https://mageduel.evolute.network/",
+			"description": "Mage Duel is a turn-based PvP board game, inspired by Carcassonne , built by Evolute Studio",
+			"name": "v0.0.2",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "mage-duel"
+			},
+			"properties": {
+				"preset": "mage-duel",
+				"icon": "https://static.cartridge.gg/presets/mage-duel/icon.png"
+			},
+			"socials": {
+				"website": "https://mageduel.evolute.network/",
+				"github": "https://github.com/evolute-studio",
+				"videos": [""],
+				"images": [
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_1.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_2.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_3.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_4.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_5.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_6.jpeg",
+					"https://raw.githubusercontent.com/evolute-studio/brand-assets/d7796b5c98f1c5d0213d2bdd16612810eba9df1d/screen_7.jpeg"
+				]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x049acadadb7400d25e79f2bd0d56fe1dd07ee91d4d66baa49b6f7db54503c247",
+			"id": 18,
+			"worldAddress": "0x03277623fa3B1B4B46aB97571882b20b292412939b24715a03430Df0ACF961ff",
+			"namespace": "jokers_of_neon_core",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 17,
+			"config": {
+				"project": "jokersofneonalpha",
+				"rpc": "https://api.cartridge.gg/x/jokersofneonalpha/katana",
+				"policies": ""
+			},
+			"color": "#DCA2EA",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeibl6po6syj27nfipo2r3xupkg4sfhgual4pik7ps2cbbt2g7eyoly",
+			"image_data": "",
+			"external_url": "https://alpha.jokersofneon.com",
+			"description": "Jokers of Neon combines familiar poker mechanics with roguelike progression and unique deck-building twists to create a fresh, competitive experience.",
+			"name": "alpha",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "jokers-of-neon"
+			},
+			"properties": {
+				"preset": "jokers-of-neon",
+				"icon": "https://static.cartridge.gg/presets/jokers-of-neon/icon.png"
+			},
+			"socials": {
+				"website": "https://alpha.jokersofneon.com",
+				"videos": [
+					"https://www.youtube.com/watch?v=OvVV1qIZUBw https://www.youtube.com/watch?v=xtTxSTtLy-k"
+				],
+				"images": [
+					"https://i.ibb.co/fG1SVtqn/specials.png https://i.ibb.co/G4LzFFch/Screenshot-2025-07-03-at-8-19-50-AM.png"
+				]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x011f90695b3588594ab647726429ad86079288b41bafb674d02c36f968aa0871",
+			"id": 19,
+			"worldAddress": "0x05c6d0020a9927eDCa9Ddc984b97305439c0b32a1Ec8D3F0EAf6291074cc9799",
+			"namespace": "s1_eternum",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 1,
+			"config": {
+				"project": "arcade-eternum-1",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#dc8b07",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafkreieqxryubmd2si4qqdsmsdc7pnwgkjez7r6fqumf4vfrnuw4mdkh2m",
+			"image_data": "",
+			"external_url": "https://eternum.realms.world/",
+			"description": "Rule the Hex.",
+			"name": "Eternum: Season 1",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "eternum"
+			},
+			"properties": {
+				"preset": "eternum",
+				"icon": "https://static.cartridge.gg/presets/eternum/icon.svg"
+			},
+			"socials": {
+				"website": "https://eternum.realms.world/",
+				"github": "https://github.com/BibliothecaDAO/eternum",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x04a665f5a38c966beeaffbf67f1ed4d6bbd82b7c0704ac9453bf1b1f38696634",
+			"id": 22,
+			"worldAddress": "0x02D26295D6C541d64740E1AE56abC079b82b22C35AB83985ef8Bd15dc0f9edfB",
+			"namespace": "achievements",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 5,
+			"config": {
+				"project": "arcade-blobarena-mainnet",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#D7B000",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeigmfdyvxjf5qgo22rlrs7b4koasnl3o5evmk3plev2lej3jotkbku",
+			"image_data": "",
+			"external_url": "https://blobarena.xyz/",
+			"description": "Blob Area is a mini-game designed for a game jam, featuring unique characters known as \\\"Bloberts\\\" engaging in strategic, Pokemon-like battles. Players will navigate through exciting encounters, against other players or against AI, using their Bloberts' distinctive traits to outsmart and defeat opponents. The game's core mechanic revolves around an enhanced rock-paper-scissors style combat modified by each character's attributes.",
+			"name": "mainnet",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "blob-arena-amma"
+			},
+			"properties": {
+				"preset": "blob-arena-amma",
+				"icon": "https://static.cartridge.gg/presets/blob-arena-amma/icon.png"
+			},
+			"socials": {
+				"website": "https://blobarena.xyz/",
+				"github": "https://github.com/GrugLikesRocks/Blob-arena",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		},
+		{
+			"type": "Edition",
+			"identifier": "0x00ffb67209646c1b2a78ee5b917b31c7013eaf46b9c2432215118c5bd79e18de",
+			"id": 23,
+			"worldAddress": "0x076b1269937DeBcb70Fb5F59dEA1C6f9cE24C9415b23876F623385933A6D2681",
+			"namespace": "ponzi_land",
+			"published": true,
+			"whitelisted": true,
+			"priority": 0,
+			"gameId": 7,
+			"config": {
+				"project": "arcade-ponziland-nft",
+				"rpc": "https://api.cartridge.gg/x/starknet/mainnet",
+				"policies": ""
+			},
+			"color": "#F38332",
+			"image": "https://turquoise-legal-fox-870.mypinata.cloud/ipfs/bafybeig2oppzwjufhumzwsvpb2rjp4buksizhw5oll4b2rhfz6gqy5t3ku",
+			"image_data": "",
+			"external_url": "https://play.ponzi.land/",
+			"description": "Stake lands, earn yield, and try not to get rugged.",
+			"name": "v2.0.0",
+			"animation_url": "",
+			"youtube_url": "",
+			"attributes": {
+				"preset": "ponziland"
+			},
+			"properties": {
+				"preset": "ponziland",
+				"icon": "https://static.cartridge.gg/presets/ponziland/icon.svg"
+			},
+			"socials": {
+				"website": "https://play.ponzi.land/",
+				"github": "https://github.com/RuneLabsxyz/PonziLand",
+				"videos": [""],
+				"images": [""]
+			},
+			"certified": true
+		}
+	]
+}

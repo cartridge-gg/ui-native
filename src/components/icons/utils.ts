@@ -1,7 +1,5 @@
 import { cva } from "class-variance-authority";
-import { cssInterop } from "nativewind";
 import { createContext, useContext } from "react";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
 
 const base = "inline-block";
 
@@ -22,58 +20,6 @@ export const iconVariants = cva(base, {
 	},
 	defaultVariants: {
 		size: "default",
-	},
-});
-
-// Configure cssInterop for SVG components
-cssInterop(Svg, {
-	className: {
-		target: "style",
-	},
-});
-
-cssInterop(Path, {
-	className: {
-		// @ts-expect-error
-		target: "style",
-		// @ts-expect-error
-		nativeStyleToProp: {
-			width: true,
-			height: true,
-			stroke: true,
-			strokeWidth: true,
-			fill: true,
-		},
-	},
-});
-
-cssInterop(Circle, {
-	className: {
-		// @ts-expect-error
-		target: "style",
-		// @ts-expect-error
-		nativeStyleToProp: {
-			width: true,
-			height: true,
-			stroke: true,
-			strokeWidth: true,
-			fill: true,
-		},
-	},
-});
-
-cssInterop(Rect, {
-	className: {
-		// @ts-expect-error
-		target: "style",
-		// @ts-expect-error
-		nativeStyleToProp: {
-			width: true,
-			height: true,
-			stroke: true,
-			strokeWidth: true,
-			fill: true,
-		},
 	},
 });
 

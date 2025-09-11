@@ -75,13 +75,12 @@ export function CardIcon({
 	return (
 		<View
 			ref={ref}
-			className="h-9 w-9 p-2 bg-background-200 flex items-center justify-center"
+			className="h-9 w-9 p-2 bg-background-200 items-center justify-center"
 		>
 			{src ? (
 				<Image
 					source={{ uri: src }}
-					className={cn("aspect-square rounded-sm", className)}
-					style={{ width: 32, height: 32 }}
+					className={cn("aspect-square rounded-sm w-8 h-8", className)}
 				/>
 			) : props.children ? (
 				props.children
@@ -211,7 +210,7 @@ function CardListItemIcon({
 	return (
 		<View
 			ref={ref}
-			className="h-11 w-11 bg-background-200 flex items-center justify-center"
+			className="h-11 w-11 bg-background-200 items-center justify-center"
 		>
 			{src ? (
 				<Image
