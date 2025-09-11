@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
-import { useDiscovers } from "#clone/arcade";
+import { getChecksumAddress } from "starknet";
+import { useArcade, useDiscovers } from "#clone/arcade";
 import {
 	EmptyStateActivityIcon,
 	Skeleton,
@@ -10,6 +11,7 @@ import {
 	TabsTrigger,
 	Text,
 	UserCheckIcon,
+	UserIcon,
 	UsersIcon,
 } from "#components";
 import { DiscoveryEvent, type DiscoveryEventProps } from "./event";
@@ -18,59 +20,172 @@ type TabValue = "all" | "following";
 
 const INITIAL_OFFSET = 30;
 
-// Enhanced interface to match desktop complexity
 export interface DiscoveryEventData {
 	identifier: string;
 	name: string;
 	timestamp: number;
-	logo?: string;
-	color?: string;
+	Icon: React.ReactNode;
 	count: number;
 	actions: string[];
 	achievements: Array<{ title: string; icon: string; points: number }>;
 	duration: number;
 	address: string;
+	onClick: () => void;
+	logo?: string;
+	color?: string;
 }
 
 export interface DiscoveryProps {
-	followingEvents?: DiscoveryEventData[];
 	onTabChange?: (tab: TabValue) => void;
 	initialTab?: TabValue;
 }
 
-export function Discovery({
-	followingEvents,
-	onTabChange,
-	initialTab = "all",
-}: DiscoveryProps) {
-	const { playthroughs, status } = useDiscovers();
-	const events = useMemo(() => playthroughs.mock, [playthroughs]);
-	const followingEventsToShow = useMemo(() => {
-		return events.filter((event) =>
-			followingEvents?.some((fe) => fe.address === event.address),
-		);
-	}, [events, followingEvents]);
+export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
+	const [events, setEvents] = useState<{
+		all: DiscoveryEventProps[];
+		following: DiscoveryEventProps[];
+	}>({
+		all: [],
+		following: [],
+	});
 
 	const [selected, setSelected] = useState<TabValue>(initialTab);
 	const [cap, setCap] = useState(INITIAL_OFFSET);
 
-	const handleTabChange = (tab: TabValue) => {
-		setSelected(tab);
-		setCap(INITIAL_OFFSET);
-		onTabChange?.(tab);
-	};
+	const {
+		playthroughs,
+		usernames: activitiesUsernames,
+		status: activitiesStatus,
+	} = useDiscovers();
+	const { games, editions } = useArcade();
 
-	// Transform events to match component props
-	const transformEvent = (event: DiscoveryEvent): DiscoveryEventProps => ({
-		identifier: event.identifier,
-		name: event.name,
-		timestamp: event.timestamp,
-		logo: event.logo,
-		color: event.color,
-		count: event.count,
-		achievements: event.achievements,
-		duration: event.duration,
-	});
+	const following = useMemo(() => {
+		// For mobile, we'll use a simplified following logic
+		// In a real app, this would come from user's following list
+		return [] as string[];
+	}, []);
+
+	const filteredEditions = useMemo(() => {
+		return editions; // Show all editions on mobile
+	}, [editions]);
+
+	const handleClick = useCallback(
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: Define proper types
+		(_game: any, _edition: any, nameOrAddress: string) => {
+			// TODO: Implement mobile navigation logic
+			console.log("Navigate to player:", nameOrAddress);
+		},
+		[],
+	);
+
+	const handleTabChange = useCallback(
+		(tab: TabValue) => {
+			setSelected(tab);
+			setCap(INITIAL_OFFSET);
+			onTabChange?.(tab);
+		},
+		[onTabChange],
+	);
+
+	// Transform playthroughs data to match desktop structure
+	useEffect(() => {
+		console.log("=== Discovery useEffect Debug ===");
+		console.log("filteredEditions length:", filteredEditions?.length);
+		console.log("playthroughs keys:", Object.keys(playthroughs || {}));
+		console.log(
+			"activitiesUsernames keys count:",
+			Object.keys(activitiesUsernames || {}).length,
+		);
+		console.log("games length:", games?.length);
+
+		if (!filteredEditions) {
+			console.log("No filteredEditions, returning");
+			return;
+		}
+		if (!Object.entries(playthroughs)) {
+			console.log("No playthroughs entries, returning");
+			return;
+		}
+		if (!Object.entries(activitiesUsernames)) {
+			console.log("No activitiesUsernames entries, returning");
+			return;
+		}
+
+		let totalActivities = 0;
+		let validActivities = 0;
+		let usernameMatches = 0;
+		let gameMatches = 0;
+
+		const data = filteredEditions
+			.flatMap((edition) => {
+				const projectPlaythroughs = playthroughs[edition?.config?.project];
+				if (!projectPlaythroughs) return [];
+
+				totalActivities += projectPlaythroughs.length;
+
+				return projectPlaythroughs
+					.map((activity) => {
+						const username =
+							activitiesUsernames[getChecksumAddress(activity.callerAddress)];
+						if (username) usernameMatches++;
+
+						if (!username) return null;
+
+						const game = games.find((game) => game.id === edition.gameId);
+						if (game) gameMatches++;
+
+						if (!game) return null;
+
+						validActivities++;
+
+						return {
+							identifier: activity.identifier,
+							name: username,
+							address: getChecksumAddress(activity.callerAddress),
+							Icon: <UserIcon size="sm" variant="solid" />,
+							duration: activity.end - activity.start,
+							count: activity.count,
+							actions: activity.actions,
+							achievements: [...activity.achievements],
+							timestamp: Math.floor(activity.end / 1000),
+							logo: edition.properties?.icon,
+							color: edition.color,
+							onClick: () =>
+								handleClick(
+									game,
+									edition,
+									username || getChecksumAddress(activity.callerAddress),
+								),
+						};
+					})
+					.filter((item): item is NonNullable<typeof item> => item !== null);
+			})
+			.filter((item): item is NonNullable<typeof item> => item !== null)
+			.sort((a, b) => b.timestamp - a.timestamp);
+
+		console.log("Data transformation stats:");
+		console.log("- Total activities:", totalActivities);
+		console.log("- Username matches:", usernameMatches);
+		console.log("- Game matches:", gameMatches);
+		console.log("- Valid activities:", validActivities);
+		console.log("- Final data length:", data.length);
+
+		if (!data) return;
+		const newEvents = {
+			all: data,
+			following: data.filter((event) => following.includes(event.address)),
+		};
+		console.log("Setting events with length:", newEvents.all.length);
+		if (newEvents.all.length === 0) return;
+		setEvents(newEvents);
+	}, [
+		playthroughs,
+		filteredEditions,
+		activitiesUsernames,
+		following,
+		handleClick,
+		games,
+	]);
 
 	return (
 		<View className="flex-1">
@@ -95,16 +210,16 @@ export function Discovery({
 				</View>
 				<TabsContent value="all" className="flex-1">
 					<Content
-						events={events.map(transformEvent)}
-						status={status}
+						events={events.all}
+						status={activitiesStatus}
 						cap={cap}
 						setCap={setCap}
 					/>
 				</TabsContent>
 				<TabsContent value="following" className="flex-1">
 					<Content
-						events={followingEventsToShow.map(transformEvent)}
-						status={status}
+						events={events.following}
+						status={activitiesStatus}
 						cap={cap}
 						setCap={setCap}
 					/>
@@ -126,6 +241,7 @@ function Content({
 	setCap: (n: number) => void;
 }) {
 	const limited = useMemo(() => events.slice(0, cap), [events, cap]);
+
 	if (status === "loading" && events.length === 0) return <LoadingState />;
 	if (status === "error" || events.length === 0) return <EmptyState />;
 

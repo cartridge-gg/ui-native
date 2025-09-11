@@ -15,7 +15,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { constants } from "starknet";
-import { ArcadeProvider, OwnershipsProvider } from "#clone/arcade";
+import {
+	ArcadeProvider,
+	DiscoversProvider,
+	OwnershipsProvider,
+} from "#clone/arcade";
 import {
 	Header,
 	SideDrawer,
@@ -48,16 +52,18 @@ export default function Layout() {
 							<ThemeProvider>
 								<ArcadeProvider>
 									<OwnershipsProvider>
-										<Drawer
-											screenOptions={({ navigation }) => ({
-												drawerStyle: {
-													width: 320,
-													backgroundColor: "#151916",
-												},
-												header: () => <Header navigation={navigation} />,
-											})}
-											drawerContent={SideDrawer}
-										/>
+										<DiscoversProvider>
+											<Drawer
+												screenOptions={({ navigation }) => ({
+													drawerStyle: {
+														width: 320,
+														backgroundColor: "#151916",
+													},
+													header: () => <Header navigation={navigation} />,
+												})}
+												drawerContent={SideDrawer}
+											/>
+										</DiscoversProvider>
 									</OwnershipsProvider>
 								</ArcadeProvider>
 							</ThemeProvider>
