@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
 import { FlatList } from "react-native";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
+import Svg, { Circle, Path, Rect, SvgUri } from "react-native-svg";
 
 // Configure LinearGradient to accept className
 cssInterop(LinearGradient, {
@@ -63,5 +63,11 @@ cssInterop(Rect, {
 			strokeWidth: true,
 			fill: true,
 		},
+	},
+});
+
+cssInterop(SvgUri, {
+	className: {
+		target: "style",
 	},
 });

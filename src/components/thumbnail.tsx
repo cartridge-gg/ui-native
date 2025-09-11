@@ -16,7 +16,7 @@ const thumbnailVariants = cva("items-center justify-center", {
 			xxl: "size-20 p-1.5",
 		},
 		variant: {
-			default: "bg-background-200",
+			default: "bg-background-200 items-center justify-center",
 			ghost: "bg-transparent",
 			dark: "bg-background-100",
 			light: "bg-background-300",
@@ -60,7 +60,9 @@ export function Thumbnail({
 				{icon.includes(".svg") ? (
 					<SvgUri
 						uri={icon}
-						className={cn("size-full", rounded ? "rounded-full" : "rounded-sm")}
+						width="100%"
+						height="100%"
+						className={cn(rounded ? "rounded-full" : "rounded-sm")}
 					/>
 				) : (
 					<Image
