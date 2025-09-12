@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.platform == 'ios' && 'macos-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.platform == 'ios' && 'macos-26' || 'ubuntu-latest' }}
     strategy:
       matrix:
         profile: [development, production]
