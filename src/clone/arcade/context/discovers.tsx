@@ -22,15 +22,18 @@ export type DiscoversContextType = {
 	status: "success" | "error" | "idle" | "loading";
 };
 
+const initialState = {
+	...mockedValue,
+	status: "success",
+} as DiscoversContextType;
+
 export const DiscoversContext = createContext<DiscoversContextType | null>(
-	mockedValue as unknown as DiscoversContextType,
+	initialState,
 );
 
 export function DiscoversProvider({ children }: { children: ReactNode }) {
 	return (
-		<DiscoversContext.Provider
-			value={mockedValue as unknown as DiscoversContextType}
-		>
+		<DiscoversContext.Provider value={initialState}>
 			{children}
 		</DiscoversContext.Provider>
 	);
