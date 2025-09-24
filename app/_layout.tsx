@@ -46,11 +46,11 @@ export default function Layout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
-				<TextClassContext.Provider value="text-foreground">
-					<SvgClassContext.Provider value="fill-foreground">
-						<Toaster position="bottom-center" />
-						<StarknetProvider>
-							<ThemeProvider>
+				<ThemeProvider>
+					<TextClassContext.Provider value="text-foreground">
+						<SvgClassContext.Provider value="fill-foreground">
+							<Toaster position="bottom-center" />
+							<StarknetProvider>
 								<ArcadeProvider>
 									<AchievementProvider>
 										<OwnershipsProvider>
@@ -69,10 +69,10 @@ export default function Layout() {
 										</OwnershipsProvider>
 									</AchievementProvider>
 								</ArcadeProvider>
-							</ThemeProvider>
-						</StarknetProvider>
-					</SvgClassContext.Provider>
-				</TextClassContext.Provider>
+							</StarknetProvider>
+						</SvgClassContext.Provider>
+					</TextClassContext.Provider>
+				</ThemeProvider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);
