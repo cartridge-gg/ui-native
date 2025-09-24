@@ -4,6 +4,7 @@ export * from "./discovery";
 export * from "./game-header";
 export * from "./header";
 export * from "./icons";
+export * from "./leaderboard";
 export * from "./network";
 export * from "./primitives";
 export * from "./screen-info";

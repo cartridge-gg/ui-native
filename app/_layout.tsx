@@ -16,6 +16,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { constants } from "starknet";
 import {
+	AchievementProvider,
 	ArcadeProvider,
 	DiscoversProvider,
 	OwnershipsProvider,
@@ -45,31 +46,33 @@ export default function Layout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
-				<TextClassContext.Provider value="text-foreground">
-					<SvgClassContext.Provider value="fill-foreground">
-						<Toaster position="bottom-center" />
-						<StarknetProvider>
-							<ThemeProvider>
+				<ThemeProvider>
+					<TextClassContext.Provider value="text-foreground">
+						<SvgClassContext.Provider value="fill-foreground">
+							<Toaster position="bottom-center" />
+							<StarknetProvider>
 								<ArcadeProvider>
-									<OwnershipsProvider>
-										<DiscoversProvider>
-											<Drawer
-												screenOptions={({ navigation }) => ({
-													drawerStyle: {
-														width: 320,
-														backgroundColor: "#151916",
-													},
-													header: () => <Header navigation={navigation} />,
-												})}
-												drawerContent={SideDrawer}
-											/>
-										</DiscoversProvider>
-									</OwnershipsProvider>
+									<AchievementProvider>
+										<OwnershipsProvider>
+											<DiscoversProvider>
+												<Drawer
+													screenOptions={({ navigation }) => ({
+														drawerStyle: {
+															width: 320,
+															backgroundColor: "#151916",
+														},
+														header: () => <Header navigation={navigation} />,
+													})}
+													drawerContent={SideDrawer}
+												/>
+											</DiscoversProvider>
+										</OwnershipsProvider>
+									</AchievementProvider>
 								</ArcadeProvider>
-							</ThemeProvider>
-						</StarknetProvider>
-					</SvgClassContext.Provider>
-				</TextClassContext.Provider>
+							</StarknetProvider>
+						</SvgClassContext.Provider>
+					</TextClassContext.Provider>
+				</ThemeProvider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);

@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { Leaderboard } from "#components";
 
 export default function GameLeaderboardScreen() {
-	return <ScreenInfo />;
+	return <Leaderboard />;
 }

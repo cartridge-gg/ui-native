@@ -89,54 +89,31 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 
 	// Transform playthroughs data to match desktop structure
 	useEffect(() => {
-		console.log("=== Discovery useEffect Debug ===");
-		console.log("filteredEditions length:", filteredEditions?.length);
-		console.log("playthroughs keys:", Object.keys(playthroughs || {}));
-		console.log(
-			"activitiesUsernames keys count:",
-			Object.keys(activitiesUsernames || {}).length,
-		);
-		console.log("games length:", games?.length);
-
 		if (!filteredEditions) {
-			console.log("No filteredEditions, returning");
 			return;
 		}
 		if (!Object.entries(playthroughs)) {
-			console.log("No playthroughs entries, returning");
 			return;
 		}
 		if (!Object.entries(activitiesUsernames)) {
-			console.log("No activitiesUsernames entries, returning");
 			return;
 		}
-
-		let totalActivities = 0;
-		let validActivities = 0;
-		let usernameMatches = 0;
-		let gameMatches = 0;
 
 		const data = filteredEditions
 			.flatMap((edition) => {
 				const projectPlaythroughs = playthroughs[edition?.config?.project];
 				if (!projectPlaythroughs) return [];
 
-				totalActivities += projectPlaythroughs.length;
-
 				return projectPlaythroughs
 					.map((activity) => {
 						const username =
 							activitiesUsernames[getChecksumAddress(activity.callerAddress)];
-						if (username) usernameMatches++;
 
 						if (!username) return null;
 
 						const game = games.find((game) => game.id === edition.gameId);
-						if (game) gameMatches++;
 
 						if (!game) return null;
-
-						validActivities++;
 
 						return {
 							identifier: activity.identifier,
@@ -163,19 +140,11 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 			.filter((item): item is NonNullable<typeof item> => item !== null)
 			.sort((a, b) => b.timestamp - a.timestamp);
 
-		console.log("Data transformation stats:");
-		console.log("- Total activities:", totalActivities);
-		console.log("- Username matches:", usernameMatches);
-		console.log("- Game matches:", gameMatches);
-		console.log("- Valid activities:", validActivities);
-		console.log("- Final data length:", data.length);
-
 		if (!data) return;
 		const newEvents = {
 			all: data,
 			following: data.filter((event) => following.includes(event.address)),
 		};
-		console.log("Setting events with length:", newEvents.all.length);
 		if (newEvents.all.length === 0) return;
 		setEvents(newEvents);
 	}, [

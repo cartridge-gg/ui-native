@@ -1,4 +1,5 @@
 import { createContext, type ReactNode } from "react";
+import achievementMock from "./achievement.mock.json";
 
 type AchievementContextType = {
 	// biome-ignore lint/suspicious/noExplicitAny: Mock data types
@@ -14,25 +15,18 @@ type AchievementContextType = {
 	isError: boolean;
 };
 
-export const AchievementContext = createContext<AchievementContextType | null>(
-	null,
-);
+const initialState = {
+	...achievementMock,
+	isLoading: false,
+	isError: false,
+} as AchievementContextType;
+
+export const AchievementContext =
+	createContext<AchievementContextType>(initialState);
 
 export function AchievementProvider({ children }: { children: ReactNode }) {
-	// For now, provide empty data structure
-	// This can be implemented later with full achievement logic
-	const value: AchievementContextType = {
-		achievements: {},
-		players: {},
-		events: {},
-		usernames: {},
-		globals: [],
-		isLoading: false,
-		isError: false,
-	};
-
 	return (
-		<AchievementContext.Provider value={value}>
+		<AchievementContext.Provider value={initialState}>
 			{children}
 		</AchievementContext.Provider>
 	);
