@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { AchievementScene } from "#components";
 
 export default function PlayerAchievementScreen() {
-	return <ScreenInfo />;
+	return <AchievementScene />;
 }

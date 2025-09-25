@@ -1,18 +1,33 @@
 import type { DrawerHeaderProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { usePathname } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { useMemo } from "react";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
 import { useArcade } from "#clone/arcade";
-import { Button, HamburgerIcon, SearchIcon, Text } from "#components";
+import {
+	ArrowIcon,
+	Button,
+	HamburgerIcon,
+	SearchIcon,
+	Text,
+} from "#components";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
+	const router = useRouter();
 	const { games } = useArcade();
+
+	// Check if we're on a stacked route (like player page)
+	const isStackedRoute = useMemo(() => {
+		return (
+			pathname?.startsWith("/player/") ||
+			(pathname?.startsWith("/game/") && pathname.includes("/player/"))
+		);
+	}, [pathname]);
 
 	// Determine header background image based on current route
 	const bgSource: ImageURISource = useMemo(() => {
@@ -55,26 +70,40 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 			/>
 
 			<View className="flex-row items-center justify-between p-3">
-				<Button
-					variant="icon"
-					size="icon"
-					accessibilityRole="button"
-					accessibilityLabel="Open menu"
-					onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-				>
-					<HamburgerIcon />
-				</Button>
-
-				<View className="flex-row items-center gap-3">
+				{isStackedRoute ? (
 					<Button
 						variant="icon"
 						size="icon"
 						accessibilityRole="button"
-						accessibilityLabel="Search"
+						accessibilityLabel="Go back"
+						onPress={() => router.back()}
+					>
+						<ArrowIcon variant="left" />
+					</Button>
+				) : (
+					<Button
+						variant="icon"
+						size="icon"
+						accessibilityRole="button"
+						accessibilityLabel="Open menu"
 						onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
 					>
-						<SearchIcon />
+						<HamburgerIcon />
 					</Button>
+				)}
+
+				<View className="flex-row items-center gap-3">
+					{!isStackedRoute && (
+						<Button
+							variant="icon"
+							size="icon"
+							accessibilityRole="button"
+							accessibilityLabel="Search"
+							onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+						>
+							<SearchIcon />
+						</Button>
+					)}
 					<Button
 						variant="outline"
 						accessibilityRole="button"

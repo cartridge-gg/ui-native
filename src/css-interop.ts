@@ -21,6 +21,7 @@ remapProps(FlatList, {
 cssInterop(Svg, {
 	className: {
 		target: "style",
+		fill: true,
 	},
 });
 

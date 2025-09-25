@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { ActivityScene } from "#components";
 
 export default function PlayerActivityScreen() {
-	return <ScreenInfo />;
+	return <ActivityScene />;
 }

@@ -38,9 +38,14 @@ export interface DiscoveryEventData {
 export interface DiscoveryProps {
 	onTabChange?: (tab: TabValue) => void;
 	initialTab?: TabValue;
+	onPlayerClick?: (address: string) => void;
 }
 
-export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
+export function Discovery({
+	onTabChange,
+	initialTab = "all",
+	onPlayerClick,
+}: DiscoveryProps) {
 	const [events, setEvents] = useState<{
 		all: DiscoveryEventProps[];
 		following: DiscoveryEventProps[];
@@ -72,10 +77,14 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 	const handleClick = useCallback(
 		// biome-ignore lint/suspicious/noExplicitAny: TODO: Define proper types
 		(_game: any, _edition: any, nameOrAddress: string) => {
-			// TODO: Implement mobile navigation logic
-			console.log("Navigate to player:", nameOrAddress);
+			if (onPlayerClick) {
+				onPlayerClick(nameOrAddress);
+			} else {
+				// TODO: Implement mobile navigation logic
+				console.log("Navigate to player:", nameOrAddress);
+			}
 		},
-		[],
+		[onPlayerClick],
 	);
 
 	const handleTabChange = useCallback(
@@ -131,7 +140,7 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 								handleClick(
 									game,
 									edition,
-									username || getChecksumAddress(activity.callerAddress),
+									getChecksumAddress(activity.callerAddress),
 								),
 						};
 					})

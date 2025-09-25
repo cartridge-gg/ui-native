@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { InventoryScene } from "#components";
 
 export default function PlayerInventoryScreen() {
-	return <ScreenInfo />;
+	return <InventoryScene />;
 }
