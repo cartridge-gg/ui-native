@@ -2,7 +2,7 @@ import type { DrawerHeaderProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePathname, useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
@@ -28,6 +28,14 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 			(pathname?.startsWith("/game/") && pathname.includes("/player/"))
 		);
 	}, [pathname]);
+
+	const handleBack = useCallback(() => {
+		if (router.canGoBack()) {
+			router.back();
+		} else {
+			router.replace("/");
+		}
+	}, [router]);
 
 	// Determine header background image based on current route
 	const bgSource: ImageURISource = useMemo(() => {
@@ -76,7 +84,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 						size="icon"
 						accessibilityRole="button"
 						accessibilityLabel="Go back"
-						onPress={() => router.back()}
+						onPress={handleBack}
 					>
 						<ArrowIcon variant="left" />
 					</Button>

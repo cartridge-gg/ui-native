@@ -7,14 +7,48 @@ import { useArcade } from "#clone/arcade";
 import { useAchievements } from "#clone/arcade/hooks/achievements";
 import { useAddress } from "#clone/arcade/hooks/address";
 import {
+	Badge,
+	BronzeIcon,
+	BronzeTagIcon,
 	Button,
-	SvgClassContext,
+	CopyAddress,
+	DefaultIcon,
+	FollowerTag,
+	GoldIcon,
+	GoldTagIcon,
+	SilverIcon,
+	SilverTagIcon,
 	Text,
-	Thumbnail,
 	UserAvatar,
 } from "#components";
 import { cn } from "#utils";
+import { formatAddress } from "#utils/account";
 import { safeGetChecksumAddress } from "#utils/address";
+
+type StatProps = {
+	label: string;
+	value: string;
+	onPress?: () => void;
+};
+
+function Stat({ label, value, onPress }: StatProps) {
+	return (
+		<Button
+			variant="ghost"
+			onPress={onPress}
+			className={cn(
+				"px-2 py-1 rounded-full border border-transparent bg-transparent",
+				onPress ? "active:bg-background-125" : "",
+			)}
+			accessibilityRole={onPress ? "button" : undefined}
+		>
+			<Text className="text-xs text-foreground-300">
+				<Text className="text-xs font-medium text-foreground-100">{value}</Text>
+				{label}
+			</Text>
+		</Button>
+	);
+}
 
 export function PlayerHeader() {
 	const { player: playerParam } = useLocalSearchParams<{ player: string }>();
@@ -47,16 +81,29 @@ export function PlayerHeader() {
 		return followeds.includes(getChecksumAddress(targetAddress));
 	}, [follows, targetAddress, self]);
 
-	const { followerCount, followingCount } = useMemo(() => {
-		const followeds = follows[getChecksumAddress(targetAddress)] || [];
-		const followingCount = followeds.length;
-		const followers = Object.keys(follows).filter((key) => {
-			const followeds = follows[key] || [];
-			return followeds.includes(getChecksumAddress(targetAddress));
-		});
-		const followerCount = followers.length;
-		return { followerCount, followingCount };
-	}, [follows, targetAddress]);
+	const { follower, followerCount, followingCount, followerUsernames } =
+		useMemo(() => {
+			const followeds = follows[getChecksumAddress(targetAddress)] || [];
+			const followingCount = followeds.length;
+			const followersMap = Object.keys(follows).filter((key) => {
+				const followedsAddress = follows[key] || [];
+				return followedsAddress.includes(getChecksumAddress(targetAddress));
+			});
+			const followerCount = followersMap.length;
+			const addresses = follows[getChecksumAddress(self || "0x0")] || [];
+			const intersection = addresses.filter((addr) =>
+				followersMap.includes(addr),
+			);
+			return {
+				follower: followersMap.includes(getChecksumAddress(self || "0x0")),
+				followerCount,
+				followingCount,
+				followerUsernames: intersection.map(
+					(addr) =>
+						usernames[addr] || formatAddress(addr, { first: 2, last: 4 }),
+				),
+			};
+		}, [follows, targetAddress, self, usernames]);
 
 	const name = useMemo(() => {
 		return (
@@ -65,17 +112,13 @@ export function PlayerHeader() {
 		);
 	}, [usernames, targetAddress]);
 
-	const Icon = useMemo(() => {
-		return <UserAvatar username={name} className="h-full w-full" size="xl" />;
-	}, [name]);
-
 	const onFollowers = useCallback(() => {
-		// TODO: Navigate to followers screen
+		// TODO: navigate to followers list once implemented
 		console.log("Navigate to followers");
 	}, []);
 
 	const onFollowing = useCallback(() => {
-		// TODO: Navigate to following screen
+		// TODO: navigate to following list once implemented
 		console.log("Navigate to following");
 	}, []);
 
@@ -102,81 +145,158 @@ export function PlayerHeader() {
 
 	const compacted = isSelf;
 
-	const rankColor = useMemo(() => {
+	const rankVariant = useMemo(() => {
 		switch (rank) {
 			case 1:
-				return "text-yellow-500";
+				return "gold" as const;
 			case 2:
-				return "text-gray-400";
+				return "silver" as const;
 			case 3:
-				return "text-orange-600";
+				return "bronze" as const;
 			default:
-				return "text-foreground-300";
+				return "default" as const;
 		}
 	}, [rank]);
 
+	const { BadgeSvg, badgeColor } = useMemo(() => {
+		switch (rankVariant) {
+			case "gold":
+				return { BadgeSvg: GoldIcon, badgeColor: "#FDB836" } as const;
+			case "silver":
+				return { BadgeSvg: SilverIcon, badgeColor: "#C7CBD2" } as const;
+			case "bronze":
+				return { BadgeSvg: BronzeIcon, badgeColor: "#E39A5F" } as const;
+			default:
+				return { BadgeSvg: DefaultIcon, badgeColor: "#262A28" } as const;
+		}
+	}, [rankVariant]);
+
+	const badgeDimensions = useMemo(() => {
+		const ranked = rankVariant !== "default";
+		return {
+			outer: ranked ? 98 : 94,
+			inner: ranked ? 76 : 72,
+		};
+	}, [rankVariant]);
+
+	const avatarSize = useMemo(
+		() => (rankVariant !== "default" ? "xxl" : "xl"),
+		[rankVariant],
+	);
+
+	const followerDescription = useMemo(() => {
+		const names = followerUsernames.slice(0, 2);
+		if (followerUsernames.length > 3) {
+			return `Followed by ${names.join(", ")} and ${followerUsernames.length - 2} others you follow`;
+		}
+		if (followerUsernames.length === 3) {
+			return `Followed by ${names.join(", ")} and ${followerUsernames.length - 2} other you follow`;
+		}
+		if (followerUsernames.length > 0) {
+			return `Followed by ${names.join(" and ")}`;
+		}
+		return "Followed by no one you follow";
+	}, [followerUsernames]);
+
 	return (
-		<View className="relative p-3 pb-2 gap-y-2 border-b border-background-200">
-			{!compacted && isConnected && (
-				<View className="absolute top-3 right-3 z-10">
-					{following && (
-						<Button
-							variant="secondary"
-							onPress={() => onFollow(following, targetAddress)}
-							disabled={loading}
-							isLoading={loading}
-							className="bg-background-200 hover:opacity-80 disabled:bg-background-125 normal-case font-normal tracking-normal font-sans text-sm transition-opacity h-9 px-2 py-2 rounded-full"
-						>
-							<Text className="text-sm">Follow</Text>
-						</Button>
+		<View className="relative px-3 py-4 gap-y-3 border-b border-background-200">
+			<View className="flex-row items-start gap-3 pr-16">
+				<View
+					className="relative items-center justify-center"
+					style={{
+						width: badgeDimensions.outer,
+						height: badgeDimensions.outer,
+					}}
+				>
+					<BadgeSvg
+						width={badgeDimensions.outer}
+						height={badgeDimensions.outer}
+						color={badgeColor}
+					/>
+					<View
+						className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-background-200 bg-background-125 shadow-[0px_16px_32px_rgba(0,0,0,0.45)]"
+						style={{
+							width: badgeDimensions.inner,
+							height: badgeDimensions.inner,
+						}}
+					>
+						<UserAvatar
+							username={name}
+							size={avatarSize}
+							className="bg-background-200"
+						/>
+					</View>
+					{rankVariant !== "default" && (
+						<View className="absolute -top-1 -right-1">
+							{rankVariant === "gold" && (
+								<GoldTagIcon size="lg" color={badgeColor} />
+							)}
+							{rankVariant === "silver" && (
+								<SilverTagIcon size="lg" color={badgeColor} />
+							)}
+							{rankVariant === "bronze" && (
+								<BronzeTagIcon size="lg" color={badgeColor} />
+							)}
+						</View>
 					)}
+				</View>
+				<View className="flex-1 gap-1">
+					<View className="flex-row items-center gap-2">
+						<Text className="text-xl font-semibold" numberOfLines={1}>
+							{name}
+						</Text>
+						{rank > 0 && (
+							<Badge
+								variant="outline"
+								className="border-background-300 bg-background-150"
+							>
+								<Text className="text-xs font-medium text-foreground-100">
+									#{rank}
+								</Text>
+							</Badge>
+						)}
+					</View>
+					<CopyAddress
+						address={getChecksumAddress(targetAddress)}
+						first={4}
+						last={4}
+						className="self-start"
+					/>
+				</View>
+			</View>
+
+			<View className="flex-row items-center flex-wrap gap-2">
+				<Stat
+					label=" Followers"
+					value={followerCount.toLocaleString()}
+					onPress={onFollowers}
+				/>
+				<Stat
+					label=" Following"
+					value={followingCount.toLocaleString()}
+					onPress={onFollowing}
+				/>
+				<Stat label=" Points" value={points.toLocaleString()} />
+				{follower && <FollowerTag variant="default" />}
+			</View>
+
+			{!compacted && (
+				<Text className="text-xs text-foreground-300">
+					{followerDescription}
+				</Text>
+			)}
+
+			{!compacted && isConnected && (
+				<View className="absolute top-4 right-3 z-10 flex-row gap-2">
 					<Button
 						variant="secondary"
 						onPress={() => onFollow(following, targetAddress)}
 						disabled={loading}
 						isLoading={loading}
-						className="group bg-background-125 border border-background-200 disabled:bg-background-125 normal-case font-normal tracking-normal font-sans text-sm transition-colors h-9 px-2 py-2 rounded-full flex items-center justify-center text-foreground-300 hover:text-destructive-100 hover:bg-background-200"
+						className="normal-case font-normal tracking-normal text-sm rounded-full px-4"
 					>
-						<Text className="text-center text-sm">Following</Text>
-					</Button>
-				</View>
-			)}
-
-			<View className="flex-row items-center gap-3 pr-20">
-				<Thumbnail icon={Icon} size="xl" variant="default" rounded />
-				<View className="flex-1 gap-1">
-					<View className="flex-row items-center gap-2">
-						<Text className="text-lg font-semibold" numberOfLines={1}>
-							{name}
-						</Text>
-						{rank !== 0 && (
-							<Text className={cn("text-xs font-medium", rankColor)}>
-								#{rank}
-							</Text>
-						)}
-					</View>
-					<Text className="text-sm text-foreground-300" numberOfLines={1}>
-						{targetAddress.slice(0, 9)}...
-					</Text>
-				</View>
-			</View>
-
-			<View className="flex-row items-center gap-2">
-				<SvgClassContext.Provider value="fill-foreground-300">
-					<Text className="text-sm font-medium">{points} points</Text>
-				</SvgClassContext.Provider>
-			</View>
-
-			{!compacted && (
-				<View className="flex-row gap-4">
-					<Button variant="link" onPress={onFollowers} className="p-0 h-auto">
-						<Text className="text-sm text-foreground-300">
-							{followerCount} followers
-						</Text>
-					</Button>
-					<Button variant="link" onPress={onFollowing} className="p-0 h-auto">
-						<Text className="text-sm text-foreground-300">
-							{followingCount} following
+						<Text className="text-sm text-foreground-100">
+							{following ? "Following" : "Follow"}
 						</Text>
 					</Button>
 				</View>

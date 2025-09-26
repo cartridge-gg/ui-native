@@ -30,8 +30,6 @@ interface EditionModel {
 
 type TabValue = "all" | "following";
 
-const INITIAL_CAP = 30;
-
 export interface LeaderboardRowData {
 	address: string;
 	name: string;
@@ -49,7 +47,6 @@ export interface LeaderboardProps {
 
 export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 	const [selected, setSelected] = useState<TabValue>("all");
-	const [cap, setCap] = useState(INITIAL_CAP);
 
 	const { achievements, globals, players, usernames, isLoading, isError } =
 		useAchievements();
@@ -81,9 +78,7 @@ export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 	);
 
 	const gameData = useMemo(() => {
-		let rank = 0;
 		const data = gamePlayers.map((player, index) => {
-			if (BigInt(player.address) === BigInt(address || "0x0")) rank = index + 1;
 			const ids = pins[getChecksumAddress(player.address)] || [];
 			const pinneds: { id: string; icon: string }[] = gameAchievements
 				.filter(
@@ -112,33 +107,19 @@ export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 				following: following.includes(getChecksumAddress(player.address)),
 			};
 		});
-		const selfData = data.find(
-			(player) => BigInt(player.address) === BigInt(address || "0x0"),
-		);
-		const newAll =
-			rank < cap || !selfData
-				? data.slice(0, cap)
-				: [...data.slice(0, cap - 1), selfData];
+		const newAll = data;
 		const filtereds = data.filter((player) =>
 			following.includes(getChecksumAddress(player.address)),
 		);
-		const position = filtereds.findIndex(
-			(player) => BigInt(player.address) === BigInt(address || "0x0"),
-		);
-		const newFollowings =
-			position < cap || !selfData
-				? filtereds.slice(0, cap)
-				: [...filtereds.slice(0, cap - 1), selfData];
+		const newFollowings = filtereds;
 		return {
 			all: newAll,
 			following: newFollowings,
 		};
-	}, [gamePlayers, gameAchievements, pins, usernames, following, cap]);
+	}, [gamePlayers, gameAchievements, pins, usernames, following]);
 
 	const gamesData = useMemo(() => {
-		let rank = 0;
 		const data = globals.map((player, index) => {
-			if (BigInt(player.address) === BigInt(address || "0x0")) rank = index + 1;
 			return {
 				address: getChecksumAddress(player.address),
 				name:
@@ -151,28 +132,16 @@ export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 				pins: [],
 			};
 		});
-		const selfData = data.find(
-			(player) => BigInt(player.address) === BigInt(address || "0x0"),
-		);
-		const newAll =
-			rank < cap || !selfData
-				? data.slice(0, cap)
-				: [...data.slice(0, cap - 1), selfData];
+		const newAll = data;
 		const filtereds = data.filter((player) =>
 			following.includes(getChecksumAddress(player.address)),
 		);
-		const position = filtereds.findIndex(
-			(player) => BigInt(player.address) === BigInt(address || "0x0"),
-		);
-		const newFollowings =
-			position < cap || !selfData
-				? filtereds.slice(0, cap)
-				: [...filtereds.slice(0, cap - 1), selfData];
+		const newFollowings = filtereds;
 		return {
 			all: newAll,
 			following: newFollowings,
 		};
-	}, [globals, usernames, following, cap]);
+	}, [globals, usernames, following]);
 
 	const filteredData = useMemo(() => {
 		if (!edition) return gamesData;
@@ -181,7 +150,6 @@ export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 
 	const handleTabChange = useCallback((tab: TabValue) => {
 		setSelected(tab);
-		setCap(INITIAL_CAP);
 	}, []);
 
 	return (
