@@ -1,15 +1,22 @@
 import { TabList, TabSlot, Tabs, TabTrigger } from "expo-router/ui";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ChestIcon, PulseIcon, TabButton, TrophyIcon } from "#components";
+import {
+	ChestIcon,
+	PlayerHeader,
+	PulseIcon,
+	TabButton,
+	TrophyIcon,
+} from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
-export default function PlayerTabsLayout() {
+export default function PlayerLayout() {
 	const insets = useSafeAreaInsets();
 
 	return (
 		<Tabs>
 			<View className="flex-1 bg-background">
+				<PlayerHeader />
 				<TabSlot />
 			</View>
 			<TabList
