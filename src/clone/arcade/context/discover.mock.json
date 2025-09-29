@@ -1,72 +1,62 @@
 {
-  "playthroughs": {
-    "arcade-blobarena-mainnet": [
-      {
-        "identifier": "arcade-blobarena-mainnet-0x64aa82018d6ce71318118ffdef01e38a5f0c4508fce2a20503a6f4a0d514493-2025-09-11T11:46:55+00:00",
-        "project": "arcade-blobarena-mainnet",
-        "callerAddress": "0x64aa82018d6ce71318118ffdef01e38a5f0c4508fce2a20503a6f4a0d514493",
-        "start": 1757591215000,
-        "end": 1757591439000,
-        "count": 10,
-        "actions": [
-          "start_challenge"
-        ],
-        "achievements": []
-      },
-      {
-        "identifier": "arcade-blobarena-mainnet-0x5ecea2047d2400ac1c1bc22ebb62d52378058f776c32a6fae3a301aae2b1d3d-2025-09-11T10:35:27+00:00",
-        "project": "arcade-blobarena-mainnet",
-        "callerAddress": "0x5ecea2047d2400ac1c1bc22ebb62d52378058f776c32a6fae3a301aae2b1d3d",
-        "start": 1757586927000,
-        "end": 1757588863000,
-        "count": 124,
-        "actions": [
-          "end_challenge"
-        ],
-        "achievements": []
-      }
-    ],
-    "arcade-dopewars": [
-      {
-        "identifier": "arcade-dopewars-0x253ca280e4118cb1c80f6c9ca05f8f6841dd1eefb813261b8a8699c0eabe1b4-2025-08-29T16:45:46+00:00",
-        "project": "arcade-dopewars",
-        "callerAddress": "0x253ca280e4118cb1c80f6c9ca05f8f6841dd1eefb813261b8a8699c0eabe1b4",
-        "start": 1756485946000,
-        "end": 1756485977000,
-        "count": 2,
-        "actions": [
-          "claim"
-        ],
-        "achievements": []
-      },
-      {
-        "identifier": "arcade-dopewars-0x6987770dea05b32d05f4496c5a5e6e5b2d2df386d1ecd99767e6667b42b52ff-2025-08-29T06:22:19+00:00",
-        "project": "arcade-dopewars",
-        "callerAddress": "0x6987770dea05b32d05f4496c5a5e6e5b2d2df386d1ecd99767e6667b42b52ff",
-        "start": 1756448539000,
-        "end": 1756449493000,
-        "count": 43,
-        "actions": [
-          "travel"
-        ],
-        "achievements": []
-      },
-      {
-        "identifier": "arcade-dopewars-0x30c65de75f2acc54c8892b9d6e5664e0f3c013d9744cbc5358a8a657bf26afa-2025-08-28T11:55:56+00:00",
-        "project": "arcade-dopewars",
-        "callerAddress": "0x30c65de75f2acc54c8892b9d6e5664e0f3c013d9744cbc5358a8a657bf26afa",
-        "start": 1756382156000,
-        "end": 1756382803000,
-        "count": 22,
-        "actions": [
-          "travel"
-        ],
-        "achievements": []
-      }
-    ],
-    "arcade-eternum-1": []
-  },
-  "usernames": {
-    "0x016c8b6168E8853B6bCC67F046F67d37ABf214eb90172F1B184583D46541eD68": "titanlord"
-  }
+	"playthroughs": {
+		"arcade-blobarena-mainnet": [
+			{
+				"identifier": "arcade-blobarena-mainnet-0x64aa82018d6ce71318118ffdef01e38a5f0c4508fce2a20503a6f4a0d514493-2025-09-11T11:46:55+00:00",
+				"project": "arcade-blobarena-mainnet",
+				"callerAddress": "0x64aa82018d6ce71318118ffdef01e38a5f0c4508fce2a20503a6f4a0d514493",
+				"start": 1757591215000,
+				"end": 1757591439000,
+				"count": 10,
+				"actions": ["start_challenge"],
+				"achievements": []
+			},
+			{
+				"identifier": "arcade-blobarena-mainnet-0x5ecea2047d2400ac1c1bc22ebb62d52378058f776c32a6fae3a301aae2b1d3d-2025-09-11T10:35:27+00:00",
+				"project": "arcade-blobarena-mainnet",
+				"callerAddress": "0x5ecea2047d2400ac1c1bc22ebb62d52378058f776c32a6fae3a301aae2b1d3d",
+				"start": 1757586927000,
+				"end": 1757588863000,
+				"count": 124,
+				"actions": ["end_challenge"],
+				"achievements": []
+			}
+		],
+		"arcade-dopewars": [
+			{
+				"identifier": "arcade-dopewars-0x253ca280e4118cb1c80f6c9ca05f8f6841dd1eefb813261b8a8699c0eabe1b4-2025-08-29T16:45:46+00:00",
+				"project": "arcade-dopewars",
+				"callerAddress": "0x253ca280e4118cb1c80f6c9ca05f8f6841dd1eefb813261b8a8699c0eabe1b4",
+				"start": 1756485946000,
+				"end": 1756485977000,
+				"count": 2,
+				"actions": ["claim"],
+				"achievements": []
+			},
+			{
+				"identifier": "arcade-dopewars-0x6987770dea05b32d05f4496c5a5e6e5b2d2df386d1ecd99767e6667b42b52ff-2025-08-29T06:22:19+00:00",
+				"project": "arcade-dopewars",
+				"callerAddress": "0x6987770dea05b32d05f4496c5a5e6e5b2d2df386d1ecd99767e6667b42b52ff",
+				"start": 1756448539000,
+				"end": 1756449493000,
+				"count": 43,
+				"actions": ["travel"],
+				"achievements": []
+			},
+			{
+				"identifier": "arcade-dopewars-0x30c65de75f2acc54c8892b9d6e5664e0f3c013d9744cbc5358a8a657bf26afa-2025-08-28T11:55:56+00:00",
+				"project": "arcade-dopewars",
+				"callerAddress": "0x30c65de75f2acc54c8892b9d6e5664e0f3c013d9744cbc5358a8a657bf26afa",
+				"start": 1756382156000,
+				"end": 1756382803000,
+				"count": 22,
+				"actions": ["travel"],
+				"achievements": []
+			}
+		],
+		"arcade-eternum-1": []
+	},
+	"usernames": {
+		"0x016c8b6168E8853B6bCC67F046F67d37ABf214eb90172F1B184583D46541eD68": "titanlord"
+	}
 }
