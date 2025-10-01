@@ -1,0 +1,6 @@
+### Running linter
+```sh
+bun lint
+```
+
+- Don't start server as Expo server is run manually by developers usually.
