@@ -61,14 +61,53 @@ const MOCK_COLLECTIONS: Collection[] = [
 		totalCount: 67,
 		project: "arcade-pixel-banner",
 	},
+	// Blob Arena collections
 	{
 		address:
 			"0x00539f522b29ae9251dbf7443c7a950cf260372e69efab3710a11bf17a9599f1",
 		name: "Blobert",
 		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/blobert/icon.png",
+		imageUrl: "https://static.cartridge.gg/presets/blob-arena-amma/icon.png",
 		totalCount: 234,
-		project: "arcade-blobert",
+		project: "arcade-blobarena-mainnet",
+	},
+	// Dope Wars collections
+	{
+		address:
+			"0x0314cca49699d0db8ac0b9df2c9a89b76c44d6d3c1a7d76f15cebc8535acfb91",
+		name: "Dope Wars Paper",
+		type: CollectionType.ERC721,
+		imageUrl: "https://static.cartridge.gg/presets/dope-wars/icon.png",
+		totalCount: 128,
+		project: "arcade-dopewars",
+	},
+	{
+		address:
+			"0x04fa864a706e3403fd17ac8df307f22eafa21b778b73353abf69a622e47a2003",
+		name: "Dope Wars Items",
+		type: CollectionType.ERC1155,
+		imageUrl: "https://static.cartridge.gg/presets/dope-wars/icon.png",
+		totalCount: 89,
+		project: "arcade-dopewars",
+	},
+	// Pistols collections
+	{
+		address:
+			"0x2e9c711b1a7e2784570b1bda5082a92606044e836ba392d2b977d280fb74b3c",
+		name: "Pistols Duelists",
+		type: CollectionType.ERC721,
+		imageUrl: "https://static.cartridge.gg/presets/pistols/icon.png",
+		totalCount: 456,
+		project: "arcade-pistols",
+	},
+	{
+		address:
+			"0x7aaa9866750a0db82a54ba8674c38620fa2f967d2fbb31133def48e0527c87f",
+		name: "Genesis Duelist",
+		type: CollectionType.ERC721,
+		imageUrl: "https://static.cartridge.gg/presets/pistols/icon.png",
+		totalCount: 156,
+		project: "arcade-pistols",
 	},
 	{
 		address:

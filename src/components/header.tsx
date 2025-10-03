@@ -32,14 +32,38 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	}, [pathname]);
 
 	const handleBack = useCallback(() => {
-		// Simply go back in the navigation history
+		// Check if we're in a game context
+		const gameMatch = pathname?.match(/^\/game\/([^/]+)\//);
+
+		if (gameMatch) {
+			const gameId = gameMatch[1];
+
+			// If we're on a player or collection page within a game, go to game marketplace
+			if (
+				pathname?.includes("/player/") ||
+				pathname?.includes("/collection/")
+			) {
+				router.replace(`/game/${gameId}/marketplace`);
+				return;
+			}
+		}
+
+		// For global player/collection routes, go to global marketplace
+		if (
+			pathname?.startsWith("/player/") ||
+			pathname?.startsWith("/collection/")
+		) {
+			router.replace("/marketplace");
+			return;
+		}
+
+		// Default fallback
 		if (router.canGoBack()) {
 			router.back();
 		} else {
-			// Fallback to marketplace if there's no history
 			router.replace("/marketplace");
 		}
-	}, [router]);
+	}, [router, pathname]);
 
 	// Determine header background image based on current route
 	const bgSource: ImageURISource = useMemo(() => {

@@ -61,16 +61,25 @@ export function MarketplaceScene() {
 			contentContainerStyle={{
 				padding: 16,
 				paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 16,
-				gap: 12,
 			}}
 			columnWrapperStyle={{ gap: 12 }}
+			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 			keyExtractor={(item) => item.address}
-			renderItem={({ item }) => (
-				<CollectionCard
-					collection={item}
-					gameParam={gameParam}
-					router={router}
-				/>
+			renderItem={({ item, index }) => (
+				<View
+					style={{
+						flex: 1,
+						maxWidth: "50%",
+						paddingLeft: index % 2 === 0 ? 0 : 6,
+						paddingRight: index % 2 === 0 ? 6 : 0,
+					}}
+				>
+					<CollectionCard
+						collection={item}
+						gameParam={gameParam}
+						router={router}
+					/>
+				</View>
 			)}
 			showsVerticalScrollIndicator={false}
 		/>
@@ -148,11 +157,16 @@ function LoadingState() {
 
 function EmptyState() {
 	return (
-		<View className="flex-1 items-center justify-center gap-3 px-6">
+		<View className="flex-1 items-center justify-center gap-4 px-6 py-12">
 			<EmptyStateInventoryIcon size="xl" />
-			<Text className="text-base text-foreground-300 text-center">
-				No collections available
-			</Text>
+			<View className="items-center gap-2">
+				<Text className="text-lg font-semibold text-foreground-200">
+					No Collections
+				</Text>
+				<Text className="text-sm text-foreground-400 text-center">
+					There are no collections available for this game yet.
+				</Text>
+			</View>
 		</View>
 	);
 }
