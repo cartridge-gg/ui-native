@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { MarketplaceScene } from "#components";
 
 export default function MarketplaceScreen() {
-	return <ScreenInfo />;
+	return <MarketplaceScene />;
 }

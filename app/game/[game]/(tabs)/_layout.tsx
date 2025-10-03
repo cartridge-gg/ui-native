@@ -32,10 +32,12 @@ export default function GameTabsLayout() {
 	return (
 		<View className="flex-1 bg-background">
 			<GameHeader />
-			<Slot />
+			<View className="flex-1 bg-background">
+				<Slot />
+			</View>
 			<View
 				className={cn(
-					"w-full flex-row justify-around items-center shrink-0 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)] gap-x-2 px-4 bg-background-200",
+					"w-full flex-row justify-around items-center shrink-0 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)] gap-x-2 px-4 bg-background-200 border-t",
 					isGameThemed ? "border-primary" : "border-spacer-100",
 				)}
 				style={{

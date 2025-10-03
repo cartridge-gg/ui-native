@@ -21,27 +21,51 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const router = useRouter();
 	const { games } = useArcade();
 
-	// Check if we're on a stacked route (like player page)
+	// Check if we're on a stacked route (like player or collection page)
 	const isStackedRoute = useMemo(() => {
 		return (
 			pathname?.startsWith("/player/") ||
-			(pathname?.startsWith("/game/") && pathname.includes("/player/"))
+			pathname?.startsWith("/collection/") ||
+			(pathname?.startsWith("/game/") && pathname.includes("/player/")) ||
+			(pathname?.startsWith("/game/") && pathname.includes("/collection/"))
 		);
 	}, [pathname]);
 
 	const handleBack = useCallback(() => {
+		// Check if we're on a game collection route
+		const gameCollectionMatch = pathname?.match(
+			/^\/game\/([^/]+)\/collection\//,
+		);
+		if (gameCollectionMatch) {
+			// Navigate to the game's marketplace tab
+			router.replace(`/game/${gameCollectionMatch[1]}/marketplace`);
+			return;
+		}
+
 		// Check if we're on a game player route
 		const gamePlayerMatch = pathname?.match(/^\/game\/([^/]+)\/player\//);
 		if (gamePlayerMatch) {
 			// Navigate to the game's marketplace tab
 			router.replace(`/game/${gamePlayerMatch[1]}/marketplace`);
-		} else if (pathname?.startsWith("/player/")) {
+			return;
+		}
+
+		// Check if we're on a global collection route
+		if (pathname?.startsWith("/collection/")) {
 			// Navigate to global marketplace tab
 			router.replace("/marketplace");
-		} else {
-			// Default to marketplace
-			router.replace("/marketplace");
+			return;
 		}
+
+		// Check if we're on a global player route
+		if (pathname?.startsWith("/player/")) {
+			// Navigate to global marketplace tab
+			router.replace("/marketplace");
+			return;
+		}
+
+		// Default to marketplace
+		router.replace("/marketplace");
 	}, [router, pathname]);
 
 	// Determine header background image based on current route

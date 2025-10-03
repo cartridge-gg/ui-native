@@ -1,6 +1,7 @@
 import { Link, usePathname } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getChecksumAddress } from "starknet";
 import { useAchievements, useArcade } from "#clone/arcade";
 import {
@@ -22,7 +23,7 @@ import {
 	UserIcon,
 	UsersIcon,
 } from "#components";
-import { cn } from "#utils";
+import { cn, TAB_BAR_HEIGHT } from "#utils";
 
 interface EditionModel {
 	config: {
@@ -219,6 +220,8 @@ function Content({
 	getPlayerHref: (address: string) => string;
 	showHeader?: boolean;
 }) {
+	const insets = useSafeAreaInsets();
+
 	if (status === "loading" && data.length === 0) return <LoadingState />;
 	if (status === "error" || data.length === 0) return <EmptyState />;
 
@@ -232,7 +235,10 @@ function Content({
 			)}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
-			contentContainerStyle={{ paddingHorizontal: 16 }}
+			contentContainerStyle={{
+				paddingHorizontal: 16,
+				paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 16,
+			}}
 			contentContainerClassName="rounded-md overflow-hidden"
 		/>
 	);
@@ -254,35 +260,34 @@ function LeaderboardRow({
 			<SvgClassContext.Provider
 				value={highlight ? "bg-primary" : "bg-background-200"}
 			>
-				<Link href={href} asChild>
-					<View
-						className={cn(
-							"flex-row items-center justify-between px-3 py-2.5",
-							highlight ? "bg-background-300" : "bg-background-200",
-						)}
-					>
-						<View className="flex-row items-center gap-3">
-							<View className="w-8 items-center">
-								<Text className="text-foreground-400">{rank}.</Text>
-							</View>
-							<View className="size-5 items-center justify-center">
-								{rank === 1 && <GoldTagIcon size="sm" />}
-								{rank === 2 && <SilverTagIcon size="sm" />}
-								{rank === 3 && <BronzeTagIcon size="sm" />}
-							</View>
-							<View className="flex-row items-center gap-2">
-								<UserIcon size="sm" variant="solid" />
-								<Text numberOfLines={1}>{name}</Text>
-							</View>
+				<Link
+					href={href}
+					className={cn(
+						"flex-row items-center justify-between px-3 py-2.5",
+						highlight ? "bg-background-300" : "bg-background-200",
+					)}
+				>
+					<View className="flex-row items-center gap-3">
+						<View className="w-8 items-center">
+							<Text className="text-foreground-400">{rank}.</Text>
 						</View>
+						<View className="size-5 items-center justify-center">
+							{rank === 1 && <GoldTagIcon size="sm" />}
+							{rank === 2 && <SilverTagIcon size="sm" />}
+							{rank === 3 && <BronzeTagIcon size="sm" />}
+						</View>
+						<View className="flex-row items-center gap-2">
+							<UserIcon size="sm" variant="solid" />
+							<Text numberOfLines={1}>{name}</Text>
+						</View>
+					</View>
 
-						<View className="flex-row items-center gap-3">
-							{following && <UserCheckIcon size="sm" variant="solid" />}
+					<View className="flex-row items-center gap-3">
+						{following && <UserCheckIcon size="sm" variant="solid" />}
 
-							<View className="flex-row items-center gap-1">
-								<SparklesIcon size="sm" variant="line" />
-								<Text className="text-sm font-medium">{points}</Text>
-							</View>
+						<View className="flex-row items-center gap-1">
+							<SparklesIcon size="sm" variant="line" />
+							<Text className="text-sm font-medium">{points}</Text>
 						</View>
 					</View>
 				</Link>
