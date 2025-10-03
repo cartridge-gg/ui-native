@@ -5,6 +5,7 @@ import type { Discover } from "#clone/arcade";
 import { useArcade, useDiscovers } from "#clone/arcade";
 import {
 	EmptyStateActivityIcon,
+	PlayerHeader,
 	Skeleton,
 	Tabs,
 	TabsContent,
@@ -21,9 +22,14 @@ type TabValue = "all" | "following";
 export interface DiscoveryProps {
 	onTabChange?: (tab: TabValue) => void;
 	initialTab?: TabValue;
+	showHeader?: boolean;
 }
 
-export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
+export function Discovery({
+	onTabChange,
+	initialTab = "all",
+	showHeader = true,
+}: DiscoveryProps) {
 	const [events, setEvents] = useState<{
 		all: Discover[];
 		following: Discover[];
@@ -104,10 +110,18 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 					</TabsList>
 				</View>
 				<TabsContent value="all" className="flex-1">
-					<Content events={events.all} status={activitiesStatus} />
+					<Content
+						events={events.all}
+						status={activitiesStatus}
+						showHeader={showHeader}
+					/>
 				</TabsContent>
 				<TabsContent value="following" className="flex-1">
-					<Content events={events.following} status={activitiesStatus} />
+					<Content
+						events={events.following}
+						status={activitiesStatus}
+						showHeader={showHeader}
+					/>
 				</TabsContent>
 			</Tabs>
 		</View>
@@ -117,9 +131,11 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 function Content({
 	events,
 	status,
+	showHeader = true,
 }: {
 	events: Discover[];
 	status: "success" | "error" | "idle" | "loading";
+	showHeader?: boolean;
 }) {
 	if (status === "loading" && events.length === 0) return <LoadingState />;
 	if (status === "error" || events.length === 0) return <EmptyState />;
@@ -127,12 +143,13 @@ function Content({
 	return (
 		<FlatList
 			data={events}
+			ListHeaderComponent={showHeader ? <PlayerHeader /> : null}
 			keyExtractor={(item) => item.identifier}
 			renderItem={({ item }) => <DiscoveryEvent {...item} />}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
-			className="p-4"
 			contentContainerClassName="rounded-md overflow-hidden"
+			contentContainerStyle={{ paddingHorizontal: 16 }}
 		/>
 	);
 }

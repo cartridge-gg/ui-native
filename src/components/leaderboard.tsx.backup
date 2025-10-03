@@ -1,4 +1,3 @@
-import { Link, usePathname } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
 import { getChecksumAddress } from "starknet";
@@ -7,7 +6,6 @@ import {
 	BronzeTagIcon,
 	EmptyStateActivityIcon,
 	GoldTagIcon,
-	PlayerHeader,
 	SilverTagIcon,
 	Skeleton,
 	SparklesIcon,
@@ -44,12 +42,11 @@ export interface LeaderboardRowData {
 
 export interface LeaderboardProps {
 	edition?: EditionModel;
-	showHeader?: boolean;
+	onPlayerClick?: (address: string) => void;
 }
 
-export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
+export function Leaderboard({ edition, onPlayerClick }: LeaderboardProps) {
 	const [selected, setSelected] = useState<TabValue>("all");
-	const pathname = usePathname();
 
 	const { achievements, globals, players, usernames, isLoading, isError } =
 		useAchievements();
@@ -73,25 +70,11 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 		return achievements[edition?.config.project || ""] || [];
 	}, [achievements, edition]);
 
-	// Determine player route based on current context
-	const getPlayerHref = useCallback(
-		(playerAddress: string) => {
-			const gameMatch = pathname?.match(/^\/game\/([^/]+)/);
-			const isPlayerRoute = pathname?.includes("/player/");
-
-			if (gameMatch) {
-				// In game context
-				if (isPlayerRoute) {
-					// In game player route, keep same tab
-					return `/game/${gameMatch[1]}/player/${playerAddress}/leaderboard`;
-				}
-				// In game route, go to player inventory
-				return `/game/${gameMatch[1]}/player/${playerAddress}/inventory`;
-			}
-			// Global context, go to player inventory
-			return `/player/${playerAddress}/inventory`;
+	const handleClick = useCallback(
+		(nameOrAddress: string) => {
+			onPlayerClick?.(nameOrAddress);
 		},
-		[pathname],
+		[onPlayerClick],
 	);
 
 	const gameData = useMemo(() => {
@@ -192,16 +175,14 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 				<Content
 					data={filteredData.all}
 					status={isLoading ? "loading" : isError ? "error" : "success"}
-					getPlayerHref={getPlayerHref}
-					showHeader={showHeader}
+					onPlayerClick={handleClick}
 				/>
 			</TabsContent>
 			<TabsContent value="following">
 				<Content
 					data={filteredData.following}
 					status={isLoading ? "loading" : isError ? "error" : "success"}
-					getPlayerHref={getPlayerHref}
-					showHeader={showHeader}
+					onPlayerClick={handleClick}
 				/>
 			</TabsContent>
 		</Tabs>
@@ -211,13 +192,11 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 function Content({
 	data,
 	status,
-	getPlayerHref,
-	showHeader = false,
+	onPlayerClick,
 }: {
 	data: LeaderboardRowData[];
 	status: "success" | "error" | "idle" | "loading";
-	getPlayerHref: (address: string) => string;
-	showHeader?: boolean;
+	onPlayerClick: (address: string) => void;
 }) {
 	if (status === "loading" && data.length === 0) return <LoadingState />;
 	if (status === "error" || data.length === 0) return <EmptyState />;
@@ -225,14 +204,12 @@ function Content({
 	return (
 		<FlatList
 			data={data}
-			ListHeaderComponent={showHeader ? <PlayerHeader /> : null}
 			keyExtractor={(item) => item.address}
 			renderItem={({ item }) => (
-				<LeaderboardRow {...item} href={getPlayerHref(item.address)} />
+				<LeaderboardRow {...item} onClick={() => onPlayerClick(item.address)} />
 			)}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
-			contentContainerStyle={{ paddingHorizontal: 16 }}
 			contentContainerClassName="rounded-md overflow-hidden"
 		/>
 	);
@@ -245,8 +222,8 @@ function LeaderboardRow({
 	highlight,
 	following,
 	// pins,
-	href,
-}: LeaderboardRowData & { href: string }) {
+	onClick,
+}: LeaderboardRowData & { onClick: () => void }) {
 	return (
 		<TextClassContext.Provider
 			value={cn("text-sm font-medium text-nowrap", highlight && "fill-primary")}
@@ -254,38 +231,37 @@ function LeaderboardRow({
 			<SvgClassContext.Provider
 				value={highlight ? "bg-primary" : "bg-background-200"}
 			>
-				<Link href={href} asChild>
-					<View
-						className={cn(
-							"flex-row items-center justify-between px-3 py-2.5",
-							highlight ? "bg-background-300" : "bg-background-200",
-						)}
-					>
-						<View className="flex-row items-center gap-3">
-							<View className="w-8 items-center">
-								<Text className="text-foreground-400">{rank}.</Text>
-							</View>
-							<View className="size-5 items-center justify-center">
-								{rank === 1 && <GoldTagIcon size="sm" />}
-								{rank === 2 && <SilverTagIcon size="sm" />}
-								{rank === 3 && <BronzeTagIcon size="sm" />}
-							</View>
-							<View className="flex-row items-center gap-2">
-								<UserIcon size="sm" variant="solid" />
-								<Text numberOfLines={1}>{name}</Text>
-							</View>
+				<View
+					className={cn(
+						"flex-row items-center justify-between px-3 py-2.5",
+						highlight ? "bg-background-300" : "bg-background-200",
+					)}
+					onTouchEnd={onClick}
+				>
+					<View className="flex-row items-center gap-3">
+						<View className="w-8 items-center">
+							<Text className="text-foreground-400">{rank}.</Text>
 						</View>
-
-						<View className="flex-row items-center gap-3">
-							{following && <UserCheckIcon size="sm" variant="solid" />}
-
-							<View className="flex-row items-center gap-1">
-								<SparklesIcon size="sm" variant="line" />
-								<Text className="text-sm font-medium">{points}</Text>
-							</View>
+						<View className="size-5 items-center justify-center">
+							{rank === 1 && <GoldTagIcon size="sm" />}
+							{rank === 2 && <SilverTagIcon size="sm" />}
+							{rank === 3 && <BronzeTagIcon size="sm" />}
+						</View>
+						<View className="flex-row items-center gap-2">
+							<UserIcon size="sm" variant="solid" />
+							<Text numberOfLines={1}>{name}</Text>
 						</View>
 					</View>
-				</Link>
+
+					<View className="flex-row items-center gap-3">
+						{following && <UserCheckIcon size="sm" variant="solid" />}
+
+						<View className="flex-row items-center gap-1">
+							<SparklesIcon size="sm" variant="line" />
+							<Text className="text-sm font-medium">{points}</Text>
+						</View>
+					</View>
+				</View>
 			</SvgClassContext.Provider>
 		</TextClassContext.Provider>
 	);

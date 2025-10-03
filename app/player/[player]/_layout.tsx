@@ -6,13 +6,7 @@ import {
 } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-	ChestIcon,
-	PlayerHeader,
-	PulseIcon,
-	TabButton,
-	TrophyIcon,
-} from "#components";
+import { ChestIcon, LeaderboardIcon, TabButton } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
 export default function PlayerLayout() {
@@ -24,13 +18,13 @@ export default function PlayerLayout() {
 	// Determine which tab is active based on pathname
 	const isInventoryActive =
 		pathname?.includes("/inventory") || pathname === `/player/${player}`;
-	const isAchievementActive = pathname?.includes("/achievement");
-	const isActivityActive = pathname?.includes("/activity");
+	const isLeaderboardActive = pathname?.includes("/leaderboard");
 
 	return (
 		<View className="flex-1 bg-background">
-			<PlayerHeader />
-			<Slot />
+			<View className="flex-1">
+				<Slot />
+			</View>
 			<View
 				className="w-full flex-row shrink-0 bg-background-200 border-t border-spacer-100 shadow-[0px_-4px_8px_0px_rgba(0,_0,_0,_0.32)] px-4"
 				style={{
@@ -44,14 +38,9 @@ export default function PlayerLayout() {
 					onPress={() => router.push(`/player/${player}/inventory`)}
 				/>
 				<TabButton
-					Icon={TrophyIcon}
-					isFocused={isAchievementActive}
-					onPress={() => router.push(`/player/${player}/achievement`)}
-				/>
-				<TabButton
-					Icon={PulseIcon}
-					isFocused={isActivityActive}
-					onPress={() => router.push(`/player/${player}/activity`)}
+					Icon={LeaderboardIcon}
+					isFocused={isLeaderboardActive}
+					onPress={() => router.push(`/player/${player}/leaderboard`)}
 				/>
 			</View>
 		</View>

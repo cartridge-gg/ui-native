@@ -30,12 +30,19 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	}, [pathname]);
 
 	const handleBack = useCallback(() => {
-		if (router.canGoBack()) {
-			router.back();
+		// Check if we're on a game player route
+		const gamePlayerMatch = pathname?.match(/^\/game\/([^/]+)\/player\//);
+		if (gamePlayerMatch) {
+			// Navigate to the game's marketplace tab
+			router.replace(`/game/${gamePlayerMatch[1]}/marketplace`);
+		} else if (pathname?.startsWith("/player/")) {
+			// Navigate to global marketplace tab
+			router.replace("/marketplace");
 		} else {
-			router.replace("/");
+			// Default to marketplace
+			router.replace("/marketplace");
 		}
-	}, [router]);
+	}, [router, pathname]);
 
 	// Determine header background image based on current route
 	const bgSource: ImageURISource = useMemo(() => {

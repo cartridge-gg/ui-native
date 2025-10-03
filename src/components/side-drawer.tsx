@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -78,29 +78,35 @@ function Item({
 	icon?: string;
 	title: string;
 }) {
+	const router = useRouter();
+
+	const handlePress = () => {
+		const href = id === "arcade" ? "/marketplace" : `/game/${id}/marketplace`;
+		router.replace(href);
+	};
+
 	return (
-		<Link href={id === "arcade" ? "/activity" : `/game/${id}/activity`} asChild>
-			<Pressable
-				key={id}
-				className="flex-row items-center p-3 active:bg-background-100 gap-2"
-			>
-				{id === "arcade" ? (
-					<Thumbnail
-						icon={require("#assets/icon.png")}
-						size="md"
-						variant="default"
-					/>
-				) : icon ? (
-					<Thumbnail icon={icon} size="md" variant="default" />
-				) : (
-					<View className="size-8 bg-background-200 rounded items-center justify-center">
-						<Text>{id[0].toUpperCase()}</Text>
-					</View>
-				)}
-				<Text className="text-foreground text-sm flex-1 font-medium">
-					{title}
-				</Text>
-			</Pressable>
-		</Link>
+		<Pressable
+			key={id}
+			onPress={handlePress}
+			className="flex-row items-center p-3 active:bg-background-100 gap-2"
+		>
+			{id === "arcade" ? (
+				<Thumbnail
+					icon={require("#assets/icon.png")}
+					size="md"
+					variant="default"
+				/>
+			) : icon ? (
+				<Thumbnail icon={icon} size="md" variant="default" />
+			) : (
+				<View className="size-8 bg-background-200 rounded items-center justify-center">
+					<Text>{id[0].toUpperCase()}</Text>
+				</View>
+			)}
+			<Text className="text-foreground text-sm flex-1 font-medium">
+				{title}
+			</Text>
+		</Pressable>
 	);
 }
