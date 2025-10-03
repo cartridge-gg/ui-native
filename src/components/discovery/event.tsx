@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { getChecksumAddress } from "starknet";
@@ -27,6 +27,7 @@ export function DiscoveryEvent({
 	achievements,
 }: DiscoveryEventProps) {
 	const router = useRouter();
+	const pathname = usePathname();
 	const { games, editions } = useArcade();
 	const { usernames } = useDiscovers();
 	const address = getChecksumAddress(callerAddress);
@@ -42,12 +43,24 @@ export function DiscoveryEvent({
 		() => achievements.reduce((acc, a) => acc + (a.points || 0), 0),
 		[achievements],
 	);
-	// const duration = end - start;
+
+	// Determine the correct player route based on current context
+	const playerRoute = useMemo(() => {
+		// Check if we're currently on a game route
+		const gameMatch = pathname?.match(/^\/game\/([^/]+)/);
+		if (gameMatch) {
+			// We're in a game context, navigate to game-specific player route
+			return `/game/${gameMatch[1]}/player/${address}/inventory`;
+		}
+		// Default to global player route
+		return `/player/${address}/inventory`;
+	}, [pathname, address]);
+
 	const onClick = useMemo(
 		() => () => {
-			router.push(`/player/${address}/inventory`);
+			router.push(playerRoute);
 		},
-		[address, router],
+		[playerRoute, router],
 	);
 
 	return (

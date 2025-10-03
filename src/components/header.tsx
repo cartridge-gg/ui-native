@@ -30,8 +30,11 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	}, [pathname]);
 
 	const handleBack = useCallback(() => {
-		// Navigate to activity tab
-		router.navigate("/activity");
+		if (router.canGoBack()) {
+			router.back();
+		} else {
+			router.replace("/");
+		}
 	}, [router]);
 
 	// Determine header background image based on current route
