@@ -1,5 +1,5 @@
 import { ScreenInfo } from "#components";
 
-export default function GameGuildsScreen() {
+export default function CollectionScreen() {
 	return <ScreenInfo />;
 }

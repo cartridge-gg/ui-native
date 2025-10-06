@@ -3,7 +3,6 @@ import type { Config } from "tailwindcss";
 // NativeWind preset doesn't export proper TypeScript types
 const nativewind = require("nativewind/preset");
 
-import defaultTheme from "tailwindcss/defaultTheme";
 import twAnimate from "tailwindcss-animate";
 
 export const cartridgePreset: Partial<Config> = {
@@ -90,8 +89,8 @@ export const cartridgePreset: Partial<Config> = {
 		},
 		extend: {
 			fontFamily: {
-				sans: ["Inter", ...defaultTheme.fontFamily.sans],
-				mono: ["IBM Plex Mono", ...defaultTheme.fontFamily.mono],
+				sans: "Inter",
+				mono: "IBM Plex Mono",
 			},
 			fontSize: {
 				"2xs": "10px",

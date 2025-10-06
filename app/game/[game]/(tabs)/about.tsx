@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { AboutScene } from "#components";
 
 export default function GameAboutScreen() {
-	return <ScreenInfo />;
+	return <AboutScene />;
 }

@@ -11,7 +11,8 @@ export function CopyAddress({
 	return (
 		<Address
 			address={address}
-			textClassName={cn("text-xs text-foreground-300", className)}
+			containerClassName={cn("flex-row items-center gap-1", className)}
+			textClassName="text-xs text-foreground-300"
 			size={size}
 			first={first}
 			last={last}

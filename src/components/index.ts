@@ -1,3 +1,4 @@
+export * from "./about";
 export * from "./address";
 export * from "./copy-address";
 export * from "./discovery";
@@ -6,8 +7,11 @@ export * from "./header";
 export * from "./icons";
 export * from "./leaderboard";
 export * from "./network";
+export * from "./player-header";
 export * from "./primitives";
+export * from "./scenes";
 export * from "./screen-info";
 export * from "./side-drawer";
 export * from "./tab-button";
 export * from "./thumbnail";
+export * from "./user-avatar";

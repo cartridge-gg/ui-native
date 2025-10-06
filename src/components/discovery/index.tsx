@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
 import { getChecksumAddress } from "starknet";
+import type { Discover } from "#clone/arcade";
 import { useArcade, useDiscovers } from "#clone/arcade";
 import {
 	EmptyStateActivityIcon,
+	PlayerHeader,
 	Skeleton,
 	Tabs,
 	TabsContent,
@@ -11,53 +13,34 @@ import {
 	TabsTrigger,
 	Text,
 	UserCheckIcon,
-	UserIcon,
 	UsersIcon,
 } from "#components";
-import { DiscoveryEvent, type DiscoveryEventProps } from "./event";
+import { DiscoveryEvent } from "./event";
 
 type TabValue = "all" | "following";
-
-const INITIAL_OFFSET = 30;
-
-export interface DiscoveryEventData {
-	identifier: string;
-	name: string;
-	timestamp: number;
-	Icon: React.ReactNode;
-	count: number;
-	actions: string[];
-	achievements: Array<{ title: string; icon: string; points: number }>;
-	duration: number;
-	address: string;
-	onClick: () => void;
-	logo?: string;
-	color?: string;
-}
 
 export interface DiscoveryProps {
 	onTabChange?: (tab: TabValue) => void;
 	initialTab?: TabValue;
+	showHeader?: boolean;
 }
 
-export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
+export function Discovery({
+	onTabChange,
+	initialTab = "all",
+	showHeader = true,
+}: DiscoveryProps) {
 	const [events, setEvents] = useState<{
-		all: DiscoveryEventProps[];
-		following: DiscoveryEventProps[];
+		all: Discover[];
+		following: Discover[];
 	}>({
 		all: [],
 		following: [],
 	});
 
 	const [selected, setSelected] = useState<TabValue>(initialTab);
-	const [cap, setCap] = useState(INITIAL_OFFSET);
-
-	const {
-		playthroughs,
-		usernames: activitiesUsernames,
-		status: activitiesStatus,
-	} = useDiscovers();
-	const { games, editions } = useArcade();
+	const { playthroughs, status: activitiesStatus } = useDiscovers();
+	const { editions } = useArcade();
 
 	const following = useMemo(() => {
 		// For mobile, we'll use a simplified following logic
@@ -69,19 +52,9 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 		return editions; // Show all editions on mobile
 	}, [editions]);
 
-	const handleClick = useCallback(
-		// biome-ignore lint/suspicious/noExplicitAny: TODO: Define proper types
-		(_game: any, _edition: any, nameOrAddress: string) => {
-			// TODO: Implement mobile navigation logic
-			console.log("Navigate to player:", nameOrAddress);
-		},
-		[],
-	);
-
 	const handleTabChange = useCallback(
 		(tab: TabValue) => {
 			setSelected(tab);
-			setCap(INITIAL_OFFSET);
 			onTabChange?.(tab);
 		},
 		[onTabChange],
@@ -95,66 +68,25 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 		if (!Object.entries(playthroughs)) {
 			return;
 		}
-		if (!Object.entries(activitiesUsernames)) {
-			return;
-		}
 
 		const data = filteredEditions
 			.flatMap((edition) => {
 				const projectPlaythroughs = playthroughs[edition?.config?.project];
 				if (!projectPlaythroughs) return [];
-
-				return projectPlaythroughs
-					.map((activity) => {
-						const username =
-							activitiesUsernames[getChecksumAddress(activity.callerAddress)];
-
-						if (!username) return null;
-
-						const game = games.find((game) => game.id === edition.gameId);
-
-						if (!game) return null;
-
-						return {
-							identifier: activity.identifier,
-							name: username,
-							address: getChecksumAddress(activity.callerAddress),
-							Icon: <UserIcon size="sm" variant="solid" />,
-							duration: activity.end - activity.start,
-							count: activity.count,
-							actions: activity.actions,
-							achievements: [...activity.achievements],
-							timestamp: Math.floor(activity.end / 1000),
-							logo: edition.properties?.icon,
-							color: edition.color,
-							onClick: () =>
-								handleClick(
-									game,
-									edition,
-									username || getChecksumAddress(activity.callerAddress),
-								),
-						};
-					})
-					.filter((item): item is NonNullable<typeof item> => item !== null);
+				return projectPlaythroughs;
 			})
-			.filter((item): item is NonNullable<typeof item> => item !== null)
-			.sort((a, b) => b.timestamp - a.timestamp);
+			.sort((a, b) => b.end - a.end);
 
 		if (!data) return;
 		const newEvents = {
 			all: data,
-			following: data.filter((event) => following.includes(event.address)),
+			following: data.filter((event) =>
+				following.includes(getChecksumAddress(event.callerAddress)),
+			),
 		};
 		if (newEvents.all.length === 0) return;
 		setEvents(newEvents);
-	}, [
-		playthroughs,
-		filteredEditions,
-		activitiesUsernames,
-		following,
-		handleClick,
-		games,
-	]);
+	}, [playthroughs, filteredEditions, following]);
 
 	return (
 		<View className="flex-1">
@@ -181,16 +113,14 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 					<Content
 						events={events.all}
 						status={activitiesStatus}
-						cap={cap}
-						setCap={setCap}
+						showHeader={showHeader}
 					/>
 				</TabsContent>
 				<TabsContent value="following" className="flex-1">
 					<Content
 						events={events.following}
 						status={activitiesStatus}
-						cap={cap}
-						setCap={setCap}
+						showHeader={showHeader}
 					/>
 				</TabsContent>
 			</Tabs>
@@ -201,30 +131,25 @@ export function Discovery({ onTabChange, initialTab = "all" }: DiscoveryProps) {
 function Content({
 	events,
 	status,
-	cap,
-	setCap,
+	showHeader = true,
 }: {
-	events: DiscoveryEventProps[];
+	events: Discover[];
 	status: "success" | "error" | "idle" | "loading";
-	cap: number;
-	setCap: (n: number) => void;
+	showHeader?: boolean;
 }) {
-	const limited = useMemo(() => events.slice(0, cap), [events, cap]);
-
 	if (status === "loading" && events.length === 0) return <LoadingState />;
 	if (status === "error" || events.length === 0) return <EmptyState />;
 
 	return (
 		<FlatList
-			data={limited}
+			data={events}
+			ListHeaderComponent={showHeader ? <PlayerHeader /> : null}
 			keyExtractor={(item) => item.identifier}
 			renderItem={({ item }) => <DiscoveryEvent {...item} />}
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
-			onEndReached={() => setCap(cap + 24)}
-			onEndReachedThreshold={0.5}
-			className="p-4"
 			contentContainerClassName="rounded-md overflow-hidden"
+			contentContainerStyle={{ paddingHorizontal: 16 }}
 		/>
 	);
 }

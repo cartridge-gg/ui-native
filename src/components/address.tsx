@@ -36,7 +36,7 @@ export function Address({
 
 	const textClassName = cn(
 		monospace && "font-mono",
-		"text-primary leading-3",
+		copyable ? "text-foreground-300 font-medium" : "text-primary leading-3",
 		_textclassName,
 	);
 
@@ -47,7 +47,7 @@ export function Address({
 				onPress={onCopy}
 			>
 				<Text>{formattedAddress}</Text>
-				<CopyIcon size="xs" className={textClassName} />
+				<CopyIcon size="sm" className={textClassName} />
 			</Pressable>
 		</TextClassContext.Provider>
 	) : (

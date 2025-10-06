@@ -1,4 +1,6 @@
-import { Link } from "expo-router";
+import type { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { DrawerActions } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -6,7 +8,7 @@ import { useArcade } from "#clone/arcade";
 import { Input, Text, Thumbnail } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
-export function SideDrawer() {
+export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const insets = useSafeAreaInsets();
 	const { games } = useArcade();
 	const [search, setSearch] = useState("");
@@ -33,7 +35,7 @@ export function SideDrawer() {
 							Arcade
 						</Text>
 						{/* biome-ignore lint/nursery/useUniqueElementIds: this is static */}
-						<Item id="arcade" title="Arcade" />
+						<Item id="arcade" title="Arcade" navigation={navigation} />
 
 						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
 							Games
@@ -45,6 +47,7 @@ export function SideDrawer() {
 									id={g.id.toString()}
 									icon={g.properties.icon}
 									title={g.name}
+									navigation={navigation}
 								/>
 							))}
 						</View>
@@ -73,34 +76,42 @@ function Item({
 	id,
 	icon,
 	title,
+	navigation,
 }: {
 	id: string;
 	icon?: string;
 	title: string;
+	navigation: DrawerContentComponentProps["navigation"];
 }) {
+	const router = useRouter();
+
+	const handlePress = () => {
+		const href = id === "arcade" ? "/marketplace" : `/game/${id}/marketplace`;
+		navigation.dispatch(DrawerActions.closeDrawer());
+		router.replace(href);
+	};
+
 	return (
-		<Link href={id === "arcade" ? "/activity" : `/game/${id}/activity`} asChild>
-			<Pressable
-				key={id}
-				className="flex-row items-center p-3 active:bg-background-100 gap-2"
-			>
-				{id === "arcade" ? (
-					<Thumbnail
-						icon={require("#assets/icon.png")}
-						size="md"
-						variant="default"
-					/>
-				) : icon ? (
-					<Thumbnail icon={icon} size="md" variant="default" />
-				) : (
-					<View className="size-8 bg-background-200 rounded items-center justify-center">
-						<Text>{id[0].toUpperCase()}</Text>
-					</View>
-				)}
-				<Text className="text-foreground text-sm flex-1 font-medium">
-					{title}
-				</Text>
-			</Pressable>
-		</Link>
+		<Pressable
+			onPress={handlePress}
+			className="flex-row items-center p-3 active:bg-background-100 gap-2"
+		>
+			{id === "arcade" ? (
+				<Thumbnail
+					icon={require("#assets/icon.png")}
+					size="md"
+					variant="default"
+				/>
+			) : icon ? (
+				<Thumbnail icon={icon} size="md" variant="default" />
+			) : (
+				<View className="size-8 bg-background-200 rounded items-center justify-center">
+					<Text>{id[0].toUpperCase()}</Text>
+				</View>
+			)}
+			<Text className="text-foreground text-sm flex-1 font-medium">
+				{title}
+			</Text>
+		</Pressable>
 	);
 }

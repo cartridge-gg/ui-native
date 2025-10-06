@@ -1,5 +1,5 @@
 import { ScreenInfo } from "#components";
 
-export default function GamePlayerActivityScreen() {
+export default function GameCollectionScreen() {
 	return <ScreenInfo />;
 }

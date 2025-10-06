@@ -8,6 +8,7 @@ import {
 	jsonRpcProvider,
 	StarknetConfig,
 } from "@starknet-react/core";
+import { usePathname, useSegments } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { verifyInstallation } from "nativewind";
 import { type PropsWithChildren, useEffect } from "react";
@@ -18,8 +19,10 @@ import { constants } from "starknet";
 import {
 	AchievementProvider,
 	ArcadeProvider,
+	CollectionProvider,
 	DiscoversProvider,
 	OwnershipsProvider,
+	TokenProvider,
 } from "#clone/arcade";
 import {
 	Header,
@@ -38,7 +41,21 @@ type SessionPolicies = {
 	messages?: any[];
 };
 
+function useRouteLogger() {
+	const pathname = usePathname();
+	const segments = useSegments();
+
+	useEffect(() => {
+		if (__DEV__) {
+			console.log("📍 Route changed:", pathname);
+			console.log("📍 Segments:", segments);
+		}
+	}, [pathname, segments]);
+}
+
 export default function Layout() {
+	useRouteLogger();
+
 	useEffect(() => {
 		verifyInstallation();
 	}, []);
@@ -54,18 +71,24 @@ export default function Layout() {
 								<ArcadeProvider>
 									<AchievementProvider>
 										<OwnershipsProvider>
-											<DiscoversProvider>
-												<Drawer
-													screenOptions={({ navigation }) => ({
-														drawerStyle: {
-															width: 320,
-															backgroundColor: "#151916",
-														},
-														header: () => <Header navigation={navigation} />,
-													})}
-													drawerContent={SideDrawer}
-												/>
-											</DiscoversProvider>
+											<TokenProvider>
+												<CollectionProvider>
+													<DiscoversProvider>
+														<Drawer
+															screenOptions={({ navigation }) => ({
+																drawerStyle: {
+																	width: 320,
+																	backgroundColor: "#151916",
+																},
+																header: () => (
+																	<Header navigation={navigation} />
+																),
+															})}
+															drawerContent={SideDrawer}
+														/>
+													</DiscoversProvider>
+												</CollectionProvider>
+											</TokenProvider>
 										</OwnershipsProvider>
 									</AchievementProvider>
 								</ArcadeProvider>
