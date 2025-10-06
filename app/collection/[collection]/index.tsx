@@ -1,5 +1,5 @@
-import { ScreenInfo } from "#components";
+import { CollectionScene } from "#components/scenes";
 
 export default function CollectionScreen() {
-	return <ScreenInfo />;
+	return <CollectionScene />;
 }

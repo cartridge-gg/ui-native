@@ -1,10 +1,15 @@
-import { Slot } from "expo-router";
-import { View } from "react-native";
+import { Stack } from "expo-router";
 
 export default function CollectionLayout() {
 	return (
-		<View className="flex-1 bg-background">
-			<Slot />
-		</View>
+		<Stack
+			screenOptions={{
+				presentation: "modal",
+				headerShown: false,
+				animation: "slide_from_bottom",
+			}}
+		>
+			<Stack.Screen name="index" />
+		</Stack>
 	);
 }

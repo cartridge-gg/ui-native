@@ -14,12 +14,22 @@ import {
 	SearchIcon,
 	Text,
 } from "#components";
+import { useCollectionFilters } from "#context/collection-filters";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
 	const router = useRouter();
 	const { games } = useArcade();
+	const collectionFilters = useCollectionFilters();
+
+	// Check if we're on a collection route
+	const isCollectionRoute = useMemo(() => {
+		return (
+			pathname?.startsWith("/collection/") ||
+			(pathname?.startsWith("/game/") && pathname.includes("/collection/"))
+		);
+	}, [pathname]);
 
 	// Check if we're on a stacked route (like player or collection page)
 	const isStackedRoute = useMemo(() => {
@@ -107,15 +117,27 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 
 			<View className="flex-row items-center justify-between p-3">
 				{isStackedRoute ? (
-					<Button
-						variant="icon"
-						size="icon"
-						accessibilityRole="button"
-						accessibilityLabel="Go back"
-						onPress={handleBack}
-					>
-						<ArrowIcon variant="left" />
-					</Button>
+					isCollectionRoute && collectionFilters ? (
+						<Button
+							variant="icon"
+							size="icon"
+							accessibilityRole="button"
+							accessibilityLabel="Open filters"
+							onPress={() => collectionFilters.openFilters()}
+						>
+							<HamburgerIcon />
+						</Button>
+					) : (
+						<Button
+							variant="icon"
+							size="icon"
+							accessibilityRole="button"
+							accessibilityLabel="Go back"
+							onPress={handleBack}
+						>
+							<ArrowIcon variant="left" />
+						</Button>
+					)
 				) : (
 					<Button
 						variant="icon"
