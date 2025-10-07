@@ -25,10 +25,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 
 	// Check if we're on a collection route
 	const isCollectionRoute = useMemo(() => {
-		return (
-			pathname?.startsWith("/collection/") ||
-			(pathname?.startsWith("/game/") && pathname.includes("/collection/"))
-		);
+		return pathname?.startsWith("/collection/");
 	}, [pathname]);
 
 	// Check if we're on a stacked route (like player or collection page)
@@ -36,8 +33,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 		return (
 			pathname?.startsWith("/player/") ||
 			pathname?.startsWith("/collection/") ||
-			(pathname?.startsWith("/game/") && pathname.includes("/player/")) ||
-			(pathname?.startsWith("/game/") && pathname.includes("/collection/"))
+			(pathname?.startsWith("/game/") && pathname.includes("/player/"))
 		);
 	}, [pathname]);
 

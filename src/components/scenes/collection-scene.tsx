@@ -101,6 +101,7 @@ export function CollectionScene() {
 	const router = useRouter();
 	const { collection: collectionParam } = useLocalSearchParams<{
 		collection: string;
+		game?: string;
 	}>();
 	const { collections, status } = useCollections();
 	const { games, editions } = useArcade();

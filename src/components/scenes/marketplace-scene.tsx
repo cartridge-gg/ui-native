@@ -103,11 +103,10 @@ function CollectionCard({
 
 	const handlePress = () => {
 		const collectionAddress = collection.address.toLowerCase();
-		if (gameParam) {
-			router.push(`/game/${gameParam}/collection/${collectionAddress}`);
-		} else {
-			router.push(`/collection/${collectionAddress}`);
-		}
+		router.push({
+			pathname: `/collection/${collectionAddress}`,
+			params: gameParam ? { game: gameParam } : {},
+		});
 	};
 
 	return (
