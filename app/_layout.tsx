@@ -8,7 +8,8 @@ import {
 	jsonRpcProvider,
 	StarknetConfig,
 } from "@starknet-react/core";
-import { Stack, usePathname, useSegments } from "expo-router";
+import { usePathname, useSegments } from "expo-router";
+import Drawer from "expo-router/drawer";
 import { verifyInstallation } from "nativewind";
 import { type PropsWithChildren, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -23,7 +24,12 @@ import {
 	OwnershipsProvider,
 	TokenProvider,
 } from "#clone/arcade";
-import { SvgClassContext, TextClassContext } from "#components";
+import {
+	Header,
+	SideDrawer,
+	SvgClassContext,
+	TextClassContext,
+} from "#components";
 import { ThemeProvider } from "#context/theme";
 import { MobileConnector, RPC_MAINNET_URL, RPC_SEPOLIA_URL } from "#utils";
 
@@ -68,20 +74,19 @@ export default function Layout() {
 											<TokenProvider>
 												<CollectionProvider>
 													<DiscoversProvider>
-														<Stack>
-															<Stack.Screen
-																name="(drawer)"
-																options={{ headerShown: false }}
-															/>
-															<Stack.Screen
-																name="collection/[collection]/index"
-																options={{
-																	presentation: "modal",
-																	headerShown: false,
-																	animation: "slide_from_bottom",
-																}}
-															/>
-														</Stack>
+														<Drawer
+															screenOptions={({ navigation }) => ({
+																drawerStyle: {
+																	width: 320,
+																	backgroundColor: "#151916",
+																},
+																headerShown: true,
+																header: () => (
+																	<Header navigation={navigation} />
+																),
+															})}
+															drawerContent={SideDrawer}
+														/>
 													</DiscoversProvider>
 												</CollectionProvider>
 											</TokenProvider>

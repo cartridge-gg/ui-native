@@ -1,18 +1,13 @@
-import { Drawer } from "expo-router/drawer";
-import { Header, SideDrawer } from "#components";
+import { Stack } from "expo-router";
 
-export default function DrawerLayout() {
+export default function DrawerStackLayout() {
 	return (
-		<Drawer
-			screenOptions={({ navigation }) => ({
-				drawerStyle: {
-					width: 320,
-					backgroundColor: "#151916",
-				},
-				headerShown: true,
-				header: () => <Header navigation={navigation} />,
-			})}
-			drawerContent={SideDrawer}
-		/>
+		<Stack screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="(tabs)" />
+			<Stack.Screen
+				name="collection"
+				options={{ presentation: "modal", gestureEnabled: true }}
+			/>
+		</Stack>
 	);
 }
