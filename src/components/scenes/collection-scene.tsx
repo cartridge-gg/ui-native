@@ -146,7 +146,6 @@ export function CollectionScene() {
 			value={{ openFilters: () => setFiltersVisible(true) }}
 		>
 			<View className="flex-1 bg-background">
-				{/* Collection Info Header */}
 				<View className="bg-background-200 border-b border-spacer-100 p-4">
 					<View className="flex-row items-center justify-between gap-4">
 						<Pressable
@@ -193,36 +192,32 @@ export function CollectionScene() {
 					</View>
 				</View>
 
-				{/* Items Grid */}
-				<ScrollView className="flex-1">
-					<View className="p-4">
-						<FlatList
-							data={MOCK_NFTS}
-							numColumns={2}
-							scrollEnabled={false}
-							columnWrapperStyle={{ gap: 12 }}
-							ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-							keyExtractor={(item) => item.id}
-							renderItem={({ item, index }) => (
-								<View
-									style={{
-										flex: 1,
-										maxWidth: "50%",
-										paddingLeft: index % 2 === 0 ? 0 : 6,
-										paddingRight: index % 2 === 0 ? 6 : 0,
-									}}
-								>
-									<NFTCard nft={item} />
-								</View>
-							)}
-							ListEmptyComponent={
-								<EmptyState message="No items in this collection" />
-							}
-						/>
-					</View>
+				<ScrollView className="flex-1 p-4">
+					<FlatList
+						data={MOCK_NFTS}
+						numColumns={2}
+						scrollEnabled={false}
+						columnWrapperStyle={{ gap: 12 }}
+						ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item, index }) => (
+							<View
+								style={{
+									flex: 1,
+									maxWidth: "50%",
+									paddingLeft: index % 2 === 0 ? 0 : 6,
+									paddingRight: index % 2 === 0 ? 6 : 0,
+								}}
+							>
+								<NFTCard nft={item} />
+							</View>
+						)}
+						ListEmptyComponent={
+							<EmptyState message="No items in this collection" />
+						}
+					/>
 				</ScrollView>
 
-				{/* Filters Drawer */}
 				<CollectionFilters
 					visible={filtersVisible}
 					onClose={() => setFiltersVisible(false)}

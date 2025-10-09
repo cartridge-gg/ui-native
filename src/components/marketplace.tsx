@@ -1,32 +1,29 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, Image, Pressable, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useArcade, useCollections } from "#clone/arcade";
 import type { Collection } from "#clone/arcade/context/collection";
 import { EmptyStateInventoryIcon, Skeleton, Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
-export function MarketplaceScene() {
-	const router = useRouter();
+export function Marketplace() {
 	const insets = useSafeAreaInsets();
-	const { game: gameParam } = useLocalSearchParams<{ game?: string }>();
+	const { game } = useLocalSearchParams<{ game: string }>();
 	const { collections, status } = useCollections();
 	const { games, editions } = useArcade();
 
 	// Find the current game and edition if we're in a game context
 	const { edition } = useMemo(() => {
-		if (!gameParam) return { game: undefined, edition: undefined };
+		if (!game) return { game: undefined, edition: undefined };
 
 		try {
-			const idNum = Number(gameParam);
+			const idNum = Number(game);
 			const foundGame =
 				(Number.isFinite(idNum)
 					? games.find((g) => g.id === idNum)
 					: undefined) ??
-				games.find(
-					(g) => g.name.toLowerCase().replace(/\s+/g, "-") === gameParam,
-				);
+				games.find((g) => g.name.toLowerCase().replace(/\s+/g, "-") === game);
 
 			if (!foundGame) return { game: undefined, edition: undefined };
 
@@ -37,7 +34,7 @@ export function MarketplaceScene() {
 		} catch {
 			return { game: undefined, edition: undefined };
 		}
-	}, [gameParam, games, editions]);
+	}, [game, games, editions]);
 
 	// Filter collections by game/edition if applicable
 	const filteredCollections = useMemo(() => {
@@ -74,11 +71,7 @@ export function MarketplaceScene() {
 						paddingRight: index % 2 === 0 ? 6 : 0,
 					}}
 				>
-					<CollectionCard
-						collection={item}
-						gameParam={gameParam}
-						router={router}
-					/>
+					<CollectionCard collection={item} game={game} />
 				</View>
 			)}
 			showsVerticalScrollIndicator={false}
@@ -88,50 +81,44 @@ export function MarketplaceScene() {
 
 interface CollectionCardProps {
 	collection: Collection;
-	gameParam?: string;
-	router: ReturnType<typeof useRouter>;
+	game?: string;
 }
 
-function CollectionCard({
-	collection,
-	gameParam,
-	router,
-}: CollectionCardProps) {
+function CollectionCard({ collection, game }: CollectionCardProps) {
 	const imageUri = collection.imageUrl.startsWith("ipfs://")
 		? collection.imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
 		: collection.imageUrl;
 
-	const handlePress = () => {
-		const collectionAddress = collection.address.toLowerCase();
-		router.push({
-			pathname: `/collection/${collectionAddress}`,
-			params: gameParam ? { game: gameParam } : {},
-		});
-	};
-
 	return (
-		<Pressable
-			onPress={handlePress}
-			className="flex-1 bg-background-200 rounded-lg overflow-hidden active:opacity-80"
+		<Link
+			href={
+				game
+					? `/(drawer)/game/${game}/collection/${collection.address}`
+					: `/(drawer)/collection/${collection.address}`
+			}
+			push
+			asChild
 		>
-			<View className="aspect-square bg-background-100">
-				<Image
-					source={{ uri: imageUri }}
-					className="w-full h-full"
-					resizeMode="cover"
-				/>
+			<View className="flex-1 bg-background-200 rounded-lg overflow-hidden active:opacity-80">
+				<View className="aspect-square bg-background-100">
+					<Image
+						source={{ uri: imageUri }}
+						className="w-full h-full"
+						resizeMode="cover"
+					/>
+				</View>
+				<View className="p-3 gap-1">
+					<Text className="text-sm font-medium" numberOfLines={1}>
+						{collection.name}
+					</Text>
+					<Text className="text-xs text-foreground-300">
+						{collection.totalCount}{" "}
+						{collection.totalCount === 1 ? "item" : "items"}
+					</Text>
+					<Text className="text-xs text-foreground-400">{collection.type}</Text>
+				</View>
 			</View>
-			<View className="p-3 gap-1">
-				<Text className="text-sm font-medium" numberOfLines={1}>
-					{collection.name}
-				</Text>
-				<Text className="text-xs text-foreground-300">
-					{collection.totalCount}{" "}
-					{collection.totalCount === 1 ? "item" : "items"}
-				</Text>
-				<Text className="text-xs text-foreground-400">{collection.type}</Text>
-			</View>
-		</Pressable>
+		</Link>
 	);
 }
 

@@ -6,6 +6,7 @@ export * from "./game-header";
 export * from "./header";
 export * from "./icons";
 export * from "./leaderboard";
+export * from "./marketplace";
 export * from "./network";
 export * from "./player-header";
 export * from "./primitives";

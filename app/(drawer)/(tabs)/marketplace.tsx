@@ -1,5 +1,5 @@
-import { MarketplaceScene } from "#components";
+import { Marketplace } from "#components";
 
 export default function MarketplaceScreen() {
-	return <MarketplaceScene />;
+	return <Marketplace />;
 }

@@ -4,10 +4,7 @@ export default function DrawerStackLayout() {
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="(tabs)" />
-			<Stack.Screen
-				name="collection"
-				options={{ presentation: "modal", gestureEnabled: true }}
-			/>
+			<Stack.Screen name="collection" options={{ presentation: "modal" }} />
 		</Stack>
 	);
 }
