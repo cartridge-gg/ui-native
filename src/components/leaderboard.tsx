@@ -236,7 +236,6 @@ function Content({
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
 			contentContainerStyle={{
-				paddingHorizontal: 16,
 				paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 16,
 			}}
 			contentContainerClassName="rounded-md overflow-hidden"
