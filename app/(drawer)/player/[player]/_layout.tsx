@@ -1,9 +1,4 @@
-import {
-	Slot,
-	useLocalSearchParams,
-	usePathname,
-	useRouter,
-} from "expo-router";
+import { Link, Slot, usePathname } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChestIcon, LeaderboardIcon, TabButton } from "#components";
@@ -12,13 +7,6 @@ import { TAB_BAR_HEIGHT } from "#utils";
 export default function PlayerLayout() {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
-	const router = useRouter();
-	const { player } = useLocalSearchParams<{ player: string }>();
-
-	// Determine which tab is active based on pathname
-	const isInventoryActive =
-		pathname?.includes("/inventory") || pathname === `/player/${player}`;
-	const isLeaderboardActive = pathname?.includes("/leaderboard");
 
 	return (
 		<View className="flex-1 bg-background">
@@ -32,16 +20,18 @@ export default function PlayerLayout() {
 					paddingBottom: insets.bottom,
 				}}
 			>
-				<TabButton
-					Icon={ChestIcon}
-					isFocused={isInventoryActive}
-					onPress={() => router.push(`/player/${player}/inventory`)}
-				/>
-				<TabButton
-					Icon={LeaderboardIcon}
-					isFocused={isLeaderboardActive}
-					onPress={() => router.push(`/player/${player}/leaderboard`)}
-				/>
+				<Link href="./inventory" replace asChild>
+					<TabButton
+						Icon={ChestIcon}
+						isFocused={pathname?.includes("/inventory")}
+					/>
+				</Link>
+				<Link href="./leaderboard" replace asChild>
+					<TabButton
+						Icon={LeaderboardIcon}
+						isFocused={pathname?.includes("/leaderboard")}
+					/>
+				</Link>
 			</View>
 		</View>
 	);

@@ -1,7 +1,7 @@
 import { Image, ScrollView, View } from "react-native";
 import type { Collection, Token } from "#clone/arcade";
 import { useCollections, useTokens } from "#clone/arcade";
-import { PlayerHeader, Text } from "#components";
+import { Text } from "#components";
 
 export function InventoryScene() {
 	const { tokens, credits, status: tokensStatus } = useTokens();
@@ -9,7 +9,6 @@ export function InventoryScene() {
 
 	return (
 		<ScrollView className="flex-1">
-			<PlayerHeader />
 			<View style={{ padding: 16, gap: 16 }}>
 				<TokensSection
 					tokens={tokens}
@@ -177,13 +176,9 @@ function CollectionCard({ collection }: { collection: Collection }) {
 	);
 
 	return (
-		<View className="w-[48%] bg-background-200 rounded-lg overflow-hidden">
+		<View className="grid grid-cols-2 gap-3 bg-background-200 rounded-lg overflow-hidden">
 			<View className="aspect-square bg-background-100">
-				<Image
-					source={{ uri: imageUri }}
-					className="w-full h-full"
-					resizeMode="cover"
-				/>
+				<Image source={{ uri: imageUri }} resizeMode="cover" />
 			</View>
 			<View className="p-3">
 				<Text className="text-sm font-medium" numberOfLines={1}>
