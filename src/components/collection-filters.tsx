@@ -1,12 +1,14 @@
 import { useCallback, useState } from "react";
 import { Modal, Pressable, ScrollView, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowIcon } from "#components/icons/directional/arrow";
-import { CaratIcon } from "#components/icons/directional/carat";
-import { FilterIcon } from "#components/icons/state/filter";
-import { Button } from "#components/primitives/button";
-import { Separator } from "#components/primitives/separator";
-import { Text } from "#components/primitives/text";
+import {
+	ArrowIcon,
+	Button,
+	CaratIcon,
+	Separator,
+	SliderIcon,
+	Text,
+} from "#components";
 
 type FilterStatus = "buy_now" | "show_all";
 
@@ -112,7 +114,7 @@ export function CollectionFilters({
 						<ArrowIcon variant="left" />
 					</Pressable>
 					<View className="flex-row items-center gap-2 flex-1">
-						<FilterIcon size="md" />
+						<SliderIcon size="md" />
 						<Text className="text-lg font-semibold">Filters</Text>
 					</View>
 				</View>
