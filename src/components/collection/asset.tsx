@@ -55,7 +55,9 @@ export function Asset() {
 
 	const attributes = metadata?.attributes || [];
 
-	const properties = useMemo(() => {
+	const properties = useMemo<
+		Array<{ label: string; value: string; placeholder?: boolean }>
+	>(() => {
 		if (!token) return [];
 		const props = [
 			{ label: "Token ID", value: token.token_id },
@@ -72,6 +74,18 @@ export function Asset() {
 		}
 		if (token.lastSale) {
 			props.push({ label: "Last Sale", value: `${token.lastSale} ETH` });
+		}
+		const numColumns = 3;
+		const remainder = props.length % numColumns;
+		if (remainder !== 0) {
+			const placeholdersNeeded = numColumns - remainder;
+			for (let i = 0; i < placeholdersNeeded; i++) {
+				props.push({ label: "", value: "", placeholder: true } as {
+					label: string;
+					value: string;
+					placeholder?: boolean;
+				});
+			}
 		}
 		return props;
 	}, [token, attributes]);
@@ -161,17 +175,21 @@ export function Asset() {
 								)}
 								renderItem={({ item }) => (
 									<View className="flex-1">
-										<View className="bg-background-200 font-semibold rounded p-3 gap-3">
-											<Text className="text-xs text-foreground-400 font-semibold">
-												{item.label}
-											</Text>
-											<Text
-												className="text-sm font-medium text-foreground-100"
-												numberOfLines={1}
-											>
-												{item.value}
-											</Text>
-										</View>
+										{item.placeholder ? (
+											<View />
+										) : (
+											<View className="bg-background-200 font-semibold rounded p-3 gap-3">
+												<Text className="text-xs text-foreground-400 font-semibold">
+													{item.label}
+												</Text>
+												<Text
+													className="text-sm font-medium text-foreground-100"
+													numberOfLines={1}
+												>
+													{item.value}
+												</Text>
+											</View>
+										)}
 									</View>
 								)}
 							/>
