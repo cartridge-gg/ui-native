@@ -1,10 +1,9 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, Image, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useArcade, useCollections } from "#clone/arcade";
-import type { Collection } from "#clone/arcade/context/collection";
-import { EmptyStateInventoryIcon, Skeleton, Text } from "#components";
+import { EmptyStateInventoryIcon, ItemCard, Skeleton, Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
 export function Marketplace() {
@@ -62,63 +61,39 @@ export function Marketplace() {
 			columnWrapperStyle={{ gap: 12 }}
 			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 			keyExtractor={(item) => item.address}
-			renderItem={({ item, index }) => (
-				<View
-					style={{
-						flex: 1,
-						maxWidth: "50%",
-						paddingLeft: index % 2 === 0 ? 0 : 6,
-						paddingRight: index % 2 === 0 ? 6 : 0,
-					}}
-				>
-					<CollectionCard collection={item} game={game} />
-				</View>
-			)}
+			renderItem={({ item, index }) => {
+				const { name, imageUrl, totalCount, address } = item;
+				const listingCount = 0;
+				const price = null;
+				const lastSale = null;
+
+				return (
+					<View
+						style={{
+							flex: 1,
+							maxWidth: "50%",
+							paddingLeft: index % 2 === 0 ? 0 : 6,
+							paddingRight: index % 2 === 0 ? 6 : 0,
+						}}
+					>
+						<ItemCard
+							href={
+								game
+									? `/(drawer)/game/${game}/collection/${address}`
+									: `/(drawer)/collection/${address}`
+							}
+							title={name}
+							imageUri={imageUrl}
+							totalCount={totalCount}
+							listingCount={listingCount}
+							price={price}
+							lastSale={lastSale}
+						/>
+					</View>
+				);
+			}}
 			showsVerticalScrollIndicator={false}
 		/>
-	);
-}
-
-interface CollectionCardProps {
-	collection: Collection;
-	game?: string;
-}
-
-function CollectionCard({ collection, game }: CollectionCardProps) {
-	const imageUri = collection.imageUrl.startsWith("ipfs://")
-		? collection.imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
-		: collection.imageUrl;
-
-	return (
-		<Link
-			href={
-				game
-					? `/(drawer)/game/${game}/collection/${collection.address}`
-					: `/(drawer)/collection/${collection.address}`
-			}
-			push
-			asChild
-		>
-			<View className="flex-1 bg-background-200 rounded-lg overflow-hidden active:opacity-80">
-				<View className="aspect-square bg-background-100">
-					<Image
-						source={{ uri: imageUri }}
-						className="w-full h-full"
-						resizeMode="cover"
-					/>
-				</View>
-				<View className="p-3 gap-1">
-					<Text className="text-sm font-medium" numberOfLines={1}>
-						{collection.name}
-					</Text>
-					<Text className="text-xs text-foreground-300">
-						{collection.totalCount}{" "}
-						{collection.totalCount === 1 ? "item" : "items"}
-					</Text>
-					<Text className="text-xs text-foreground-400">{collection.type}</Text>
-				</View>
-			</View>
-		</Link>
 	);
 }
 
