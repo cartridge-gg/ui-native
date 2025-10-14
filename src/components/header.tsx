@@ -1,8 +1,8 @@
 import type { DrawerHeaderProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { usePathname, useRouter } from "expo-router";
-import { useCallback, useMemo } from "react";
+import { Link, usePathname, useRouter } from "expo-router";
+import { useMemo } from "react";
 import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
@@ -21,51 +21,6 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const router = useRouter();
 	const { games } = useArcade();
 
-	// Check if we're on a stacked route (like player or collection page)
-	const isStackedRoute = useMemo(() => {
-		return (
-			pathname?.startsWith("/player/") ||
-			pathname?.startsWith("/collection/") ||
-			(pathname?.startsWith("/game/") && pathname.includes("/player/")) ||
-			(pathname?.startsWith("/game/") && pathname.includes("/collection/"))
-		);
-	}, [pathname]);
-
-	const handleBack = useCallback(() => {
-		// Check if we're in a game context
-		const gameMatch = pathname?.match(/^\/game\/([^/]+)\//);
-
-		if (gameMatch) {
-			const gameId = gameMatch[1];
-
-			// If we're on a player or collection page within a game, go to game marketplace
-			if (
-				pathname?.includes("/player/") ||
-				pathname?.includes("/collection/")
-			) {
-				router.replace(`/game/${gameId}/marketplace`);
-				return;
-			}
-		}
-
-		// For global player/collection routes, go to global marketplace
-		if (
-			pathname?.startsWith("/player/") ||
-			pathname?.startsWith("/collection/")
-		) {
-			router.replace("/marketplace");
-			return;
-		}
-
-		// Default fallback
-		if (router.canGoBack()) {
-			router.back();
-		} else {
-			router.replace("/marketplace");
-		}
-	}, [router, pathname]);
-
-	// Determine header background image based on current route
 	const bgSource: ImageURISource = useMemo(() => {
 		try {
 			if (pathname?.startsWith("/game/")) {
@@ -87,8 +42,6 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 		return banner as ImageURISource;
 	}, [pathname, games]);
 
-	// No per-header overrides; ThemeProvider applies game theme globally on game routes
-
 	return (
 		<ImageBackground
 			source={bgSource}
@@ -106,16 +59,17 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 			/>
 
 			<View className="flex-row items-center justify-between p-3">
-				{isStackedRoute ? (
-					<Button
-						variant="icon"
-						size="icon"
-						accessibilityRole="button"
-						accessibilityLabel="Go back"
-						onPress={handleBack}
-					>
-						<ArrowIcon variant="left" />
-					</Button>
+				{router.canGoBack() ? (
+					<Link href=".." asChild>
+						<Button
+							variant="icon"
+							size="icon"
+							accessibilityRole="button"
+							accessibilityLabel="Go back"
+						>
+							<ArrowIcon variant="left" />
+						</Button>
+					</Link>
 				) : (
 					<Button
 						variant="icon"
@@ -129,7 +83,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 				)}
 
 				<View className="flex-row items-center gap-3">
-					{!isStackedRoute && (
+					{!router.canGoBack() && (
 						<Button
 							variant="icon"
 							size="icon"

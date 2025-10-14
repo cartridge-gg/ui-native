@@ -1,7 +1,8 @@
-import { Image, ScrollView, View } from "react-native";
+import { useMemo } from "react";
+import { FlatList, Image, ScrollView, View } from "react-native";
 import type { Collection, Token } from "#clone/arcade";
-import { useCollections, useTokens } from "#clone/arcade";
-import { PlayerHeader, Text } from "#components";
+import { useCollections, useMarketplace, useTokens } from "#clone/arcade";
+import { ItemCard, ItemGrid, Text } from "#components";
 
 export function InventoryScene() {
 	const { tokens, credits, status: tokensStatus } = useTokens();
@@ -9,7 +10,6 @@ export function InventoryScene() {
 
 	return (
 		<ScrollView className="flex-1">
-			<PlayerHeader />
 			<View style={{ padding: 16, gap: 16 }}>
 				<TokensSection
 					tokens={tokens}
@@ -130,17 +130,28 @@ interface CollectionsSectionProps {
 }
 
 function CollectionsSection({ collections, status }: CollectionsSectionProps) {
+	const { getListingCount, getFloorPrice, getLastSale } = useMarketplace();
+
+	const skeletonData = useMemo(
+		() => Array.from({ length: 4 }, (_, i) => ({ id: `skeleton-${i}` })),
+		[],
+	);
+
 	if (status === "loading") {
 		return (
 			<View>
 				<Text className="text-lg font-semibold mb-3">Collections</Text>
-				<View className="grid grid-cols-2 gap-3">
-					{Array.from({ length: 4 }, (_, i) => `collection-skeleton-${i}`).map(
-						(key) => (
-							<View key={key} className="h-40 bg-background-200 rounded-lg" />
-						),
+				<FlatList
+					data={skeletonData}
+					numColumns={2}
+					scrollEnabled={false}
+					columnWrapperStyle={{ gap: 12 }}
+					contentContainerStyle={{ gap: 12 }}
+					keyExtractor={(item) => item.id}
+					renderItem={() => (
+						<View className="flex-1 h-40 bg-background-200 rounded-lg" />
 					)}
-				</View>
+				/>
 			</View>
 		);
 	}
@@ -161,42 +172,31 @@ function CollectionsSection({ collections, status }: CollectionsSectionProps) {
 	return (
 		<View>
 			<Text className="text-lg font-semibold mb-3">Collections</Text>
-			<View className="flex flex-row flex-wrap gap-3">
-				{collections.map((collection) => (
-					<CollectionCard key={collection.address} collection={collection} />
-				))}
-			</View>
-		</View>
-	);
-}
+			<ItemGrid
+				data={collections}
+				numColumns={2}
+				gap={12}
+				maintainColumnWidth={true}
+				keyExtractor={(item) => item.address}
+				renderItem={(item) => {
+					const { name, imageUrl, totalCount, address } = item;
+					const listingCount = getListingCount(address);
+					const price = getFloorPrice(address);
+					const lastSale = getLastSale(address);
 
-function CollectionCard({ collection }: { collection: Collection }) {
-	const imageUri = collection.imageUrl.replace(
-		"ipfs://",
-		"https://ipfs.io/ipfs/",
-	);
-
-	return (
-		<View className="w-[48%] bg-background-200 rounded-lg overflow-hidden">
-			<View className="aspect-square bg-background-100">
-				<Image
-					source={{ uri: imageUri }}
-					className="w-full h-full"
-					resizeMode="cover"
-				/>
-			</View>
-			<View className="p-3">
-				<Text className="text-sm font-medium" numberOfLines={1}>
-					{collection.name}
-				</Text>
-				<Text className="text-xs text-foreground-300 mt-1">
-					{collection.totalCount}{" "}
-					{collection.totalCount === 1 ? "item" : "items"}
-				</Text>
-				<Text className="text-xs text-foreground-400 mt-0.5">
-					{collection.type}
-				</Text>
-			</View>
+					return (
+						<ItemCard
+							href={`../collection/${address}`}
+							title={name}
+							imageUri={imageUrl}
+							totalCount={totalCount}
+							listingCount={listingCount}
+							price={price}
+							lastSale={lastSale}
+						/>
+					);
+				}}
+			/>
 		</View>
 	);
 }

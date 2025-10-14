@@ -79,14 +79,7 @@ function TabsContent({
 	...props
 }: TabsPrimitive.ContentProps & React.RefAttributes<TabsPrimitive.ContentRef>) {
 	return (
-		<TabsPrimitive.Content
-			className={cn(
-				Platform.select({ web: "flex-1 outline-none" }),
-				"mt-2",
-				className,
-			)}
-			{...props}
-		/>
+		<TabsPrimitive.Content className={cn("flex-1", className)} {...props} />
 	);
 }
 

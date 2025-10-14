@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
 import { FlatList } from "react-native";
@@ -5,6 +6,13 @@ import Svg, { Circle, Path, Rect, SvgUri } from "react-native-svg";
 
 // Configure LinearGradient to accept className
 cssInterop(LinearGradient, {
+	className: {
+		target: "style",
+	},
+});
+
+// Configure Image from expo-image to accept className
+cssInterop(Image, {
 	className: {
 		target: "style",
 	},

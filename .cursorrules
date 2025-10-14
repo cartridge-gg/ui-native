@@ -4,4 +4,6 @@ bun lint
 ```
 
 - Don't start server as Expo server is run manually by developers usually.
+- Don't put comments inside components unless surpressing ts/lint errors or specifically instructed to do so.
+- Always prefer `<Link />` component wrapper instead of passing onPress callback to Button or Pressable
 

@@ -174,7 +174,7 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 		<Tabs
 			value={selected}
 			onValueChange={(v) => handleTabChange(v as TabValue)}
-			className="p-4"
+			className="flex-1 px-4"
 		>
 			<TabsList>
 				<TabsTrigger value="all">
@@ -195,6 +195,7 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 					status={isLoading ? "loading" : isError ? "error" : "success"}
 					getPlayerHref={getPlayerHref}
 					showHeader={showHeader}
+					tab="all"
 				/>
 			</TabsContent>
 			<TabsContent value="following">
@@ -203,6 +204,7 @@ export function Leaderboard({ edition, showHeader = false }: LeaderboardProps) {
 					status={isLoading ? "loading" : isError ? "error" : "success"}
 					getPlayerHref={getPlayerHref}
 					showHeader={showHeader}
+					tab="following"
 				/>
 			</TabsContent>
 		</Tabs>
@@ -214,16 +216,18 @@ function Content({
 	status,
 	getPlayerHref,
 	showHeader = false,
+	tab,
 }: {
 	data: LeaderboardRowData[];
 	status: "success" | "error" | "idle" | "loading";
 	getPlayerHref: (address: string) => string;
 	showHeader?: boolean;
+	tab: TabValue;
 }) {
 	const insets = useSafeAreaInsets();
 
 	if (status === "loading" && data.length === 0) return <LoadingState />;
-	if (status === "error" || data.length === 0) return <EmptyState />;
+	if (status === "error" || data.length === 0) return <EmptyState tab={tab} />;
 
 	return (
 		<FlatList
@@ -236,7 +240,6 @@ function Content({
 			showsVerticalScrollIndicator={false}
 			ItemSeparatorComponent={() => <View className="h-px bg-transparent" />}
 			contentContainerStyle={{
-				paddingHorizontal: 16,
 				paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 16,
 			}}
 			contentContainerClassName="rounded-md overflow-hidden"
@@ -307,12 +310,17 @@ function LoadingState() {
 	);
 }
 
-function EmptyState() {
+function EmptyState({ tab }: { tab: TabValue }) {
+	const message =
+		tab === "following"
+			? "You're not following any players yet."
+			: "No leaderboard available for this game.";
+
 	return (
-		<View className="flex-1 items-center justify-center gap-3 px-6">
+		<View className="flex-1 items-center justify-center gap-3 px-6 py-12">
 			<EmptyStateActivityIcon size="xl" />
-			<Text className="text-base text-foreground-300">
-				No leaderboard available for this game.
+			<Text className="text-base text-foreground-300 text-center">
+				{message}
 			</Text>
 		</View>
 	);
