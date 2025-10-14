@@ -1,5 +1,6 @@
 export * from "./about";
 export * from "./address";
+export * from "./collection";
 export * from "./copy-address";
 export * from "./discovery";
 export * from "./game-header";

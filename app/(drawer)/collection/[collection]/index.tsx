@@ -1,5 +1,5 @@
-import { CollectionScene } from "#components/scenes";
+import { Collection } from "#components";
 
 export default function CollectionScreen() {
-	return <CollectionScene />;
+	return <Collection />;
 }

@@ -1,7 +1,7 @@
-import { Image, ScrollView, View } from "react-native";
+import { Image, Pressable, ScrollView, View } from "react-native";
 import type { Collection, Token } from "#clone/arcade";
 import { useCollections, useTokens } from "#clone/arcade";
-import { Text } from "#components";
+import { StackDiamondIcon, TagIcon, Text } from "#components";
 
 export function InventoryScene() {
 	const { tokens, credits, status: tokensStatus } = useTokens();
@@ -162,7 +162,9 @@ function CollectionsSection({ collections, status }: CollectionsSectionProps) {
 			<Text className="text-lg font-semibold mb-3">Collections</Text>
 			<View className="flex flex-row flex-wrap gap-3">
 				{collections.map((collection) => (
-					<CollectionCard key={collection.address} collection={collection} />
+					<View key={collection.address} className="w-[48%]">
+						<CollectionCard collection={collection} />
+					</View>
 				))}
 			</View>
 		</View>
@@ -170,28 +172,109 @@ function CollectionsSection({ collections, status }: CollectionsSectionProps) {
 }
 
 function CollectionCard({ collection }: { collection: Collection }) {
-	const imageUri = collection.imageUrl.replace(
-		"ipfs://",
-		"https://ipfs.io/ipfs/",
-	);
+	const imageUri = collection.imageUrl.startsWith("ipfs://")
+		? collection.imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/")
+		: collection.imageUrl;
+
+	// Mock data - in real app these would come from marketplace data
+	const listingCount = 0; // No listings for user's own collections typically
+	const price = null;
+	const lastSale = null;
 
 	return (
-		<View className="grid grid-cols-2 gap-3 bg-background-200 rounded-lg overflow-hidden">
-			<View className="aspect-square bg-background-100">
-				<Image source={{ uri: imageUri }} resizeMode="cover" />
+		<Pressable className="relative rounded overflow-hidden border-2 border-transparent">
+			{/* Header */}
+			<View className="h-9 relative flex-row gap-2 px-1.5 py-1.5 justify-between items-center bg-background-200">
+				<View className="flex-row items-center gap-1.5 overflow-hidden flex-1">
+					<Text
+						className="text-sm font-medium text-foreground-100 flex-1 pl-2.5"
+						numberOfLines={1}
+					>
+						{collection.name}
+					</Text>
+				</View>
 			</View>
-			<View className="p-3">
-				<Text className="text-sm font-medium" numberOfLines={1}>
-					{collection.name}
-				</Text>
-				<Text className="text-xs text-foreground-300 mt-1">
-					{collection.totalCount}{" "}
-					{collection.totalCount === 1 ? "item" : "items"}
-				</Text>
-				<Text className="text-xs text-foreground-400 mt-0.5">
-					{collection.type}
-				</Text>
+
+			{/* Preview */}
+			<View className="relative overflow-hidden aspect-square">
+				{/* Blurred background */}
+				<View className="absolute inset-0 opacity-75" style={{ zIndex: 0 }}>
+					<Image
+						source={{ uri: imageUri }}
+						className="w-full h-full"
+						style={{ transform: [{ scale: 1.1 }] }}
+						blurRadius={8}
+						resizeMode="cover"
+					/>
+					<View className="absolute inset-0 bg-black/64" />
+				</View>
+
+				{/* Main image - centered with padding */}
+				<View
+					className="absolute inset-0 p-2 items-center justify-center"
+					style={{ zIndex: 1 }}
+				>
+					<Image
+						source={{ uri: imageUri }}
+						style={{
+							width: "100%",
+							height: "100%",
+						}}
+						resizeMode="contain"
+					/>
+				</View>
+
+				{/* Stats overlay - bottom left */}
+				<View
+					className="absolute bottom-1.5 left-1.5 flex-row gap-1 items-center flex-wrap"
+					style={{ zIndex: 2 }}
+				>
+					{!!collection.totalCount && (
+						<View className="relative px-1 py-0.5 rounded-sm h-6 flex-row justify-center items-center bg-[#1E221FA3]">
+							<StackDiamondIcon variant="solid" size="sm" />
+							<Text className="text-sm font-semibold text-foreground-100 px-0.5">
+								{collection.totalCount.toLocaleString()}
+							</Text>
+						</View>
+					)}
+					{!!listingCount && (
+						<View className="relative px-1 py-0.5 rounded-sm h-6 flex-row justify-center items-center bg-[#1E221FA3]">
+							<TagIcon variant="solid" size="sm" />
+							<Text className="text-sm font-semibold text-foreground-100 px-0.5">
+								{listingCount}
+							</Text>
+						</View>
+					)}
+				</View>
 			</View>
-		</View>
+
+			{/* Footer */}
+			{(price || lastSale) && (
+				<View className="px-3 py-2 flex-col gap-0.5 text-foreground-400 bg-background-200">
+					<View className="flex-row justify-between items-center">
+						<Text className="text-[10px] leading-3 text-foreground-400">
+							Price
+						</Text>
+						<Text className="text-[10px] leading-3 text-foreground-400">
+							Last Sale
+						</Text>
+					</View>
+					<View className="flex-row justify-between items-center">
+						<Text
+							className={
+								price
+									? "text-sm font-medium text-foreground-100"
+									: "text-sm font-medium text-foreground-400"
+							}
+						>
+							{price || "--"}
+						</Text>
+						<Text className="text-sm font-medium text-foreground-400">
+							{lastSale || "--"}
+						</Text>
+					</View>
+				</View>
+			)}
+		</Pressable>
 	);
 }

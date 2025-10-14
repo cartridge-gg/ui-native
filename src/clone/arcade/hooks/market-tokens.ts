@@ -13,6 +13,9 @@ export type MarketToken = {
 	image?: string;
 	name?: string;
 	balance?: string;
+	// Marketplace data
+	price?: string | null; // Current listing price
+	lastSale?: string | null; // Last sale price
 };
 
 type MarketTokensFetcherInput = {
@@ -36,6 +39,9 @@ type MarketTokensFetcherResult = {
 	isFetchingNextPage: boolean;
 	fetchNextPage: () => void;
 	availableFilters: UIFilterFormat; // Computed attributes for filtering
+	// Collection-level stats
+	totalCount: number; // Total items in collection
+	listingCount: number; // Number of items currently listed
 };
 
 // Mock NFT data generator based on collection address
@@ -84,6 +90,13 @@ const generateMockNFTs = (
 		const typeIndex = Math.floor((i * 4) / count); // Spread evenly
 		const elementIndex = Math.floor((i * 5) / count); // Spread across 5 elements
 
+		// Generate varied marketplace data
+		const hasListing = i % 2 === 0; // 50% have current listings
+		const hadSale = i % 3 === 0; // 33% have sale history
+		const priceValue = hasListing ? (10 + (i % 50)).toString() : null;
+		const lastSaleValue =
+			hadSale && !hasListing ? (5 + (i % 30)).toString() : null;
+
 		return {
 			contract_address: collectionAddress,
 			token_id: (i + 1).toString(),
@@ -109,6 +122,8 @@ const generateMockNFTs = (
 				],
 			},
 			balance: "1",
+			price: priceValue,
+			lastSale: lastSaleValue,
 		};
 	});
 };
@@ -218,6 +233,16 @@ export function useMarketTokensFetcher({
 		return convertToUIFormat(filters);
 	}, [tokens]);
 
+	// Compute collection-level stats
+	const stats = useMemo(() => {
+		const allMockTokens = generateMockNFTs(address, TOTAL_MOCK_ITEMS);
+		const listingCount = allMockTokens.filter((t) => t.price).length;
+		return {
+			totalCount: TOTAL_MOCK_ITEMS,
+			listingCount,
+		};
+	}, [address]);
+
 	return {
 		collection: null, // Could add collection metadata if needed
 		tokens,
@@ -232,5 +257,7 @@ export function useMarketTokensFetcher({
 		isFetchingNextPage: isFetchingRef.current && tokens.length > 0,
 		fetchNextPage,
 		availableFilters,
+		totalCount: stats.totalCount,
+		listingCount: stats.listingCount,
 	};
 }

@@ -18,7 +18,7 @@ type PropertyFilter = {
 	property: string;
 };
 
-export function CollectionFiltersScreen() {
+export function CollectionFilter() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const params = useLocalSearchParams<{
