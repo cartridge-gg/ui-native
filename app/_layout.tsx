@@ -21,6 +21,7 @@ import {
 	ArcadeProvider,
 	CollectionProvider,
 	DiscoversProvider,
+	MarketplaceProvider,
 	OwnershipsProvider,
 	TokenProvider,
 } from "#clone/arcade";
@@ -70,27 +71,29 @@ export default function Layout() {
 							<StarknetProvider>
 								<ArcadeProvider>
 									<AchievementProvider>
-										<OwnershipsProvider>
-											<TokenProvider>
-												<CollectionProvider>
-													<DiscoversProvider>
-														<Drawer
-															screenOptions={({ navigation }) => ({
-																drawerStyle: {
-																	width: 320,
-																	backgroundColor: "#151916",
-																},
-																headerShown: true,
-																header: () => (
-																	<Header navigation={navigation} />
-																),
-															})}
-															drawerContent={SideDrawer}
-														/>
-													</DiscoversProvider>
-												</CollectionProvider>
-											</TokenProvider>
-										</OwnershipsProvider>
+										<MarketplaceProvider>
+											<OwnershipsProvider>
+												<TokenProvider>
+													<CollectionProvider>
+														<DiscoversProvider>
+															<Drawer
+																screenOptions={({ navigation }) => ({
+																	drawerStyle: {
+																		width: 320,
+																		backgroundColor: "#151916",
+																	},
+																	headerShown: true,
+																	header: () => (
+																		<Header navigation={navigation} />
+																	),
+																})}
+																drawerContent={SideDrawer}
+															/>
+														</DiscoversProvider>
+													</CollectionProvider>
+												</TokenProvider>
+											</OwnershipsProvider>
+										</MarketplaceProvider>
 									</AchievementProvider>
 								</ArcadeProvider>
 							</StarknetProvider>

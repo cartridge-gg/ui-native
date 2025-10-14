@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
 	useArcade,
 	useCollections,
@@ -17,6 +17,7 @@ import {
 	VerifiedIcon,
 } from "#components";
 import { ItemCard } from "./item-card";
+import { ItemGrid } from "./item-grid";
 
 export function Collection() {
 	const params = useLocalSearchParams<{
@@ -147,14 +148,13 @@ export function Collection() {
 						<Skeleton className="flex-1 h-48 rounded-lg" />
 					</View>
 				) : (
-					<FlatList
+					<ItemGrid
 						data={tokens}
 						numColumns={2}
-						scrollEnabled={false}
-						columnWrapperStyle={{ gap: 12 }}
-						ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+						gap={12}
+						maintainColumnWidth={false}
 						keyExtractor={(item) => `${item.contract_address}-${item.token_id}`}
-						renderItem={({ item }) => (
+						renderItem={(item) => (
 							<ItemCard
 								href={`./${params.collection}/${item.token_id}`}
 								title={item.name ?? item.contract_address}

@@ -1,9 +1,15 @@
 import { useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useArcade, useCollections } from "#clone/arcade";
-import { EmptyStateInventoryIcon, ItemCard, Skeleton, Text } from "#components";
+import { useArcade, useCollections, useMarketplace } from "#clone/arcade";
+import {
+	EmptyStateInventoryIcon,
+	ItemCard,
+	ItemGrid,
+	Skeleton,
+	Text,
+} from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 
 export function Marketplace() {
@@ -11,6 +17,7 @@ export function Marketplace() {
 	const { game } = useLocalSearchParams<{ game: string }>();
 	const { collections, status } = useCollections();
 	const { games, editions } = useArcade();
+	const { getListingCount, getFloorPrice, getLastSale } = useMarketplace();
 
 	// Find the current game and edition if we're in a game context
 	const { edition } = useMemo(() => {
@@ -51,31 +58,26 @@ export function Marketplace() {
 	}
 
 	return (
-		<FlatList
-			data={filteredCollections}
-			numColumns={2}
+		<ScrollView
 			contentContainerStyle={{
 				padding: 16,
 				paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 16,
 			}}
-			columnWrapperStyle={{ gap: 12 }}
-			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-			keyExtractor={(item) => item.address}
-			renderItem={({ item, index }) => {
-				const { name, imageUrl, totalCount, address } = item;
-				const listingCount = 0;
-				const price = null;
-				const lastSale = null;
+			showsVerticalScrollIndicator={false}
+		>
+			<ItemGrid
+				data={filteredCollections}
+				numColumns={2}
+				gap={12}
+				maintainColumnWidth={true}
+				keyExtractor={(item) => item.address}
+				renderItem={(item) => {
+					const { name, imageUrl, totalCount, address } = item;
+					const listingCount = getListingCount(address);
+					const price = getFloorPrice(address);
+					const lastSale = getLastSale(address);
 
-				return (
-					<View
-						style={{
-							flex: 1,
-							maxWidth: "50%",
-							paddingLeft: index % 2 === 0 ? 0 : 6,
-							paddingRight: index % 2 === 0 ? 6 : 0,
-						}}
-					>
+					return (
 						<ItemCard
 							href={
 								game
@@ -89,11 +91,10 @@ export function Marketplace() {
 							price={price}
 							lastSale={lastSale}
 						/>
-					</View>
-				);
-			}}
-			showsVerticalScrollIndicator={false}
-		/>
+					);
+				}}
+			/>
+		</ScrollView>
 	);
 }
 

@@ -5,4 +5,5 @@ export * from "./arcade";
 export * from "./collection";
 export * from "./discover";
 export * from "./market-tokens";
+export * from "./marketplace";
 export * from "./token";
