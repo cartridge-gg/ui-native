@@ -1,8 +1,8 @@
+import { Image } from "expo-image";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
+import { FlatList, Pressable, ScrollView, View } from "react-native";
 import {
-	type MarketToken,
 	useArcade,
 	useCollections,
 	useMarketTokensFetcher,
@@ -69,8 +69,6 @@ export function Collection() {
 		tokens,
 		status: tokensStatus,
 		availableFilters,
-		totalCount,
-		listingCount,
 	} = useMarketTokensFetcher({
 		project: collection?.project ? [collection.project] : [],
 		address: collection?.address || "",
@@ -101,6 +99,7 @@ export function Collection() {
 											)
 										: collection.imageUrl,
 								}}
+								placeholder={require("#assets/placeholder.png")}
 								className="w-full h-full"
 								resizeMode="cover"
 							/>
@@ -157,22 +156,13 @@ export function Collection() {
 						columnWrapperStyle={{ gap: 12 }}
 						ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 						keyExtractor={(item) => `${item.contract_address}-${item.token_id}`}
-						renderItem={({ item, index }) => (
-							<View
-								style={{
-									flex: 1,
-									maxWidth: "50%",
-									paddingLeft: index % 2 === 0 ? 0 : 6,
-									paddingRight: index % 2 === 0 ? 6 : 0,
-								}}
-							>
-								<Item
-									token={item}
-									collectionName={collection.name}
-									totalCount={totalCount}
-									listingCount={listingCount}
-								/>
-							</View>
+						renderItem={({ item }) => (
+							<Item
+								title={item.name ?? item.contract_address}
+								imageUri={item.image}
+								price={item.price}
+								lastSale={item.lastSale}
+							/>
 						)}
 						ListEmptyComponent={
 							<EmptyState message="No items in this collection" />
@@ -185,19 +175,27 @@ export function Collection() {
 }
 
 function Item({
-	token,
-	collectionName,
+	title,
+	imageUri,
+	price,
+	lastSale,
 	totalCount,
 	listingCount,
 }: {
-	token: MarketToken;
-	collectionName: string;
-	totalCount: number;
-	listingCount: number;
+	title: string;
+	imageUri: string | undefined;
+	price?: string | null;
+	lastSale?: string | null;
+	totalCount?: number;
+	listingCount?: number;
 }) {
-	const imageUri = token.image?.startsWith("ipfs://")
-		? token.image.replace("ipfs://", "https://ipfs.io/ipfs/")
-		: token.image || "";
+	const imageSource = useMemo(
+		() =>
+			imageUri?.startsWith("ipfs://")
+				? imageUri.replace("ipfs://", "https://ipfs.io/ipfs/")
+				: imageUri,
+		[imageUri],
+	);
 
 	return (
 		<Pressable className="flex-1 relative rounded overflow-hidden border-2 border-transparent">
@@ -207,7 +205,7 @@ function Item({
 						className="text-sm font-medium text-foreground-100 flex-1 pl-2.5"
 						numberOfLines={1}
 					>
-						{collectionName}
+						{title}
 					</Text>
 				</View>
 			</View>
@@ -215,11 +213,11 @@ function Item({
 			<View className="relative overflow-hidden h-[128px]">
 				<View className="absolute inset-0 opacity-75 z-0">
 					<Image
-						source={{ uri: imageUri }}
+						source={imageSource}
 						className="size-full"
 						style={{ transform: [{ scale: 1.1 }] }}
 						blurRadius={8}
-						resizeMode="cover"
+						contentFit="cover"
 					/>
 					<View className="absolute inset-0 bg-black/64" />
 				</View>
@@ -227,8 +225,9 @@ function Item({
 				<View className="absolute inset-0 h-full py-2 items-center justify-center z-10">
 					<Image
 						className="size-full"
-						source={{ uri: imageUri }}
-						resizeMode="contain"
+						source={imageSource}
+						contentFit="contain"
+						placeholder={require("#assets/placeholder.png")}
 					/>
 				</View>
 
@@ -252,7 +251,7 @@ function Item({
 				</View>
 			</View>
 
-			{(token.price || token.lastSale) && (
+			{(price || lastSale) && (
 				<View className="px-3 py-2 flex-col gap-0.5 text-foreground-400 bg-background-200">
 					<View className="flex-row justify-between items-center">
 						<Text className="text-[10px] leading-3 text-foreground-400">
@@ -267,16 +266,16 @@ function Item({
 							<StarknetColorIcon />
 							<Text
 								className={
-									token.price
+									price
 										? "text-sm font-medium text-foreground-100"
 										: "text-sm font-medium text-foreground-400"
 								}
 							>
-								{token.price || "--"}
+								{price || "--"}
 							</Text>
 						</View>
 						<Text className="text-sm font-medium text-foreground-400">
-							{token.lastSale || "--"}
+							{lastSale || "--"}
 						</Text>
 					</View>
 				</View>

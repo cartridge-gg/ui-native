@@ -183,7 +183,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
 
 	return (
 		<Pressable className="relative rounded overflow-hidden border-2 border-transparent">
-			{/* Header */}
 			<View className="h-9 relative flex-row gap-2 px-1.5 py-1.5 justify-between items-center bg-background-200">
 				<View className="flex-row items-center gap-1.5 overflow-hidden flex-1">
 					<Text
@@ -195,9 +194,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
 				</View>
 			</View>
 
-			{/* Preview */}
 			<View className="relative overflow-hidden aspect-square">
-				{/* Blurred background */}
 				<View className="absolute inset-0 opacity-75" style={{ zIndex: 0 }}>
 					<Image
 						source={{ uri: imageUri }}
@@ -209,7 +206,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
 					<View className="absolute inset-0 bg-black/64" />
 				</View>
 
-				{/* Main image - centered with padding */}
 				<View
 					className="absolute inset-0 p-2 items-center justify-center"
 					style={{ zIndex: 1 }}
@@ -224,7 +220,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
 					/>
 				</View>
 
-				{/* Stats overlay - bottom left */}
 				<View
 					className="absolute bottom-1.5 left-1.5 flex-row gap-1 items-center flex-wrap"
 					style={{ zIndex: 2 }}
@@ -248,7 +243,6 @@ function CollectionCard({ collection }: { collection: Collection }) {
 				</View>
 			</View>
 
-			{/* Footer */}
 			{(price || lastSale) && (
 				<View className="px-3 py-2 flex-col gap-0.5 text-foreground-400 bg-background-200">
 					<View className="flex-row justify-between items-center">
