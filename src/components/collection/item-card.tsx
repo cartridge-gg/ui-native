@@ -53,11 +53,12 @@ export function ItemCard({
 				<View className="relative overflow-hidden h-[128px]">
 					<View className="absolute inset-0 opacity-75 z-0">
 						<Image
-							source={imageSource}
 							className="size-full"
-							style={{ transform: [{ scale: 1.1 }] }}
+							source={imageSource}
+							style={{ transform: [{ scale: 3 }] }}
 							blurRadius={8}
 							contentFit="cover"
+							placeholder={require("#assets/placeholder.png")}
 						/>
 						<View className="absolute inset-0 bg-black/64" />
 					</View>

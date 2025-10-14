@@ -156,7 +156,7 @@ export function Collection() {
 						keyExtractor={(item) => `${item.contract_address}-${item.token_id}`}
 						renderItem={({ item }) => (
 							<ItemCard
-								href={`./${item.contract_address}`}
+								href={`./${params.collection}/${item.token_id}`}
 								title={item.name ?? item.contract_address}
 								imageUri={item.image}
 								price={item.price}
