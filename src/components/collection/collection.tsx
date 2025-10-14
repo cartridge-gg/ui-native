@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
 import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
 import {
@@ -8,6 +8,7 @@ import {
 	useMarketTokensFetcher,
 } from "#clone/arcade";
 import {
+	Button,
 	EmptyStateInventoryIcon,
 	Skeleton,
 	SliderIcon,
@@ -20,23 +21,41 @@ import {
 } from "#components";
 
 export function Collection() {
-	const router = useRouter();
-	const { collection: collectionParam } = useLocalSearchParams<{
+	const params = useLocalSearchParams<{
 		collection: string;
 		game?: string;
+		filters?: string; // Format: "trait1:value1,value2|trait2:value3"
+		status?: string; // "buy_now" or "show_all"
 	}>();
 	const { collections, status } = useCollections();
 	const { games, editions } = useArcade();
 
-	// Find the collection by address
 	const collection = useMemo(() => {
-		if (!collectionParam) return undefined;
+		if (!params.collection) return undefined;
 		return collections.find(
-			(c) => c.address.toLowerCase() === collectionParam.toLowerCase(),
+			(c) => c.address.toLowerCase() === params.collection.toLowerCase(),
 		);
-	}, [collectionParam, collections]);
+	}, [params.collection, collections]);
 
-	// Find the game for this collection
+	// Parse filters from URL params
+	const attributeFilters = useMemo(() => {
+		if (!params.filters) return {};
+		try {
+			// Format: "trait1:value1,value2|trait2:value3"
+			const filters: { [name: string]: Set<string> } = {};
+			const traits = params.filters.split("|");
+			for (const trait of traits) {
+				const [name, valuesStr] = trait.split(":");
+				if (name && valuesStr) {
+					filters[name] = new Set(valuesStr.split(","));
+				}
+			}
+			return filters;
+		} catch {
+			return {};
+		}
+	}, [params.filters]);
+
 	const game = useMemo(() => {
 		if (!collection) return undefined;
 		const edition = editions.find(
@@ -46,7 +65,6 @@ export function Collection() {
 		return games.find((g) => g.id === edition.gameId);
 	}, [collection, editions, games]);
 
-	// Fetch tokens for this collection
 	const {
 		tokens,
 		status: tokensStatus,
@@ -57,6 +75,7 @@ export function Collection() {
 		project: collection?.project ? [collection.project] : [],
 		address: collection?.address || "",
 		autoFetch: !!collection,
+		attributeFilters,
 	});
 
 	if (status === "loading") {
@@ -66,16 +85,6 @@ export function Collection() {
 	if (!collection) {
 		return <EmptyState message="Collection not found" />;
 	}
-
-	const handleOpenFilters = () => {
-		router.push({
-			pathname: "/(drawer)/collection/[collection]/filters",
-			params: {
-				collection: collection?.address || "",
-				availableFilters: JSON.stringify(availableFilters),
-			},
-		});
-	};
 
 	return (
 		<View className="flex-1 bg-background">
@@ -110,18 +119,27 @@ export function Collection() {
 							)}
 						</View>
 					</View>
-					<Pressable
-						onPress={handleOpenFilters}
-						className="w-9 h-9 items-center justify-center active:opacity-60"
+					<Link
+						href={{
+							pathname: "/(drawer)/collection/[collection]/filter",
+							params: {
+								collection: collection?.address || "",
+								availableFilters: JSON.stringify(availableFilters),
+								filters: params.filters || "",
+								status: params.status || "show_all",
+							},
+						}}
+						asChild
 					>
-						<SliderIcon size="lg" />
-					</Pressable>
-					<Pressable
-						onPress={() => router.back()}
-						className="w-9 h-9 rounded-full bg-background-100 items-center justify-center active:bg-background-300"
-					>
-						<TimesIcon size="sm" />
-					</Pressable>
+						<Button variant="icon" size="icon">
+							<SliderIcon size="lg" />
+						</Button>
+					</Link>
+					<Link href=".." asChild>
+						<Button variant="icon" size="icon">
+							<TimesIcon size="sm" />
+						</Button>
+					</Link>
 				</View>
 			</View>
 

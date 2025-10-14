@@ -1,15 +1,8 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { Pressable, ScrollView, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-	ArrowIcon,
-	Button,
-	CaratIcon,
-	Separator,
-	SliderIcon,
-	Text,
-} from "#components";
+import { Button, CaratIcon, Separator, Text, TimesIcon } from "#components";
 
 type FilterStatus = "buy_now" | "show_all";
 
@@ -19,14 +12,14 @@ type PropertyFilter = {
 };
 
 export function CollectionFilter() {
-	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const params = useLocalSearchParams<{
 		collection: string;
 		availableFilters: string;
+		filters?: string;
+		status?: string;
 	}>();
 
-	// Parse available filters from route params
 	const attributes = useMemo(() => {
 		try {
 			return params.availableFilters ? JSON.parse(params.availableFilters) : {};
@@ -35,9 +28,33 @@ export function CollectionFilter() {
 		}
 	}, [params.availableFilters]);
 
-	// Filter state - in real app, this would come from shared state/context
-	const [filterStatus, setFilterStatus] = useState<FilterStatus>("show_all");
-	const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>([]);
+	// Initialize filters from params
+	const initialPropertyFilters = useMemo(() => {
+		if (!params.filters) return [];
+		try {
+			const filters: PropertyFilter[] = [];
+			const traits = params.filters.split("|");
+			for (const trait of traits) {
+				const [attribute, valuesStr] = trait.split(":");
+				if (attribute && valuesStr) {
+					const values = valuesStr.split(",");
+					for (const property of values) {
+						filters.push({ attribute, property });
+					}
+				}
+			}
+			return filters;
+		} catch {
+			return [];
+		}
+	}, [params.filters]);
+
+	const initialStatus = (params.status as FilterStatus) || "show_all";
+
+	const [filterStatus, setFilterStatus] = useState<FilterStatus>(initialStatus);
+	const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>(
+		initialPropertyFilters,
+	);
 	const [expandedSections, setExpandedSections] = useState<Set<string>>(
 		new Set(Object.keys(attributes)),
 	);
@@ -84,6 +101,24 @@ export function CollectionFilter() {
 		setSearchTerms({});
 	}, []);
 
+	const serializeFilters = useCallback(() => {
+		if (propertyFilters.length === 0) return "";
+		// Group filters by attribute: "Rarity:Common,Rare|Type:Weapon"
+		const grouped = propertyFilters.reduce(
+			(acc, { attribute, property }) => {
+				if (!acc[attribute]) {
+					acc[attribute] = [];
+				}
+				acc[attribute].push(property);
+				return acc;
+			},
+			{} as { [key: string]: string[] },
+		);
+		return Object.entries(grouped)
+			.map(([attribute, values]) => `${attribute}:${values.join(",")}`)
+			.join("|");
+	}, [propertyFilters]);
+
 	const hasActiveFilters = propertyFilters.length > 0;
 
 	const getFilteredProperties = useCallback(
@@ -98,29 +133,20 @@ export function CollectionFilter() {
 		[attributes, searchTerms],
 	);
 
-	const handleApply = () => {
-		// TODO: Apply filters via context/state management
-		router.back();
-	};
-
 	return (
 		<View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-			{/* Header */}
 			<View className="flex-row items-center gap-4 p-4 border-b border-spacer-100">
-				<Pressable
-					onPress={() => router.back()}
-					className="w-9 h-9 items-center justify-center active:opacity-60"
-				>
-					<ArrowIcon variant="left" />
-				</Pressable>
 				<View className="flex-row items-center gap-2 flex-1">
-					<SliderIcon size="lg" />
 					<Text className="text-lg font-semibold">Filters</Text>
 				</View>
+				<Link href="../" asChild>
+					<Button variant="icon" size="icon">
+						<TimesIcon size="sm" />
+					</Button>
+				</Link>
 			</View>
 
 			<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-				{/* Status Section */}
 				<View className="p-4">
 					<Text className="text-sm font-semibold text-foreground-200 mb-3">
 						Status
@@ -141,7 +167,6 @@ export function CollectionFilter() {
 
 				<Separator />
 
-				{/* Properties Section */}
 				<View className="p-4">
 					<View className="flex-row items-center justify-between mb-3">
 						<Text className="text-sm font-semibold text-foreground-200">
@@ -180,15 +205,11 @@ export function CollectionFilter() {
 												</View>
 											)}
 										</View>
-										<CaratIcon
-											size="sm"
-											className={isExpanded ? "rotate-180" : ""}
-										/>
+										<CaratIcon variant={isExpanded ? "up" : "down"} size="sm" />
 									</Pressable>
 
 									{isExpanded && (
 										<View className="px-3 pb-3">
-											{/* Search */}
 											<View className="mb-2">
 												<TextInput
 													placeholder="Search..."
@@ -204,7 +225,6 @@ export function CollectionFilter() {
 												/>
 											</View>
 
-											{/* Property checkboxes */}
 											<View className="gap-1">
 												{properties.map(({ property, count }) => (
 													<CheckboxItem
@@ -231,14 +251,25 @@ export function CollectionFilter() {
 				</View>
 			</ScrollView>
 
-			{/* Footer */}
 			<View
 				className="p-4 border-t border-spacer-100"
 				style={{ paddingBottom: insets.bottom + 16 }}
 			>
-				<Button onPress={handleApply} className="w-full">
-					<Text className="text-background font-semibold">Apply Filters</Text>
-				</Button>
+				<Link
+					href={{
+						pathname: "/(drawer)/collection/[collection]",
+						params: {
+							collection: params.collection,
+							filters: serializeFilters(),
+							status: filterStatus,
+						},
+					}}
+					asChild
+				>
+					<Button className="w-full">
+						<Text className="text-background font-semibold">Apply Filters</Text>
+					</Button>
+				</Link>
 			</View>
 		</View>
 	);
