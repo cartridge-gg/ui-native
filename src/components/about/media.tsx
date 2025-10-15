@@ -1,3 +1,4 @@
+import { useVideoPlayer, VideoView } from "expo-video";
 import { useState } from "react";
 import {
 	Dimensions,
@@ -7,12 +8,20 @@ import {
 	ScrollView,
 	View,
 } from "react-native";
+import YoutubePlayer from "react-native-youtube-iframe";
 import { Text } from "#components";
 import { cn } from "#utils";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ITEM_WIDTH = screenWidth - 32 - 16; // Padding minus gap
 const ITEM_HEIGHT = (ITEM_WIDTH * 9) / 16; // 16:9 aspect ratio
+
+function extractYouTubeId(url: string): string {
+	const match = url.match(
+		/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/,
+	);
+	return match?.[1] || "";
+}
 
 export function AboutMedia({ items }: { items: string[] }) {
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -57,28 +66,58 @@ export function AboutMedia({ items }: { items: string[] }) {
 				scrollEventThrottle={16}
 				contentContainerStyle={{ gap: 16 }}
 			>
-				{items.map((item) => (
-					<MediaItem key={item} uri={item} />
+				{items.map((item, index) => (
+					<MediaItem key={item} uri={item} isActive={currentIndex === index} />
 				))}
 			</ScrollView>
 		</View>
 	);
 }
 
-function MediaItem({ uri }: { uri: string }) {
+function MediaItem({ uri, isActive }: { uri: string; isActive: boolean }) {
+	const isVideo = /\.(mp4|mov|m4v|webm)$/i.test(uri);
 	const isYouTube = uri.includes("youtu");
 
+	const player = useVideoPlayer(isVideo ? uri : "", (player) => {
+		player.loop = true;
+		player.play();
+	});
+
+	if (isVideo) {
+		return (
+			<VideoView
+				player={player}
+				style={{ width: ITEM_WIDTH, height: ITEM_HEIGHT }}
+				className="rounded-lg overflow-hidden"
+				contentFit="contain"
+				allowsFullscreen
+				allowsPictureInPicture
+			/>
+		);
+	}
+
 	if (isYouTube) {
-		// For YouTube videos, show a placeholder with info text
-		// In a production app, you'd use expo-av or react-native-youtube-iframe
+		const videoId = extractYouTubeId(uri);
 		return (
 			<View
 				style={{ width: ITEM_WIDTH, height: ITEM_HEIGHT }}
-				className="rounded-lg overflow-hidden bg-background-200 items-center justify-center"
+				className="rounded-lg overflow-hidden"
 			>
-				<Text className="text-xs text-foreground-400 text-center px-4">
-					Video available on web
-				</Text>
+				<YoutubePlayer
+					height={ITEM_HEIGHT}
+					videoId={videoId}
+					play={isActive}
+					mute
+					loop
+					webViewProps={{
+						injectedJavaScript: `
+              var element = document.getElementsByClassName('container')[0];
+              element.style.position = 'unset';
+              element.style.paddingBottom = 'unset';
+              true;
+            `,
+					}}
+				/>
 			</View>
 		);
 	}
