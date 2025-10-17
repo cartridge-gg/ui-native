@@ -58,17 +58,18 @@ export function ItemCard({
 							style={{ transform: [{ scale: 3 }] }}
 							blurRadius={8}
 							contentFit="cover"
-							placeholder={require("#assets/placeholder.png")}
+							placeholder={require("#assets/placeholder.svg")}
 						/>
 						<View className="absolute inset-0 bg-black/64" />
 					</View>
 
 					<View className="absolute inset-0 h-full py-2 items-center justify-center z-10">
 						<Image
-							className="size-full"
+							className="size-full aspect-square"
 							source={imageSource}
 							contentFit="contain"
-							placeholder={require("#assets/placeholder.png")}
+							placeholderContentFit="contain"
+							placeholder={require("#assets/placeholder.svg")}
 						/>
 					</View>
 

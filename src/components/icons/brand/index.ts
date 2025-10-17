@@ -4,6 +4,7 @@ export { ArgentIcon } from "#components/icons/brand/argent";
 export { BraavosIcon } from "#components/icons/brand/braavos";
 export { CartridgeIcon } from "#components/icons/brand/cartridge";
 export { CartridgeFaceIcon } from "#components/icons/brand/cartridge-face";
+export { CartridgeLogo } from "#components/icons/brand/cartridge-logo";
 export { ChromeIcon } from "#components/icons/brand/chrome";
 export { ControllerIcon } from "#components/icons/brand/controller";
 export { ControllerAccountIcon } from "#components/icons/brand/controller-account";
