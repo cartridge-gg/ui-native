@@ -2,6 +2,19 @@ import "../global.css";
 import "react-native-get-random-values";
 import "../src/css-interop";
 
+import {
+	IBMPlexMono_400Regular,
+	IBMPlexMono_500Medium,
+	IBMPlexMono_600SemiBold,
+	IBMPlexMono_700Bold,
+} from "@expo-google-fonts/ibm-plex-mono";
+import {
+	Inter_400Regular,
+	Inter_500Medium,
+	Inter_600SemiBold,
+	Inter_700Bold,
+} from "@expo-google-fonts/inter";
+import { useFonts } from "expo-font";
 import { usePathname, useSegments } from "expo-router";
 import Drawer from "expo-router/drawer";
 import { verifyInstallation } from "nativewind";
@@ -45,9 +58,24 @@ const USE_MOCK_MODE = process.env.EXPO_PUBLIC_MOCK_STARKNET === "true";
 export default function Layout() {
 	useRouteLogger();
 
+	const [fontsLoaded] = useFonts({
+		Inter_400Regular,
+		Inter_500Medium,
+		Inter_600SemiBold,
+		Inter_700Bold,
+		IBMPlexMono_400Regular,
+		IBMPlexMono_500Medium,
+		IBMPlexMono_600SemiBold,
+		IBMPlexMono_700Bold,
+	});
+
 	useEffect(() => {
 		verifyInstallation();
 	}, []);
+
+	if (!fontsLoaded) {
+		return null;
+	}
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>

@@ -9,7 +9,7 @@ import {
 	type TextInputFocusEventData,
 	View,
 } from "react-native";
-import { Input, Text, UserAvatar } from "#components";
+import { ControllerIcon, Input, Text } from "#components";
 import { cn } from "#utils";
 
 // Types for account search results
@@ -31,13 +31,13 @@ const dropdownVariants = cva(
 );
 
 const suggestionItemVariants = cva(
-	"h-12 px-3 py-2 flex items-center gap-1.5 select-none transition-colors duration-150",
+	"h-12 px-3 py-2 flex flex-row items-center gap-2 border-b border-background-300",
 	{
 		variants: {
 			variant: {
-				default: "bg-background-200 text-foreground-100",
-				selected: "bg-background-400 text-foreground-100",
-				"create-new": "bg-background-200 text-foreground-100",
+				default: "bg-background-200",
+				selected: "bg-background-300",
+				"create-new": "bg-background-200",
 			},
 		},
 		defaultVariants: {
@@ -248,23 +248,22 @@ export function UsernameInput({
 							variant: isSelected ? "selected" : "default",
 						})}
 					>
-						{/* Achievement player badge */}
+						{/* Controller icon in circle */}
 						<View className="w-8 h-8 bg-background-300 rounded-full items-center justify-center">
-							<UserAvatar username={item.username} size="sm" />
+							<ControllerIcon size="sm" className="fill-primary" />
 						</View>
 
-						<View className="flex-1 flex-row items-center justify-between gap-1">
-							<Text className="text-sm font-normal px-0.5 truncate text-foreground-100">
-								{item.username}
-							</Text>
+						{/* Username */}
+						<Text className="flex-1 text-sm font-normal text-foreground-100">
+							{item.username}
+						</Text>
 
-							{/* Points display */}
-							<View className="flex-row items-center justify-center gap-0.5 p-1 bg-background-300 rounded">
-								<Text className="text-foreground-100 text-xs">✨</Text>
-								<Text className="text-xs font-medium text-foreground-100">
-									{item.points?.toLocaleString() || 0}
-								</Text>
-							</View>
+						{/* Points display with sparkles */}
+						<View className="flex-row items-center gap-1 px-2 py-1 bg-background-300 rounded">
+							<Text className="text-foreground-100 text-xs">✨</Text>
+							<Text className="text-xs font-medium text-foreground-100">
+								{item.points?.toLocaleString() || 0}
+							</Text>
 						</View>
 					</Pressable>
 				);
@@ -354,9 +353,6 @@ export function UsernameInput({
 							offset: 48 * index,
 							index,
 						})}
-						ItemSeparatorComponent={() => (
-							<View className="h-px bg-background-300" />
-						)}
 					/>
 				</View>
 			)}
