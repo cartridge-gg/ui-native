@@ -26,7 +26,9 @@ export const inputVariants = cva(
 				default:
 					"border bg-background-200 border-background-300 text-foreground-100 hover:border-background-400 focus-visible:border-primary focus-visible:bg-background-300 placeholder:text-foreground-400",
 				username:
-					"border bg-background-200 border-background-300 text-foreground-100 placeholder:text-foreground-400 focus-visible:border-primary",
+					"border bg-background-200 border-background-300 text-foreground-100 placeholder:text-primary focus-visible:border-primary",
+				"username-no-border":
+					"border-none bg-transparent text-foreground-100 placeholder:text-primary focus-visible:outline-none",
 			},
 			size: {
 				default: "h-10 text-sm leading-[18px]",

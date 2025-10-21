@@ -9,7 +9,6 @@ import {
 } from "starknet";
 import {
 	Button,
-	ScreenHeader,
 	Text,
 	// Textarea
 } from "#components";
@@ -48,7 +47,6 @@ export default function SignMessage() {
 
 	return (
 		<View className="flex-1 bg-background">
-			<ScreenHeader title="Sign Message" />
 			<ScrollView contentContainerClassName="px-4 pb-16 gap-2">
 				<View className="bg-background-400 p-4 rounded-lg border border-foreground-400">
 					<Text>{JSON.stringify(message, null, 2)}</Text>

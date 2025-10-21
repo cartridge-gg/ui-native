@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getChecksumAddress } from "starknet";
 import { useAchievements, useArcade } from "#clone/arcade";
 import {
+	AchievementPlayerAvatar,
 	BronzeTagIcon,
 	EmptyStateActivityIcon,
 	GoldTagIcon,
@@ -20,7 +21,6 @@ import {
 	Text,
 	TextClassContext,
 	UserCheckIcon,
-	UserIcon,
 	UsersIcon,
 } from "#components";
 import { cn, TAB_BAR_HEIGHT } from "#utils";
@@ -280,7 +280,11 @@ function LeaderboardRow({
 							{rank === 3 && <BronzeTagIcon size="sm" />}
 						</View>
 						<View className="flex-row items-center gap-2">
-							<UserIcon size="sm" variant="solid" />
+							<AchievementPlayerAvatar
+								username={name}
+								size="sm"
+								className="fill-primary"
+							/>
 							<Text numberOfLines={1}>{name}</Text>
 						</View>
 					</View>

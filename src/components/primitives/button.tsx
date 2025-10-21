@@ -60,7 +60,7 @@ export const buttonTextVariants = cva(
 				icon: "text-foreground-100",
 				link: "text-foreground-300",
 				destructive: "text-destructive-foreground",
-				outline: "text-foreground",
+				outline: "text-primary",
 				ghost: "text-foreground",
 			},
 			size: {
@@ -88,7 +88,7 @@ export const buttonSvgVariants = cva("", {
 			icon: "fill-foreground-100",
 			link: "fill-foreground-300",
 			destructive: "fill-destructive-foreground",
-			outline: "fill-foreground",
+			outline: "fill-primary",
 			ghost: "fill-foreground",
 		},
 	},

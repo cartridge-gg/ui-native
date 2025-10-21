@@ -1,10 +1,8 @@
 import { memo } from "react";
 import Svg, { Path } from "react-native-svg";
+import { iconVariants, type OlmechIconProps, useSvgClass } from "#components";
 
-import type { StateIconProps } from "#components/icons/types";
-import { iconVariants, useSvgClass } from "#components/icons/utils";
-
-export const OlmechIcon = memo<StateIconProps>(
+export const OlmechIcon = memo<OlmechIconProps>(
 	({ className, size: sizeProp, variant, color, ref, ...props }) => {
 		const hookSvgClass = useSvgClass();
 		const svgClass = className ?? hookSvgClass ?? "fill-foreground";

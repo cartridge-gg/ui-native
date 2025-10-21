@@ -98,9 +98,10 @@ export function Collection() {
 											)
 										: collection.imageUrl,
 								}}
-								placeholder={require("#assets/placeholder.png")}
-								className="w-full h-full"
-								resizeMode="cover"
+								placeholder={require("#assets/placeholder.svg")}
+								placeholderContentFit="contain"
+								className="size-full"
+								contentFit="contain"
 							/>
 						</View>
 						<View className="flex-1 gap-2">
