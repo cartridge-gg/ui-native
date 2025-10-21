@@ -1,4 +1,5 @@
 export * from "./about";
+export * from "./achievement-player-avatar";
 export * from "./address";
 export * from "./collection";
 export * from "./copy-address";

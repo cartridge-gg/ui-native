@@ -6,7 +6,6 @@ import {
 	Button,
 	CartridgeLogo,
 	ControllerIcon,
-	SonnerToaster,
 	Text,
 	TimesIcon,
 	UsernameInput,
@@ -133,8 +132,6 @@ export default function ConnectScreen() {
 						</Link>
 					</View>
 				</View>
-
-				<SonnerToaster />
 			</View>
 		</TouchableWithoutFeedback>
 	);

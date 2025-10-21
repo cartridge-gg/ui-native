@@ -9,7 +9,7 @@ import {
 	type TextInputFocusEventData,
 	View,
 } from "react-native";
-import { ControllerIcon, Input, Text } from "#components";
+import { AchievementPlayerAvatar, Input, Text } from "#components";
 import { cn } from "#utils";
 
 // Types for account search results
@@ -248,17 +248,18 @@ export function UsernameInput({
 							variant: isSelected ? "selected" : "default",
 						})}
 					>
-						{/* Controller icon in circle */}
-						<View className="w-8 h-8 bg-background-300 rounded-full items-center justify-center">
-							<ControllerIcon size="sm" className="fill-primary" />
+						<View className="w-8 h-8 items-center justify-center">
+							<AchievementPlayerAvatar
+								username={item.username}
+								size="default"
+								className="fill-primary"
+							/>
 						</View>
 
-						{/* Username */}
 						<Text className="flex-1 text-sm font-normal text-foreground-100">
 							{item.username}
 						</Text>
 
-						{/* Points display with sparkles */}
 						<View className="flex-row items-center gap-1 px-2 py-1 bg-background-300 rounded">
 							<Text className="text-foreground-100 text-xs">✨</Text>
 							<Text className="text-xs font-medium text-foreground-100">
