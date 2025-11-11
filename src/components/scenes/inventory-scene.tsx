@@ -121,14 +121,16 @@ function TokensSection({ tokens, credits, status }: TokensSectionProps) {
 
 	return (
 		<View>
-			<View className="flex flex-col gap-[1.2px]">
-				{/* Credits card - always show */}
-				<TokenCard key="credits" token={credits} />
+			<View className="rounded-md overflow-hidden">
+				<View className="flex flex-col gap-[1.2px]">
+					{/* Credits card - always show */}
+					<TokenCard key="credits" token={credits} />
 
-				{/* Other tokens */}
-				{filteredTokens.map((token, index) => (
-					<TokenCard key={`${token.metadata.symbol}-${index}`} token={token} />
-				))}
+					{/* Other tokens */}
+					{filteredTokens.map((token, index) => (
+						<TokenCard key={`${token.metadata.symbol}-${index}`} token={token} />
+					))}
+				</View>
 			</View>
 		</View>
 	);
