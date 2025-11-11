@@ -2,6 +2,7 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { useMemo } from "react";
 import { Pressable, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import {
 	StackDiamondIcon,
 	StarknetColorIcon,
@@ -17,6 +18,7 @@ export interface ItemCardProps {
 	lastSale?: string | null;
 	totalCount?: number;
 	listingCount?: number;
+	variant?: "collection" | "nft";
 }
 
 export function ItemCard({
@@ -27,6 +29,7 @@ export function ItemCard({
 	lastSale,
 	totalCount,
 	listingCount,
+	variant = "nft",
 }: ItemCardProps) {
 	const imageSource = useMemo(
 		() =>
@@ -36,6 +39,47 @@ export function ItemCard({
 		[imageUri],
 	);
 
+	// Collection variant - simpler design with just image and name
+	if (variant === "collection") {
+		return (
+			<Link href={href} asChild>
+				<Pressable className="flex-1 relative rounded-lg overflow-hidden">
+					<View className="relative overflow-hidden h-48">
+						{/* Main image */}
+						<Image
+							className="size-full"
+							source={imageSource}
+							contentFit="cover"
+							placeholder={require("#assets/placeholder.png")}
+							cachePolicy="memory-disk"
+							transition={150}
+						/>
+						
+						{/* Gradient overlay from dark at bottom to transparent */}
+						<LinearGradient
+							colors={["rgba(10, 10, 10, 0.9)", "transparent"]}
+							start={{ x: 0, y: 1 }}
+							end={{ x: 0, y: 0 }}
+							className="absolute inset-0"
+							pointerEvents="none"
+						/>
+						
+						{/* Title at bottom */}
+						<View className="absolute bottom-0 left-0 right-0 p-3">
+							<Text
+								className="text-base font-semibold text-white"
+								numberOfLines={1}
+							>
+								{title}
+							</Text>
+						</View>
+					</View>
+				</Pressable>
+			</Link>
+		);
+	}
+
+	// NFT variant - existing design
 	return (
 		<Link href={href} asChild>
 			<Pressable className="flex-1 relative rounded overflow-hidden border-2 border-transparent">

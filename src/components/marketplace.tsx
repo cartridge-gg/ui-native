@@ -67,13 +67,11 @@ export function Marketplace() {
 				maintainColumnWidth={true}
 				keyExtractor={(item) => item.address}
 				renderItem={(item) => {
-					const { name, imageUrl, totalCount, address } = item;
-					const listingCount = getListingCount(address);
-					const price = getFloorPrice(address);
-					const lastSale = getLastSale(address);
+					const { name, imageUrl, address } = item;
 
 					return (
 						<ItemCard
+							variant="collection"
 							href={
 								game
 									? `/(drawer)/game/${game}/collection/${address}`
@@ -81,10 +79,6 @@ export function Marketplace() {
 							}
 							title={name}
 							imageUri={imageUrl}
-							totalCount={totalCount}
-							listingCount={listingCount}
-							price={price}
-							lastSale={lastSale}
 						/>
 					);
 				}}

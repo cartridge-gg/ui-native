@@ -2,8 +2,21 @@
  * Collection Context - REAL DATA from Torii
  * Provides collection data from Torii token contracts
  */
-import { createContext, type ReactNode, useMemo } from "react";
+import { createContext, type ReactNode, useMemo, useEffect, useState } from "react";
 import { useTokenContracts, type ParsedTokenContract } from "../../../../../../hooks/useTokenContracts";
+import { useToriiClient } from "../../../../../../contexts/ToriiContext";
+import { PaginationDirection } from "../../../../../../modules/arcade/src/generated/dojo";
+
+/**
+ * Pads a hex string to 64 characters (0x + 64 hex digits)
+ */
+function padHexTo64(hex: string): string {
+	// Remove 0x prefix if present
+	const cleaned = hex.startsWith('0x') ? hex.slice(2) : hex;
+	// Pad to 64 characters
+	const padded = cleaned.padStart(64, '0');
+	return `0x${padded}`;
+}
 
 export enum CollectionType {
 	ERC721 = "ERC-721",
@@ -33,27 +46,12 @@ export const CollectionContext = createContext<CollectionContextType | null>(
  * Uses already-parsed metadata from useTokenContracts hook
  */
 function tokenContractToCollection(tokenContract: ParsedTokenContract): Collection {
-	const parsedTokenMetadata = tokenContract.parsedMetadata;
+	// Use name directly from tokenContract
+	const name = tokenContract.name || 'Unknown Collection';
 	
-	// Also try the metadata field as fallback (some collections have it there)
-	let parsedMetadata: any;
-	try {
-		parsedMetadata = tokenContract.metadata ? JSON.parse(tokenContract.metadata) : undefined;
-	} catch {
-		// metadata field might not be valid JSON, ignore
-	}
-	
-	// Get name from various sources
-	const name = parsedTokenMetadata?.name || parsedMetadata?.name || tokenContract.name || 'Unknown Collection';
-	
-	// Get image URL - prioritize parsedTokenMetadata (from tokenMetadata field) as it's more reliable
-	// Then fall back to parsedMetadata (from metadata field)
-	let imageUrl = parsedTokenMetadata?.image || parsedMetadata?.image || '';
-	
-	// Convert IPFS URLs to HTTP gateway URLs (but keep data URLs as-is)
-	if (imageUrl.startsWith('ipfs://')) {
-		imageUrl = imageUrl.replace('ipfs://', 'https://ipfs.io/ipfs/');
-	}
+	// Generate image URL using Cartridge API with padded contract address
+	const paddedAddress = padHexTo64(tokenContract.contractAddress);
+	const imageUrl = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/image`;
 	
 	// Parse total supply
 	let totalCount = 0;
@@ -83,20 +81,87 @@ function tokenContractToCollection(tokenContract: ParsedTokenContract): Collecti
 
 export function CollectionProvider({ children }: { children: ReactNode }) {
 	const { tokenContracts, loading, error } = useTokenContracts();
+	const { client, isReady } = useToriiClient();
+	const [firstTokenImages, setFirstTokenImages] = useState<Map<string, string>>(new Map());
+	const [fetchingImages, setFetchingImages] = useState(false);
 	
-	// Memoize collections conversion to avoid re-computing on every render
-	// Only re-compute when tokenContracts array changes (by length)
+	// Fetch first token for each collection to get image
+	useEffect(() => {
+		if (!client || !isReady || tokenContracts.length === 0 || fetchingImages) {
+			return;
+		}
+		
+		const fetchFirstTokenImages = async () => {
+			setFetchingImages(true);
+			const imageMap = new Map<string, string>();
+			
+			console.log(`🖼️ Fetching first token images for ${tokenContracts.length} collections...`);
+			
+			// Fetch first token for each collection in parallel
+			const promises = tokenContracts.map(async (contract) => {
+				try {
+					const result = await client.tokens({
+						contractAddresses: [contract.contractAddress],
+						tokenIds: [],
+						attributeFilters: [],
+						pagination: {
+							cursor: undefined,
+							limit: 1,
+							direction: PaginationDirection.Forward,
+							orderBy: [],
+						},
+					});
+					
+					if (result.items && result.items.length > 0) {
+						const firstToken = result.items[0];
+						console.log(`📦 Collection ${contract.name}:`, {
+							contractAddress: contract.contractAddress,
+							tokenId: firstToken.tokenId,
+						});
+						
+						const paddedAddress = padHexTo64(contract.contractAddress);
+						const paddedTokenId = padHexTo64(firstToken.tokenId || '0');
+						const tokenImageUrl = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
+						
+						console.log(`🖼️ Image URL for ${contract.name}: ${tokenImageUrl}`);
+						imageMap.set(contract.contractAddress, tokenImageUrl);
+					} else {
+						console.warn(`⚠️ No tokens found for collection ${contract.name} (${contract.contractAddress})`);
+					}
+				} catch (err) {
+					console.warn(`❌ Failed to fetch first token for ${contract.contractAddress}:`, err);
+				}
+			});
+			
+			await Promise.all(promises);
+			console.log(`✅ Fetched ${imageMap.size} collection images`);
+			setFirstTokenImages(imageMap);
+			setFetchingImages(false);
+		};
+		
+		fetchFirstTokenImages();
+	}, [client, isReady, tokenContracts.length, fetchingImages]);
+	
+	// Memoize collections conversion with first token images
 	const collections = useMemo(() => {
-		return tokenContracts.map(tokenContractToCollection);
-	}, [tokenContracts.length]); // Depend on length to avoid deep comparison
+		return tokenContracts.map(tokenContract => {
+			const collection = tokenContractToCollection(tokenContract);
+			// Use first token image if available, otherwise keep contract image
+			const firstTokenImage = firstTokenImages.get(tokenContract.contractAddress);
+			if (firstTokenImage) {
+				return { ...collection, imageUrl: firstTokenImage };
+			}
+			return collection;
+		});
+	}, [tokenContracts.length, firstTokenImages.size]); // Depend on both lengths
 	
 	// Determine status
 	const status = useMemo<"success" | "error" | "idle" | "loading">(() => {
-		if (loading) return "loading";
+		if (loading || fetchingImages) return "loading";
 		if (error) return "error";
 		if (collections.length > 0) return "success";
 		return "idle";
-	}, [loading, error, collections.length]);
+	}, [loading, fetchingImages, error, collections.length]);
 	
 	return (
 		<CollectionContext.Provider

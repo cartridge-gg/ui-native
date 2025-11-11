@@ -19,42 +19,6 @@ export function InventoryScene() {
 	const { connect, connectors } = useConnect();
 	const { tokenBalances, loading: nftsLoading } = useTokenBalances(address);
 	const { activities, loading: activitiesLoading } = useActivities(address, 20);
-	// TEMPORARY: Mock token data for preview
-	const mockTokens: Token[] = [
-		{
-			metadata: { name: 'Ethereum', symbol: 'ETH', image: '', decimals: 18 },
-			balance: { amount: 2.45, value: 8234.50, change: 123.45 }
-		},
-		{
-			metadata: { name: 'Starknet Token', symbol: 'STRK', image: '', decimals: 18 },
-			balance: { amount: 15420.5, value: 3542.15, change: -45.20 }
-		},
-		{
-			metadata: { name: 'USD Coin', symbol: 'USDC', image: '', decimals: 18 },
-			balance: { amount: 1250.00, value: 1250.00, change: 0 }
-		},
-		{
-			metadata: { name: 'Wrapped Bitcoin', symbol: 'WBTC', image: '', decimals: 18 },
-			balance: { amount: 0.125, value: 5437.50, change: 87.30 }
-		},
-		{
-			metadata: { name: 'Dai Stablecoin', symbol: 'DAI', image: '', decimals: 18 },
-			balance: { amount: 890.50, value: 891.20, change: 1.50 }
-		},
-		{
-			metadata: { name: 'Lords Token', symbol: 'LORDS', image: '', decimals: 18 },
-			balance: { amount: 45678.90, value: 2341.78, change: -123.45 }
-		},
-		{
-			metadata: { name: 'Ekubo Token', symbol: 'EKUBO', image: '', decimals: 18 },
-			balance: { amount: 8934.20, value: 456.78, change: 23.45 }
-		},
-		{
-			metadata: { name: 'zkLend Token', symbol: 'ZEND', image: '', decimals: 18 },
-			balance: { amount: 2345.67, value: 345.89, change: -12.34 }
-		},
-	];
-
 
 	// Filter NFTs (those with tokenId)
 	const nfts = useMemo(() => {
@@ -96,7 +60,7 @@ export function InventoryScene() {
 			<View style={{ padding: 16, gap: 16 }}>
 				{/* Always show tokens section (credits always visible) */}
 				<TokensSection
-					tokens={mockTokens}
+					tokens={tokens}
 					credits={credits}
 					status={tokensStatus}
 				/>
