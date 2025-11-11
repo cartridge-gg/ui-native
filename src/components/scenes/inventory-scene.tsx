@@ -1,10 +1,10 @@
-import { useMemo, type ComponentType } from "react";
-import { FlatList, Image, ScrollView, View, Dimensions } from "react-native";
+import React, { useMemo, type ComponentType } from "react";
+import { Image, Pressable, ScrollView, View, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useAccount, useConnect } from "@starknet-react/core";
 import type { Token } from "#clone/arcade";
 import { useTokens } from "#clone/arcade";
-import { ItemCard, ItemGrid, Text, CreditIcon, ScarecrowIcon, Button, ConnectIcon } from "#components";
+import { ItemCard, ItemGrid, Skeleton, Text, CreditIcon, ScarecrowIcon, Button, ConnectIcon, EyeIcon } from "#components";
 import { StarknetColorIcon } from "#components/icons/brand-color/starknet";
 import { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
 import { USDCIcon } from "#components/icons/brand-color/usdc";
@@ -19,6 +19,42 @@ export function InventoryScene() {
 	const { connect, connectors } = useConnect();
 	const { tokenBalances, loading: nftsLoading } = useTokenBalances(address);
 	const { activities, loading: activitiesLoading } = useActivities(address, 20);
+	// TEMPORARY: Mock token data for preview
+	const mockTokens: Token[] = [
+		{
+			metadata: { name: 'Ethereum', symbol: 'ETH', image: '', decimals: 18 },
+			balance: { amount: 2.45, value: 8234.50, change: 123.45 }
+		},
+		{
+			metadata: { name: 'Starknet Token', symbol: 'STRK', image: '', decimals: 18 },
+			balance: { amount: 15420.5, value: 3542.15, change: -45.20 }
+		},
+		{
+			metadata: { name: 'USD Coin', symbol: 'USDC', image: '', decimals: 18 },
+			balance: { amount: 1250.00, value: 1250.00, change: 0 }
+		},
+		{
+			metadata: { name: 'Wrapped Bitcoin', symbol: 'WBTC', image: '', decimals: 18 },
+			balance: { amount: 0.125, value: 5437.50, change: 87.30 }
+		},
+		{
+			metadata: { name: 'Dai Stablecoin', symbol: 'DAI', image: '', decimals: 18 },
+			balance: { amount: 890.50, value: 891.20, change: 1.50 }
+		},
+		{
+			metadata: { name: 'Lords Token', symbol: 'LORDS', image: '', decimals: 18 },
+			balance: { amount: 45678.90, value: 2341.78, change: -123.45 }
+		},
+		{
+			metadata: { name: 'Ekubo Token', symbol: 'EKUBO', image: '', decimals: 18 },
+			balance: { amount: 8934.20, value: 456.78, change: 23.45 }
+		},
+		{
+			metadata: { name: 'zkLend Token', symbol: 'ZEND', image: '', decimals: 18 },
+			balance: { amount: 2345.67, value: 345.89, change: -12.34 }
+		},
+	];
+
 
 	// Filter NFTs (those with tokenId)
 	const nfts = useMemo(() => {
@@ -60,7 +96,7 @@ export function InventoryScene() {
 			<View style={{ padding: 16, gap: 16 }}>
 				{/* Always show tokens section (credits always visible) */}
 				<TokensSection
-					tokens={tokens}
+					tokens={mockTokens}
 					credits={credits}
 					status={tokensStatus}
 				/>
@@ -102,6 +138,8 @@ const getTokenIcon = (symbol: string): { Icon: ComponentType<any>, isColored: bo
 };
 
 function TokensSection({ tokens, credits, status }: TokensSectionProps) {
+	const [showAllTokens, setShowAllTokens] = React.useState(false);
+	
 	if (status === "loading") {
 		return (
 			<View>
@@ -117,20 +155,32 @@ function TokensSection({ tokens, credits, status }: TokensSectionProps) {
 	}
 
 	const filteredTokens = tokens.filter((token) => token.balance.amount > 0);
-	const hasAnyTokens = credits.balance.amount > 0 || filteredTokens.length > 0;
+	const displayTokens = showAllTokens ? filteredTokens : filteredTokens.slice(0, 3);
+	const hasMoreTokens = filteredTokens.length > 3;
 
 	return (
-		<View>
-			<View className="rounded-md overflow-hidden">
-				<View className="flex flex-col gap-[1.2px]">
-					{/* Credits card - always show */}
-					<TokenCard key="credits" token={credits} />
+		<View className="rounded-md overflow-hidden">
+			<View className="flex flex-col gap-[1.2px]">
+				{/* Credits card - always show */}
+				<TokenCard key="credits" token={credits} />
 
-					{/* Other tokens */}
-					{filteredTokens.map((token, index) => (
-						<TokenCard key={`${token.metadata.symbol}-${index}`} token={token} />
-					))}
-				</View>
+				{/* Other tokens */}
+				{displayTokens.map((token, index) => (
+					<TokenCard key={`${token.metadata.symbol}-${index}`} token={token} />
+				))}
+				
+				{/* View All Button - styled like a token row */}
+				{hasMoreTokens && !showAllTokens && (
+					<Pressable
+						onPress={() => setShowAllTokens(true)}
+						className="bg-background-200 p-4 flex-row items-center justify-center gap-1 active:opacity-70"
+					>
+						<EyeIcon color="#71717a" variant="line" size="default"/>
+						<Text className="text-foreground-400 font-medium text-base">
+							View All
+						</Text>
+					</Pressable>
+				)}
 			</View>
 		</View>
 	);
@@ -213,48 +263,23 @@ interface NFTsSectionProps {
 }
 
 function NFTsSection({ nfts, status }: NFTsSectionProps) {
-	const skeletonData = useMemo(
-		() => Array.from({ length: 4 }, (_, i) => ({ id: `skeleton-${i}` })),
-		[],
-	);
-
-	// Group NFTs by contract address
-	const groupedNFTs = useMemo(() => {
-		const groups: Record<string, typeof nfts> = {};
-		for (const nft of nfts) {
-			const key = nft.contractAddress;
-			if (!groups[key]) {
-				groups[key] = [];
-			}
-			groups[key].push(nft);
-		}
-		return Object.entries(groups).map(([address, items]) => ({
-			address,
-			count: items.length,
-			name: `Collection ${address.slice(0, 6)}...${address.slice(-4)}`,
-			imageUrl: 'https://via.placeholder.com/150',
-		}));
-	}, [nfts]);
 
 	if (status === "loading") {
 		return (
 			<View>
-				<FlatList
-					data={skeletonData}
-					numColumns={2}
-					scrollEnabled={false}
-					columnWrapperStyle={{ gap: 12 }}
-					contentContainerStyle={{ gap: 12 }}
-					keyExtractor={(item) => item.id}
-					renderItem={() => (
-						<View className="flex-1 h-40 bg-background-200 rounded-lg" />
-					)}
-				/>
+				<View className="flex-row gap-3 mb-3">
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+				</View>
+				<View className="flex-row gap-3 mb-3">
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+				</View>
 			</View>
 		);
 	}
 
-	if (groupedNFTs.length === 0) {
+	if (nfts.length === 0) {
 		return (
 			<View style={{ minHeight: screenHeight * 0.4 }} className="items-center justify-center">
 				<View style={{ width: 200, height: 200 }}>
@@ -268,29 +293,19 @@ function NFTsSection({ nfts, status }: NFTsSectionProps) {
 	}
 
 	return (
-		<View>
-			<View className="flex-row flex-wrap -mx-1.5">
-				{groupedNFTs.map((collection) => (
-					<View key={collection.address} className="w-1/2 p-1.5">
-						<View className="bg-background-200 rounded-xl overflow-hidden">
-							<Image
-								source={{ uri: collection.imageUrl }}
-								className="w-full h-32"
-							/>
-							<View className="p-3">
-								<Text className="text-foreground-100 font-medium text-base mb-1" numberOfLines={1}>
-									{collection.name}
-								</Text>
-								<View className="flex-row items-center">
-									<Text className="text-foreground-400 text-sm">
-										{collection.count} {collection.count === 1 ? 'item' : 'items'}
-									</Text>
-								</View>
-							</View>
-						</View>
-					</View>
-				))}
-			</View>
-		</View>
+		<ItemGrid
+			data={nfts}
+			numColumns={2}
+			gap={12}
+			maintainColumnWidth={true}
+			keyExtractor={(item) => item.contractAddress + (item.tokenId || "")}
+			renderItem={(item) => (
+				<ItemCard
+					href={`/(drawer)/nft/${item.contractAddress}/${item.tokenId || ""}`}
+					title={`NFT #${item.tokenId || "0"}`}
+					imageUri={"https://via.placeholder.com/150"}
+				/>
+			)}
+		/>
 	);
 }
