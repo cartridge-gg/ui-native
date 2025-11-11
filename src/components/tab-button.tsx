@@ -17,7 +17,7 @@ export function TabButton({
 			{...props}
 			className={cn(
 				"flex-1 h-full relative",
-				isFocused ? "opacity-100" : "opacity-60",
+				isFocused ? "opacity-100" : "opacity-70",
 				className,
 			)}
 			accessibilityRole="tab"
@@ -27,11 +27,11 @@ export function TabButton({
 				<View className="absolute top-0 left-0 right-0 h-0.5 bg-primary" />
 			) : null}
 			<View className="flex-1 w-full h-full items-center justify-center">
-				<SvgClassContext.Provider
-					value={isFocused ? "fill-primary" : "fill-foreground-100"}
-				>
-					<Icon variant={isFocused ? "solid" : "line"} size="lg" />
-				</SvgClassContext.Provider>
+				<Icon 
+					variant={isFocused ? "solid" : "line"} 
+					size="lg"
+					color={isFocused ? "hsl(44, 96%, 64%)" : "#ffffff"}
+				/>
 			</View>
 		</Pressable>
 	);

@@ -19,27 +19,21 @@ import {
 
 export function GameHeader() {
 	const pathname = usePathname();
-	const { games } = useArcade();
+	const gameLookup = useGameLookup();
 
 	const currentGame = useMemo(() => {
 		try {
 			if (pathname?.startsWith("/game/")) {
 				const seg = pathname.split("/")[2];
 				if (seg) {
-					const idNum = Number(seg);
-					return (
-						(Number.isFinite(idNum)
-							? games.find((g) => g.id === idNum)
-							: undefined) ??
-						games.find((g) => g.name.toLowerCase().replace(/\s+/g, "-") === seg)
-					);
+					return gameLookup.byIdOrSlug(seg);
 				}
 			}
 		} catch {
 			// Return undefined if parsing fails
 		}
 		return undefined;
-	}, [pathname, games]);
+	}, [pathname, gameLookup]);
 
 	const gameName = currentGame?.name ?? "Loot Survivor";
 	const gameLogo = currentGame?.properties?.icon;

@@ -34,6 +34,7 @@ export { PaperPlaneIcon } from "#components/icons/state/paper-plane";
 export { PencilIcon } from "#components/icons/state/pencil";
 export { PlusIcon } from "#components/icons/state/plus";
 export { PulseIcon } from "#components/icons/state/pulse";
+export { ScarecrowIcon } from "#components/icons/state/scarecrow";
 export { ScrollIcon } from "#components/icons/state/scroll";
 export { ShapesIcon } from "#components/icons/state/shapes";
 export { ShieldIcon } from "#components/icons/state/shield";

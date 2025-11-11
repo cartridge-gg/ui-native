@@ -19,28 +19,39 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
 	const router = useRouter();
-	const { games } = useArcade();
+	const { games, gamesList } = useArcade();
+
+	// Create a map of game covers - only access complex games array once!
+	const gameCovers = useMemo(() => {
+		const coverMap = new Map<string, string>();
+		// Only build this map once when games first load
+		if (games.length > 0) {
+			for (const game of games) {
+				const cover = game.properties?.cover;
+				if (cover) {
+					coverMap.set(game.id.toString(), cover);
+					// Also add by name slug for URL matching
+					const slug = game.name.toLowerCase().replace(/\s+/g, "-");
+					coverMap.set(slug, cover);
+				}
+			}
+		}
+		return coverMap;
+	}, [gamesList.length]); // Depend on lightweight list length!
 
 	const bgSource: ImageURISource = useMemo(() => {
 		try {
 			if (pathname?.startsWith("/game/")) {
 				const seg = pathname.split("/")[2];
 				if (seg) {
-					const idNum = Number(seg);
-					const game =
-						(Number.isFinite(idNum)
-							? games.find((g) => g.id === idNum)
-							: undefined) ??
-						games.find(
-							(g) => g.name.toLowerCase().replace(/\s+/g, "-") === seg,
-						);
-					const cover = game?.properties?.cover;
+					// Try to get cover from our lightweight map
+					const cover = gameCovers.get(seg);
 					if (cover) return { uri: cover } as ImageURISource;
 				}
 			}
 		} catch {}
 		return banner as ImageURISource;
-	}, [pathname, games]);
+	}, [pathname, gameCovers]);
 
 	return (
 		<ImageBackground

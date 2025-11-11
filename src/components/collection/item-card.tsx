@@ -50,27 +50,31 @@ export function ItemCard({
 					</View>
 				</View>
 
-				<View className="relative overflow-hidden h-[128px]">
-					<View className="absolute inset-0 opacity-75 z-0">
-						<Image
-							className="size-full"
-							source={imageSource}
-							style={{ transform: [{ scale: 3 }] }}
-							blurRadius={8}
-							contentFit="cover"
-							placeholder={require("#assets/placeholder.png")}
-						/>
-						<View className="absolute inset-0 bg-black/64" />
-					</View>
+			<View className="relative overflow-hidden h-[128px]">
+				<View className="absolute inset-0 opacity-75 z-0">
+					<Image
+						className="size-full"
+						source={imageSource}
+						style={{ transform: [{ scale: 3 }] }}
+						blurRadius={8}
+						contentFit="cover"
+						placeholder={require("#assets/placeholder.png")}
+						cachePolicy="memory-disk"
+						transition={150}
+					/>
+					<View className="absolute inset-0 bg-black/64" />
+				</View>
 
-					<View className="absolute inset-0 h-full py-2 items-center justify-center z-10">
-						<Image
-							className="size-full"
-							source={imageSource}
-							contentFit="contain"
-							placeholder={require("#assets/placeholder.png")}
-						/>
-					</View>
+				<View className="absolute inset-0 h-full py-2 items-center justify-center z-10">
+					<Image
+						className="size-full"
+						source={imageSource}
+						contentFit="contain"
+						placeholder={require("#assets/placeholder.png")}
+						cachePolicy="memory-disk"
+						transition={150}
+					/>
+				</View>
 
 					<View className="absolute bottom-1.5 left-1.5 flex-row gap-1 items-center flex-wrap z-20">
 						{!!totalCount && (

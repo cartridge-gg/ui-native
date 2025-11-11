@@ -4,6 +4,7 @@ export * from "./collection";
 export * from "./copy-address";
 export * from "./discovery";
 export * from "./game-header";
+export * from "./game-icon";
 export * from "./header";
 export * from "./icons";
 export * from "./leaderboard";

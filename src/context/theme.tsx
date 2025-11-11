@@ -3,7 +3,7 @@ import { usePathname } from "expo-router";
 import { useColorScheme, vars } from "nativewind";
 import { createContext, type PropsWithChildren, useMemo } from "react";
 import { View } from "react-native";
-import { useArcade } from "#clone/arcade";
+import { useGameLookup } from "#clone/arcade";
 
 export const themes = {
 	default: {
@@ -109,7 +109,7 @@ export function ThemeProvider({
 	const { colorScheme } = useColorScheme();
 	const scheme = colorScheme ?? "light";
 	const pathname = usePathname();
-	const { games } = useArcade();
+	const gameLookup = useGameLookup();
 
 	const overrideVars = useMemo(() => {
 		try {
@@ -122,7 +122,7 @@ export function ThemeProvider({
 				if (direct) return direct;
 				if (/^\d+$/.test(seg)) {
 					const id = Number(seg);
-					const byId = games.find((g) => g.id === id);
+					const byId = gameLookup.byId(id);
 					const name = byId?.name?.toLowerCase?.();
 					if (name) {
 						const byName = Object.values(controllerConfigs).find(
@@ -159,7 +159,7 @@ export function ThemeProvider({
 				: undefined;
 		} catch {}
 		return undefined;
-	}, [pathname, games, scheme]);
+	}, [pathname, gameLookup, scheme]);
 
 	const isGameThemed = !!overrideVars;
 	return (

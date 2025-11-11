@@ -2,7 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useArcade, useCollections, useMarketplace } from "#clone/arcade";
+import { useArcade, useCollections, useMarketplace, useGameLookup } from "#clone/arcade";
 import {
 	EmptyStateInventoryIcon,
 	ItemCard,
@@ -16,21 +16,16 @@ export function Marketplace() {
 	const insets = useSafeAreaInsets();
 	const { game } = useLocalSearchParams<{ game: string }>();
 	const { collections, status } = useCollections();
-	const { games, editions } = useArcade();
+	const { editions } = useArcade();
 	const { getListingCount, getFloorPrice, getLastSale } = useMarketplace();
+	const gameLookup = useGameLookup();
 
 	// Find the current game and edition if we're in a game context
 	const { edition } = useMemo(() => {
 		if (!game) return { game: undefined, edition: undefined };
 
 		try {
-			const idNum = Number(game);
-			const foundGame =
-				(Number.isFinite(idNum)
-					? games.find((g) => g.id === idNum)
-					: undefined) ??
-				games.find((g) => g.name.toLowerCase().replace(/\s+/g, "-") === game);
-
+			const foundGame = gameLookup.byIdOrSlug(game);
 			if (!foundGame) return { game: undefined, edition: undefined };
 
 			// Match edition by gameId instead of config.project
@@ -40,7 +35,7 @@ export function Marketplace() {
 		} catch {
 			return { game: undefined, edition: undefined };
 		}
-	}, [game, games, editions]);
+	}, [game, gameLookup, editions]);
 
 	// Filter collections by game/edition if applicable
 	const filteredCollections = useMemo(() => {

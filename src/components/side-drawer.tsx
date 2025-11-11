@@ -1,21 +1,30 @@
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useArcade } from "#clone/arcade";
-import { Input, Text, Thumbnail } from "#components";
+import { Input, Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
+import { GameIcon } from "./game-icon";
 
 export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const insets = useSafeAreaInsets();
-	const { games } = useArcade();
+	const arcade = useArcade();
+	const { gamesList, version } = arcade;
 	const [search, setSearch] = useState("");
 
-	const filteredGames = games.filter((g) =>
-		g.name.toLowerCase().includes(search.toLowerCase()),
-	);
+	// Filter the pre-processed lightweight list
+	const filteredGames = useMemo(() => {
+		if (!search) {
+			return gamesList; // Already lightweight!
+		}
+		
+		// Filter by search
+		const searchLower = search.toLowerCase();
+		return gamesList.filter(g => g.name.toLowerCase().includes(searchLower));
+	}, [version, search]); // Depend on version, not gamesList!
 
 	return (
 		<View className="flex-1" style={{ paddingTop: insets.top }}>
@@ -29,13 +38,26 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 					/>
 				</View>
 
-				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+				<ScrollView 
+					className="flex-1" 
+					showsVerticalScrollIndicator={false}
+					removeClippedSubviews={true}
+					maxToRenderPerBatch={10}
+					updateCellsBatchingPeriod={50}
+					initialNumToRender={10}
+					windowSize={10}
+				>
 					<View className="px-3">
 						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
 							Arcade
 						</Text>
 						{/* biome-ignore lint/nursery/useUniqueElementIds: this is static */}
-						<Item id="arcade" title="Arcade" navigation={navigation} />
+						<Item 
+							id="arcade" 
+							title="Arcade" 
+							navigation={navigation}
+							icon={undefined}
+						/>
 
 						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
 							Games
@@ -45,7 +67,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 								<Item
 									key={g.id}
 									id={g.id.toString()}
-									icon={g.properties.icon}
+									icon={g.icon}
 									title={g.name}
 									navigation={navigation}
 								/>
@@ -88,22 +110,17 @@ function Item({
 			href={id === "arcade" ? "/marketplace" : `/game/${id}/marketplace`}
 			replace
 			asChild
-			onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
 		>
-			<Pressable className="flex-row items-center p-3 active:bg-background-100 gap-2">
-				{id === "arcade" ? (
-					<Thumbnail
-						icon={require("#assets/icon.png")}
-						size="md"
-						variant="default"
-					/>
-				) : icon ? (
-					<Thumbnail icon={icon} size="md" variant="default" />
-				) : (
-					<View className="size-8 bg-background-200 rounded items-center justify-center">
-						<Text>{id[0].toUpperCase()}</Text>
-					</View>
-				)}
+			<Pressable 
+				className="flex-row items-center p-3 active:bg-background-100 gap-2"
+				onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+			>
+				<GameIcon 
+					icon={icon} 
+					title={title} 
+					size="md" 
+					variant={id === "arcade" ? "primary" : "default"}
+				/>
 				<Text className="text-foreground text-sm flex-1 font-medium">
 					{title}
 				</Text>

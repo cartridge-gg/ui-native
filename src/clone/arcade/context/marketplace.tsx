@@ -1,3 +1,7 @@
+/**
+ * Marketplace Context - REAL DATA from Torii
+ * Provides marketplace data (orders, listings, sales)
+ */
 import { createContext, type ReactNode, useMemo } from "react";
 
 export interface OrderModel {
@@ -26,17 +30,22 @@ export const MarketplaceContext = createContext<MarketplaceContextType | null>(
 );
 
 export function MarketplaceProvider({ children }: { children: ReactNode }) {
+	// TODO: Implement orders fetching from Torii
 	const orders = useMemo(() => {
 		return {};
 	}, []);
 
+	// TODO: Implement listings fetching from Torii
 	const listings = useMemo(() => {
 		return {};
 	}, []);
 
+	// TODO: Implement sales fetching from Torii  
 	const sales = useMemo(() => {
 		return {};
 	}, []);
+
+	console.log('💰 MarketplaceProvider: Initialized (TODO: implement orders/listings/sales)');
 
 	return (
 		<MarketplaceContext.Provider
