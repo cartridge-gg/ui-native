@@ -226,6 +226,17 @@ interface NFTsSectionProps {
 	status: string;
 }
 
+/**
+ * Pads a hex string to 64 characters (0x + 64 hex digits)
+ */
+function padHexTo64(hex: string): string {
+	// Remove 0x prefix if present
+	const cleaned = hex.startsWith('0x') ? hex.slice(2) : hex;
+	// Pad to 64 characters
+	const padded = cleaned.padStart(64, '0');
+	return `0x${padded}`;
+}
+
 function NFTsSection({ nfts, status }: NFTsSectionProps) {
 
 	if (status === "loading") {
@@ -263,13 +274,19 @@ function NFTsSection({ nfts, status }: NFTsSectionProps) {
 			gap={12}
 			maintainColumnWidth={true}
 			keyExtractor={(item) => item.contractAddress + (item.tokenId || "")}
-			renderItem={(item) => (
-				<ItemCard
-					href={`/(drawer)/nft/${item.contractAddress}/${item.tokenId || ""}`}
-					title={`NFT #${item.tokenId || "0"}`}
-					imageUri={"https://via.placeholder.com/150"}
-				/>
-			)}
+			renderItem={(item) => {
+				const paddedAddress = padHexTo64(item.contractAddress || '');
+				const paddedTokenId = padHexTo64(item.tokenId || '0');
+				const imageUri = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
+				
+				return (
+					<ItemCard
+						href={`/(drawer)/nft/${item.contractAddress}/${item.tokenId || ""}`}
+						title={`NFT #${item.tokenId || "0"}`}
+						imageUri={imageUri}
+					/>
+				);
+			}}
 		/>
 	);
 }

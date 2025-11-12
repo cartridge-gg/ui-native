@@ -9,6 +9,7 @@ import {
 	TagIcon,
 	Text,
 } from "#components";
+import { sanitizeImageUri } from "#utils";
 
 export interface ItemCardProps {
 	href: string;
@@ -31,13 +32,9 @@ export function ItemCard({
 	listingCount,
 	variant = "nft",
 }: ItemCardProps) {
-	const imageSource = useMemo(
-		() =>
-			imageUri?.startsWith("ipfs://")
-				? imageUri.replace("ipfs://", "https://ipfs.io/ipfs/")
-				: imageUri,
-		[imageUri],
-	);
+	const imageSource = useMemo(() => {
+		return sanitizeImageUri(imageUri, `ItemCard: ${title}`);
+	}, [imageUri, title]);
 
 	// Collection variant - simpler design with just image and name
 	if (variant === "collection") {
@@ -45,30 +42,54 @@ export function ItemCard({
 			<Link href={href} asChild>
 				<Pressable className="flex-1 relative rounded-lg overflow-hidden">
 					<View className="relative overflow-hidden h-48">
-						{/* Main image */}
-						<Image
-							className="size-full"
-							source={imageSource}
-							contentFit="cover"
-							placeholder={require("#assets/placeholder.png")}
-							cachePolicy="memory-disk"
-							transition={150}
-						/>
+						{/* Blurred background layer */}
+						<View className="absolute inset-0 z-0">
+							<Image
+								className="size-full"
+								source={imageSource}
+								style={{ transform: [{ scale: 1.2 }] }}
+								blurRadius={10}
+								contentFit="cover"
+								placeholder={require("#assets/placeholder.png")}
+								cachePolicy="memory-disk"
+								transition={150}
+							/>
+							<View className="absolute inset-0 bg-black/40" />
+						</View>
+						
+						{/* Main sharp image */}
+						<View className="absolute inset-0 z-10 p-2 items-center justify-center">
+							<Image
+								className="size-full"
+								source={imageSource}
+								contentFit="contain"
+								placeholder={require("#assets/placeholder.png")}
+								cachePolicy="memory-disk"
+								transition={150}
+							/>
+						</View>
 						
 						{/* Gradient overlay from dark at bottom to transparent */}
 						<LinearGradient
-							colors={["rgba(10, 10, 10, 0.9)", "transparent"]}
+							colors={["rgba(0, 0, 0, 0.95)", "rgba(0, 0, 0, 0.3)", "transparent"]}
 							start={{ x: 0, y: 1 }}
 							end={{ x: 0, y: 0 }}
-							className="absolute inset-0"
+							locations={[0, 0.5, 1]}
+							className="absolute inset-0 z-20"
 							pointerEvents="none"
 						/>
 						
 						{/* Title at bottom */}
-						<View className="absolute bottom-0 left-0 right-0 p-3">
+						<View className="absolute bottom-0 left-0 right-0 p-3 z-30">
 							<Text
-								className="text-base font-semibold text-white"
+								className="text-base font-semibold"
 								numberOfLines={1}
+								style={{ 
+									color: '#ffffff',
+									textShadowColor: 'rgba(0, 0, 0, 0.8)', 
+									textShadowOffset: { width: 0, height: 1 }, 
+									textShadowRadius: 3 
+								}}
 							>
 								{title}
 							</Text>
