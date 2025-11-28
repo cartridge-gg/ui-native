@@ -97,12 +97,9 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 			setFetchingImages(true);
 			const imageMap = new Map<string, string>();
 			
-			console.log(`🖼️ Fetching first token images for ${tokenContracts.length} collections...`);
-			
 			// Fetch first token for ALL collections to get real token images
 			const promises = tokenContracts.map(async (contract) => {
 				try {
-					console.log(`🔍 [${contract.name}] Fetching first token for collection image...`);
 					
 					const result = await client.tokens({
 						contractAddresses: [contract.contractAddress],
@@ -128,7 +125,6 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 								if (parsed.image && typeof parsed.image === 'string' && parsed.image.startsWith('data:image/svg+xml')) {
 									// Sanitize SVG data URIs
 									imageUrl = sanitizeSvgDataUri(parsed.image, `Collection: ${contract.name}`);
-									console.log(`📝 [${contract.name}] Using sanitized SVG from metadata`);
 								}
 							} catch (e) {
 								// If JSON parse fails, try base64 decode
@@ -138,7 +134,6 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 									if (parsedDecoded.image && typeof parsedDecoded.image === 'string' && parsedDecoded.image.startsWith('data:image/svg+xml')) {
 										// Sanitize SVG data URIs
 										imageUrl = sanitizeSvgDataUri(parsedDecoded.image, `Collection: ${contract.name}`);
-										console.log(`📝 [${contract.name}] Using sanitized SVG from decoded metadata`);
 									}
 								} catch (e2) {
 									// Not SVG or couldn't parse, will use static endpoint
@@ -151,20 +146,16 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 							const paddedAddress = padHexTo64(contract.contractAddress);
 							const paddedTokenId = padHexTo64(firstToken.tokenId || '0');
 							imageUrl = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
-							console.log(`🌐 [${contract.name}] Using static endpoint: ${imageUrl}`);
 						}
 						
 						imageMap.set(contract.contractAddress, imageUrl);
-					} else {
-						console.warn(`⚠️ [${contract.name}] No tokens found in collection (${contract.contractAddress})`);
 					}
 				} catch (err) {
-					console.error(`❌ [${contract.name}] Failed to fetch first token:`, err);
+					// Silently handle errors - collection will use fallback image
 				}
 			});
 			
 			await Promise.all(promises);
-			console.log(`✅ Fetched ${imageMap.size} collection images from first tokens`);
 			setFirstTokenImages(imageMap);
 			setFetchingImages(false);
 			setHasFetchedImages(true);
@@ -185,32 +176,15 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 			return collection;
 		});
 		
-		if (__DEV__ && converted.length > 0) {
-			console.log(`✅ Converted ${converted.length} token contracts to collections`);
-		}
-		
 		return converted;
 	}, [tokenContracts, firstTokenImages.size]);
 	
 	// Determine status
 	const status = useMemo<"success" | "error" | "idle" | "loading">(() => {
-		const newStatus = (() => {
-			if (loading || fetchingImages) return "loading";
-			if (error) return "error";
-			if (collections.length > 0) return "success";
-			return "idle";
-		})();
-		
-		if (__DEV__) {
-			console.log('🎨 CollectionProvider Status:', {
-				status: newStatus,
-				loading,
-				fetchingImages,
-				collectionsLength: collections.length,
-			});
-		}
-		
-		return newStatus;
+		if (loading || fetchingImages) return "loading";
+		if (error) return "error";
+		if (collections.length > 0) return "success";
+		return "idle";
 	}, [loading, fetchingImages, error, collections.length]);
 	
 	return (
