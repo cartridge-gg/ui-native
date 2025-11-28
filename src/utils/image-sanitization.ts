@@ -42,13 +42,28 @@ export function sanitizeSvgDataUri(dataUri: string, debugLabel?: string): string
 			}
 		}
 		
-		// React Native doesn't support <foreignObject>, so we need to extract images and convert to <image> elements
-		const foreignObjectRegex = /<foreignObject([^>]*)>([\s\S]*?)<\/foreignObject>/g;
-		let hasForeignObject = svgContent.includes('<foreignObject');
+		// Check if SVG contains a CSS background-image - if so, extract and return just the image
+		const backgroundImageMatch = svgContent.match(/background-image:\s*url\(([^)]+)\)/);
+		if (backgroundImageMatch && backgroundImageMatch[1]) {
+			const extractedImage = backgroundImageMatch[1];
+			return extractedImage;
+		}
 		
-		if (hasForeignObject) {
-			let patchedSvg = svgContent.replace(foreignObjectRegex, (match, foreignObjectAttrs, innerContent) => {
-				// Extract attributes from foreignObject
+		// No background-image, check if we need to patch foreignObject
+		let patchedSvg = svgContent;
+		let wasPatched = false;
+		
+		// Fix malformed attributes like width="100width="100%" -> width="100%"
+		patchedSvg = patchedSvg.replace(/width="100width="([^"]*)"/g, 'width="$1"');
+		patchedSvg = patchedSvg.replace(/height="100height="([^"]*)"/g, 'height="$1"');
+		if (patchedSvg !== svgContent) {
+			wasPatched = true;
+		}
+		
+		// Convert <foreignObject> to <image> elements (React Native doesn't support foreignObject)
+		const foreignObjectRegex = /<foreignObject([^>]*)>([\s\S]*?)<\/foreignObject>/g;
+		if (patchedSvg.includes('<foreignObject')) {
+			patchedSvg = patchedSvg.replace(foreignObjectRegex, (match, foreignObjectAttrs, innerContent) => {
 				const xMatch = foreignObjectAttrs.match(/x=['"]([^'"]*)['"]/);
 				const yMatch = foreignObjectAttrs.match(/y=['"]([^'"]*)['"]/);
 				const widthMatch = foreignObjectAttrs.match(/width=['"]([^'"]*)['"]/);
@@ -59,25 +74,24 @@ export function sanitizeSvgDataUri(dataUri: string, debugLabel?: string): string
 				const width = widthMatch ? widthMatch[1] : '100%';
 				const height = heightMatch ? heightMatch[1] : '100%';
 				
-				// Extract image src from xhtml:img
 				const imgSrcMatch = innerContent.match(/src=['"]([^'"]*)['"]/);
 				
 				if (imgSrcMatch && imgSrcMatch[1]) {
-					const imageSrc = imgSrcMatch[1];
-					// Create a proper SVG <image> element - use "meet" to show full image without cropping
-					return `<image href="${imageSrc}" x="${x}" y="${y}" width="${width}" height="${height}" preserveAspectRatio="xMidYMid meet" style="image-rendering: pixelated;" />`;
+					wasPatched = true;
+					return `<image href="${imgSrcMatch[1]}" x="${x}" y="${y}" width="${width}" height="${height}" preserveAspectRatio="xMidYMid meet" style="image-rendering: pixelated;" />`;
 				}
 				
-				// If we couldn't extract the image, return empty
 				return '';
 			});
-			
-			// Re-encode the patched SVG
+		}
+		
+		// Re-encode if we made changes
+		if (wasPatched) {
 			const encodedSvg = btoa(patchedSvg);
 			return `data:image/svg+xml;base64,${encodedSvg}`;
 		}
 		
-		// No foreignObject, return original
+		// No changes needed
 		return dataUri;
 	} catch (e) {
 		console.error(`❌ ${label} Failed to process SVG:`, e);
