@@ -47,8 +47,8 @@ export function ItemCard({
 							<Image
 								className="size-full"
 								source={imageSource}
-								style={{ transform: [{ scale: 1.2 }] }}
-								blurRadius={10}
+								style={{ transform: [{ scale: 1.5 }] }}
+								blurRadius={30}
 								contentFit="cover"
 								placeholder={require("#assets/placeholder.png")}
 								cachePolicy="memory-disk"
