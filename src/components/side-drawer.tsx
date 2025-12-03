@@ -233,11 +233,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	// Render normal game list mode
 	return (
 		<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
-			<ScrollView 
-				className="flex-1" 
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
-			>
+			{/* Fixed Header Section */}
+			<View>
 				{/* Header Logo */}
 				<View className="flex-row items-center px-4 py-4">
 					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
@@ -323,8 +320,14 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 						</View>
 					</View>
 				</View> */}
+			</View>
 
-				{/* Games List */}
+			{/* Scrollable Games List */}
+			<ScrollView 
+				className="flex-1" 
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+			>
 				<View className="px-3">
 					{/* Arcade Home Row */}
 					<Link
@@ -336,8 +339,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 							className="flex-row items-center px-3 py-3 active:bg-background-100"
 							onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
 						>
-							<View className="w-10 h-10 rounded-lg bg-background-300 items-center justify-center">
-								<ArcadeIcon style={{ width: 24, height: 24 }} color="#FBCB4A" />
+							<View className="size-8 rounded bg-background-200 items-center justify-center">
+								<ArcadeIcon style={{ width: 20, height: 20 }} color="#FBCB4A" />
 							</View>
 							<Text className="text-foreground text-sm flex-1 font-medium ml-3">
 								Arcade
