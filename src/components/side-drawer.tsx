@@ -240,11 +240,11 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 			>
 				{/* Header Logo */}
 				<View className="flex-row items-center px-4 py-4">
-					<ArcadeBrandIcon style={{ width: 127, height: 32 }} />
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
 				</View>
 				
 				{/* Separator line */}
-				<View className="mb-4" style={{ height: 1, backgroundColor: '#000000' }} />
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
 
 				{/* User Profile Card - Only show when connected */}
 				{isConnected && address && (
@@ -328,7 +328,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 				<View className="px-3">
 					{/* Arcade Home Row */}
 					<Link
-						href="/(drawer)/(tabs)/marketplace"
+						href="/(drawer)/(tabs)"
 						replace
 						asChild
 					>
@@ -354,6 +354,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 							title={g.name}
 							points={400}
 							navigation={navigation}
+							isSelected={currentGameId?.toString() === g.id.toString()}
+							gameColor={g.color || '#FBCB4A'}
 						/>
 					))}
 				</View>
@@ -368,12 +370,16 @@ function GameItem({
 	title,
 	points,
 	navigation,
+	isSelected,
+	gameColor,
 }: {
 	id: string;
 	icon?: string;
 	title: string;
 	points?: number;
 	navigation: DrawerContentComponentProps["navigation"];
+	isSelected?: boolean;
+	gameColor?: string;
 }) {
 	return (
 		<Link
@@ -382,7 +388,8 @@ function GameItem({
 			asChild
 		>
 			<Pressable 
-				className="flex-row items-center px-3 py-3 active:bg-background-100"
+				className="flex-row items-center px-3 py-3 rounded-lg active:bg-background-100"
+				style={isSelected ? { backgroundColor: `${gameColor}10` } : undefined}
 				onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
 			>
 				<GameIcon 
@@ -391,7 +398,10 @@ function GameItem({
 					size="md" 
 					variant="default"
 				/>
-				<Text className="text-foreground text-sm flex-1 font-medium ml-3">
+				<Text 
+					className="text-sm flex-1 font-medium ml-3"
+					style={{ color: isSelected ? gameColor : '#ffffff' }}
+				>
 					{title}
 				</Text>
 				{/* Stars commented out for now */}

@@ -24,14 +24,16 @@ export function useGameLookup(): GameLookup {
 		const idMap = new Map<number, Game>();
 		const slugMap = new Map<string, Game>();
 
-		for (const game of games) {
-			idMap.set(game.id, game);
-			const slug = game.name.toLowerCase().replace(/\s+/g, "-");
-			slugMap.set(slug, game);
+		if (games && Array.isArray(games)) {
+			for (const game of games) {
+				idMap.set(game.id, game);
+				const slug = game.name.toLowerCase().replace(/\s+/g, "-");
+				slugMap.set(slug, game);
+			}
 		}
 
 		return { idMap, slugMap };
-	}, [games.length]); // Only depend on length!
+	}, [games?.length ?? 0]); // Only depend on length, with fallback!
 
 	// Return stable lookup functions
 	return useMemo(

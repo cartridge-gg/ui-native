@@ -8,13 +8,13 @@ import { useGameLookup } from "#clone/arcade";
 export const themes = {
 	default: {
 		light: vars({
-			"--background-100": "135 8% 9%",
-			"--background-125": "135 8% 10%",
-			"--background-150": "135 7% 11%",
-			"--background-200": "135 6% 13%",
-			"--background-300": "120 5% 15%",
-			"--background-400": "120 6% 17%",
-			"--background-500": "132 4% 23%",
+			"--background-100": "135 8% 8%",
+			"--background-125": "135 8% 9%",
+			"--background-150": "135 7% 10%",
+			"--background-200": "135 6% 12%",
+			"--background-300": "120 5% 14%",
+			"--background-400": "120 6% 16%",
+			"--background-500": "132 4% 22%",
 
 			"--translucent-dark-100": "0 0% 0% / 0.078",
 			"--translucent-dark-150": "0 0% 0% / 0.122",
@@ -26,7 +26,7 @@ export const themes = {
 			"--translucent-light-200": "0 0% 100% / 0.478",
 			"--translucent-light-300": "0 0% 100% / 0.639",
 
-			"--spacer-100": "132 14% 7%",
+			"--spacer-100": "0 0% 22%",
 
 			"--foreground-100": "0 0% 100%",
 			"--foreground-200": "0 0% 61%",
@@ -49,13 +49,13 @@ export const themes = {
 			"--constructive-100": "128 67% 66%",
 		}),
 		dark: vars({
-			"--background-100": "135 8% 9%",
-			"--background-125": "135 8% 10%",
-			"--background-150": "135 7% 11%",
-			"--background-200": "135 6% 13%",
-			"--background-300": "120 5% 15%",
-			"--background-400": "120 6% 17%",
-			"--background-500": "132 4% 23%",
+			"--background-100": "135 8% 8%",
+			"--background-125": "135 8% 9%",
+			"--background-150": "135 7% 10%",
+			"--background-200": "135 6% 12%",
+			"--background-300": "120 5% 14%",
+			"--background-400": "120 6% 16%",
+			"--background-500": "132 4% 22%",
 
 			"--translucent-dark-100": "0 0% 0% / 0.078",
 			"--translucent-dark-150": "0 0% 0% / 0.122",
@@ -67,7 +67,7 @@ export const themes = {
 			"--translucent-light-200": "0 0% 100% / 0.478",
 			"--translucent-light-300": "0 0% 100% / 0.639",
 
-			"--spacer-100": "132 14% 7%",
+			"--spacer-100": "0 0% 22%",
 
 			"--foreground-100": "0 0% 100%",
 			"--foreground-200": "0 0% 61%",

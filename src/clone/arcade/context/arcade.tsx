@@ -55,7 +55,7 @@ export function ArcadeProvider(props: PropsWithChildren) {
 	const gamesRef = useRef<Game[]>([]);
 	const editionsRef = useRef<Edition[]>([]);
 	// Create a lightweight games list with only simple values for UI
-	const gamesListRef = useRef<Array<{id: number, name: string, icon?: string}>>([]);
+	const gamesListRef = useRef<Array<{id: number, name: string, icon?: string, color?: string}>>([]);
 	const [version, setVersion] = useState(0);
 	
 	// Update refs and version when games count changes
@@ -74,6 +74,7 @@ export function ArcadeProvider(props: PropsWithChildren) {
 				id: g.id,
 				name: g.name,
 				icon: g.properties?.icon || undefined,
+				color: g.color || undefined,
 			}));
 			
 			// Create editions

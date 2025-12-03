@@ -14,12 +14,17 @@ import {
 	SearchIcon,
 	Text,
 } from "#components";
+import { useGameContext } from "../../../../contexts/GameContext";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
 	const router = useRouter();
 	const { games, gamesList } = useArcade();
+	const { currentGameColor, currentGameId } = useGameContext();
+	
+	// Use game color when in a game context, otherwise use default yellow
+	const accentColor = currentGameId ? currentGameColor : '#FBCB4A';
 
 	// Create a map of game covers - only access complex games array once!
 	const gameCovers = useMemo(() => {
@@ -110,7 +115,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 						accessibilityRole="button"
 						accessibilityLabel="Connect"
 					>
-						<Text className="text-primary text-sm font-medium">CONNECT</Text>
+						<Text className="text-sm font-medium" style={{ color: accentColor }}>CONNECT</Text>
 					</Button>
 				</View>
 			</View>

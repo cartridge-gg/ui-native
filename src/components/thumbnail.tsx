@@ -1,8 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { useMemo } from "react";
-import { Image, View } from "react-native";
-import { SvgUri } from "react-native-svg";
+import { View } from "react-native";
+import { Image } from "expo-image";
 import { cn } from "#utils";
 
 const thumbnailVariants = cva("items-center justify-center", {
@@ -57,20 +57,13 @@ export function Thumbnail({
 	if (typeof icon === "string") {
 		return (
 			<View className={containerClasses}>
-				{icon.includes(".svg") ? (
-					<SvgUri
-						uri={icon}
-						width="100%"
-						height="100%"
-						className={cn(rounded ? "rounded-full" : "rounded-sm")}
-					/>
-				) : (
-					<Image
-						source={{ uri: icon }}
-						className={cn("size-full", rounded ? "rounded-full" : "rounded-sm")}
-						resizeMode="cover"
-					/>
-				)}
+				<Image
+					source={{ uri: icon }}
+					className={cn("size-full", rounded ? "rounded-full" : "rounded-sm")}
+					contentFit="cover"
+					cachePolicy="memory-disk"
+					transition={100}
+				/>
 			</View>
 		);
 	}
@@ -81,7 +74,7 @@ export function Thumbnail({
 				<Image
 					source={icon}
 					className={cn("size-full", rounded ? "rounded-full" : "rounded-sm")}
-					resizeMode="cover"
+					contentFit="cover"
 				/>
 			</View>
 		);
