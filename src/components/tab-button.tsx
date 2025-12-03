@@ -10,8 +10,12 @@ export function TabButton({
 	isFocused,
 	Icon,
 	className,
+	accentColor,
 	...props
-}: TabTriggerSlotProps & { Icon: IconComponent; className?: string }) {
+}: TabTriggerSlotProps & { Icon: IconComponent; className?: string; accentColor?: string }) {
+	// Default to yellow if no accent color provided
+	const color = accentColor || "hsl(44, 96%, 64%)";
+	
 	return (
 		<Pressable
 			{...props}
@@ -24,13 +28,13 @@ export function TabButton({
 			accessibilityState={{ selected: !!isFocused }}
 		>
 			{isFocused ? (
-				<View className="absolute top-0 left-0 right-0 h-0.5 bg-primary" />
+				<View className="absolute top-0 left-0 right-0 h-0.5" style={{ backgroundColor: color }} />
 			) : null}
 			<View className="flex-1 w-full h-full items-center justify-center">
 				<Icon 
 					variant={isFocused ? "solid" : "line"} 
 					size="lg"
-					color={isFocused ? "hsl(44, 96%, 64%)" : "#ffffff"}
+					color={isFocused ? color : "#ffffff"}
 				/>
 			</View>
 		</Pressable>

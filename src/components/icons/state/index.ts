@@ -58,6 +58,7 @@ export { UserIcon } from "#components/icons/state/user";
 export { UserAddIcon } from "#components/icons/state/user-add";
 export { UserCheckIcon } from "#components/icons/state/user-check";
 export { UsersIcon } from "#components/icons/state/users";
+export { VerifiedBadgeIcon } from "#components/icons/state/verified-badge";
 export { WalletIcon } from "#components/icons/state/wallet";
 export { WandIcon } from "#components/icons/state/wand";
 export { WrenchIcon } from "#components/icons/state/wrench";

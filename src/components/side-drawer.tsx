@@ -1,23 +1,81 @@
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View, TouchableOpacity, TextInput } from "react-native";
+import { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import { Pressable, ScrollView, View, TouchableOpacity, TextInput, Animated, LayoutAnimation, Platform, UIManager } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useAccount, useConnect } from "@starknet-react/core";
+import * as Clipboard from "expo-clipboard";
 import { useArcade } from "#clone/arcade";
-import { Input, Text } from "#components";
+import { Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
 import { GameIcon } from "./game-icon";
+import { ArcadeBrandIcon } from "./icons/brand/arcade-brand";
+import { ArcadeIcon } from "./icons/brand/arcade";
+import { UserAvatar } from "./user-avatar";
 import { useFilterContext } from "../../../../contexts/FilterContext";
+import { useGameContext } from "../../../../contexts/GameContext";
 import type { TraitFilter } from "../../../../hooks/useTraitFilters";
 import type { AttributeFilter } from "../../../../modules/arcade/src/generated/dojo";
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+	UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+// Simple chevron that rotates based on expanded state
+function AnimatedChevron({ isExpanded }: { isExpanded: boolean }) {
+	return (
+		<View style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}>
+			<Feather name="chevron-down" size={20} color="#a8a29e" />
+		</View>
+	);
+}
 
 export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const insets = useSafeAreaInsets();
 	const arcade = useArcade();
 	const { gamesList, version } = arcade;
-	const [search, setSearch] = useState("");
+	const { address, status, account } = useAccount();
+	const { connect, connectors } = useConnect();
+	const isConnected = status === "connected";
+	const { currentGameColor, currentGameId } = useGameContext();
+	const [username, setUsername] = useState<string | null>(null);
+	
+	// Use game color when in a game context, otherwise use default yellow
+	const accentColor = currentGameId ? currentGameColor : '#FBCB4A';
+	
+	// Get username from account
+	useEffect(() => {
+		if (status === "connected" && account) {
+			try {
+				const mobileAccount = account as any;
+				if (mobileAccount.getSessionInfo) {
+					const info = mobileAccount.getSessionInfo();
+					if (info?.username) {
+						setUsername(info.username);
+					}
+				}
+			} catch (e) {
+				// Ignore error
+			}
+		} else {
+			setUsername(null);
+		}
+	}, [status, account]);
+	
+	// Copy address to clipboard
+	const handleCopyAddress = async () => {
+		if (address) {
+			await Clipboard.setStringAsync(address);
+		}
+	};
+	
+	const connector = useMemo(
+		() => connectors.find(c => c.id === "controller_mobile") || connectors[0],
+		[connectors],
+	);
 	const [expandedTraits, setExpandedTraits] = useState<Set<string>>(new Set());
 	
 	const {
@@ -28,16 +86,10 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		onClearAll,
 	} = useFilterContext();
 
-	// Filter the pre-processed lightweight list
+	// Use the pre-processed lightweight list
 	const filteredGames = useMemo(() => {
-		if (!search) {
-			return gamesList; // Already lightweight!
-		}
-		
-		// Filter by search
-		const searchLower = search.toLowerCase();
-		return gamesList.filter(g => g.name.toLowerCase().includes(searchLower));
-	}, [version, search]); // Depend on version, not gamesList!
+		return gamesList;
+	}, [version]); // Depend on version, not gamesList!
 
 	// Group filters by trait name
 	const groupedFilters = useMemo(() => {
@@ -52,7 +104,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 
 	const traitNames = Object.keys(groupedFilters).sort();
 
-	const toggleTrait = (traitName: string) => {
+	const toggleTrait = useCallback((traitName: string) => {
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		setExpandedTraits((prev) => {
 			const next = new Set(prev);
 			if (next.has(traitName)) {
@@ -62,7 +115,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 			}
 			return next;
 		});
-	};
+	}, []);
 
 	const isFilterSelected = (traitName: string, traitValue: string) => {
 		return selectedFilters.some(
@@ -78,7 +131,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	// Render filter mode content
 	if (isFilterMode) {
 		return (
-			<View className="flex-1 bg-background-200" style={{ paddingTop: insets.top }}>
+			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
 				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
 					{/* Traits Section */}
 					<View className="p-4">
@@ -117,11 +170,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 											<Text className="text-foreground-400 text-sm mr-2">
 												{totalCount}
 											</Text>
-											<Feather
-												name={isExpanded ? 'chevron-up' : 'chevron-down'}
-												size={20}
-												color="#a8a29e"
-											/>
+											<AnimatedChevron isExpanded={isExpanded} />
 										</View>
 									</Pressable>
 
@@ -183,103 +232,175 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 
 	// Render normal game list mode
 	return (
-		<View className="flex-1" style={{ paddingTop: insets.top }}>
-			<View className="flex-1 flex-col">
-				<View className="p-4">
-					<Input
-						placeholder="Search"
-						value={search}
-						onChangeText={setSearch}
-						className="border-background-300 hover:border-background-300 focus-visible:border-background-300 focus-visible:bg-background-200 bg-spacer"
-					/>
+		<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+			<ScrollView 
+				className="flex-1" 
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+			>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} />
 				</View>
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#000000' }} />
 
-				<ScrollView 
-					className="flex-1" 
-					showsVerticalScrollIndicator={false}
-					removeClippedSubviews={true}
-					maxToRenderPerBatch={10}
-					updateCellsBatchingPeriod={50}
-					initialNumToRender={10}
-					windowSize={10}
-				>
-					<View className="px-3">
-						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
-							Arcade
-						</Text>
-						{/* biome-ignore lint/nursery/useUniqueElementIds: this is static */}
-						<Item 
-							id="arcade" 
-							title="Arcade" 
-							navigation={navigation}
-							icon={undefined}
-						/>
-
-						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
-							Games
-						</Text>
-						<View className="gap-1">
-							{filteredGames.map((g) => (
-								<Item
-									key={g.id}
-									id={g.id.toString()}
-									icon={g.icon}
-									title={g.name}
-									navigation={navigation}
-								/>
-							))}
+				{/* User Profile Card - Only show when connected */}
+				{isConnected && address && (
+					<View className="mx-4 mb-4 p-4 rounded-lg border border-foreground-400/20">
+						<View className="flex-row items-center">
+							{/* Avatar */}
+							<View className="mr-4">
+								<UserAvatar username={username || 'User'} size={64} color={accentColor} />
+							</View>
+							
+							{/* User Info */}
+							<View className="flex-1">
+								<Text className="text-foreground text-lg font-semibold mb-2">
+									{username || 'User'}
+								</Text>
+								<Pressable 
+									className="flex-row items-center bg-background-300 px-2 py-1.5 rounded self-start active:opacity-70"
+									onPress={handleCopyAddress}
+								>
+									<Text className="text-foreground-400 text-xs font-mono">
+										{`${address.slice(0, 6)}...${address.slice(-4)}`}
+									</Text>
+									<Feather name="copy" size={12} color="#a8a29e" style={{ marginLeft: 6 }} />
+								</Pressable>
+							</View>
 						</View>
 					</View>
-				</ScrollView>
-				<View
-					className="p-3 border-t border-background-100 bg-background-100"
-					style={{
-						height: TAB_BAR_HEIGHT + insets.bottom,
-						paddingBottom: insets.bottom,
-					}}
-				>
-					<Pressable className="bg-background-100 flex-row items-center justify-center p-3 rounded-lg">
-						<Text className="text-foreground-300 mr-2">+</Text>
-						<Text className="text-foreground-300 text-sm font-medium">
-							Register Game
-						</Text>
+				)}
+
+				{/* Connect Button - Only show when not connected */}
+				{!isConnected && (
+					<Pressable 
+						className="mx-4 mb-4 p-4 rounded-lg"
+						style={{ borderWidth: 2, borderColor: `${accentColor}80` }}
+						onPress={() => {
+							if (connector) {
+								connect({ connector });
+							}
+						}}
+					>
+						<View className="flex-row items-center">
+							{/* Controller Icon */}
+							<View className="w-16 h-16 rounded-lg bg-background-300 items-center justify-center mr-4">
+								<Feather name="link" size={24} color={accentColor} />
+							</View>
+							
+							{/* Connect Info */}
+							<View className="flex-1">
+								<Text className="text-foreground text-base font-semibold mb-2">Connect Controller</Text>
+								<View className="flex-row items-center">
+									<Feather name="gift" size={16} color="#a8a29e" />
+									<Text className="text-foreground-200 text-sm ml-2">Access your inventory</Text>
+								</View>
+							</View>
+						</View>
 					</Pressable>
+				)}
+
+				{/* Connect X Account Card - Commented out for now */}
+				{/* <View className="mx-4 mb-4 p-4 rounded-lg border-2 border-primary/50">
+					<View className="flex-row items-center">
+						<View className="w-16 h-16 rounded-lg bg-background-300 items-center justify-center mr-4">
+							<Text className="text-foreground text-2xl font-bold">𝕏</Text>
+						</View>
+						<View className="flex-1">
+							<Text className="text-foreground text-base font-semibold mb-2">Connect X Account</Text>
+							<View className="flex-row items-center">
+								<Feather name="gift" size={16} color="#a8a29e" />
+								<View 
+									className="ml-2 px-3 py-1 rounded-full flex-row items-center"
+									style={{ backgroundColor: 'rgba(234, 179, 8, 0.2)', borderWidth: 1, borderColor: '#EAB308' }}
+								>
+									<Text className="text-primary text-sm font-semibold">Ⓒ 100</Text>
+								</View>
+							</View>
+						</View>
+					</View>
+				</View> */}
+
+				{/* Games List */}
+				<View className="px-3">
+					{/* Arcade Home Row */}
+					<Link
+						href="/(drawer)/(tabs)/marketplace"
+						replace
+						asChild
+					>
+						<Pressable 
+							className="flex-row items-center px-3 py-3 active:bg-background-100"
+							onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+						>
+							<View className="w-10 h-10 rounded-lg bg-background-300 items-center justify-center">
+								<ArcadeIcon style={{ width: 24, height: 24 }} color="#FBCB4A" />
+							</View>
+							<Text className="text-foreground text-sm flex-1 font-medium ml-3">
+								Arcade
+							</Text>
+						</Pressable>
+					</Link>
+					
+					{/* Game Items */}
+					{filteredGames.map((g) => (
+						<GameItem
+							key={g.id}
+							id={g.id.toString()}
+							icon={g.icon}
+							title={g.name}
+							points={400}
+							navigation={navigation}
+						/>
+					))}
 				</View>
-			</View>
+			</ScrollView>
 		</View>
 	);
 }
 
-function Item({
+function GameItem({
 	id,
 	icon,
 	title,
+	points,
 	navigation,
 }: {
 	id: string;
 	icon?: string;
 	title: string;
+	points?: number;
 	navigation: DrawerContentComponentProps["navigation"];
 }) {
 	return (
 		<Link
-			href={id === "arcade" ? "/marketplace" : `/game/${id}/marketplace`}
+			href={`/game/${id}/marketplace`}
 			replace
 			asChild
 		>
 			<Pressable 
-				className="flex-row items-center p-3 active:bg-background-100 gap-2"
+				className="flex-row items-center px-3 py-3 active:bg-background-100"
 				onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
 			>
 				<GameIcon 
 					icon={icon} 
 					title={title} 
 					size="md" 
-					variant={id === "arcade" ? "primary" : "default"}
+					variant="default"
 				/>
-				<Text className="text-foreground text-sm flex-1 font-medium">
+				<Text className="text-foreground text-sm flex-1 font-medium ml-3">
 					{title}
 				</Text>
+				{/* Stars commented out for now */}
+				{/* {points !== undefined && points > 0 && (
+					<View className="flex-row items-center">
+						<Feather name="star" size={14} color="#a8a29e" />
+						<Text className="text-foreground-400 text-sm ml-1">{points}</Text>
+					</View>
+				)} */}
 			</Pressable>
 		</Link>
 	);

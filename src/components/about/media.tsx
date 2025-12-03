@@ -13,12 +13,13 @@ import { Text } from "#components";
 import { cn } from "#utils";
 
 const { width: screenWidth } = Dimensions.get("window");
-const ITEM_WIDTH = screenWidth - 32 - 16; // Padding minus gap
+// Full width minus padding (16px on each side = 32px total)
+const ITEM_WIDTH = screenWidth - 32;
 const ITEM_HEIGHT = (ITEM_WIDTH * 9) / 16; // 16:9 aspect ratio
 
 function extractYouTubeId(url: string): string {
 	const match = url.match(
-		/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/,
+		/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=|\/shorts\/))([\w-]{11})/,
 	);
 	return match?.[1] || "";
 }
@@ -30,9 +31,25 @@ export function AboutMedia({ items }: { items: string[] }) {
 
 	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
 		const offsetX = event.nativeEvent.contentOffset.x;
-		const index = Math.round(offsetX / (ITEM_WIDTH + 16));
+		const index = Math.round(offsetX / ITEM_WIDTH);
 		setCurrentIndex(index);
 	};
+
+	// For single item, render without ScrollView for better centering
+	if (items.length === 1) {
+		return (
+			<View className="flex-col gap-2">
+				<View className="h-10 flex flex-row items-center justify-between">
+					<Text className="text-xs tracking-wider font-semibold text-foreground-400 uppercase">
+						Media
+					</Text>
+				</View>
+				<View className="items-center">
+					<MediaItem uri={items[0]} isActive={true} />
+				</View>
+			</View>
+		);
+	}
 
 	return (
 		<View className="flex-col gap-2">
@@ -44,7 +61,7 @@ export function AboutMedia({ items }: { items: string[] }) {
 					<View className="flex-row gap-1">
 						{items.map((item, index) => (
 							<View
-								key={item}
+								key={`dot-${index}`}
 								className={cn(
 									"rounded-full bg-foreground-100",
 									currentIndex === index ? "w-2 h-2" : "w-1.5 h-1.5 opacity-50",
@@ -57,17 +74,15 @@ export function AboutMedia({ items }: { items: string[] }) {
 
 			<ScrollView
 				horizontal
-				pagingEnabled={false}
+				pagingEnabled
 				showsHorizontalScrollIndicator={false}
 				decelerationRate="fast"
-				snapToInterval={ITEM_WIDTH + 16}
-				snapToAlignment="start"
 				onScroll={handleScroll}
 				scrollEventThrottle={16}
-				contentContainerStyle={{ gap: 16 }}
+				contentContainerStyle={{ alignItems: 'center' }}
 			>
 				{items.map((item, index) => (
-					<MediaItem key={item} uri={item} isActive={currentIndex === index} />
+					<MediaItem key={`media-${index}`} uri={item} isActive={currentIndex === index} />
 				))}
 			</ScrollView>
 		</View>
@@ -101,14 +116,13 @@ function MediaItem({ uri, isActive }: { uri: string; isActive: boolean }) {
 		return (
 			<View
 				style={{ width: ITEM_WIDTH, height: ITEM_HEIGHT }}
-				className="rounded-lg overflow-hidden"
+				className="rounded-lg overflow-hidden bg-background-300"
 			>
 				<YoutubePlayer
 					height={ITEM_HEIGHT}
+					width={ITEM_WIDTH}
 					videoId={videoId}
 					play={isActive}
-					mute
-					loop
 					webViewProps={{
 						injectedJavaScript: `
               var element = document.getElementsByClassName('container')[0];

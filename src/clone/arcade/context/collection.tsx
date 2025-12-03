@@ -5,6 +5,7 @@
 import { createContext, type ReactNode, useMemo, useEffect, useState } from "react";
 import { useTokenContracts, type ParsedTokenContract } from "../../../../../../hooks/useTokenContracts";
 import { useToriiClient } from "../../../../../../contexts/ToriiContext";
+import { useCollectionGameMapping } from "../../../../../../hooks/useCollectionGameMapping";
 import { PaginationDirection } from "../../../../../../modules/arcade/src/generated/dojo";
 import { sanitizeSvgDataUri } from "#utils";
 
@@ -31,6 +32,7 @@ export type Collection = {
 	imageUrl: string;
 	totalCount: number;
 	project: string;
+	gameId?: string; // Linked game ID from ARCADE-CollectionEdition
 };
 
 export type CollectionContextType = {
@@ -83,6 +85,7 @@ function tokenContractToCollection(tokenContract: ParsedTokenContract): Collecti
 export function CollectionProvider({ children }: { children: ReactNode }) {
 	const { tokenContracts, loading, error } = useTokenContracts();
 	const { client, isReady } = useToriiClient();
+	const { getGameIdForCollection, loading: mappingLoading } = useCollectionGameMapping();
 	const [firstTokenImages, setFirstTokenImages] = useState<Map<string, string>>(new Map());
 	const [fetchingImages, setFetchingImages] = useState(false);
 	const [hasFetchedImages, setHasFetchedImages] = useState(false);
@@ -164,28 +167,32 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 		fetchFirstTokenImages();
 	}, [client, isReady, tokenContracts.length, fetchingImages, hasFetchedImages]);
 	
-	// Convert token contracts to collections with first token images
+	// Convert token contracts to collections with first token images and game IDs
 	const collections = useMemo(() => {
 		const converted = tokenContracts.map(tokenContract => {
 			const collection = tokenContractToCollection(tokenContract);
 			// Override with first token image if available
 			const firstTokenImage = firstTokenImages.get(tokenContract.contractAddress);
-			if (firstTokenImage) {
-				return { ...collection, imageUrl: firstTokenImage };
-			}
-			return collection;
+			// Get game ID from the mapping
+			const gameId = getGameIdForCollection(tokenContract.contractAddress);
+			
+			return { 
+				...collection, 
+				imageUrl: firstTokenImage || collection.imageUrl,
+				gameId,
+			};
 		});
 		
 		return converted;
-	}, [tokenContracts, firstTokenImages.size]);
+	}, [tokenContracts, firstTokenImages.size, getGameIdForCollection]);
 	
 	// Determine status
 	const status = useMemo<"success" | "error" | "idle" | "loading">(() => {
-		if (loading || fetchingImages) return "loading";
+		if (loading || fetchingImages || mappingLoading) return "loading";
 		if (error) return "error";
 		if (collections.length > 0) return "success";
 		return "idle";
-	}, [loading, fetchingImages, error, collections.length]);
+	}, [loading, fetchingImages, mappingLoading, error, collections.length]);
 	
 	return (
 		<CollectionContext.Provider
