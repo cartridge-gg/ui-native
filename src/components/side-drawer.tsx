@@ -16,8 +16,10 @@ import { ArcadeIcon } from "./icons/brand/arcade";
 import { UserAvatar } from "./user-avatar";
 import { useFilterContext } from "../../../../contexts/FilterContext";
 import { useGameContext } from "../../../../contexts/GameContext";
+import { useTokenDetailContext } from "../../../../contexts/TokenContext";
 import type { TraitFilter } from "../../../../hooks/useTraitFilters";
 import type { AttributeFilter } from "../../../../modules/arcade/src/generated/dojo";
+import { Thumbnail } from "./thumbnail";
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -85,6 +87,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		onFilterToggle,
 		onClearAll,
 	} = useFilterContext();
+	
+	const { currentToken, isTokenPage } = useTokenDetailContext();
 
 	// Use the pre-processed lightweight list
 	const filteredGames = useMemo(() => {
@@ -127,6 +131,116 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		onClearAll?.();
 		setExpandedTraits(new Set());
 	};
+
+	// Render token details mode
+	if (isTokenPage && currentToken) {
+		const shortAddress = `${currentToken.contractAddress.slice(0, 6)}...${currentToken.contractAddress.slice(-4)}`;
+		
+		// Parse token ID to decimal (handles hex format)
+		let displayTokenId = currentToken.tokenId;
+		try {
+			if (currentToken.tokenId.startsWith('0x')) {
+				const decimal = parseInt(currentToken.tokenId, 16);
+				if (!isNaN(decimal)) {
+					displayTokenId = decimal.toString();
+				}
+			}
+		} catch {
+			// Keep original if parsing fails
+		}
+		
+		return (
+			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
+				</View>
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
+				
+				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+					{/* Details Section */}
+					<View className="px-4 mb-6">
+						<Text className="text-foreground-400 text-xs font-semibold tracking-widest uppercase mb-3">
+							Details
+						</Text>
+						
+						<View className="rounded-lg overflow-hidden" style={{ backgroundColor: '#1a1f1b' }}>
+							{/* Owner Row */}
+							{(currentToken.ownerUsername || currentToken.ownerAddress) && (
+								<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+									<Text className="text-foreground-400 text-sm">Owner</Text>
+									<View className="flex-row items-center gap-2">
+										<UserAvatar 
+											username={currentToken.ownerUsername || currentToken.ownerAddress || 'unknown'} 
+											size={20} 
+											color={accentColor} 
+											showFrame={false} 
+										/>
+										<Text className="text-foreground text-sm font-medium">
+											{currentToken.ownerUsername || 
+												(currentToken.ownerAddress 
+													? `${currentToken.ownerAddress.slice(0, 6)}...${currentToken.ownerAddress.slice(-4)}`
+													: 'Unknown'
+												)
+											}
+										</Text>
+									</View>
+								</View>
+							)}
+							
+							{/* Contract Address Row */}
+							<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+								<Text className="text-foreground-400 text-sm">Contract Address</Text>
+								<Text className="text-foreground text-sm font-medium font-mono">{shortAddress}</Text>
+							</View>
+							
+							{/* Token ID Row */}
+							<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+								<Text className="text-foreground-400 text-sm">Token ID</Text>
+								<Text className="text-foreground text-sm font-medium">{displayTokenId}</Text>
+							</View>
+							
+							{/* Token Standard Row */}
+							{currentToken.tokenStandard && (
+								<View className="flex-row items-center justify-between px-4 py-3">
+									<Text className="text-foreground-400 text-sm">Token Standard</Text>
+									<Text className="text-foreground text-sm font-medium">{currentToken.tokenStandard}</Text>
+								</View>
+							)}
+						</View>
+					</View>
+					
+					{/* Collection Section */}
+					{currentToken.collectionName && (
+						<View className="px-4 mb-6">
+							<Text className="text-foreground-400 text-xs font-semibold tracking-widest uppercase mb-3">
+								Collection
+							</Text>
+							
+							<View className="flex-row items-center justify-between px-4 py-3 rounded-lg" style={{ backgroundColor: '#1a1f1b' }}>
+								<View className="flex-row items-center gap-3">
+									{currentToken.collectionIcon && (
+										<View className="w-8 h-8 rounded overflow-hidden">
+											<Thumbnail icon={currentToken.collectionIcon} size="sm" variant="default" />
+										</View>
+									)}
+									<Text className="text-foreground text-sm font-medium">{currentToken.collectionName}</Text>
+								</View>
+								{currentToken.collectionTotalCount !== undefined && currentToken.collectionTotalCount > 0 && (
+									<View className="flex-row items-center gap-1">
+										<Feather name="layers" size={14} color={accentColor} />
+										<Text className="text-foreground text-sm font-medium">{currentToken.collectionTotalCount.toLocaleString()}</Text>
+									</View>
+								)}
+							</View>
+						</View>
+					)}
+				</ScrollView>
+			</View>
+		);
+	}
 
 	// Render filter mode content
 	if (isFilterMode) {

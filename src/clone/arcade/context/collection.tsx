@@ -56,11 +56,22 @@ function tokenContractToCollection(tokenContract: ParsedTokenContract): Collecti
 	// Initialize as empty, will be replaced when first token is fetched
 	const imageUrl = '';
 	
-	// Parse total supply
+	// Parse total supply (U256 can be decimal string or hex)
 	let totalCount = 0;
 	if (tokenContract.totalSupply) {
 		try {
-			totalCount = parseInt(tokenContract.totalSupply, 10);
+			const supply = tokenContract.totalSupply;
+			if (supply.startsWith('0x')) {
+				// Hex format
+				totalCount = parseInt(supply, 16);
+			} else {
+				// Decimal format
+				totalCount = parseInt(supply, 10);
+			}
+			// Handle NaN case
+			if (Number.isNaN(totalCount)) {
+				totalCount = 0;
+			}
 		} catch (e) {
 			// Silently fail
 		}
@@ -173,8 +184,8 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 			const collection = tokenContractToCollection(tokenContract);
 			// Override with first token image if available
 			const firstTokenImage = firstTokenImages.get(tokenContract.contractAddress);
-			// Get game ID from the mapping
-			const gameId = getGameIdForCollection(tokenContract.contractAddress);
+			// Get game ID from the mapping (only available after mappingLoading is false)
+			const gameId = !mappingLoading ? getGameIdForCollection(tokenContract.contractAddress) : undefined;
 			
 			return { 
 				...collection, 
@@ -184,7 +195,7 @@ export function CollectionProvider({ children }: { children: ReactNode }) {
 		});
 		
 		return converted;
-	}, [tokenContracts, firstTokenImages.size, getGameIdForCollection]);
+	}, [tokenContracts, firstTokenImages.size, getGameIdForCollection, mappingLoading]);
 	
 	// Determine status
 	const status = useMemo<"success" | "error" | "idle" | "loading">(() => {

@@ -1,4 +1,4 @@
-import * as HoverCard from "@radix-ui/react-hover-card";
+ import * as HoverCard from "@radix-ui/react-hover-card";
 // Removed unused imports
 import * as Slot from "@rn-primitives/slot";
 import * as React from "react";

@@ -21,6 +21,7 @@ export { FilterIcon } from "#components/icons/state/filter";
 export { GemIcon } from "#components/icons/state/gem";
 export { GlobeIcon } from "#components/icons/state/globe";
 export { GridIcon } from "#components/icons/state/grid";
+export { ItemsListIcon } from "#components/icons/state/items-list";
 export { JoystickIcon } from "#components/icons/state/joystick";
 export { LaptopIcon } from "#components/icons/state/laptop";
 export { LaurelIcon } from "#components/icons/state/laurel";
