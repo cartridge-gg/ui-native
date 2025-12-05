@@ -3,6 +3,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { Pressable, ScrollView, View, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useAccount, useConnect } from "@starknet-react/core";
@@ -24,12 +25,23 @@ import { PaginationDirection } from "../../../../modules/arcade/src/generated/do
 import { Thumbnail } from "./thumbnail";
 
 
-// Simple chevron that rotates based on expanded state
+// Animated chevron using react-native-reanimated
 function Chevron({ isExpanded }: { isExpanded: boolean }) {
+	const rotation = useSharedValue(isExpanded ? -180 : 0);
+	
+	// Update rotation when isExpanded changes
+	useEffect(() => {
+		rotation.value = withTiming(isExpanded ? -180 : 0, { duration: 200 });
+	}, [isExpanded, rotation]);
+	
+	const animatedStyle = useAnimatedStyle(() => ({
+		transform: [{ rotate: `${rotation.value}deg` }],
+	}));
+	
 	return (
-		<View style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}>
+		<Animated.View style={animatedStyle}>
 			<Feather name="chevron-down" size={20} color="#a8a29e" />
-		</View>
+		</Animated.View>
 	);
 }
 
@@ -193,13 +205,13 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 				const state = getTraitValuesState?.(traitName);
 				if (!state || state.values.length === 0) {
 					// Set loading state
-					setLoadingTraitNames(prev => new Set([...prev, traitName]));
+					setLoadingTraitNames(new Set([...loadingTraitNames, traitName]));
 					onFetchTraitValues?.(traitName);
 				}
 			}
 			return next;
 		});
-	}, [getTraitValuesState, onFetchTraitValues, setLoadingTraitNames]);
+	}, [getTraitValuesState, onFetchTraitValues, setLoadingTraitNames, loadingTraitNames]);
 
 	// Poll to clear loading state when values arrive
 	useEffect(() => {
@@ -581,7 +593,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 													className="py-2 items-center"
 													onPress={() => {
 														if (!isLoadingValues) {
-															setLoadingTraitNames(prev => new Set([...prev, traitName]));
+															setLoadingTraitNames(new Set([...loadingTraitNames, traitName]));
 															onLoadMoreTraitValues?.(traitName);
 														}
 													}}
