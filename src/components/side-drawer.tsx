@@ -21,7 +21,6 @@ import { useTokenDetailContext } from "../../../../contexts/TokenContext";
 import { useToriiClient } from "../../../../contexts/ToriiContext";
 import type { TraitFilter } from "../../../../hooks/useTraitFilters";
 import type { AttributeFilter } from "../../../../modules/arcade/src/generated/dojo";
-import { PaginationDirection } from "../../../../modules/arcade/src/generated/dojo";
 import { Thumbnail } from "./thumbnail";
 
 
@@ -116,7 +115,7 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const { client } = useToriiClient();
 	
-	// Debounced search for usernames - must be before any early returns
+	// Debounced search for usernames using the search API - must be before any early returns
 	useEffect(() => {
 		if (searchTimeoutRef.current) {
 			clearTimeout(searchTimeoutRef.current);
@@ -132,25 +131,34 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		
 		searchTimeoutRef.current = setTimeout(async () => {
 			try {
-				const controllers = await client.controllers({
-					contractAddresses: [],
-					usernames: [ownerSearch],
-					pagination: {
-						cursor: undefined,
-						limit: 10,
-						direction: PaginationDirection.Forward,
-						orderBy: [],
-					},
+				// Use the search API to find controllers
+				const searchResponse = await client.search({
+					query: ownerSearch,
+					limit: 10,
 				});
 				
-				const results = controllers.items
-					.map(c => ({
-						username: c.username || 'Unknown',
-						address: c.address,
-					}))
-					.slice(0, 5);
+				// Find the controllers table in the results
+				const controllersTable = searchResponse.results.find(
+					(table) => table.table === 'controllers'
+				);
 				
-				setSearchResults(results);
+				if (controllersTable && controllersTable.matches.length > 0) {
+					const results = controllersTable.matches
+						.map(match => {
+							// Extract username and address from search fields
+							const usernameField = match.id;
+							const addressField = match.fields.find(f => f.key === 'address');
+							return {
+								username: usernameField,
+								address: addressField?.value || match.id,
+							};
+						})
+						.slice(0, 5);
+					
+					setSearchResults(results);
+				} else {
+					setSearchResults([]);
+				}
 			} catch (error) {
 				console.error('Error searching controllers:', error);
 				setSearchResults([]);
