@@ -85,11 +85,7 @@ export function Marketplace() {
 					return (
 						<ItemCard
 							variant="collection"
-							href={
-								game
-									? `/(drawer)/game/${game}/collection/${address}`
-									: `/(drawer)/collection/${address}`
-							}
+							href={`/(drawer)/collection/${address}`}
 							title={name}
 							imageUri={imageUrl}
 						/>

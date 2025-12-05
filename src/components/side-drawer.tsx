@@ -2,7 +2,7 @@ import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
-import { Pressable, ScrollView, View, TouchableOpacity, TextInput, Animated, LayoutAnimation, Platform, UIManager } from "react-native";
+import { Pressable, ScrollView, View, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useAccount, useConnect } from "@starknet-react/core";
@@ -17,17 +17,15 @@ import { UserAvatar } from "./user-avatar";
 import { useFilterContext } from "../../../../contexts/FilterContext";
 import { useGameContext } from "../../../../contexts/GameContext";
 import { useTokenDetailContext } from "../../../../contexts/TokenContext";
+import { useToriiClient } from "../../../../contexts/ToriiContext";
 import type { TraitFilter } from "../../../../hooks/useTraitFilters";
 import type { AttributeFilter } from "../../../../modules/arcade/src/generated/dojo";
+import { PaginationDirection } from "../../../../modules/arcade/src/generated/dojo";
 import { Thumbnail } from "./thumbnail";
 
-// Enable LayoutAnimation on Android
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-	UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 // Simple chevron that rotates based on expanded state
-function AnimatedChevron({ isExpanded }: { isExpanded: boolean }) {
+function Chevron({ isExpanded }: { isExpanded: boolean }) {
 	return (
 		<View style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}>
 			<Feather name="chevron-down" size={20} color="#a8a29e" />
@@ -84,11 +82,87 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		isFilterMode,
 		availableFilters,
 		selectedFilters,
+		selectedOwner,
+		setSelectedOwner,
 		onFilterToggle,
 		onClearAll,
+		traitCategories,
+		isLoadingTraitCategories,
+		loadingTraitNames,
+		setLoadingTraitNames,
+		onFetchTraitValues,
+		onLoadMoreTraitValues,
+		getTraitValuesState,
 	} = useFilterContext();
 	
 	const { currentToken, isTokenPage } = useTokenDetailContext();
+	
+	// Owner filter state - must be declared here before any early returns
+	const [ownerSearch, setOwnerSearch] = useState('');
+	const [searchResults, setSearchResults] = useState<{ username: string; address: string }[]>([]);
+	const [isSearching, setIsSearching] = useState(false);
+	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const { client } = useToriiClient();
+	
+	// Debounced search for usernames - must be before any early returns
+	useEffect(() => {
+		if (searchTimeoutRef.current) {
+			clearTimeout(searchTimeoutRef.current);
+		}
+		
+		if (!ownerSearch.trim() || !client) {
+			setSearchResults([]);
+			setIsSearching(false);
+			return;
+		}
+		
+		setIsSearching(true);
+		
+		searchTimeoutRef.current = setTimeout(async () => {
+			try {
+				const controllers = await client.controllers({
+					contractAddresses: [],
+					usernames: [ownerSearch],
+					pagination: {
+						cursor: undefined,
+						limit: 10,
+						direction: PaginationDirection.Forward,
+						orderBy: [],
+					},
+				});
+				
+				const results = controllers.items
+					.map(c => ({
+						username: c.username || 'Unknown',
+						address: c.address,
+					}))
+					.slice(0, 5);
+				
+				setSearchResults(results);
+			} catch (error) {
+				console.error('Error searching controllers:', error);
+				setSearchResults([]);
+			} finally {
+				setIsSearching(false);
+			}
+		}, 300);
+		
+		return () => {
+			if (searchTimeoutRef.current) {
+				clearTimeout(searchTimeoutRef.current);
+			}
+		};
+	}, [ownerSearch, client]);
+	
+	const handleOwnerSelect = (owner: { username: string; address?: string }) => {
+		setSelectedOwner(owner);
+		setOwnerSearch('');
+		setSearchResults([]);
+	};
+	
+	const handleOwnerClear = () => {
+		setSelectedOwner(null);
+	};
 
 	// Use the pre-processed lightweight list
 	const filteredGames = useMemo(() => {
@@ -109,17 +183,49 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const traitNames = Object.keys(groupedFilters).sort();
 
 	const toggleTrait = useCallback((traitName: string) => {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		setExpandedTraits((prev) => {
 			const next = new Set(prev);
 			if (next.has(traitName)) {
 				next.delete(traitName);
 			} else {
 				next.add(traitName);
+				// Fetch values when expanding (lazy load)
+				const state = getTraitValuesState?.(traitName);
+				if (!state || state.values.length === 0) {
+					// Set loading state
+					setLoadingTraitNames(prev => new Set([...prev, traitName]));
+					onFetchTraitValues?.(traitName);
+				}
 			}
 			return next;
 		});
-	}, []);
+	}, [getTraitValuesState, onFetchTraitValues, setLoadingTraitNames]);
+
+	// Poll to clear loading state when values arrive
+	useEffect(() => {
+		if (loadingTraitNames.size === 0) return;
+		
+		const checkLoading = () => {
+			const stillLoading = new Set<string>();
+			loadingTraitNames.forEach(traitName => {
+				const state = getTraitValuesState?.(traitName);
+				// Keep in loading if state says it's still loading
+				if (state?.loading) {
+					stillLoading.add(traitName);
+				}
+			});
+			
+			if (stillLoading.size !== loadingTraitNames.size) {
+				setLoadingTraitNames(stillLoading);
+			}
+		};
+		
+		// Check immediately and poll every 100ms
+		checkLoading();
+		const interval = setInterval(checkLoading, 100);
+		
+		return () => clearInterval(interval);
+	}, [loadingTraitNames, getTraitValuesState, setLoadingTraitNames]);
 
 	const isFilterSelected = (traitName: string, traitValue: string) => {
 		return selectedFilters.some(
@@ -247,28 +353,148 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 		return (
 			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
 				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+					{/* Owner Section */}
+					<View className="p-4 pb-2">
+						<Text className="font-semibold text-sm tracking-wider text-foreground-400 px-2 mb-3">
+							Owner
+						</Text>
+						
+						{selectedOwner ? (
+							<View 
+								className="flex-row items-center justify-between bg-background-400 rounded-lg px-4 py-3"
+							>
+								<View className="flex-row items-center gap-2">
+									<UserAvatar 
+										username={selectedOwner.username} 
+										size={24} 
+										color={accentColor} 
+										showFrame={false} 
+									/>
+									<Text className="text-foreground text-sm font-medium">
+										{selectedOwner.username}
+									</Text>
+								</View>
+								<View className="flex-row items-center gap-3">
+									<Pressable onPress={handleOwnerClear}>
+										<Feather name="x" size={20} color="#9ca3af" />
+									</Pressable>
+								</View>
+							</View>
+						) : (
+							<View>
+								<View 
+									className="flex-row items-center bg-background-400 px-4 py-3"
+									style={{ 
+										borderWidth: 1,
+										borderColor: 'rgba(156, 163, 175, 0.2)',
+										borderTopLeftRadius: 8,
+										borderTopRightRadius: 8,
+										borderBottomLeftRadius: searchResults.length > 0 ? 0 : 8,
+										borderBottomRightRadius: searchResults.length > 0 ? 0 : 8,
+										borderBottomWidth: searchResults.length > 0 ? 0 : 1,
+									}}
+								>
+									<Feather name="search" size={18} color="#9ca3af" />
+									<TextInput
+										className="flex-1 text-foreground text-sm ml-2"
+										placeholder="Search"
+										placeholderTextColor="#9ca3af"
+										value={ownerSearch}
+										onChangeText={setOwnerSearch}
+										autoCapitalize="none"
+										autoCorrect={false}
+									/>
+									{isSearching && (
+										<ActivityIndicator size="small" color={accentColor} />
+									)}
+								</View>
+								
+								{/* Search Results */}
+								{searchResults.length > 0 && (
+									<View className="overflow-hidden" style={{ backgroundColor: '#1a1f1b', borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}>
+										{searchResults.map((result, index) => (
+											<Pressable
+												key={result.address}
+												className="flex-row items-center px-4 py-3 active:bg-background-300"
+												style={index < searchResults.length - 1 ? { borderBottomWidth: 1, borderBottomColor: '#0f1210' } : undefined}
+												onPress={() => handleOwnerSelect(result)}
+											>
+												<UserAvatar 
+													username={result.username} 
+													size={24} 
+													color={accentColor} 
+													showFrame={false} 
+												/>
+												<Text className="text-foreground text-sm font-medium ml-2 flex-1">
+													{result.username}
+												</Text>
+												<Text className="text-foreground-400 text-xs font-mono">
+													{`${result.address.slice(0, 6)}...${result.address.slice(-4)}`}
+												</Text>
+											</Pressable>
+										))}
+									</View>
+								)}
+								
+								{/* No results message */}
+								{ownerSearch.trim() && !isSearching && searchResults.length === 0 && (
+									<View className="mt-2 px-4 py-3">
+										<Text className="text-foreground-400 text-sm text-center">
+											No users found for "{ownerSearch}"
+										</Text>
+									</View>
+								)}
+							</View>
+						)}
+					</View>
+					
 					{/* Traits Section */}
 					<View className="p-4">
 						<View className="flex-row items-center justify-between px-2 py-3">
-							<Text className="font-semibold text-2xs tracking-wider text-foreground-400">
-								Traits
-							</Text>
+							<View className="flex-row items-center gap-2">
+								<Text className="font-semibold text-sm tracking-wider text-foreground-400">
+									Traits
+								</Text>
+								{isLoadingTraitCategories && (
+									<ActivityIndicator size="small" color={accentColor} />
+								)}
+							</View>
 							{selectedFilters.length > 0 && (
 								<TouchableOpacity onPress={handleClearAll}>
-									<Text className="text-primary text-sm font-medium">
+									<Text className="text-sm font-medium" style={{ color: accentColor }}>
 										Clear All
 									</Text>
 								</TouchableOpacity>
 							)}
 						</View>
 
-						{traitNames.map((traitName) => {
-							const traitFilters = groupedFilters[traitName];
+						{/* Loading state when no categories yet */}
+						{isLoadingTraitCategories && traitCategories.length === 0 && (
+							<View className="py-8 items-center">
+								<Text className="text-foreground-400 text-sm mt-2">Loading traits...</Text>
+							</View>
+						)}
+
+						{/* Use traitCategories if available (paginated), otherwise fall back to grouped availableFilters */}
+						{(traitCategories.length > 0 ? traitCategories : traitNames.map(name => ({ 
+							traitName: name, 
+							totalValues: groupedFilters[name]?.length || 0, 
+							totalCount: groupedFilters[name]?.reduce((sum, f) => sum + f.count, 0) || 0 
+						}))).map((category) => {
+							const traitName = 'traitName' in category ? category.traitName : (category as any).name;
 							const isExpanded = expandedTraits.has(traitName);
-							const totalCount = traitFilters.reduce(
-								(sum, f) => sum + f.count,
-								0
-							);
+							
+							// Get values state (paginated) or fall back to grouped filters
+							const valuesState = getTraitValuesState?.(traitName);
+							const traitFilters = valuesState?.values.length 
+								? valuesState.values 
+								: (groupedFilters[traitName] || []);
+							// Use context's loadingTraitNames for reactive updates
+							const isLoadingValues = loadingTraitNames.has(traitName) || valuesState?.loading || false;
+							const hasMoreValues = valuesState?.hasMore ?? false;
+							
+							// Show number of trait values (options), not total token count
+							const displayCount = 'totalValues' in category ? category.totalValues : traitFilters.length;
 
 							return (
 								<View key={traitName} className="mb-2">
@@ -282,15 +508,23 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 										</Text>
 										<View className="flex-row items-center">
 											<Text className="text-foreground-400 text-sm mr-2">
-												{totalCount}
+												{displayCount}
 											</Text>
-											<AnimatedChevron isExpanded={isExpanded} />
+											<Chevron isExpanded={isExpanded} />
 										</View>
 									</Pressable>
 
 									{/* Trait Values */}
 									{isExpanded && (
 										<View className="mt-1 ml-4">
+											{/* Loading indicator */}
+											{isLoadingValues && traitFilters.length === 0 && (
+												<View className="py-4 items-center">
+													<ActivityIndicator size="small" color={accentColor} />
+												</View>
+											)}
+											
+											{/* Values list */}
 											{traitFilters.map((filter) => {
 												const isSelected = isFilterSelected(
 													filter.traitName,
@@ -309,11 +543,11 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 													>
 														<View className="flex-row items-center flex-1">
 															<View
-																className={`w-5 h-5 rounded border-2 items-center justify-center mr-3 ${
-																	isSelected
-																		? 'border-primary bg-primary'
-																		: 'border-foreground-400'
-																}`}
+																className="w-5 h-5 rounded border-2 items-center justify-center mr-3"
+																style={{
+																	borderColor: isSelected ? accentColor : '#a8a29e',
+																	backgroundColor: isSelected ? accentColor : 'transparent',
+																}}
 															>
 																{isSelected && (
 																	<Feather
@@ -323,16 +557,42 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 																	/>
 																)}
 															</View>
-															<Text className="text-foreground-300 text-sm">
+															<Text className="text-foreground text-sm">
 																{filter.traitValue}
 															</Text>
 														</View>
-														<Text className="text-foreground-400 text-sm">
+														<Text className="text-foreground-300 text-sm">
 															{filter.count}
 														</Text>
 													</Pressable>
 												);
 											})}
+											
+											{/* Loading more indicator - shows above Load more */}
+											{isLoadingValues && traitFilters.length > 0 && (
+												<View className="py-3 items-center">
+													<ActivityIndicator size="small" color={accentColor} />
+												</View>
+											)}
+											
+											{/* Load more button */}
+											{hasMoreValues && (
+												<Pressable
+													className="py-2 items-center"
+													onPress={() => {
+														if (!isLoadingValues) {
+															setLoadingTraitNames(prev => new Set([...prev, traitName]));
+															onLoadMoreTraitValues?.(traitName);
+														}
+													}}
+													disabled={isLoadingValues}
+													style={{ opacity: isLoadingValues ? 0.5 : 1 }}
+												>
+													<Text className="text-sm" style={{ color: accentColor }}>
+														Load more...
+													</Text>
+												</Pressable>
+											)}
 										</View>
 									)}
 								</View>
