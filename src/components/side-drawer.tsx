@@ -364,6 +364,14 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	if (isFilterMode) {
 		return (
 			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
+				</View>
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
+				
 				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
 					{/* Owner Section */}
 					<View className="p-4 pb-2">
