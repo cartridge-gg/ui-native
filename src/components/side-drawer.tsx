@@ -91,6 +91,8 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	
 	const {
 		isFilterMode,
+		listingFilter,
+		setListingFilter,
 		availableFilters,
 		selectedFilters,
 		selectedOwner,
@@ -381,6 +383,44 @@ export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
 				
 				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+					{/* Status Section */}
+					<View className="p-4 pb-2">
+						<Text className="font-semibold text-sm tracking-wider text-foreground-400 px-2 mb-3">
+							Status
+						</Text>
+						
+						<View className="flex-row gap-2">
+							<Pressable
+								className="flex-1 py-3 rounded-lg items-center justify-center"
+								style={{
+									backgroundColor: listingFilter === 'all' ? accentColor : '#1a1f1b',
+								}}
+								onPress={() => setListingFilter('all')}
+							>
+								<Text 
+									className="text-sm font-medium"
+									style={{ color: listingFilter === 'all' ? '#0a0a0a' : '#9ca3af' }}
+								>
+									All
+								</Text>
+							</Pressable>
+							<Pressable
+								className="flex-1 py-3 rounded-lg items-center justify-center"
+								style={{
+									backgroundColor: listingFilter === 'buy_now' ? accentColor : '#1a1f1b',
+								}}
+								onPress={() => setListingFilter('buy_now')}
+							>
+								<Text 
+									className="text-sm font-medium"
+									style={{ color: listingFilter === 'buy_now' ? '#0a0a0a' : '#9ca3af' }}
+								>
+									Buy Now
+								</Text>
+							</Pressable>
+						</View>
+					</View>
+					
 					{/* Owner Section */}
 					<View className="p-4 pb-2">
 						<Text className="font-semibold text-sm tracking-wider text-foreground-400 px-2 mb-3">
