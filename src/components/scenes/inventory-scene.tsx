@@ -1,29 +1,31 @@
 import React, { useMemo, type ComponentType } from "react";
 import { Image, Pressable, ScrollView, View, Dimensions } from "react-native";
+import { Image as ExpoImage } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useAccount, useConnect } from "@starknet-react/core";
 import type { Token } from "#clone/arcade";
-import { useTokens } from "#clone/arcade";
+import { useTokens as useTokensClone } from "#clone/arcade";
 import { ItemCard, ItemGrid, Skeleton, Text, CreditIcon, ScarecrowIcon, Button, ConnectIcon, EyeIcon } from "#components";
 import { StarknetColorIcon } from "#components/icons/brand-color/starknet";
 import { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
 import { USDCIcon } from "#components/icons/brand-color/usdc";
-import { useTokenBalances } from "../../../../../hooks/useTokenBalances";
+import { useTokens } from "../../../../../hooks/useTokens";
 import { useActivities, type ParsedActivity } from "../../../../../hooks/useActivities";
+import { sanitizeImageUri } from "#utils";
 
 const { height: screenHeight } = Dimensions.get('window');
 
 export function InventoryScene() {
-	const { tokens, credits, status: tokensStatus } = useTokens();
+	const { tokens: fungibleTokens, credits, status: tokensStatus } = useTokensClone();
 	const { address, status } = useAccount();
 	const { connect, connectors } = useConnect();
-	const { tokenBalances, loading: nftsLoading } = useTokenBalances(address);
+	
+	// Fetch NFTs owned by this address using the proper useTokens hook with metadata
+	const { tokens: nftTokens, loading: nftsLoading } = useTokens({
+		ownerAddress: address,
+		pageSize: 50,
+	});
 	const { activities, loading: activitiesLoading } = useActivities(address, 20);
-
-	// Filter NFTs (those with tokenId)
-	const nfts = useMemo(() => {
-		return tokenBalances.filter(balance => balance.isNFT);
-	}, [tokenBalances]);
 
 	const nftsStatus = nftsLoading ? "loading" : "success";
 	const activitiesStatus = activitiesLoading ? "loading" : "success";
@@ -60,13 +62,13 @@ export function InventoryScene() {
 			<View style={{ padding: 16, gap: 16 }}>
 				{/* Always show tokens section (credits always visible) */}
 				<TokensSection
-					tokens={tokens}
+					tokens={fungibleTokens}
 					credits={credits}
 					status={tokensStatus}
 				/>
 				{/* Always show NFTs section */}
 				<NFTsSection
-					nfts={nfts}
+					nfts={nftTokens}
 					status={nftsStatus}
 				/>
 			</View>
@@ -222,7 +224,7 @@ function TokenCard({ token }: { token: Token }) {
 }
 
 interface NFTsSectionProps {
-	nfts: Array<{ contractAddress: string; tokenId?: string; balance: string }>;
+	nfts: Array<any>; // Token type from useTokens
 	status: string;
 }
 
@@ -235,6 +237,68 @@ function padHexTo64(hex: string): string {
 	// Pad to 64 characters
 	const padded = cleaned.padStart(64, '0');
 	return `0x${padded}`;
+}
+
+/**
+ * Gets the token name from metadata or falls back to token.name or tokenId
+ */
+function getTokenName(token: any): string {
+	// Try to parse metadata and get name
+	if (token.metadata) {
+		try {
+			let metadata;
+			try {
+				metadata = JSON.parse(token.metadata);
+			} catch {
+				// Try decoding as base64
+				const decoded = atob(token.metadata);
+				metadata = JSON.parse(decoded);
+			}
+			if (metadata?.name) {
+				return metadata.name;
+			}
+		} catch (err) {
+			// Silently fail and continue to fallbacks
+		}
+	}
+	
+	// Fall back to token.name
+	if (token.name) {
+		return token.name;
+	}
+	
+	// Final fallback to token ID
+	return `#${token.tokenId || '0'}`;
+}
+
+/**
+ * Gets the token image URI, checking metadata first then falling back to Cartridge API
+ */
+function getTokenImageUri(token: any, contractAddress: string): string | undefined {
+	// Try to parse metadata and get image
+	if (token.metadata) {
+		try {
+			let metadata;
+			try {
+				metadata = JSON.parse(token.metadata);
+			} catch {
+				// Try decoding as base64
+				const decoded = atob(token.metadata);
+				metadata = JSON.parse(decoded);
+			}
+			if (metadata?.image) {
+				// Sanitize the image URI (handles SVGs, IPFS, etc.)
+				return sanitizeImageUri(metadata.image, `Token: ${token.tokenId}`);
+			}
+		} catch (err) {
+			// Silently fail and continue to fallback
+		}
+	}
+	
+	// Fallback to Cartridge API
+	const paddedAddress = padHexTo64(contractAddress);
+	const paddedTokenId = padHexTo64(token.tokenId || '0');
+	return `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
 }
 
 function NFTsSection({ nfts, status }: NFTsSectionProps) {
@@ -275,15 +339,11 @@ function NFTsSection({ nfts, status }: NFTsSectionProps) {
 			maintainColumnWidth={true}
 			keyExtractor={(item) => item.contractAddress + (item.tokenId || "")}
 			renderItem={(item) => {
-				const paddedAddress = padHexTo64(item.contractAddress || '');
-				const paddedTokenId = padHexTo64(item.tokenId || '0');
-				const imageUri = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
-				
 				return (
 					<ItemCard
 						href={`/(drawer)/nft/${item.contractAddress}/${item.tokenId || ""}`}
-						title={`NFT #${item.tokenId || "0"}`}
-						imageUri={imageUri}
+						title={getTokenName(item)}
+						imageUri={getTokenImageUri(item, item.contractAddress || '')}
 					/>
 				);
 			}}
