@@ -9,6 +9,7 @@ import { ItemCard, ItemGrid, Skeleton, Text, CreditIcon, ScarecrowIcon, Button, 
 import { StarknetColorIcon } from "#components/icons/brand-color/starknet";
 import { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
 import { USDCIcon } from "#components/icons/brand-color/usdc";
+import { LordsColorIcon } from "#components/icons/brand-color/lords";
 import { useTokens } from "../../../../../hooks/useTokens";
 import { useActivities, type ParsedActivity } from "../../../../../hooks/useActivities";
 import { sanitizeImageUri } from "#utils";
@@ -95,6 +96,8 @@ const getTokenIcon = (symbol: string): { Icon: ComponentType<any>, isColored: bo
 			return { Icon: StarknetColorIcon, isColored: true };
 		case 'USDC':
 			return { Icon: USDCIcon, isColored: true };
+		case 'LORDS':
+			return { Icon: LordsColorIcon, isColored: true };
 		case 'USDT':
 			// For now using first letter, can add USDT icon later
 			return null;

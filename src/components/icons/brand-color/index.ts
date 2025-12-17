@@ -4,6 +4,7 @@ export { DiscordColorIcon } from "#components/icons/brand-color/discord";
 export { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
 export { EthereumDarkColorIcon } from "#components/icons/brand-color/ethereum-dark";
 export { EthereumLightColorIcon } from "#components/icons/brand-color/ethereum-light";
+export { LordsColorIcon } from "#components/icons/brand-color/lords";
 export { MetaMaskColorIcon } from "#components/icons/brand-color/metamask";
 export { PhantomColorIcon } from "#components/icons/brand-color/phantom";
 export { RabbyColorIcon } from "#components/icons/brand-color/rabby";
