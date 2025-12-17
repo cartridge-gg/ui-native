@@ -38,27 +38,54 @@ export function AboutScene() {
 		return editions.find((e) => e.gameId === game.id);
 	}, [game, editions]);
 
+	// Merge socials from game and edition
 	const socials = useMemo(() => {
 		if (!edition && !game) return undefined;
-		// Merge edition and game socials, with edition taking precedence
+		
+		const gameSocials = (game as any)?.socials || {};
+		const editionSocials = edition?.socials || {};
+		
 		return {
-			website: edition?.socials?.website || game?.socials?.website,
-			discord: edition?.socials?.discord || game?.socials?.discord,
-			telegram: edition?.socials?.telegram || game?.socials?.telegram,
-			twitter: edition?.socials?.twitter || game?.socials?.twitter,
-			github: edition?.socials?.github || game?.socials?.github,
-			youtube: edition?.socials?.youtube || game?.socials?.youtube,
+			website: editionSocials?.website || gameSocials?.website || (game as any)?.externalUrl,
+			discord: editionSocials?.discord || gameSocials?.discord,
+			telegram: editionSocials?.telegram || gameSocials?.telegram,
+			twitter: editionSocials?.twitter || gameSocials?.twitter,
+			github: editionSocials?.github || gameSocials?.github,
+			youtube: editionSocials?.youtube || gameSocials?.youtube,
 		};
 	}, [edition, game]);
 
+	// Get media items (videos and images)
 	const mediaItems = useMemo(() => {
-		if (!edition) return [];
-		const videos = edition.socials?.videos?.filter((v) => !!v) ?? [];
-		const images = edition.socials?.images?.filter((i) => !!i) ?? [];
-		return [...videos, ...images];
-	}, [edition]);
+		const gameSocials = (game as any)?.socials || {};
+		const editionSocials = edition?.socials || {};
+		
+		// Collect videos
+		const videos: string[] = [];
+		
+		// Check for youtube_url on game
+		const gameYoutubeUrl = (game as any)?.youtubeUrl;
+		if (gameYoutubeUrl) {
+			videos.push(gameYoutubeUrl);
+		}
+		
+		// Add videos from socials
+		const socialVideos = editionSocials?.videos || gameSocials?.videos || [];
+		videos.push(...socialVideos.filter((v: string) => !!v && v.trim() !== ''));
+		
+		// Get images
+		const images = editionSocials?.images || gameSocials?.images || [];
+		const validImages = images.filter((i: string) => !!i && i.trim() !== '');
+		
+		return [...videos, ...validImages];
+	}, [edition, game]);
 
-	if (!edition) {
+	// Get description
+	const description = useMemo(() => {
+		return edition?.description || (game as any)?.description || '';
+	}, [edition, game]);
+
+	if (!game) {
 		return (
 			<View className="flex-1 items-center justify-center px-6">
 				<Text className="text-base text-foreground-300">
@@ -77,8 +104,10 @@ export function AboutScene() {
 				gap: 16,
 			}}
 		>
-			<AboutMedia items={mediaItems} />
+			{/* Media Section */}
+			{mediaItems.length > 0 && <AboutMedia items={mediaItems} />}
 
+			{/* Social Links */}
 			{socials && (
 				<View className="flex-col gap-2">
 					<Text className="text-xs tracking-wider font-semibold text-foreground-400 uppercase">
@@ -88,7 +117,8 @@ export function AboutScene() {
 				</View>
 			)}
 
-			<AboutDetails content={edition.description || ""} />
+			{/* Description/Details */}
+			{description && <AboutDetails content={description} />}
 		</ScrollView>
 	);
 }

@@ -1,4 +1,7 @@
-import { createContext, type ReactNode, useState } from "react";
+import { createContext, type ReactNode, useMemo, useEffect, useState } from "react";
+import { useAccount } from "@starknet-react/core";
+import { useCartridgeBalances } from "../../../../../../hooks/useCartridgeBalances";
+import { useCredits } from "../../../../../../hooks/useCredits";
 
 export type Balance = {
 	amount: number;
@@ -28,77 +31,104 @@ export type TokenContextType = {
 
 export const TokenContext = createContext<TokenContextType | null>(null);
 
-// Mock data for development
-const MOCK_CREDITS: Token = {
-	balance: {
-		amount: 1250.5,
-		value: 1250.5,
-		change: 45.2,
-	},
-	metadata: {
-		name: "Credits",
-		symbol: "CREDITS",
-		decimals: 18,
-		address: "0x123",
-		project: "arcade",
-	},
-};
-
-const MOCK_TOKENS: Token[] = [
-	{
-		balance: {
-			amount: 0.5,
-			value: 1580.25,
-			change: 25.5,
-		},
-		metadata: {
-			name: "Ethereum",
-			symbol: "ETH",
-			decimals: 18,
-			address:
-				"0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-		},
-	},
-	{
-		balance: {
-			amount: 1000,
-			value: 850.0,
-			change: -12.3,
-		},
-		metadata: {
-			name: "Starknet Token",
-			symbol: "STRK",
-			decimals: 18,
-			address:
-				"0x04718f5a0Fc34cC1AF16A1cdee98fFB20C31f5cD61D6Ab07201858f4287c938D",
-		},
-	},
-	{
-		balance: {
-			amount: 250,
-			value: 250.0,
-			change: 0,
-		},
-		metadata: {
-			name: "Lords",
-			symbol: "LORDS",
-			decimals: 18,
-			address:
-				"0x0124aeb495b947201f5fac96fd1138e326ad86195b98df6dec9009158a533b49",
-		},
-	},
-];
-
 export function TokenProvider({ children }: { children: ReactNode }) {
-	const [status] = useState<"success" | "error" | "idle" | "loading">(
-		"success",
-	);
+	const { address, status: accountStatus, account } = useAccount();
+	const [username, setUsername] = useState<string | null>(null);
+	
+	// Get username from session
+	useEffect(() => {
+		if (accountStatus === "connected" && account) {
+			try {
+				const mobileAccount = account as any;
+				if (mobileAccount.getSessionInfo) {
+					const info = mobileAccount.getSessionInfo();
+					if (info?.username) {
+						setUsername(info.username);
+					}
+				}
+			} catch (e) {
+				console.error('Failed to get username:', e);
+			}
+		} else {
+			setUsername(null);
+		}
+	}, [accountStatus, account]);
+	
+	// Fetch credits and token balances
+	const { 
+		credits: creditsData, 
+		loading: creditsLoading, 
+		error: creditsError 
+	} = useCredits(username || undefined);
+	
+	const { 
+		balances: cartridgeBalances, 
+		loading: balancesLoading, 
+		error: balancesError 
+	} = useCartridgeBalances(address);
+	
+	// Convert our data to Token format
+	const tokens: Token[] = useMemo(() => {
+		return cartridgeBalances.map(balance => ({
+			balance: {
+				amount: balance.amount,
+				value: balance.value,
+				change: balance.value - (balance.amount * balance.meta.periodPrice),
+			},
+			metadata: {
+				name: balance.meta.name || 'Unknown',
+				symbol: balance.meta.symbol || '?',
+				decimals: balance.meta.decimals,
+				address: balance.meta.project,
+			},
+		}));
+	}, [cartridgeBalances]);
+	
+	// Convert credits to Token format
+	const credits: Token = useMemo(() => {
+		if (!creditsData) {
+			return {
+				balance: { amount: 0, value: 0, change: 0 },
+				metadata: {
+					name: "Credits",
+					symbol: "CREDITS",
+					decimals: 18,
+					project: "arcade",
+				},
+			};
+		}
+		
+		const amount = parseFloat(creditsData.amount) / Math.pow(10, creditsData.decimals);
+		return {
+			balance: {
+				amount,
+				value: amount,
+				change: 0, // Credits don't have price changes
+			},
+			metadata: {
+				name: "Credits",
+				symbol: "CREDITS",
+				decimals: creditsData.decimals,
+				project: "arcade",
+			},
+		};
+	}, [creditsData]);
+	
+	// Determine status
+	let status: "success" | "error" | "idle" | "loading" = "idle";
+	if (creditsLoading || balancesLoading) {
+		status = "loading";
+	} else if (creditsError || balancesError) {
+		status = "error";
+	} else if (accountStatus === "connected") {
+		status = "success";
+	}
 
 	return (
 		<TokenContext.Provider
 			value={{
-				tokens: MOCK_TOKENS,
-				credits: MOCK_CREDITS,
+				tokens,
+				credits,
 				status,
 			}}
 		>

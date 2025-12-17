@@ -1,112 +1,861 @@
 import type { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import { Pressable, ScrollView, View, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
+import { useAccount, useConnect } from "@starknet-react/core";
+import * as Clipboard from "expo-clipboard";
 import { useArcade } from "#clone/arcade";
-import { Input, Text, Thumbnail } from "#components";
+import { Text } from "#components";
 import { TAB_BAR_HEIGHT } from "#utils";
+import { GameIcon } from "./game-icon";
+import { ArcadeBrandIcon } from "./icons/brand/arcade-brand";
+import { ArcadeIcon } from "./icons/brand/arcade";
+import { UserAvatar } from "./user-avatar";
+import { useFilterContext } from "../../../../contexts/FilterContext";
+import { useGameContext } from "../../../../contexts/GameContext";
+import { useTokenDetailContext } from "../../../../contexts/TokenContext";
+import { useToriiClient } from "../../../../contexts/ToriiContext";
+import type { TraitFilter } from "../../../../hooks/useTraitFilters";
+import type { AttributeFilter } from "../../../../modules/arcade/src/generated/dojo";
+import { Thumbnail } from "./thumbnail";
+
+
+// Animated chevron using react-native-reanimated
+function Chevron({ isExpanded }: { isExpanded: boolean }) {
+	const rotation = useSharedValue(isExpanded ? -180 : 0);
+	
+	// Update rotation when isExpanded changes
+	useEffect(() => {
+		rotation.value = withTiming(isExpanded ? -180 : 0, { duration: 200 });
+	}, [isExpanded, rotation]);
+	
+	const animatedStyle = useAnimatedStyle(() => ({
+		transform: [{ rotate: `${rotation.value}deg` }],
+	}));
+	
+	return (
+		<Animated.View style={animatedStyle}>
+			<Feather name="chevron-down" size={20} color="#a8a29e" />
+		</Animated.View>
+	);
+}
 
 export function SideDrawer({ navigation }: DrawerContentComponentProps) {
 	const insets = useSafeAreaInsets();
-	const { games } = useArcade();
-	const [search, setSearch] = useState("");
-
-	const filteredGames = games.filter((g) =>
-		g.name.toLowerCase().includes(search.toLowerCase()),
+	const arcade = useArcade();
+	const { gamesList, version } = arcade;
+	const { address, status, account } = useAccount();
+	const { connect, connectors } = useConnect();
+	const isConnected = status === "connected";
+	const { currentGameColor, currentGameId } = useGameContext();
+	const [username, setUsername] = useState<string | null>(null);
+	
+	// Use game color when in a game context, otherwise use default yellow
+	const accentColor = currentGameId ? currentGameColor : '#FBCB4A';
+	
+	// Get username from account
+	useEffect(() => {
+		if (status === "connected" && account) {
+			try {
+				const mobileAccount = account as any;
+				if (mobileAccount.getSessionInfo) {
+					const info = mobileAccount.getSessionInfo();
+					if (info?.username) {
+						setUsername(info.username);
+					}
+				}
+			} catch (e) {
+				// Ignore error
+			}
+		} else {
+			setUsername(null);
+		}
+	}, [status, account]);
+	
+	// Copy address to clipboard
+	const handleCopyAddress = async () => {
+		if (address) {
+			await Clipboard.setStringAsync(address);
+		}
+	};
+	
+	const connector = useMemo(
+		() => connectors.find(c => c.id === "controller_mobile") || connectors[0],
+		[connectors],
 	);
+	const [expandedTraits, setExpandedTraits] = useState<Set<string>>(new Set());
+	
+	const {
+		isFilterMode,
+		listingFilter,
+		setListingFilter,
+		availableFilters,
+		selectedFilters,
+		selectedOwner,
+		setSelectedOwner,
+		onFilterToggle,
+		onClearAll,
+		traitCategories,
+		isLoadingTraitCategories,
+		loadingTraitNames,
+		setLoadingTraitNames,
+		onFetchTraitValues,
+		onLoadMoreTraitValues,
+		getTraitValuesState,
+	} = useFilterContext();
+	
+	const { currentToken, isTokenPage } = useTokenDetailContext();
+	
+	// Owner filter state - must be declared here before any early returns
+	const [ownerSearch, setOwnerSearch] = useState('');
+	const [searchResults, setSearchResults] = useState<{ username: string; address: string }[]>([]);
+	const [isSearching, setIsSearching] = useState(false);
+	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const { client } = useToriiClient();
+	
+	// Debounced search for usernames using the search API - must be before any early returns
+	useEffect(() => {
+		if (searchTimeoutRef.current) {
+			clearTimeout(searchTimeoutRef.current);
+		}
+		
+		if (!ownerSearch.trim() || !client) {
+			setSearchResults([]);
+			setIsSearching(false);
+			return;
+		}
+		
+		setIsSearching(true);
+		
+		searchTimeoutRef.current = setTimeout(async () => {
+			try {
+				// Use the search API to find controllers
+				const searchResponse = await client.search({
+					query: ownerSearch,
+					limit: 10,
+				});
+				
+				// Find the controllers table in the results
+				const controllersTable = searchResponse.results.find(
+					(table) => table.table === 'controllers'
+				);
+				
+				if (controllersTable && controllersTable.matches.length > 0) {
+					const results = controllersTable.matches
+						.map(match => {
+							// Extract username and address from search fields
+							const usernameField = match.id;
+							const addressField = match.fields.find(f => f.key === 'address');
+							return {
+								username: usernameField,
+								address: addressField?.value || match.id,
+							};
+						})
+						.slice(0, 5);
+					
+					setSearchResults(results);
+				} else {
+					setSearchResults([]);
+				}
+			} catch (error) {
+				console.error('Error searching controllers:', error);
+				setSearchResults([]);
+			} finally {
+				setIsSearching(false);
+			}
+		}, 300);
+		
+		return () => {
+			if (searchTimeoutRef.current) {
+				clearTimeout(searchTimeoutRef.current);
+			}
+		};
+	}, [ownerSearch, client]);
+	
+	const handleOwnerSelect = (owner: { username: string; address?: string }) => {
+		setSelectedOwner(owner);
+		setOwnerSearch('');
+		setSearchResults([]);
+	};
+	
+	const handleOwnerClear = () => {
+		setSelectedOwner(null);
+	};
 
-	return (
-		<View className="flex-1" style={{ paddingTop: insets.top }}>
-			<View className="flex-1 flex-col">
-				<View className="p-4">
-					<Input
-						placeholder="Search"
-						value={search}
-						onChangeText={setSearch}
-						className="border-background-300 hover:border-background-300 focus-visible:border-background-300 focus-visible:bg-background-200 bg-spacer"
-					/>
+	// Use the pre-processed lightweight list
+	const filteredGames = useMemo(() => {
+		return gamesList;
+	}, [version]); // Depend on version, not gamesList!
+
+	// Group filters by trait name
+	const groupedFilters = useMemo(() => {
+		return availableFilters.reduce((acc, filter) => {
+			if (!acc[filter.traitName]) {
+				acc[filter.traitName] = [];
+			}
+			acc[filter.traitName].push(filter);
+			return acc;
+		}, {} as Record<string, TraitFilter[]>);
+	}, [availableFilters]);
+
+	const traitNames = Object.keys(groupedFilters).sort();
+
+	const toggleTrait = useCallback((traitName: string) => {
+		setExpandedTraits((prev) => {
+			const next = new Set(prev);
+			if (next.has(traitName)) {
+				next.delete(traitName);
+			} else {
+				next.add(traitName);
+				// Fetch values when expanding (lazy load)
+				const state = getTraitValuesState?.(traitName);
+				if (!state || state.values.length === 0) {
+					// Set loading state
+					setLoadingTraitNames(new Set([...loadingTraitNames, traitName]));
+					onFetchTraitValues?.(traitName);
+				}
+			}
+			return next;
+		});
+	}, [getTraitValuesState, onFetchTraitValues, setLoadingTraitNames, loadingTraitNames]);
+
+	// Poll to clear loading state when values arrive
+	useEffect(() => {
+		if (loadingTraitNames.size === 0) return;
+		
+		const checkLoading = () => {
+			const stillLoading = new Set<string>();
+			loadingTraitNames.forEach(traitName => {
+				const state = getTraitValuesState?.(traitName);
+				// Keep in loading if state says it's still loading
+				if (state?.loading) {
+					stillLoading.add(traitName);
+				}
+			});
+			
+			if (stillLoading.size !== loadingTraitNames.size) {
+				setLoadingTraitNames(stillLoading);
+			}
+		};
+		
+		// Check immediately and poll every 100ms
+		checkLoading();
+		const interval = setInterval(checkLoading, 100);
+		
+		return () => clearInterval(interval);
+	}, [loadingTraitNames, getTraitValuesState, setLoadingTraitNames]);
+
+	const isFilterSelected = (traitName: string, traitValue: string) => {
+		return selectedFilters.some(
+			(f) => f.traitName === traitName && f.traitValue === traitValue
+		);
+	};
+
+	const handleClearAll = () => {
+		onClearAll?.();
+		setExpandedTraits(new Set());
+	};
+
+	// Render token details mode
+	if (isTokenPage && currentToken) {
+		const shortAddress = `${currentToken.contractAddress.slice(0, 6)}...${currentToken.contractAddress.slice(-4)}`;
+		
+		// Parse token ID to decimal (handles hex format)
+		let displayTokenId = currentToken.tokenId;
+		try {
+			if (currentToken.tokenId.startsWith('0x')) {
+				const decimal = parseInt(currentToken.tokenId, 16);
+				if (!isNaN(decimal)) {
+					displayTokenId = decimal.toString();
+				}
+			}
+		} catch {
+			// Keep original if parsing fails
+		}
+		
+		return (
+			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
 				</View>
-
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
+				
 				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-					<View className="px-3">
-						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
-							Arcade
+					{/* Details Section */}
+					<View className="px-4 mb-6">
+						<Text className="text-foreground-400 text-xs font-semibold tracking-widest uppercase mb-3">
+							Details
 						</Text>
-						{/* biome-ignore lint/nursery/useUniqueElementIds: this is static */}
-						<Item id="arcade" title="Arcade" navigation={navigation} />
-
-						<Text className="font-semibold text-2xs tracking-wider text-foreground-400 px-2 py-3">
-							Games
-						</Text>
-						<View className="gap-1">
-							{filteredGames.map((g) => (
-								<Item
-									key={g.id}
-									id={g.id.toString()}
-									icon={g.properties.icon}
-									title={g.name}
-									navigation={navigation}
-								/>
-							))}
+						
+						<View className="rounded-lg overflow-hidden" style={{ backgroundColor: '#1a1f1b' }}>
+							{/* Owner Row */}
+							{(currentToken.ownerUsername || currentToken.ownerAddress) && (
+								<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+									<Text className="text-foreground-400 text-sm">Owner</Text>
+									<View className="flex-row items-center gap-2">
+										<UserAvatar 
+											username={currentToken.ownerUsername || currentToken.ownerAddress || 'unknown'} 
+											size={20} 
+											color={accentColor} 
+											showFrame={false} 
+										/>
+										<Text className="text-foreground text-sm font-medium">
+											{currentToken.ownerUsername || 
+												(currentToken.ownerAddress 
+													? `${currentToken.ownerAddress.slice(0, 6)}...${currentToken.ownerAddress.slice(-4)}`
+													: 'Unknown'
+												)
+											}
+										</Text>
+									</View>
+								</View>
+							)}
+							
+							{/* Contract Address Row */}
+							<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+								<Text className="text-foreground-400 text-sm">Contract Address</Text>
+								<Text className="text-foreground text-sm font-medium font-mono">{shortAddress}</Text>
+							</View>
+							
+							{/* Token ID Row */}
+							<View className="flex-row items-center justify-between px-4 py-3" style={{ borderBottomWidth: 1, borderBottomColor: '#0f1210' }}>
+								<Text className="text-foreground-400 text-sm">Token ID</Text>
+								<Text className="text-foreground text-sm font-medium">{displayTokenId}</Text>
+							</View>
+							
+							{/* Token Standard Row */}
+							{currentToken.tokenStandard && (
+								<View className="flex-row items-center justify-between px-4 py-3">
+									<Text className="text-foreground-400 text-sm">Token Standard</Text>
+									<Text className="text-foreground text-sm font-medium">{currentToken.tokenStandard}</Text>
+								</View>
+							)}
 						</View>
 					</View>
+					
+					{/* Collection Section */}
+					{currentToken.collectionName && (
+						<View className="px-4 mb-6">
+							<Text className="text-foreground-400 text-xs font-semibold tracking-widest uppercase mb-3">
+								Collection
+							</Text>
+							
+							<View className="flex-row items-center justify-between px-4 py-3 rounded-lg" style={{ backgroundColor: '#1a1f1b' }}>
+								<View className="flex-row items-center gap-3">
+									{currentToken.collectionIcon && (
+										<View className="w-8 h-8 rounded overflow-hidden">
+											<Thumbnail icon={currentToken.collectionIcon} size="sm" variant="default" />
+										</View>
+									)}
+									<Text className="text-foreground text-sm font-medium">{currentToken.collectionName}</Text>
+								</View>
+								{currentToken.collectionTotalCount !== undefined && currentToken.collectionTotalCount > 0 && (
+									<View className="flex-row items-center gap-1">
+										<Feather name="layers" size={14} color={accentColor} />
+										<Text className="text-foreground text-sm font-medium">{currentToken.collectionTotalCount.toLocaleString()}</Text>
+									</View>
+								)}
+							</View>
+						</View>
+					)}
 				</ScrollView>
-				<View
-					className="p-3 border-t border-background-100 bg-background-100"
-					style={{
-						height: TAB_BAR_HEIGHT + insets.bottom,
-						paddingBottom: insets.bottom,
-					}}
-				>
-					<Pressable className="bg-background-100 flex-row items-center justify-center p-3 rounded-lg">
-						<Text className="text-foreground-300 mr-2">+</Text>
-						<Text className="text-foreground-300 text-sm font-medium">
-							Register Game
-						</Text>
-					</Pressable>
-				</View>
 			</View>
+		);
+	}
+
+	// Render filter mode content
+	if (isFilterMode) {
+		return (
+			<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
+				</View>
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
+				
+				<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+					{/* Status Section */}
+					<View className="p-4 pb-2">
+						<Text className="font-semibold text-sm tracking-wider text-foreground-400 px-2 mb-3">
+							Status
+						</Text>
+						
+						<View className="flex-row gap-2">
+							<Pressable
+								className="flex-1 py-3 rounded-lg items-center justify-center"
+								style={{
+									backgroundColor: listingFilter === 'all' ? accentColor : '#1a1f1b',
+								}}
+								onPress={() => setListingFilter('all')}
+							>
+								<Text 
+									className="text-sm font-medium"
+									style={{ color: listingFilter === 'all' ? '#0a0a0a' : '#9ca3af' }}
+								>
+									All
+								</Text>
+							</Pressable>
+							<Pressable
+								className="flex-1 py-3 rounded-lg items-center justify-center"
+								style={{
+									backgroundColor: listingFilter === 'buy_now' ? accentColor : '#1a1f1b',
+								}}
+								onPress={() => setListingFilter('buy_now')}
+							>
+								<Text 
+									className="text-sm font-medium"
+									style={{ color: listingFilter === 'buy_now' ? '#0a0a0a' : '#9ca3af' }}
+								>
+									Buy Now
+								</Text>
+							</Pressable>
+						</View>
+					</View>
+					
+					{/* Owner Section */}
+					<View className="p-4 pb-2">
+						<Text className="font-semibold text-sm tracking-wider text-foreground-400 px-2 mb-3">
+							Owner
+						</Text>
+						
+						{selectedOwner ? (
+							<View 
+								className="flex-row items-center justify-between bg-background-400 rounded-lg px-4 py-3"
+							>
+								<View className="flex-row items-center gap-2">
+									<UserAvatar 
+										username={selectedOwner.username} 
+										size={24} 
+										color={accentColor} 
+										showFrame={false} 
+									/>
+									<Text className="text-foreground text-sm font-medium">
+										{selectedOwner.username}
+									</Text>
+								</View>
+								<View className="flex-row items-center gap-3">
+									<Pressable onPress={handleOwnerClear}>
+										<Feather name="x" size={20} color="#9ca3af" />
+									</Pressable>
+								</View>
+							</View>
+						) : (
+							<View>
+								<View 
+									className="flex-row items-center bg-background-400 px-4 py-3"
+									style={{ 
+										borderWidth: 1,
+										borderColor: 'rgba(156, 163, 175, 0.2)',
+										borderTopLeftRadius: 8,
+										borderTopRightRadius: 8,
+										borderBottomLeftRadius: searchResults.length > 0 ? 0 : 8,
+										borderBottomRightRadius: searchResults.length > 0 ? 0 : 8,
+										borderBottomWidth: searchResults.length > 0 ? 0 : 1,
+									}}
+								>
+									<Feather name="search" size={18} color="#9ca3af" />
+									<TextInput
+										className="flex-1 text-foreground text-sm ml-2"
+										placeholder="Search"
+										placeholderTextColor="#9ca3af"
+										value={ownerSearch}
+										onChangeText={setOwnerSearch}
+										autoCapitalize="none"
+										autoCorrect={false}
+									/>
+									{isSearching && (
+										<ActivityIndicator size="small" color={accentColor} />
+									)}
+								</View>
+								
+								{/* Search Results */}
+								{searchResults.length > 0 && (
+									<View className="overflow-hidden" style={{ backgroundColor: '#1a1f1b', borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}>
+										{searchResults.map((result, index) => (
+											<Pressable
+												key={result.address}
+												className="flex-row items-center px-4 py-3 active:bg-background-300"
+												style={index < searchResults.length - 1 ? { borderBottomWidth: 1, borderBottomColor: '#0f1210' } : undefined}
+												onPress={() => handleOwnerSelect(result)}
+											>
+												<UserAvatar 
+													username={result.username} 
+													size={24} 
+													color={accentColor} 
+													showFrame={false} 
+												/>
+												<Text className="text-foreground text-sm font-medium ml-2 flex-1">
+													{result.username}
+												</Text>
+												<Text className="text-foreground-400 text-xs font-mono">
+													{`${result.address.slice(0, 6)}...${result.address.slice(-4)}`}
+												</Text>
+											</Pressable>
+										))}
+									</View>
+								)}
+								
+								{/* No results message */}
+								{ownerSearch.trim() && !isSearching && searchResults.length === 0 && (
+									<View className="mt-2 px-4 py-3">
+										<Text className="text-foreground-400 text-sm text-center">
+											No users found for "{ownerSearch}"
+										</Text>
+									</View>
+								)}
+							</View>
+						)}
+					</View>
+					
+					{/* Traits Section */}
+					<View className="p-4">
+						<View className="flex-row items-center justify-between px-2 py-3">
+							<View className="flex-row items-center gap-2">
+								<Text className="font-semibold text-sm tracking-wider text-foreground-400">
+									Traits
+								</Text>
+								{isLoadingTraitCategories && (
+									<ActivityIndicator size="small" color={accentColor} />
+								)}
+							</View>
+							{selectedFilters.length > 0 && (
+								<TouchableOpacity onPress={handleClearAll}>
+									<Text className="text-sm font-medium" style={{ color: accentColor }}>
+										Clear All
+									</Text>
+								</TouchableOpacity>
+							)}
+						</View>
+
+						{/* Loading state when no categories yet */}
+						{isLoadingTraitCategories && traitCategories.length === 0 && (
+							<View className="py-8 items-center">
+								<Text className="text-foreground-400 text-sm mt-2">Loading traits...</Text>
+							</View>
+						)}
+
+						{/* Use traitCategories if available (paginated), otherwise fall back to grouped availableFilters */}
+						{(traitCategories.length > 0 ? traitCategories : traitNames.map(name => ({ 
+							traitName: name, 
+							totalValues: groupedFilters[name]?.length || 0, 
+							totalCount: groupedFilters[name]?.reduce((sum, f) => sum + f.count, 0) || 0 
+						}))).map((category) => {
+							const traitName = 'traitName' in category ? category.traitName : (category as any).name;
+							const isExpanded = expandedTraits.has(traitName);
+							
+							// Get values state (paginated) or fall back to grouped filters
+							const valuesState = getTraitValuesState?.(traitName);
+							const traitFilters = valuesState?.values.length 
+								? valuesState.values 
+								: (groupedFilters[traitName] || []);
+							// Use context's loadingTraitNames for reactive updates
+							const isLoadingValues = loadingTraitNames.has(traitName) || valuesState?.loading || false;
+							const hasMoreValues = valuesState?.hasMore ?? false;
+							
+							// Show number of trait values (options), not total token count
+							const displayCount = 'totalValues' in category ? category.totalValues : traitFilters.length;
+
+							return (
+								<View key={traitName} className="mb-2">
+									{/* Trait Header */}
+									<Pressable
+										className="flex-row items-center justify-between bg-background-400 rounded-sm px-4 py-3"
+										onPress={() => toggleTrait(traitName)}
+									>
+										<Text className="text-foreground text-base font-medium">
+											{traitName}
+										</Text>
+										<View className="flex-row items-center">
+											<Text className="text-foreground-400 text-sm mr-2">
+												{displayCount}
+											</Text>
+											<Chevron isExpanded={isExpanded} />
+										</View>
+									</Pressable>
+
+									{/* Trait Values */}
+									{isExpanded && (
+										<View className="mt-1 ml-4">
+											{/* Loading indicator */}
+											{isLoadingValues && traitFilters.length === 0 && (
+												<View className="py-4 items-center">
+													<ActivityIndicator size="small" color={accentColor} />
+												</View>
+											)}
+											
+											{/* Values list */}
+											{traitFilters.map((filter) => {
+												const isSelected = isFilterSelected(
+													filter.traitName,
+													filter.traitValue
+												);
+												return (
+													<Pressable
+														key={`${filter.traitName}-${filter.traitValue}`}
+														className="flex-row items-center justify-between py-2"
+														onPress={() =>
+															onFilterToggle?.({
+																traitName: filter.traitName,
+																traitValue: filter.traitValue,
+															})
+														}
+													>
+														<View className="flex-row items-center flex-1">
+															<View
+																className="w-5 h-5 rounded border-2 items-center justify-center mr-3"
+																style={{
+																	borderColor: isSelected ? accentColor : '#a8a29e',
+																	backgroundColor: isSelected ? accentColor : 'transparent',
+																}}
+															>
+																{isSelected && (
+																	<Feather
+																		name="check"
+																		size={14}
+																		color="#ffffff"
+																	/>
+																)}
+															</View>
+															<Text className="text-foreground text-sm">
+																{filter.traitValue}
+															</Text>
+														</View>
+														<Text className="text-foreground-300 text-sm">
+															{filter.count}
+														</Text>
+													</Pressable>
+												);
+											})}
+											
+											{/* Loading more indicator - shows above Load more */}
+											{isLoadingValues && traitFilters.length > 0 && (
+												<View className="py-3 items-center">
+													<ActivityIndicator size="small" color={accentColor} />
+												</View>
+											)}
+											
+											{/* Load more button */}
+											{hasMoreValues && (
+												<Pressable
+													className="py-2 items-center"
+													onPress={() => {
+														if (!isLoadingValues) {
+															setLoadingTraitNames(new Set([...loadingTraitNames, traitName]));
+															onLoadMoreTraitValues?.(traitName);
+														}
+													}}
+													disabled={isLoadingValues}
+													style={{ opacity: isLoadingValues ? 0.5 : 1 }}
+												>
+													<Text className="text-sm" style={{ color: accentColor }}>
+														Load more...
+													</Text>
+												</Pressable>
+											)}
+										</View>
+									)}
+								</View>
+							);
+						})}
+					</View>
+				</ScrollView>
+			</View>
+		);
+	}
+
+	// Render normal game list mode
+	return (
+		<View className="flex-1 bg-background/100" style={{ paddingTop: insets.top }}>
+			{/* Fixed Header Section */}
+			<View>
+				{/* Header Logo */}
+				<View className="flex-row items-center px-4 py-4">
+					<ArcadeBrandIcon style={{ width: 127, height: 32 }} color={accentColor} />
+				</View>
+				
+				{/* Separator line */}
+				<View className="mb-4" style={{ height: 1, backgroundColor: '#2a2a2a' }} />
+
+				{/* User Profile Card - Only show when connected */}
+				{isConnected && address && (
+					<View className="mx-4 mb-4 p-4 rounded-lg border border-foreground-400/20">
+						<View className="flex-row items-center">
+							{/* Avatar */}
+							<View className="mr-4">
+								<UserAvatar username={username || 'User'} size={64} color={accentColor} />
+							</View>
+							
+							{/* User Info */}
+							<View className="flex-1">
+								<Text className="text-foreground text-lg font-semibold mb-2">
+									{username || 'User'}
+								</Text>
+								<Pressable 
+									className="flex-row items-center bg-background-300 px-2 py-1.5 rounded self-start active:opacity-70"
+									onPress={handleCopyAddress}
+								>
+									<Text className="text-foreground-400 text-xs font-mono">
+										{`${address.slice(0, 6)}...${address.slice(-4)}`}
+									</Text>
+									<Feather name="copy" size={12} color="#a8a29e" style={{ marginLeft: 6 }} />
+								</Pressable>
+							</View>
+						</View>
+					</View>
+				)}
+
+				{/* Connect Button - Only show when not connected */}
+				{!isConnected && (
+					<Pressable 
+						className="mx-4 mb-4 p-4 rounded-lg"
+						style={{ borderWidth: 2, borderColor: `${accentColor}80` }}
+						onPress={() => {
+							if (connector) {
+								connect({ connector });
+							}
+						}}
+					>
+						<View className="flex-row items-center">
+							{/* Controller Icon */}
+							<View className="w-16 h-16 rounded-lg bg-background-300 items-center justify-center mr-4">
+								<Feather name="link" size={24} color={accentColor} />
+							</View>
+							
+							{/* Connect Info */}
+							<View className="flex-1">
+								<Text className="text-foreground text-base font-semibold mb-2">Connect Controller</Text>
+								<View className="flex-row items-center">
+									<Feather name="gift" size={16} color="#a8a29e" />
+									<Text className="text-foreground-200 text-sm ml-2">Access your inventory</Text>
+								</View>
+							</View>
+						</View>
+					</Pressable>
+				)}
+
+				{/* Connect X Account Card - Commented out for now */}
+				{/* <View className="mx-4 mb-4 p-4 rounded-lg border-2 border-primary/50">
+					<View className="flex-row items-center">
+						<View className="w-16 h-16 rounded-lg bg-background-300 items-center justify-center mr-4">
+							<Text className="text-foreground text-2xl font-bold">𝕏</Text>
+						</View>
+						<View className="flex-1">
+							<Text className="text-foreground text-base font-semibold mb-2">Connect X Account</Text>
+							<View className="flex-row items-center">
+								<Feather name="gift" size={16} color="#a8a29e" />
+								<View 
+									className="ml-2 px-3 py-1 rounded-full flex-row items-center"
+									style={{ backgroundColor: 'rgba(234, 179, 8, 0.2)', borderWidth: 1, borderColor: '#EAB308' }}
+								>
+									<Text className="text-primary text-sm font-semibold">Ⓒ 100</Text>
+								</View>
+							</View>
+						</View>
+					</View>
+				</View> */}
+			</View>
+
+			{/* Scrollable Games List */}
+			<ScrollView 
+				className="flex-1" 
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+			>
+				<View className="px-3">
+					{/* Arcade Home Row */}
+					<Link
+						href="/(drawer)/(tabs)"
+						replace
+						asChild
+					>
+						<Pressable 
+							className="flex-row items-center px-3 py-3 active:bg-background-100"
+							onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+						>
+							<View className="size-8 rounded bg-background-200 items-center justify-center">
+								<ArcadeIcon style={{ width: 20, height: 20 }} color="#FBCB4A" />
+							</View>
+							<Text className="text-foreground text-sm flex-1 font-medium ml-3">
+								Arcade
+							</Text>
+						</Pressable>
+					</Link>
+					
+					{/* Game Items */}
+					{filteredGames.map((g) => (
+						<GameItem
+							key={g.id}
+							id={g.id.toString()}
+							icon={g.icon}
+							title={g.name}
+							points={400}
+							navigation={navigation}
+							isSelected={currentGameId?.toString() === g.id.toString()}
+							gameColor={g.color || '#FBCB4A'}
+						/>
+					))}
+				</View>
+			</ScrollView>
 		</View>
 	);
 }
 
-function Item({
+function GameItem({
 	id,
 	icon,
 	title,
+	points,
 	navigation,
+	isSelected,
+	gameColor,
 }: {
 	id: string;
 	icon?: string;
 	title: string;
+	points?: number;
 	navigation: DrawerContentComponentProps["navigation"];
+	isSelected?: boolean;
+	gameColor?: string;
 }) {
 	return (
 		<Link
-			href={id === "arcade" ? "/marketplace" : `/game/${id}/marketplace`}
+			href={`/game/${id}/marketplace`}
 			replace
 			asChild
-			onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
 		>
-			<Pressable className="flex-row items-center p-3 active:bg-background-100 gap-2">
-				{id === "arcade" ? (
-					<Thumbnail
-						icon={require("#assets/icon.png")}
-						size="md"
-						variant="default"
-					/>
-				) : icon ? (
-					<Thumbnail icon={icon} size="md" variant="default" />
-				) : (
-					<View className="size-8 bg-background-200 rounded items-center justify-center">
-						<Text>{id[0].toUpperCase()}</Text>
-					</View>
-				)}
-				<Text className="text-foreground text-sm flex-1 font-medium">
+			<Pressable 
+				className="flex-row items-center px-3 py-3 rounded-lg active:bg-background-100"
+				style={isSelected ? { backgroundColor: `${gameColor}10` } : undefined}
+				onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
+			>
+				<GameIcon 
+					icon={icon} 
+					title={title} 
+					size="md" 
+					variant="default"
+				/>
+				<Text 
+					className="text-sm flex-1 font-medium ml-3"
+					style={{ color: isSelected ? gameColor : '#ffffff' }}
+				>
 					{title}
 				</Text>
+				{/* Stars commented out for now */}
+				{/* {points !== undefined && points > 0 && (
+					<View className="flex-row items-center">
+						<Feather name="star" size={14} color="#a8a29e" />
+						<Text className="text-foreground-400 text-sm ml-1">{points}</Text>
+					</View>
+				)} */}
 			</Pressable>
 		</Link>
 	);

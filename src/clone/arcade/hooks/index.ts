@@ -7,3 +7,4 @@ export * from "./discover";
 export * from "./market-tokens";
 export * from "./marketplace";
 export * from "./token";
+export * from "./game-lookup";
