@@ -1,124 +1,30 @@
-name: claude
+name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened, ready_for_review]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: read
+
+  id-token: write
 jobs:
-  review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-
+  claude-code-review:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: read
-      id-token: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
-      - name: Check if commit is from Claude
-        id: check-author
-        run: |
-          AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
-          AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
-          if [[ "$AUTHOR_EMAIL" == *"claude[bot]"* ]] || [[ "$AUTHOR_NAME" == *"claude[bot]"* ]]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Run Claude Code Review
-        id: claude-review
-        if: steps.check-author.outputs.skip != 'true'
-        uses: anthropics/claude-code-action@beta
+      - name: Claude Review
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
-          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
-          # model: "claude-opus-4-20250514"
-
-          # Direct prompt for automated review (no @claude mention needed)
-          direct_prompt: |
-            Please review this React Native/Expo UI library PR and provide inline feedback using the GitHub review system. Follow these steps:
-
-            1. **Check for existing reviews**: First, use `mcp__github__get_pull_request_reviews` to check if you have any existing pending or submitted reviews on this PR
-            2. **Check existing comments**: Use `mcp__github__get_pull_request_comments` to see what comments have already been made to avoid redundancy
-            3. **Start a fresh review**: Use `mcp__github__create_pending_pull_request_review` to begin a new pending review
-            4. **Get diff information**: Use `mcp__github__get_pull_request_diff` to understand the code changes
-            5. **Add unique inline comments**: Only add comments for issues that haven't been addressed in existing reviews
-            6. **Add inline comments**: Use `mcp__github__add_pull_request_review_comment_to_pending_review` for each specific piece of feedback on particular lines, including code change suggestions where appropriate using multiline comments and the suggestion syntax:
-
-            ```suggestion
-              // Example improved code here
-            ```
-
-            7. **Submit the review**: Use `mcp__github__submit_pending_pull_request_review` with event type "COMMENT" (not "REQUEST_CHANGES") to publish all comments as a non-blocking review
-
-            Only comment when something is off, wrong, or could be improved but don't be overly pedantic; if a given implementation is already good, do not comment on it.
-
-            Focus your review on:
-
-            **React Native/Expo Best Practices:**
-            - Proper use of React Native components and APIs
-            - Expo SDK compatibility and best practices
-            - Platform-specific considerations (iOS/Android/Web)
-            - Performance optimizations for mobile devices
-            - Memory management and efficient rendering
-
-            **Component Design:**
-            - Reusable component patterns and composition
-            - TypeScript prop interfaces and type safety
-            - Accessibility implementation (screen readers, touch targets)
-            - Consistent design system adherence
-            - Cross-platform compatibility considerations
-
-            **Styling and Design:**
-            - NativeWind/Tailwind CSS usage and best practices
-            - Responsive design for different screen sizes
-            - Platform-specific styling differences
-            - Animation performance and smoothness
-            - Design token consistency with web UI library
-
-            **Code Quality:**
-            - TypeScript type safety and proper annotations
-            - Component lifecycle and hooks usage
-            - Error handling and edge cases
-            - Code organization and file structure
-            - Import/export patterns and barrel exports
-
-            **Testing and Documentation:**
-            - Storybook story coverage and quality
-            - Visual regression test considerations
-            - Component prop documentation
-            - Example usage patterns
-            - Screenshot generation requirements
-
-            **Performance:**
-            - List rendering optimization (FlatList, VirtualizedList)
-            - Image loading and caching strategies
-            - Bundle size considerations
-            - Animation performance using React Native Reanimated
-            - Memory leaks and cleanup in useEffect
-
-            **Platform Compatibility:**
-            - React Native Web compatibility issues
-            - iOS/Android platform differences
-            - Expo managed vs bare workflow considerations
-            - Native module usage and fallbacks
-            - Web-specific adaptations and limitations
-
-            Provide specific, actionable feedback with inline comments and suggestions for line-specific issues. Include an concise overall summary when submitting the review.
-
-            **Important**: Submit as "COMMENT" type so the review doesn't block the PR.
-
-          # Add MCP GitHub tools for inline comments and project-specific testing
-          allowed_tools: "mcp__github__create_pending_pull_request_review,mcp__github__get_pull_request_comments,mcp__github__get_pull_request_reviews,mcp__github__add_pull_request_review_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"
+          prompt: "/review"
+          # CLAUDE.md is a symlink to AGENTS.md in this repo; keep repo rules there.
+          claude_args: |
+            --max-turns 4
