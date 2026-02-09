@@ -1,24 +1,76 @@
-import { useMemo } from "react";
-import { FlatList, Image, ScrollView, View } from "react-native";
-import type { Collection, Token } from "#clone/arcade";
-import { useCollections, useMarketplace, useTokens } from "#clone/arcade";
-import { ItemCard, ItemGrid, Text } from "#components";
+import React, { useMemo, type ComponentType } from "react";
+import { Image, Pressable, ScrollView, View, Dimensions } from "react-native";
+import { Image as ExpoImage } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useAccount, useConnect } from "@starknet-react/core";
+import type { Token } from "#clone/arcade";
+import { useTokens as useTokensClone } from "#clone/arcade";
+import { ItemCard, ItemGrid, Skeleton, Text, CreditIcon, ScarecrowIcon, Button, ConnectIcon, EyeIcon } from "#components";
+import { StarknetColorIcon } from "#components/icons/brand-color/starknet";
+import { EthereumColorIcon } from "#components/icons/brand-color/ethereum";
+import { USDCIcon } from "#components/icons/brand-color/usdc";
+import { LordsColorIcon } from "#components/icons/brand-color/lords";
+import { useTokens } from "../../../../../hooks/useTokens";
+import { useActivities, type ParsedActivity } from "../../../../../hooks/useActivities";
+import { sanitizeImageUri } from "#utils";
+
+const { height: screenHeight } = Dimensions.get('window');
 
 export function InventoryScene() {
-	const { tokens, credits, status: tokensStatus } = useTokens();
-	const { collections, status: collectionsStatus } = useCollections();
+	const { tokens: fungibleTokens, credits, status: tokensStatus } = useTokensClone();
+	const { address, status } = useAccount();
+	const { connect, connectors } = useConnect();
+	
+	// Fetch NFTs owned by this address using the proper useTokens hook with metadata
+	const { tokens: nftTokens, loading: nftsLoading } = useTokens({
+		ownerAddress: address,
+		pageSize: 50,
+	});
+	const { activities, loading: activitiesLoading } = useActivities(address, 20);
 
+	const nftsStatus = nftsLoading ? "loading" : "success";
+	const activitiesStatus = activitiesLoading ? "loading" : "success";
+	
+	// Show not connected state
+	if (status !== "connected") {
+		return (
+			<View className="flex-1 items-center justify-center" style={{ minHeight: screenHeight * 0.7 }}>
+				<ConnectIcon size="xl" variant="line" color="#71717a" className="mb-4" />
+				<Text className="text-foreground-200 text-center text-lg font-medium mb-2">
+					Controller not connected
+				</Text>
+				<Text className="text-foreground-400 text-center text-sm mb-6">
+					Connect your controller to view your inventory
+				</Text>
+				<Button
+					variant="outline"
+					onPress={() => {
+						const connector = connectors?.[0];
+						if (connector) {
+							connect({ connector });
+						}
+					}}
+					disabled={!connectors?.[0]}
+				>
+					<Text className="text-sm font-semibold">CONNECT</Text>
+				</Button>
+			</View>
+		);
+	}
+	
 	return (
 		<ScrollView className="flex-1">
 			<View style={{ padding: 16, gap: 16 }}>
+				{/* Always show tokens section (credits always visible) */}
 				<TokensSection
-					tokens={tokens}
+					tokens={fungibleTokens}
 					credits={credits}
 					status={tokensStatus}
 				/>
-				<CollectionsSection
-					collections={collections}
-					status={collectionsStatus}
+				{/* Always show NFTs section */}
+				<NFTsSection
+					nfts={nftTokens}
+					status={nftsStatus}
 				/>
 			</View>
 		</ScrollView>
@@ -31,15 +83,39 @@ interface TokensSectionProps {
 	status: string;
 }
 
+// Token icon mapping with colored brand icons
+const getTokenIcon = (symbol: string): { Icon: ComponentType<any>, isColored: boolean } | null => {
+	const symbolUpper = symbol?.toUpperCase() || '';
+	switch (symbolUpper) {
+		case 'CREDITS':
+			return { Icon: CreditIcon, isColored: true };
+		case 'ETH':
+		case 'ETHER':
+			return { Icon: EthereumColorIcon, isColored: true };
+		case 'STRK':
+			return { Icon: StarknetColorIcon, isColored: true };
+		case 'USDC':
+			return { Icon: USDCIcon, isColored: true };
+		case 'LORDS':
+			return { Icon: LordsColorIcon, isColored: true };
+		case 'USDT':
+			// For now using first letter, can add USDT icon later
+			return null;
+		default:
+			return null;
+	}
+};
+
 function TokensSection({ tokens, credits, status }: TokensSectionProps) {
+	const [showAllTokens, setShowAllTokens] = React.useState(false);
+	
 	if (status === "loading") {
 		return (
 			<View>
-				<Text className="text-lg font-semibold mb-3">Tokens</Text>
 				<View className="flex flex-col gap-2">
 					{Array.from({ length: 4 }, (_, i) => `token-skeleton-${i}`).map(
 						(key) => (
-							<View key={key} className="h-16 bg-background-200 rounded-lg" />
+							<View key={key} className="h-16 bg-background-200" />
 						),
 					)}
 				</View>
@@ -48,25 +124,31 @@ function TokensSection({ tokens, credits, status }: TokensSectionProps) {
 	}
 
 	const filteredTokens = tokens.filter((token) => token.balance.amount > 0);
+	const displayTokens = showAllTokens ? filteredTokens : filteredTokens.slice(0, 3);
+	const hasMoreTokens = filteredTokens.length > 3;
 
 	return (
-		<View>
-			<Text className="text-lg font-semibold mb-3">Tokens</Text>
-			<View className="flex flex-col gap-2">
-				{/* Credits card */}
-				<TokenCard token={credits} />
+		<View className="rounded-md overflow-hidden">
+			<View className="flex flex-col gap-[1.2px]">
+				{/* Credits card - always show */}
+				<TokenCard key="credits" token={credits} />
 
 				{/* Other tokens */}
-				{filteredTokens.map((token) => (
-					<TokenCard key={token.metadata.address} token={token} />
+				{displayTokens.map((token, index) => (
+					<TokenCard key={`${token.metadata.symbol}-${index}`} token={token} />
 				))}
-
-				{filteredTokens.length === 0 && (
-					<View className="items-center justify-center py-8">
-						<Text className="text-foreground-300 text-center text-sm">
-							No tokens available
+				
+				{/* View All Button - styled like a token row */}
+				{hasMoreTokens && !showAllTokens && (
+					<Pressable
+						onPress={() => setShowAllTokens(true)}
+						className="bg-background-200 p-4 flex-row items-center justify-center gap-1 active:opacity-70"
+					>
+						<EyeIcon color="#71717a" variant="line" size="default"/>
+						<Text className="text-foreground-400 font-medium text-base">
+							View All
 						</Text>
-					</View>
+					</Pressable>
 				)}
 			</View>
 		</View>
@@ -74,129 +156,200 @@ function TokensSection({ tokens, credits, status }: TokensSectionProps) {
 }
 
 function TokenCard({ token }: { token: Token }) {
-	const changeColor =
-		token.balance.change > 0
-			? "text-green-500"
-			: token.balance.change < 0
-				? "text-red-500"
-				: "text-foreground-300";
+	const iconInfo = getTokenIcon(token.metadata.symbol);
+	
+	// Calculate percentage change
+	const oldValue = token.balance.value - token.balance.change;
+	const percentageChange = oldValue !== 0 ? (token.balance.change / oldValue) * 100 : 0;
+	const isPositive = percentageChange >= 0;
+	const showPercentage = !isNaN(percentageChange) && isFinite(percentageChange) && percentageChange !== 0;
 
 	return (
-		<View className="flex-row items-center gap-3 p-3 bg-background-200 rounded-lg">
-			<View className="size-10 rounded bg-background-100 items-center justify-center">
-				{token.metadata.image ? (
+		<View className="relative overflow-hidden bg-background-200">
+			{/* Subtle gradient overlay */}
+			{showPercentage && (
+				<LinearGradient
+					colors={
+						isPositive 
+							? ['rgba(16, 185, 129, 0.05)', 'transparent']
+							: ['rgba(239, 68, 68, 0.05)', 'transparent']
+					}
+					start={{ x: 1, y: 0 }}
+					end={{ x: 0, y: 0 }}
+					className="absolute inset-0"
+					pointerEvents="none"
+				/>
+			)}
+			
+			{/* Content */}
+			<View className="flex-row items-center gap-3 p-4">
+				{/* Token Icon */}
+				{iconInfo ? (
+					<iconInfo.Icon size="lg" />
+				) : token.metadata.image ? (
 					<Image
 						source={{ uri: token.metadata.image }}
-						className="size-10 rounded"
+						className="size-10 rounded-full"
 					/>
 				) : (
-					<Text className="text-sm font-bold">{token.metadata.symbol[0]}</Text>
+					<View className="size-10 bg-background-300 rounded-full items-center justify-center">
+						<Text className="text-foreground-100 font-bold text-sm">
+							{token.metadata.symbol[0]?.toUpperCase() || '?'}
+						</Text>
+					</View>
 				)}
-			</View>
-			<View className="flex-1">
-				<Text className="text-sm font-medium">{token.metadata.name}</Text>
-				<Text className="text-xs text-foreground-300">
-					{token.balance.amount.toLocaleString(undefined, {
-						maximumFractionDigits: 5,
-					})}{" "}
-					{token.metadata.symbol}
-				</Text>
-			</View>
-			<View className="items-end">
-				{token.balance.value > 0 && (
-					<Text className="text-sm font-medium">
-						$
-						{token.balance.value.toLocaleString(undefined, {
-							maximumFractionDigits: 2,
-						})}
+				<View className="flex-1">
+					<Text className="text-foreground-100 font-medium text-base">{token.metadata.name}</Text>
+					<Text className="text-foreground-400 text-sm">
+						{token.balance.amount.toLocaleString(undefined, {
+							maximumFractionDigits: 5,
+						})}{" "}
+						{token.metadata.symbol}
 					</Text>
-				)}
-				{token.balance.change !== 0 && (
-					<Text className={`text-xs ${changeColor}`}>
-						{token.balance.change > 0 ? "+" : ""}$
-						{token.balance.change.toLocaleString(undefined, {
-							maximumFractionDigits: 2,
-						})}
-					</Text>
-				)}
+				</View>
+				<View className="items-end">
+					{token.balance.value > 0 && (
+						<Text className="text-foreground-100 font-semibold text-base">
+							${token.balance.value.toLocaleString(undefined, {
+								maximumFractionDigits: 2,
+							})}
+						</Text>
+					)}
+					{showPercentage && (
+						<Text className="text-xs" style={{ color: isPositive ? '#10b981' : '#ef4444' }}>
+							{isPositive ? '+' : ''}{percentageChange.toFixed(1)}%
+						</Text>
+					)}
+				</View>
 			</View>
 		</View>
 	);
 }
 
-interface CollectionsSectionProps {
-	collections: Collection[];
+interface NFTsSectionProps {
+	nfts: Array<any>; // Token type from useTokens
 	status: string;
 }
 
-function CollectionsSection({ collections, status }: CollectionsSectionProps) {
-	const { getListingCount, getFloorPrice, getLastSale } = useMarketplace();
+/**
+ * Pads a hex string to 64 characters (0x + 64 hex digits)
+ */
+function padHexTo64(hex: string): string {
+	// Remove 0x prefix if present
+	const cleaned = hex.startsWith('0x') ? hex.slice(2) : hex;
+	// Pad to 64 characters
+	const padded = cleaned.padStart(64, '0');
+	return `0x${padded}`;
+}
 
-	const skeletonData = useMemo(
-		() => Array.from({ length: 4 }, (_, i) => ({ id: `skeleton-${i}` })),
-		[],
-	);
+/**
+ * Gets the token name from metadata or falls back to token.name or tokenId
+ */
+function getTokenName(token: any): string {
+	// Try to parse metadata and get name
+	if (token.metadata) {
+		try {
+			let metadata;
+			try {
+				metadata = JSON.parse(token.metadata);
+			} catch {
+				// Try decoding as base64
+				const decoded = atob(token.metadata);
+				metadata = JSON.parse(decoded);
+			}
+			if (metadata?.name) {
+				return metadata.name;
+			}
+		} catch (err) {
+			// Silently fail and continue to fallbacks
+		}
+	}
+	
+	// Fall back to token.name
+	if (token.name) {
+		return token.name;
+	}
+	
+	// Final fallback to token ID
+	return `#${token.tokenId || '0'}`;
+}
+
+/**
+ * Gets the token image URI, checking metadata first then falling back to Cartridge API
+ */
+function getTokenImageUri(token: any, contractAddress: string): string | undefined {
+	// Try to parse metadata and get image
+	if (token.metadata) {
+		try {
+			let metadata;
+			try {
+				metadata = JSON.parse(token.metadata);
+			} catch {
+				// Try decoding as base64
+				const decoded = atob(token.metadata);
+				metadata = JSON.parse(decoded);
+			}
+			if (metadata?.image) {
+				// Sanitize the image URI (handles SVGs, IPFS, etc.)
+				return sanitizeImageUri(metadata.image, `Token: ${token.tokenId}`);
+			}
+		} catch (err) {
+			// Silently fail and continue to fallback
+		}
+	}
+	
+	// Fallback to Cartridge API
+	const paddedAddress = padHexTo64(contractAddress);
+	const paddedTokenId = padHexTo64(token.tokenId || '0');
+	return `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
+}
+
+function NFTsSection({ nfts, status }: NFTsSectionProps) {
 
 	if (status === "loading") {
 		return (
 			<View>
-				<Text className="text-lg font-semibold mb-3">Collections</Text>
-				<FlatList
-					data={skeletonData}
-					numColumns={2}
-					scrollEnabled={false}
-					columnWrapperStyle={{ gap: 12 }}
-					contentContainerStyle={{ gap: 12 }}
-					keyExtractor={(item) => item.id}
-					renderItem={() => (
-						<View className="flex-1 h-40 bg-background-200 rounded-lg" />
-					)}
-				/>
-			</View>
-		);
-	}
-
-	if (collections.length === 0) {
-		return (
-			<View>
-				<Text className="text-lg font-semibold mb-3">Collections</Text>
-				<View className="items-center justify-center py-8">
-					<Text className="text-foreground-300 text-center text-sm">
-						No collections available
-					</Text>
+				<View className="flex-row gap-3 mb-3">
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+				</View>
+				<View className="flex-row gap-3 mb-3">
+					<Skeleton className="flex-1 h-48 rounded-lg" />
+					<Skeleton className="flex-1 h-48 rounded-lg" />
 				</View>
 			</View>
 		);
 	}
 
-	return (
-		<View>
-			<Text className="text-lg font-semibold mb-3">Collections</Text>
-			<ItemGrid
-				data={collections}
-				numColumns={2}
-				gap={12}
-				maintainColumnWidth={true}
-				keyExtractor={(item) => item.address}
-				renderItem={(item) => {
-					const { name, imageUrl, totalCount, address } = item;
-					const listingCount = getListingCount(address);
-					const price = getFloorPrice(address);
-					const lastSale = getLastSale(address);
+	if (nfts.length === 0) {
+		return (
+			<View style={{ minHeight: screenHeight * 0.4 }} className="items-center justify-center">
+				<View style={{ width: 200, height: 200 }}>
+					<ScarecrowIcon variant="line" style={{ width: 200, height: 200 }} />
+				</View>
+				<Text className="text-center text-md color-[#4a5a4d]">
+					It's empty here..
+				</Text>
+			</View>
+		);
+	}
 
-					return (
-						<ItemCard
-							href={`../collection/${address}`}
-							title={name}
-							imageUri={imageUrl}
-							totalCount={totalCount}
-							listingCount={listingCount}
-							price={price}
-							lastSale={lastSale}
-						/>
-					);
-				}}
-			/>
-		</View>
+	return (
+		<ItemGrid
+			data={nfts}
+			numColumns={2}
+			gap={12}
+			maintainColumnWidth={true}
+			keyExtractor={(item) => item.contractAddress + (item.tokenId || "")}
+			renderItem={(item) => {
+				return (
+					<ItemCard
+						href={`/(drawer)/nft/${item.contractAddress}/${item.tokenId || ""}`}
+						title={getTokenName(item)}
+						imageUri={getTokenImageUri(item, item.contractAddress || '')}
+					/>
+				);
+			}}
+		/>
 	);
 }

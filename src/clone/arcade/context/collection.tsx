@@ -1,4 +1,24 @@
-import { createContext, type ReactNode, useState } from "react";
+/**
+ * Collection Context - REAL DATA from Torii
+ * Provides collection data from Torii token contracts
+ */
+import { createContext, type ReactNode, useMemo, useEffect, useState } from "react";
+import { useTokenContracts, type ParsedTokenContract } from "../../../../../../hooks/useTokenContracts";
+import { useToriiClient } from "../../../../../../contexts/ToriiContext";
+import { useCollectionGameMapping } from "../../../../../../hooks/useCollectionGameMapping";
+import { PaginationDirection } from "../../../../../../modules/arcade/src/generated/dojo";
+import { sanitizeSvgDataUri } from "#utils";
+
+/**
+ * Pads a hex string to 64 characters (0x + 64 hex digits)
+ */
+function padHexTo64(hex: string): string {
+	// Remove 0x prefix if present
+	const cleaned = hex.startsWith('0x') ? hex.slice(2) : hex;
+	// Pad to 64 characters
+	const padded = cleaned.padStart(64, '0');
+	return `0x${padded}`;
+}
 
 export enum CollectionType {
 	ERC721 = "ERC-721",
@@ -12,6 +32,7 @@ export type Collection = {
 	imageUrl: string;
 	totalCount: number;
 	project: string;
+	gameId?: string; // Linked game ID from ARCADE-CollectionEdition
 };
 
 export type CollectionContextType = {
@@ -23,112 +44,171 @@ export const CollectionContext = createContext<CollectionContextType | null>(
 	null,
 );
 
-// Mock data for development - based on actual Cartridge marketplace collections
-const MOCK_COLLECTIONS: Collection[] = [
-	{
-		address:
-			"0x051d0844f96f86c7363cc7eb3ab939e0ef5b70939dcbc17895b2fa178d9af420",
-		name: "Dragark",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/dragark/icon.png",
-		totalCount: 156,
-		project: "arcade-dragark",
-	},
-	{
-		address:
-			"0x07d8ea58612a5de25f29281199a4fc1f2ce42f0f207f93c3a35280605f3b8e68",
-		name: "Karat",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/karat/icon.png",
-		totalCount: 89,
-		project: "arcade-karat",
-	},
-	{
-		address:
-			"0x077485a949c130cf0d98819d2b0749f5860b0734ea28cb678dd3f39379131bfa",
-		name: "Schizodio Brothers",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/schizodio/icon.png",
-		totalCount: 42,
-		project: "arcade-schizodio",
-	},
-	{
-		address:
-			"0x02d66679de61a5c6d57afd21e005a8c96118bd60315fd79a4521d68f5e5430d1",
-		name: "Pixel Banner",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/pixel-banner/icon.png",
-		totalCount: 67,
-		project: "arcade-pixel-banner",
-	},
-	// Blob Arena collections
-	{
-		address:
-			"0x00539f522b29ae9251dbf7443c7a950cf260372e69efab3710a11bf17a9599f1",
-		name: "Blobert",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/blob-arena-amma/icon.png",
-		totalCount: 234,
-		project: "arcade-blobarena-mainnet",
-	},
-	// Dope Wars collections
-	{
-		address:
-			"0x0314cca49699d0db8ac0b9df2c9a89b76c44d6d3c1a7d76f15cebc8535acfb91",
-		name: "Dope Wars Paper",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/dope-wars/icon.png",
-		totalCount: 128,
-		project: "arcade-dopewars",
-	},
-	{
-		address:
-			"0x04fa864a706e3403fd17ac8df307f22eafa21b778b73353abf69a622e47a2003",
-		name: "Dope Wars Items",
-		type: CollectionType.ERC1155,
-		imageUrl: "https://static.cartridge.gg/presets/dope-wars/icon.png",
-		totalCount: 89,
-		project: "arcade-dopewars",
-	},
-	// Pistols collections
-	{
-		address:
-			"0x2e9c711b1a7e2784570b1bda5082a92606044e836ba392d2b977d280fb74b3c",
-		name: "Pistols Duelists",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/pistols/icon.png",
-		totalCount: 456,
-		project: "arcade-pistols",
-	},
-	{
-		address:
-			"0x7aaa9866750a0db82a54ba8674c38620fa2f967d2fbb31133def48e0527c87f",
-		name: "Genesis Duelist",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/pistols/icon.png",
-		totalCount: 156,
-		project: "arcade-pistols",
-	},
-	{
-		address:
-			"0x0158160018d590d93528995b340260e65aedd76d28a686e9daa5c4e8fad0c5dd",
-		name: "Beasts",
-		type: CollectionType.ERC721,
-		imageUrl: "https://static.cartridge.gg/presets/loot-survivor/icon.png",
-		totalCount: 512,
-		project: "arcade-loot-survivor",
-	},
-];
+/**
+ * Convert TokenContract to Collection format
+ * Uses already-parsed metadata from useTokenContracts hook
+ */
+function tokenContractToCollection(tokenContract: ParsedTokenContract): Collection {
+	// Use name directly from tokenContract
+	const name = tokenContract.name || 'Unknown Collection';
+	
+	// Image URL will be set from first token's static endpoint
+	// Initialize as empty, will be replaced when first token is fetched
+	const imageUrl = '';
+	
+	// Parse total supply (U256 can be decimal string or hex)
+	let totalCount = 0;
+	if (tokenContract.totalSupply) {
+		try {
+			const supply = tokenContract.totalSupply;
+			if (supply.startsWith('0x')) {
+				// Hex format
+				totalCount = parseInt(supply, 16);
+			} else {
+				// Decimal format
+				totalCount = parseInt(supply, 10);
+			}
+			// Handle NaN case
+			if (Number.isNaN(totalCount)) {
+				totalCount = 0;
+			}
+		} catch (e) {
+			// Silently fail
+		}
+	}
+	
+	// Determine collection type based on contract
+	const type = CollectionType.ERC721; // Default, could be enhanced
+	
+	// Use contract address as project identifier
+	const project = `arcade-${name.toLowerCase().replace(/\s+/g, '-')}`;
+	
+	return {
+		address: tokenContract.contractAddress,
+		name,
+		type,
+		imageUrl,
+		totalCount,
+		project,
+	};
+}
 
 export function CollectionProvider({ children }: { children: ReactNode }) {
-	const [status] = useState<"success" | "error" | "idle" | "loading">(
-		"success",
-	);
-
+	const { tokenContracts, loading, error } = useTokenContracts();
+	const { client, isReady } = useToriiClient();
+	const { getGameIdForCollection, loading: mappingLoading } = useCollectionGameMapping();
+	const [firstTokenImages, setFirstTokenImages] = useState<Map<string, string>>(new Map());
+	const [fetchingImages, setFetchingImages] = useState(false);
+	const [hasFetchedImages, setHasFetchedImages] = useState(false);
+	
+	// Fetch first token for ALL collections to ensure working images
+	useEffect(() => {
+		if (!client || !isReady || tokenContracts.length === 0 || fetchingImages || hasFetchedImages) {
+			return;
+		}
+		
+		const fetchFirstTokenImages = async () => {
+			setFetchingImages(true);
+			const imageMap = new Map<string, string>();
+			
+			// Fetch first token for ALL collections to get real token images
+			const promises = tokenContracts.map(async (contract) => {
+				try {
+					
+					const result = await client.tokens({
+						contractAddresses: [contract.contractAddress],
+						tokenIds: [],
+						attributeFilters: [],
+						pagination: {
+							cursor: undefined,
+							limit: 1,
+							direction: PaginationDirection.Forward,
+							orderBy: [],
+						},
+					});
+					
+					if (result.items && result.items.length > 0) {
+						const firstToken = result.items[0];
+						let imageUrl: string | undefined;
+						
+						// Check if metadata contains SVG that needs sanitization
+						if (typeof firstToken.metadata === 'string' && firstToken.metadata.length > 0) {
+							try {
+								// Try parsing as JSON first
+								const parsed = JSON.parse(firstToken.metadata);
+								if (parsed.image && typeof parsed.image === 'string' && parsed.image.startsWith('data:image/svg+xml')) {
+									// Sanitize SVG data URIs
+									imageUrl = sanitizeSvgDataUri(parsed.image, `Collection: ${contract.name}`);
+								}
+							} catch (e) {
+								// If JSON parse fails, try base64 decode
+								try {
+									const decoded = atob(firstToken.metadata);
+									const parsedDecoded = JSON.parse(decoded);
+									if (parsedDecoded.image && typeof parsedDecoded.image === 'string' && parsedDecoded.image.startsWith('data:image/svg+xml')) {
+										// Sanitize SVG data URIs
+										imageUrl = sanitizeSvgDataUri(parsedDecoded.image, `Collection: ${contract.name}`);
+									}
+								} catch (e2) {
+									// Not SVG or couldn't parse, will use static endpoint
+								}
+							}
+						}
+						
+						// If not SVG or no metadata, use static endpoint
+						if (!imageUrl) {
+							const paddedAddress = padHexTo64(contract.contractAddress);
+							const paddedTokenId = padHexTo64(firstToken.tokenId || '0');
+							imageUrl = `https://api.cartridge.gg/x/arcade-main/torii/static/${paddedAddress}/${paddedTokenId}/image`;
+						}
+						
+						imageMap.set(contract.contractAddress, imageUrl);
+					}
+				} catch (err) {
+					// Silently handle errors - collection will use fallback image
+				}
+			});
+			
+			await Promise.all(promises);
+			setFirstTokenImages(imageMap);
+			setFetchingImages(false);
+			setHasFetchedImages(true);
+		};
+		
+		fetchFirstTokenImages();
+	}, [client, isReady, tokenContracts.length, fetchingImages, hasFetchedImages]);
+	
+	// Convert token contracts to collections with first token images and game IDs
+	const collections = useMemo(() => {
+		const converted = tokenContracts.map(tokenContract => {
+			const collection = tokenContractToCollection(tokenContract);
+			// Override with first token image if available
+			const firstTokenImage = firstTokenImages.get(tokenContract.contractAddress);
+			// Get game ID from the mapping (only available after mappingLoading is false)
+			const gameId = !mappingLoading ? getGameIdForCollection(tokenContract.contractAddress) : undefined;
+			
+			return { 
+				...collection, 
+				imageUrl: firstTokenImage || collection.imageUrl,
+				gameId,
+			};
+		});
+		
+		return converted;
+	}, [tokenContracts, firstTokenImages.size, getGameIdForCollection, mappingLoading]);
+	
+	// Determine status
+	const status = useMemo<"success" | "error" | "idle" | "loading">(() => {
+		if (loading || fetchingImages || mappingLoading) return "loading";
+		if (error) return "error";
+		if (collections.length > 0) return "success";
+		return "idle";
+	}, [loading, fetchingImages, mappingLoading, error, collections.length]);
+	
 	return (
 		<CollectionContext.Provider
 			value={{
-				collections: MOCK_COLLECTIONS,
+				collections,
 				status,
 			}}
 		>
