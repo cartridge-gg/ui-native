@@ -24,3 +24,18 @@ export type StateIconProps = SvgProps &
 		ref?: React.Ref<Svg>;
 		color?: string;
 	};
+
+export type OlmechIconProps = SvgProps &
+	VariantProps<typeof iconVariants> & {
+		variant:
+			| "one"
+			| "two"
+			| "three"
+			| "four"
+			| "five"
+			| "six"
+			| "seven"
+			| "eight";
+		ref?: React.Ref<Svg>;
+		color?: string;
+	};

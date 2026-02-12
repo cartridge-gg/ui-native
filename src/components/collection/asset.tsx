@@ -126,7 +126,7 @@ export function Asset() {
 								style={{ transform: [{ scale: 1.1 }] }}
 								blurRadius={8}
 								contentFit="cover"
-								placeholder={require("#assets/placeholder.png")}
+								placeholder={require("#assets/placeholder.svg")}
 							/>
 							<View className="absolute inset-0 bg-black/64" />
 						</View>
@@ -135,7 +135,8 @@ export function Asset() {
 								source={imageSource}
 								className="size-full"
 								contentFit="contain"
-								placeholder={require("#assets/placeholder.png")}
+								placeholder={require("#assets/placeholder.svg")}
+								placeholderContentFit="contain"
 							/>
 						</View>
 					</View>

@@ -7,13 +7,8 @@ import { ImageBackground, type ImageURISource, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import banner from "#assets/banner.png";
 import { useArcade } from "#clone/arcade";
-import {
-	ArrowIcon,
-	Button,
-	HamburgerIcon,
-	SearchIcon,
-	Text,
-} from "#components";
+import { ArrowIcon, Button, HamburgerIcon, SearchIcon } from "#components";
+import { Connection } from "./connection";
 
 export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 	const insets = useSafeAreaInsets();
@@ -94,13 +89,7 @@ export function Header({ navigation }: Pick<DrawerHeaderProps, "navigation">) {
 							<SearchIcon />
 						</Button>
 					)}
-					<Button
-						variant="outline"
-						accessibilityRole="button"
-						accessibilityLabel="Connect"
-					>
-						<Text className="text-primary text-sm font-medium">CONNECT</Text>
-					</Button>
+					<Connection />
 				</View>
 			</View>
 		</ImageBackground>

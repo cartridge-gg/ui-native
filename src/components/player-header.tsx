@@ -7,6 +7,7 @@ import { useArcade } from "#clone/arcade";
 import { useAchievements } from "#clone/arcade/hooks/achievements";
 import { useAddress } from "#clone/arcade/hooks/address";
 import {
+	AchievementPlayerAvatar,
 	Badge,
 	BronzeIcon,
 	BronzeTagIcon,
@@ -19,7 +20,6 @@ import {
 	SilverIcon,
 	SilverTagIcon,
 	Text,
-	UserAvatar,
 } from "#components";
 import { cn } from "#utils";
 import { formatAddress } from "#utils/account";
@@ -180,7 +180,7 @@ export function PlayerHeader() {
 	}, [rankVariant]);
 
 	const avatarSize = useMemo(
-		() => (rankVariant !== "default" ? "xxl" : "xl"),
+		() => (rankVariant !== "default" ? "3xl" : "2xl"),
 		[rankVariant],
 	);
 
@@ -220,10 +220,10 @@ export function PlayerHeader() {
 							height: badgeDimensions.inner,
 						}}
 					>
-						<UserAvatar
+						<AchievementPlayerAvatar
 							username={name}
 							size={avatarSize}
-							className="bg-background-200"
+							className="fill-primary"
 						/>
 					</View>
 					{rankVariant !== "default" && (
